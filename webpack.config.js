@@ -2,21 +2,19 @@ var path = require('path');
 var autoprefixer = require('autoprefixer');
 
 module.exports = {
-    entry: { main: path.resolve(__dirname, 'src/js/main.js')
-             //Feed: './feed.js'
-    },
+    entry: getEntrySources([path.resolve(__dirname, 'app/js/entry.js')]),
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        //publicPath: 'http://mycdn.com/', // This is used to generate URLs to e.g. images
-        filename: '[name].js' // Template based on keys in entry above
+        publicPath: 'http://localhost:8080/', // This is used to generate URLs to e.g. images
+        //path: path.resolve(__dirname, 'dist'),
+        filename: 'dist/bundle.js'
     },
     devtool: 'eval',
     module: {
         preLoaders: [
             {
-                test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: "jshint"
+                test: /\.jsx?$/,
+                exclude: /(node_modules|bower_components|bundle\.js$)/,
+                loader: "eslint"
             },
             {
                 test: /\.jsx?$/,
@@ -28,12 +26,12 @@ module.exports = {
         loaders: [
             { // CSS
                 test: /\.css$/,
-                include: /src/,
+                include: /app/,
                 loader: 'style!css!postcss'
             },
             { // SASS
                 test: /\.scss$/,
-                include: /src/,
+                include: /app/,
                 loaders: [
                     'style',
                     'css',
@@ -65,3 +63,12 @@ module.exports = {
     },
     watch: true
 };
+
+function getEntrySources(sources) {
+    if (process.env.NODE_ENV !== 'production') {
+        sources.push('webpack-dev-server/client?http://localhost:8080');
+        sources.push('webpack/hot/only-dev-server');
+    }
+
+    return sources;
+}
