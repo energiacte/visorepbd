@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack --progress --colors",
-    "webpack-server": "webpack-dev-server --hot --progress --colors",
+    "webpack-server": "webpack-dev-server --hot --progress --colors --content-base dist",
     "web-server": "http-server -p 3000 ./dist",
     "lint": "eslint --ignore-pattern dist/bundle*.js --ext .js,.jsx app/",
     "start": "npm run webpack-server & npm run web-server",
