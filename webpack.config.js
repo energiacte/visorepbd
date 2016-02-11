@@ -1,8 +1,11 @@
 var path = require('path');
 var autoprefixer = require('autoprefixer');
 
-module.exports = {
+config = {
     entry: getEntrySources([path.resolve(__dirname, 'app/js/entry.js')]),
+    resolve: { // you can now require('file') instead of require('file.json')
+        extensions: ['', '.js', '.jsx', '.json']
+    },
     output: {
         publicPath: 'http://localhost:8080/', // This is used to generate URLs to e.g. images
         //path: path.resolve(__dirname, 'dist'),
@@ -58,9 +61,6 @@ module.exports = {
         ]
     },
     postcss: [ autoprefixer({ browsers: ['last 3 versions'] }) ],
-    resolve: { // you can now require('file') instead of require('file.json')
-        extensions: ['', '.js', '.jsx', '.json']
-    },
     watch: true
 };
 
@@ -72,3 +72,5 @@ function getEntrySources(sources) {
 
     return sources;
 }
+
+module.exports = config
