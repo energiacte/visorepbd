@@ -5,11 +5,15 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "webpack --progress --colors",
-    "webpack-server": "webpack-dev-server --hot --progress --colors --content-base dist",
+    "clean": "rm -rf dist/",
+    "prod": "webpack --progress --colors",
+    "dev": "webpack --progress --colors --watch --devtool cheap-module-source-map",
+    "webpack-server": "webpack-dev-server --hot --progress --colors --inline --content-base ./dist",
     "web-server": "http-server -p 3000 ./dist",
-    "lint": "eslint --ignore-pattern dist/bundle*.js --ext .js,.jsx app/",
-    "start": "npm run webpack-server & npm run web-server",
+    "devserver": "npm run web-server | npm run dev",
+    "bs3": "rm .bootstraprc && cp node_modules/bootstrap-loader/.bootstraprc-3-default .bootstraprc",
+    "lint": "eslint --ignore-pattern dist/*.js --ext .js,.jsx public/",
+    "start": "node server.js",
     "deploy": "NODE_ENV=production webpack -p"
   },
   "keywords": [
@@ -24,23 +28,24 @@
   "devDependencies": {
     "autoprefixer": "^6.3.1",
     "babel-core": "^6.5.1",
-    "babel-eslint": "^4.1.8",
     "babel-loader": "^6.2.2",
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
+    "bootstrap-loader": "^1.0.8",
+    "clean-webpack-plugin": "^0.1.8",
     "css-loader": "^0.23.1",
-    "eslint": "^1.10.3",
-    "eslint-loader": "^1.2.1",
-    "eslint-plugin-react": "^3.16.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
+    "html-webpack-plugin": "^2.9.0",
     "http-server": "^0.8.5",
     "img-loader": "^1.2.2",
+    "imports-loader": "^0.6.5",
     "node-libs-browser": "^1.0.0",
     "node-sass": "^3.4.2",
     "postcss-loader": "^0.8.0",
-    "react": "^0.14.7",
     "react-hot-loader": "^1.3.0",
+    "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.1.2",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.0",
@@ -48,5 +53,13 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.12.13",
     "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {
+    "bootstrap-sass": "^3.3.6",
+    "jquery": "^2.2.1",
+    "react": "^0.14.7",
+    "react-bootstrap": "^0.28.3",
+    "react-dom": "^0.14.7",
+    "react-router": "2.0.0"
   }
 }
