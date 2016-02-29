@@ -1,7 +1,7 @@
 import uuid from 'node-uuid';
 import React from 'react';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
-import Navigation from 'components/navigation.jsx';
+import Navigation from 'components/Navigation.jsx';
 import Components from 'components/Components';
 
 class Base extends React.Component {

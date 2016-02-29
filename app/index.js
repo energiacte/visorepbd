@@ -4,7 +4,7 @@ import './css/style.scss'; // CSS
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Base from './components/base.jsx';
+import Base from 'components/Base.jsx';
 
 var appnode = document.body.appendChild(document.createElement("div"));
 
