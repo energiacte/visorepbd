@@ -1,21 +1,29 @@
 'use strict';
 
-var path = require('path');
-var autoprefixer = require('autoprefixer');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CleanPlugin = require('clean-webpack-plugin');
-//var BowerWebpackPlugin = require("bower-webpack-plugin");
+const path = require('path');
+const autoprefixer = require('autoprefixer');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CleanPlugin = require('clean-webpack-plugin');
+const NpmInstallPlugin = require('npm-install-webpack-plugin');
+
+//const BowerWebpackPlugin = require("bower-webpack-plugin");
 
 var production = process.env.NODE_ENV === 'production';
 
-// var bower_dir = __dirname + '/bower_components';
-// var node_dir = __dirname + '/node_modules';
-// var lib_dir = __dirname + '/public/js/libs';
+const PATHS = {
+  app: path.join(__dirname, 'app'),
+  build: path.join(__dirname, 'build'),
+  bower: path.join(__dirname, 'bower_components'),
+  node: path.join(__dirname, 'node_modules'),
+  styles: path.join(__dirname, 'app', 'css'),
+  components: path.join(__dirname, 'app', 'components')
+};
 
 var plugins = [
   //    new BowerWebpackPlugin(),
+  new webpack.HotModuleReplacementPlugin(),
   new ExtractTextPlugin('bundle.css', {allChunks: true}),
   new HtmlWebpackPlugin({
     title: "Pruebas para implementación de la ISO 52000-1 en CTE DB-HE",
@@ -34,6 +42,10 @@ var plugins = [
     React: 'react',
     ReactDOM: 'react-dom'//,
     //Bootstrap: 'react-bootstrap'
+  }),
+  new NpmInstallPlugin({
+    // detect needed modules and install instead of using npm install --save module
+    save: true // --save
   })
 ];
 
@@ -41,7 +53,7 @@ if (production) {
   plugins = plugins.concat([ // Production plugins go here
     // Cleanup the builds/ folder before
     // compiling our final assets
-    new CleanPlugin('dist'),
+    new CleanPlugin('build'),
     // This plugin looks for similar chunks and files
     // and merges them for better caching by the user
     new webpack.optimize.DedupePlugin(),
@@ -76,30 +88,37 @@ if (production) {
 var config = {
   debug: !production,
   cache: true,
-  progress: true,
   devtool: production ? false : 'cheap-module-source-map',
   entry: {
-    app: ['./public/js/app.js', 'bootstrap-loader']
+    app: [PATHS.app, 'bootstrap-loader']
   },
   devServer: {
-    contentBase: './dist',
-    hot: true
+    contentBase: PATHS.build,
+    // Enable history API fallback so HTML5 History API based
+    // routing works. This is a good default that will come
+    // in handy in more complicated setups.
+    historyApiFallback: true,
+    hot: true,
+    inline: true,
+    progress: true,
+    // Display only errors to reduce the amount of output.
+    stats: 'errors-only'
   },
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].js',
-    publicPath: '/dist/' // This is used to generate URLs to e.g. images
+    path: PATHS.build,
+    filename: '[name].js'
+    //publicPath: '/build/' // This is used to generate URLs to e.g. images
   },
   resolve: { // you can now import 'file' instead of import 'file.json'
     modulesDirectories: [
-      'public',
-      'bower_components',
-      'node_modules'
+      PATHS.app,
+      PATHS.bower,
+      PATHS.node
     ],
     extensions: ['', '.js', '.jsx', '.json'],
     alias: { // Para usar alias en imports
-      'styles': __dirname + '/public/css',
-      'components': __dirname + '/public/js/components'
+      'styles': PATHS.styles,
+      'components': PATHS.components
     }
   },
   module: {
@@ -107,28 +126,30 @@ var config = {
     loaders: [
       { // JS, JSX: BABEL
         test: /\.jsx?$/,
-        exclude: [/node_modules/, /bower_components/],
+        include: PATHS.app,
         loader: 'babel',
         query: {cacheDirectory: true,
                 presets: ['es2015', 'stage-0', 'react']}
       },
       { // CSS
         test: /\.css$/,
-        //include: /public/,
+        include: PATHS.app,
         loader: ExtractTextPlugin.extract('style', 'css!postcss')
       },
       { // SASS
         test: /\.scss$/,
-        //include: /public/,
+        include: PATHS.app,
         loader: ExtractTextPlugin.extract('style', 'css!postcss!sass?outputStyle=expanded')
       },
       { // LESS
         test: /\.less$/,
+        include: PATHS.app,
         loaders: ExtractTextPlugin.extract('style', ['css', 'postcss', 'less'])
       },
       { // IMG  inline base64 URLs for <=8k images, direct URLs for the rest
         test: /\.(png|jpe?g|gif)$/i,
-        exclude: [/node_modules/, /bower_components/],
+        include: PATHS.app,
+        //exclude: [/node_modules/, /bower_components/],
         loader: 'url?limit=8192!img'
       },
       // required for bootstrap icons
@@ -141,7 +162,7 @@ var config = {
       // Bootstrap 3
       { test: /bootstrap-sass\/assets\/javascripts\//, loader: 'imports?jQuery=jquery' },
       // Bootstrap 4
-      { test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery' }
+      { test: /bootstrap\/build\/js\/umd\//, loader: 'imports?jQuery=jquery' }
     ]
   },
   plugins: plugins,
