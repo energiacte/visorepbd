@@ -13,7 +13,7 @@
     "prodserver": "npm run web-server | npm run buildprod",
     "bs3": "rm .bootstraprc && cp node_modules/bootstrap-loader/.bootstraprc-3-default .bootstraprc",
     "lint": "eslint --ignore-pattern build/*.js --ext .js,.jsx app/",
-    "start": "node server.js",
+    "start": "npm run webpack-server",
     "deploy": "NODE_ENV=production webpack -p"
   },
   "keywords": [
@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
+    "components": "^0.1.0",
     "jquery": "^2.2.1",
     "node-uuid": "^1.4.7",
     "react": "^0.14.7",

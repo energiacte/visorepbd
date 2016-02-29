@@ -18,9 +18,9 @@ class Navigation extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <NavItem className="active" eventKey={1} href="#home">Home</NavItem>
-            <NavItem eventKey={2} href="#about">About</NavItem>
-            <NavItem eventKey={2} href="#about">Contact</NavItem>
+            <NavItem className="active" eventKey={1} href="#home">Inicio</NavItem>
+            <NavItem eventKey={2} href="#about">Créditos</NavItem>
+            {/*
             <DropdownButton eventKey={3} title="Dropdown" id="dropdown-basic-1">
               <MenuItem eventKey={3.1}>Action</MenuItem>
               <MenuItem eventKey={3.2}>Another action</MenuItem>
@@ -28,6 +28,7 @@ class Navigation extends React.Component {
               <MenuItem divider />
               <MenuItem eventKey={3.3}>Separated link</MenuItem>
             </DropdownButton>
+            */}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
