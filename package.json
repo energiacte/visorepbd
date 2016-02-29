@@ -10,7 +10,7 @@
     "builddev": "webpack --progress --colors --watch --devtool eval-source-map",
     "webpack-server": "webpack-dev-server --hot --inline --colors",
     "web-server": "http-server -p 3000 ./build",
-    "devserver": "npm run web-server | npm run builddev",
+    "prodserver": "npm run web-server | npm run buildprod",
     "bs3": "rm .bootstraprc && cp node_modules/bootstrap-loader/.bootstraprc-3-default .bootstraprc",
     "lint": "eslint --ignore-pattern build/*.js --ext .js,.jsx app/",
     "start": "node server.js",
@@ -58,6 +58,7 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
     "jquery": "^2.2.1",
+    "node-uuid": "^1.4.7",
     "react": "^0.14.7",
     "react-bootstrap": "^0.28.3",
     "react-dom": "^0.14.7",
