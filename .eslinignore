@@ -1,5 +1,5 @@
-dist
-node_modules
+**/node_modules/**
+**/build/**
+builds/
 coverage
 webpack.*.js
-*Server.js
