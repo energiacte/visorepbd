@@ -9,4 +9,4 @@ import Base from 'components/Base.jsx';
 var appnode = document.body.appendChild(document.createElement("div"));
 
 // Render
-ReactDOM.render(<Base headertitle= "Implementación en el CTE DB-HE de la ISO 52000-1"/>, appnode);
+ReactDOM.render(<Base headertitle= "CTE DB-HE, aplicación de ISO 52000-1"/>, appnode);

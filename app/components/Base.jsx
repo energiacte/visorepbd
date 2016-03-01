@@ -11,10 +11,7 @@ class Base extends React.Component {
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
           <PageHeader>{this.props.headertitle}</PageHeader>
-          <div className="page">
-            <p className="lead">Aplicación de prueba de ISO 52000-1.</p>
-            <p>Seleccione los componentes de energía consumida y producida:</p>
-          </div>
+          <p className="lead">Energía suministrada y producida:</p>
           <Components />
         </div>
       </div>
