@@ -3,5 +3,8 @@ html {
         /* font-size: 100%;
         background: url(../img/repeater.jpg); */
         padding-top: 40px;
+        #components {
+           .bg-info {background-color: #b7caff; cursor: pointer;}
+           }
     }
 }

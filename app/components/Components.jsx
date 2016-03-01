@@ -5,6 +5,7 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import Button from 'react-bootstrap/lib/Button';
 
 const initialstate = {
+  selectedid: null,
   components: [
     {
       id: uuid.v4(),
@@ -37,13 +38,26 @@ const initialstate = {
   ]
 };
 
-var Component = ({id, type, originoruse, vector, values}) =>
-  <tr id={id}>
-    <td>{type}</td>
-    <td>{originoruse}</td>
-    <td>{vector}</td>
-    <td>{values}</td>
-  </tr>;
+class Component extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = props.component;
+  }
+
+  render() {
+    return (
+      <tr onClick={() => this.props.selectCallback(this.state.id)}
+          className={(this.state.id === this.props.selectedid)? 'bg-info' : ''}
+          id={this.state.id}>
+        <td>{this.state.type}</td>
+        <td>{this.state.originoruse}</td>
+        <td>{this.state.vector}</td>
+        <td>{this.state.values}</td>
+      </tr>
+    );
+  }
+
+}
 
 export default class Components extends React.Component {
 
@@ -64,15 +78,13 @@ export default class Components extends React.Component {
           <Button>Middle</Button>
           <Button>Right</Button>
         </ButtonGroup>
-        <table className="table-striped table-bordered table-condensed">
+        <table id="components" className="table-striped table-bordered table-condensed">
           <tbody>
           {components.map(component =>
-              <Component
-                  id={component.id}
-                  type={component.type}
-                  originoruse={component.originoruse}
-                  vector={component.vector}
-                  values={component.values} />
+            <Component
+                selectCallback={this.selectComponent}
+                selectedid={this.state.selectedid}
+                component={component} />
            )}
           </tbody>
         </table>
@@ -91,11 +103,26 @@ export default class Components extends React.Component {
     // I.e., through `this.state.components.push` and then
     // `this.setState({notes: this.state.components})` to commit.
     this.setState({
-      components : [... this.state.components, {id: uuid.v4(), type: 'Suministro', originoruse: 'EPB', vector: 'ELECTRICIDAD', values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }]
-      /* components: this.state.components.concat([{ id: uuid.v4(), type: 'New type' }]) */
+      selectedid: this.state.selectedid,
+      components : [... this.state.components,
+                    {id: uuid.v4(),
+                     type: 'Suministro',
+                     originoruse: 'EPB',
+                     vector: 'ELECTRICIDAD',
+                     values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                    }
+      ]
     }
                 , () => console.log('añade componente cambiando estado y pulsando botón!')
     );
+  };
+
+  selectComponent = (selectedid) => {
+    this.setState({
+      selectedid: selectedid,
+      components: this.state.components
+    });
+    console.log('El componente seleccionado es ' + selectedid);
   };
 
 }
