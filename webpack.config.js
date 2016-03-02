@@ -18,7 +18,10 @@ const PATHS = {
   bower: path.join(__dirname, 'bower_components'),
   node: path.join(__dirname, 'node_modules'),
   styles: path.join(__dirname, 'app', 'css'),
-  components: path.join(__dirname, 'app', 'components')
+  components: path.join(__dirname, 'app', 'components'),
+  actions: path.join(__dirname, 'app', 'actions'),
+  reducers: path.join(__dirname, 'app', 'reducers'),
+  store: path.join(__dirname, 'app', 'store')
 };
 
 var plugins = [
@@ -119,7 +122,10 @@ var config = {
     extensions: ['', '.js', '.jsx', '.json'],
     alias: { // Para usar alias en imports
       'styles': PATHS.styles,
-      'components': PATHS.components
+      'components': PATHS.components,
+      'actions': PATHS.resolver,
+      'reducers': PATHS.reducers,
+      'store': PATHS.store
     }
   },
   module: {

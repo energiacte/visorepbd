@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SELECT_COMPONENT, ADD_COMPONENT } from '../actions/actions';
+import { SELECT_COMPONENT, ADD_COMPONENT } from '../actions/actions.js';
 
 function selectedkey(state = null, action) {
   switch (action.type) {

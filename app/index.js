@@ -1,12 +1,13 @@
 import './css/style.scss'; // CSS
 
-import { createStore } from 'redux';
-import epbdApp from './reducers/reducers';
-import { addComponent, selectComponent } from './actions/actions'
-
 //// Import React and JS
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+
+import epbdApp from './reducers/reducers.js';
+import { addComponent, selectComponent } from './actions/actions.js'
+
 
 import Base from 'components/Base.jsx';
 
