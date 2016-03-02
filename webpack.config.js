@@ -39,6 +39,7 @@ var plugins = [
     $: 'jquery',
     'windows.jQuery': 'jquery',
     _: 'lodash',
+    lodash: 'lodash',
     React: 'react',
     ReactDOM: 'react-dom'//,
     //Bootstrap: 'react-bootstrap'

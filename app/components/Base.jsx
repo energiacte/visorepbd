@@ -1,5 +1,4 @@
-import uuid from 'node-uuid';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import Navigation from 'components/Navigation.jsx';
 import Components from 'components/Components';
@@ -12,7 +11,7 @@ class Base extends React.Component {
         <div className="container">
           <PageHeader>{this.props.headertitle}</PageHeader>
           <p className="lead">Energía suministrada y producida:</p>
-          <Components />
+          <Components state={this.props.state} />
         </div>
       </div>
     );

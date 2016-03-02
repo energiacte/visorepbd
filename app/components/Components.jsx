@@ -1,70 +1,41 @@
-import uuid from 'node-uuid';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Panel from 'react-bootstrap/lib/Panel';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import Button from 'react-bootstrap/lib/Button';
-
-const initialstate = {
-  selectedid: null,
-  components: [
-    {
-      id: uuid.v4(),
-      type: 'Suministro',
-      originoruse: 'EPB',
-      vector: 'ELECTRICIDAD',
-      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    },
-    {
-      id: uuid.v4(),
-      type: 'Suministro',
-      originoruse: 'NEPB',
-      vector: 'ELECTRICIDAD',
-      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    },
-    {
-      id: uuid.v4(),
-      type: 'Producción',
-      originoruse: 'INSITU',
-      vector: 'MEDIOAMBIENTE',
-      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    },
-    {
-      id: uuid.v4(),
-      type: 'Producción',
-      originoruse: 'COGENERACION',
-      vector: 'ELECTRICIDAD',
-      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    }
-  ]
-};
-
 class Component extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = props.component;
-  }
 
   render() {
     return (
-      <tr onClick={() => this.props.selectCallback(this.state.id)}
-          className={(this.state.id === this.props.selectedid)? 'bg-info' : ''}
-          id={this.state.id}>
-        <td>{this.state.type}</td>
-        <td>{this.state.originoruse}</td>
-        <td>{this.state.vector}</td>
-        <td>{this.state.values}</td>
+      <tr onClick={this.props.onSelect()}
+          className={this.props.isSelected | false ? 'bg-info' : ''}>
+        <td>{this.props.type}</td>
+        <td>{this.props.originoruse}</td>
+        <td>{this.props.vector}</td>
+        <td>{this.props.values}</td>
       </tr>
     );
   }
-
 }
+
+/*
+   Component.propTypes = {
+   onClick: PropTypes.func.isRequired,
+   isSelected: PropTypes.bool.isRequired,
+   type: PropTypes.string.isRequired,
+   originoruse: PropTypes.string.isRequired,
+   vector: PropTypes.string.isRequired,
+   values: PropTypes.array.isRequired,
+   } */
 
 export default class Components extends React.Component {
 
   constructor(props) {
     super(props);
 
-    this.state = initialstate;
+    this.state = this.props.state;
+    // bind this to methods (could instead use () => {})
+    this.addComponent = this.addComponent.bind(this);
+    this.selectComponent = this.selectComponent.bind(this);
   }
 
   render() {
@@ -80,49 +51,39 @@ export default class Components extends React.Component {
         </ButtonGroup>
         <table id="components" className="table-striped table-bordered table-condensed">
           <tbody>
-          {components.map(component =>
+          {components.map((component, i) =>
             <Component
-                selectCallback={this.selectComponent}
-                selectedid={this.state.selectedid}
-                component={component} />
+                key={i}
+                onSelect={() => this.selectComponent.bind(null, i)}
+                isSelected={i === this.state.selectedkey}
+                {...component} />
            )}
           </tbody>
         </table>
       </Panel>
-    );
+    )
   }
 
-  // We are using an experimental feature known as property
-  // initializer here. It allows us to bind the method `this`
-  // to point at our *App* instance.
-  //
-  // Alternatively we could `bind` at `constructor` using
-  // a line, such as this.addNote = this.addNote.bind(this);
-  addComponent = () => {
-    // It would be possible to write this in an imperative style.
-    // I.e., through `this.state.components.push` and then
-    // `this.setState({notes: this.state.components})` to commit.
+  addComponent() {
     this.setState({
-      selectedid: this.state.selectedid,
+      selectedkey: this.state.selectedkey,
       components : [... this.state.components,
-                    {id: uuid.v4(),
-                     type: 'Suministro',
+                    {type: 'Suministro',
                      originoruse: 'EPB',
                      vector: 'ELECTRICIDAD',
                      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                     }
       ]
-    }
-                , () => console.log('añade componente cambiando estado y pulsando botón!')
-    );
-  };
+    });
+    console.log('añade componente cambiando estado y pulsando botón!');
+  }
 
-  selectComponent = (selectedid) => {
+  selectComponent(i) {
     this.setState({
-      selectedid: selectedid,
+      selectedkey: i,
       components: this.state.components
     });
-    console.log('El componente seleccionado es ' + selectedid);
-  };
+    console.log('El componente seleccionado es ' + i );
+  }
 
 }
