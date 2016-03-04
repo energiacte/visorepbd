@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import Navigation from 'components/Navigation.jsx';
-import Components from 'components/Components';
+import ComponentList from 'components/ComponentList';
 
 class Base extends React.Component {
   render() {
@@ -11,7 +11,7 @@ class Base extends React.Component {
         <div className="container">
           <PageHeader>{this.props.headertitle}</PageHeader>
           <p className="lead">Energía suministrada y producida:</p>
-          <Components state={this.props.state} />
+          <ComponentList state={this.props.state} />
         </div>
       </div>
     );

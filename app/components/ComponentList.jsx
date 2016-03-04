@@ -29,7 +29,7 @@ class Component extends React.Component {
    values: PropTypes.array.isRequired,
    } */
 
-export default class Components extends React.Component {
+export default class ComponentList extends React.Component {
 
   constructor(props) {
     super(props);
