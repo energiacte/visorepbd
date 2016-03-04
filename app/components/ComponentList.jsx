@@ -8,7 +8,7 @@ class Component extends React.Component {
 
   render() {
     return (
-      <tr onClick={this.props.onSelect()}
+      <tr onClick={this.props.onComponentClick()}
           className={this.props.isSelected | false ? 'bg-info' : ''}>
         <td>{this.props.type}</td>
         <td>{this.props.originoruse}</td>
@@ -56,7 +56,7 @@ export default class ComponentList extends React.Component {
           {components.map((component, i) =>
             <Component
                 key={i}
-                onSelect={() => this.selectComponent.bind(null, i)}
+                onComponentClick={() => this.onComponentClick.bind(null, i)}
                 isSelected={i === this.state.selectedkey}
                 {...component} />
            )}
@@ -80,7 +80,7 @@ export default class ComponentList extends React.Component {
     console.log('añade componente cambiando estado y pulsando botón!');
   }
 
-  selectComponent(i) {
+  onComponentClick(i) {
     this.setState({
       selectedkey: i,
       components: this.state.components
