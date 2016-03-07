@@ -1,7 +1,7 @@
 dev:
 	npm run webpack-server
 install:
-	npm install -g eslint eslint-plugin-react http-webserver webpack-web-server
+	npm install -g eslint babel-eslint eslint-plugin-react http-webserver webpack-web-server
 analyze:
 	webpack --json > stats.json
 	webpack-bundle-size-analyzer stats.json

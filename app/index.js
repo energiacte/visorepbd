@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 
 import epbdApp from './reducers/reducers.js';
-import { addComponent, selectComponent } from './actions/actions.js'
+import { addComponent, selectComponent } from './actions/actions.js';
 
 
 import Base from 'components/Base.jsx';

@@ -63,7 +63,7 @@ export default class ComponentList extends React.Component {
           </tbody>
         </table>
       </Panel>
-    )
+    );
   }
 
   addComponent() {
