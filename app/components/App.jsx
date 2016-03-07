@@ -3,20 +3,25 @@ import PageHeader from 'react-bootstrap/lib/PageHeader';
 import Navigation from 'components/Navigation.jsx';
 import { ComponentList, ComponentEdit } from 'components/ComponentList';
 
-class Base extends React.Component {
+class App extends React.Component {
   render() {
+    const { store } = this.context;
+    const state = store.getState();
+
     return (
       <div>
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
-          <PageHeader>{this.props.headertitle}</PageHeader>
+          <PageHeader>CTE DB-HE, aplicación de ISO 52000-1</PageHeader>
           <p className="lead">Energía suministrada y producida:</p>
-          <ComponentList state={this.props.state} />
-          <ComponentEdit state={this.props.state} />
+          <ComponentList />
+          <ComponentEdit />
         </div>
       </div>
     );
   }
 }
 
-export default Base;
+App.contextTypes = { store: React.PropTypes.object };
+
+export default App;
