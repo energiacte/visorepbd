@@ -6,9 +6,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
-const NpmInstallPlugin = require('npm-install-webpack-plugin');
-
-//const BowerWebpackPlugin = require("bower-webpack-plugin");
 
 var production = process.env.NODE_ENV === 'production';
 
@@ -25,7 +22,6 @@ const PATHS = {
 };
 
 var plugins = [
-  //    new BowerWebpackPlugin(),
   new webpack.HotModuleReplacementPlugin(),
   new ExtractTextPlugin('bundle.css', {allChunks: true}),
   new HtmlWebpackPlugin({
@@ -45,11 +41,6 @@ var plugins = [
     lodash: 'lodash',
     React: 'react',
     ReactDOM: 'react-dom'//,
-    //Bootstrap: 'react-bootstrap'
-  }),
-  new NpmInstallPlugin({
-    // detect needed modules and install instead of using npm install --save module
-    save: true // --save
   })
 ];
 
