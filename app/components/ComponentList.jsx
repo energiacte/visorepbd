@@ -5,7 +5,7 @@ import Panel from 'react-bootstrap/lib/Panel';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import Button from 'react-bootstrap/lib/Button';
 
-import { addComponent, selectComponent } from '../actions/actions.js';
+import { addComponent, selectComponent } from 'actions/actions.js';
 
 class Component extends React.Component {
 

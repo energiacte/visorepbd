@@ -1,5 +1,5 @@
 import { createStore} from 'redux';
-import reducer from '../reducers/reducers.js';
+import reducer from 'reducers/reducers.js';
 
 const initialState = {
   selectedkey: 0,

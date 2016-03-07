@@ -10,15 +10,15 @@ const CleanPlugin = require('clean-webpack-plugin');
 var production = process.env.NODE_ENV === 'production';
 
 const PATHS = {
-  app: path.join(__dirname, 'app'),
-  build: path.join(__dirname, 'build'),
-  bower: path.join(__dirname, 'bower_components'),
-  node: path.join(__dirname, 'node_modules'),
-  styles: path.join(__dirname, 'app', 'css'),
-  components: path.join(__dirname, 'app', 'components'),
-  actions: path.join(__dirname, 'app', 'actions'),
-  reducers: path.join(__dirname, 'app', 'reducers'),
-  store: path.join(__dirname, 'app', 'store')
+  app: path.resolve(path.join(__dirname, 'app')),
+  build: path.resolve(path.join(__dirname, 'build')),
+  bower: path.resolve(path.join(__dirname, 'bower_components')),
+  node: path.resolve(path.join(__dirname, 'node_modules')),
+  styles: path.resolve(path.join(__dirname, 'app', 'css')),
+  components: path.resolve(path.join(__dirname, 'app', 'components')),
+  actions: path.resolve(path.join(__dirname, 'app', 'actions')),
+  reducers: path.resolve(path.join(__dirname, 'app', 'reducers')),
+  store: path.resolve(path.join(__dirname, 'app', 'store'))
 };
 
 var plugins = [
@@ -114,7 +114,7 @@ var config = {
     alias: { // Para usar alias en imports
       'styles': PATHS.styles,
       'components': PATHS.components,
-      'actions': PATHS.resolver,
+      'actions': PATHS.actions,
       'reducers': PATHS.reducers,
       'store': PATHS.store
     }

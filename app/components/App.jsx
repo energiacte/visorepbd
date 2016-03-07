@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
+
 import PageHeader from 'react-bootstrap/lib/PageHeader';
+
 import Navigation from 'components/Navigation.jsx';
 import { ComponentList, ComponentEdit } from 'components/ComponentList';
 
