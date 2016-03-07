@@ -29,7 +29,22 @@ class Component extends React.Component {
    values: PropTypes.array.isRequired,
    } */
 
-export default class ComponentList extends React.Component {
+
+export class ComponentEdit extends React.Component {
+
+  render() {
+    const selectedkey = this.props.state.selectedkey;
+
+    console.log("Componente seleccionado: ", selectedkey);
+    {/* <input type="range" min="0" max="100" step="1" data-buffer="60" /><p>prueba</p> */}
+
+    return (
+      <p>Componente seleccionado: { selectedkey }</p>
+    );
+  }
+}
+
+export class ComponentList extends React.Component {
 
   constructor(props) {
     super(props);
@@ -45,7 +60,6 @@ export default class ComponentList extends React.Component {
 
     return (
       <Panel header="Energía suministrada o producida en el edificio">
-        {/* <input type="range" min="0" max="100" step="1" data-buffer="60" /><p>prueba</p> */}
         <ButtonGroup>
           <Button onClick={this.addComponent}>+</Button>
           <Button>Middle</Button>
