@@ -37,7 +37,7 @@ export default class ComponentList extends React.Component {
     this.state = this.props.state;
     // bind this to methods (could instead use () => {})
     this.addComponent = this.addComponent.bind(this);
-    this.selectComponent = this.selectComponent.bind(this);
+    this.onComponentClick = this.onComponentClick.bind(this);
   }
 
   render() {
