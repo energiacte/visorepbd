@@ -14,8 +14,8 @@ export default class App extends React.Component {
         <div className="container">
           <PageHeader>CTE DB-HE, aplicación de ISO 52000-1</PageHeader>
           <p className="lead">Energía suministrada y producida:</p>
-          <ComponentList />
           <ComponentEdit />
+          <ComponentList />
         </div>
       </div>
     );
