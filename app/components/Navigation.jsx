@@ -11,19 +11,19 @@ class Navigation extends React.Component {
   static contextTypes = {
     store: React.PropTypes.object
   }
-  
+
   render() {
     return (
       <Navbar inverse fixedTop>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="/">{this.props.projectName}</a>
+            <a href="/#/">{this.props.projectName}</a>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <NavItem className="active" eventKey={1} href="/">Inicio</NavItem>
+            <NavItem className="active" eventKey={1} href="/#/">Inicio</NavItem>
             <NavItem eventKey={2} href="/#/about">Créditos</NavItem>
             {/*
             <DropdownButton eventKey={3} title="Dropdown" id="dropdown-basic-1">
