@@ -9,27 +9,17 @@ import { addComponent, selectComponent } from 'actions/actions.js';
 
 class Component extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.onClick = this.onClick.bind(this);
+  static propTypes = {
+    type: PropTypes.string.isRequired,
+    originoruse: PropTypes.string.isRequired,
+    vector: PropTypes.string.isRequired,
+    values: React.PropTypes.arrayOf(React.PropTypes.number).isRequired
   }
-
-  static contextTypes = {
-    store: React.PropTypes.object
-  }
-
-  /*
-     static propTypes = {
-     type: PropTypes.string.isRequired,
-     originoruse: PropTypes.string.isRequired,
-     vector: PropTypes.string.isRequired,
-     values: PropTypes.array.isRequired,
-     } */
 
   render() {
     const { selectedkey, id, type, originoruse, vector, values } = this.props;
     return (
-      <tr onClick={this.onClick}
+      <tr onClick={this.onClick.bind(this)}
           className={selectedkey === id | false ? 'bg-info' : ''}>
         <td>{type}</td>
         <td>{originoruse}</td>
@@ -58,8 +48,6 @@ export class ComponentEdit extends React.Component {
 
   render() {
     const { selectedkey } = this.props;
-
-    console.log("Componente seleccionado: ", selectedkey);
     // <input type="range" min="0" max="100" step="1" data-buffer="60" /><p>prueba</p>
 
     return (
@@ -72,10 +60,6 @@ ComponentEdit = connect(state => { return { selectedkey: state.selectedkey } })(
 
 
 export class ComponentList extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     const { components } = this.props;
@@ -92,7 +76,7 @@ export class ComponentList extends React.Component {
     return (
       <Panel header="Energía suministrada o producida en el edificio">
         <ButtonGroup>
-          <Button onClick={this.handleAdd.bind(this)}>+</Button>
+          <Button onClick={this.handleAdd}>+</Button>
           <Button>Middle</Button>
           <Button>Right</Button>
         </ButtonGroup>
@@ -105,7 +89,7 @@ export class ComponentList extends React.Component {
     );
   }
 
-  handleAdd() {
+  handleAdd(event) {
     this.props.dispatch(addComponent({type: 'Suministro',
                                       originoruse: 'EPB',
                                       vector: 'ELECTRICIDAD',

@@ -1,15 +1,13 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 
 import Navigation from 'components/Navigation.jsx';
 import { ComponentList, ComponentEdit } from 'components/ComponentList';
 
-class App extends React.Component {
-  render() {
-    const { store } = this.context;
-    const state = store.getState();
+export default class App extends React.Component {
 
+  render() {
     return (
       <div>
         <Navigation projectName="DB-HE NZEB" />
@@ -23,7 +21,3 @@ class App extends React.Component {
     );
   }
 }
-
-App.contextTypes = { store: React.PropTypes.object };
-
-export default App;
