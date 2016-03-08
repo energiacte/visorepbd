@@ -3,8 +3,6 @@ import React from 'react';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
-//import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-//import MenuItem from 'react-bootstrap/lib/MenuItem';
 
 class Navigation extends React.Component {
 
@@ -25,15 +23,6 @@ class Navigation extends React.Component {
           <Nav>
             <NavItem className="active" eventKey={1} href="/#/">Inicio</NavItem>
             <NavItem eventKey={2} href="/#/about">Créditos</NavItem>
-            {/*
-            <DropdownButton eventKey={3} title="Dropdown" id="dropdown-basic-1">
-              <MenuItem eventKey={3.1}>Action</MenuItem>
-              <MenuItem eventKey={3.2}>Another action</MenuItem>
-              <MenuItem eventKey={3.3}>Something else here</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey={3.3}>Separated link</MenuItem>
-            </DropdownButton>
-            */}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
