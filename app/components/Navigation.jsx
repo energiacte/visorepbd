@@ -3,8 +3,8 @@ import React from 'react';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
+//import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+//import MenuItem from 'react-bootstrap/lib/MenuItem';
 
 class Navigation extends React.Component {
 

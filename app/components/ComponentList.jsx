@@ -76,7 +76,7 @@ export class ComponentList extends React.Component {
     return (
       <Panel header="Energía suministrada o producida en el edificio">
         <ButtonGroup>
-          <Button onClick={this.handleAdd}>+</Button>
+          <Button onClick={this.handleAdd.bind(this)}>+</Button>
           <Button>Middle</Button>
           <Button>Right</Button>
         </ButtonGroup>
