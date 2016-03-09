@@ -44,11 +44,32 @@ Component = connect (
 export class ComponentEditor extends React.Component {
 
   render() {
-    // <input type="range" min="0" max="100" step="1" data-buffer="60" /><p>prueba</p>
     const { selectedkey, components } = this.props;
     const { type, originoruse, vector, values } = components[selectedkey];
+
     return (
       <div>
+        <div id="kexp">
+          <span>k<sub>exp</sub> </span>
+          <input id="kexprange"
+                 type="range"
+                 min="0" max="1" step="0.1"
+                 defaultValue="1.0"
+                 onChange={() => $('#kexptextbox').val(parseFloat(Math.round($('#kexprange').val() * 10) / 10).toFixed(1)) } />
+          <span>  </span>
+          <input id="kexptextbox" type="text" readOnly pattern="/\d\.\d/" maxLength="3" size="3" placeholder="1.0" />
+        </div>
+        <div id="krdel">
+          <span>k<sub>rdel</sub> </span>
+          <input id="krdelrange"
+                 type="range"
+                 min="0" max="1" step="0.1"
+                 defaultValue="1.0"
+                 onChange={() => $('#krdeltextbox').val(parseFloat(Math.round($('#krdelrange').val() * 10) / 10).toFixed(1)) } />
+          <span>  </span>
+          <input id="krdeltextbox" type="text" readOnly pattern="/\d\.\d/" maxLength="3" size="3" placeholder="1.0" />
+        </div>
+
         <table id="editor" className="table-striped table-bordered table-condensed">
           <tbody>
             <tr>
@@ -98,7 +119,7 @@ export class ComponentList extends React.Component {
     );
 
     return (
-      <table id="components" className="table-striped table-bordered table-condensed">
+      <table id="components" className="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
             <td>#</td>
@@ -109,7 +130,9 @@ export class ComponentList extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {componentlist}
+          {components.map( (component, i) =>
+            <Component key={i} id={i} {...component} />
+           )}
         </tbody>
       </table>
     );

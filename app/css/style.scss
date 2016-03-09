@@ -6,5 +6,13 @@ html {
         #components {
            .bg-info {background-color: #b7caff; cursor: pointer;}
            }
+        #kexp, #krdel {
+               span {font-weight: bold;};
+               input[type=range] {
+                                 width: 200px;
+                                 display: inline;
+                                 vertical-align: middle;
+                                 }
+        }
     }
 }
