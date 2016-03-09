@@ -3,29 +3,31 @@ import reducer from 'reducers/reducers.js';
 
 const initialState = {
   selectedkey: 0,
+  kexp: 1.0,
+  krdel: 1.0,
   components: [
     {
       type: 'Suministro',
       originoruse: 'EPB',
-      vector: 'ELECTRICIDAD',
+      carrier: 'ELECTRICIDAD',
       values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     },
     {
       type: 'Suministro',
       originoruse: 'NEPB',
-      vector: 'ELECTRICIDAD',
+      carrier: 'ELECTRICIDAD',
       values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     },
     {
       type: 'Producción',
       originoruse: 'INSITU',
-      vector: 'MEDIOAMBIENTE',
+      carrier: 'MEDIOAMBIENTE',
       values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     },
     {
       type: 'Producción',
       originoruse: 'COGENERACION',
-      vector: 'ELECTRICIDAD',
+      carrier: 'ELECTRICIDAD',
       values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     }
   ]

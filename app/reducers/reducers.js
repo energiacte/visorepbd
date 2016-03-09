@@ -1,10 +1,31 @@
 import { combineReducers } from 'redux';
-import { SELECT_COMPONENT, ADD_COMPONENT } from '../actions/actions.js';
+import { SELECT_COMPONENT,
+         ADD_COMPONENT,
+         CHANGE_KEXP,
+         CHANGE_KRDEL} from '../actions/actions.js';
 
 function selectedkey(state = null, action) {
   switch (action.type) {
   case SELECT_COMPONENT:
     return (action.id);
+  default:
+    return state;
+  }
+}
+
+function kexp(state = [], action) {
+  switch (action.type) {
+  case CHANGE_KEXP:
+    return action.value;
+  default:
+    return state;
+  }
+}
+
+function krdel(state = [], action) {
+  switch (action.type) {
+  case CHANGE_KRDEL:
+    return action.value;
   default:
     return state;
   }
@@ -21,5 +42,7 @@ function components(state = [], action) {
 
 export default combineReducers({
   selectedkey,
+  kexp,
+  krdel,
   components
 });
