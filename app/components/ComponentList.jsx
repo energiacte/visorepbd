@@ -99,9 +99,20 @@ export class ComponentEditor extends React.Component {
             </tr>
           </tbody>
         </table>
-        <div className="btn-group">
-          <button className="btn btn-default" type="button" onClick={this.handleAdd.bind(this)}>+</button>
-          <button className="btn btn-default" type="button">-</button>
+
+        <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
+          <button className="btn" id="add" onClick={this.handleAdd.bind(this)}>
+            <span className="glyphicon glyphicon-plus"></span> Añadir
+          </button>
+          <button className="btn" id="remove">
+            <span className="glyphicon glyphicon-minus"></span> Borrar
+          </button>
+          <button className="btn" id="modify">
+            <span className="glyphicon glyphicon-refresh"></span> Modificar
+          </button>
+          <button className="btn" id="clean">
+            <span className="glyphicon glyphicon-trash"></span> Limpiar
+          </button>
         </div>
       </div>
     );
