@@ -21,6 +21,7 @@ class Component extends React.Component {
     return (
       <tr onClick={this.onClick.bind(this)}
           className={selectedkey === id | false ? 'bg-info' : ''}>
+        <td>{id}</td>
         <td>{type}</td>
         <td>{originoruse}</td>
         <td>{vector}</td>
@@ -44,19 +45,40 @@ Component = connect (
 )(Component);
 
 
-export class ComponentEdit extends React.Component {
+export class ComponentEditor extends React.Component {
 
   render() {
-    const { selectedkey } = this.props;
     // <input type="range" min="0" max="100" step="1" data-buffer="60" /><p>prueba</p>
-
+    const { selectedkey, components } = this.props;
+    const { type, originoruse, vector, values } = components[selectedkey];
     return (
-      <p>Componente seleccionado: { selectedkey }</p>
+      <div>
+        <table id="editor" className="table-striped table-bordered table-condensed">
+          <tbody>
+            <tr>
+              <td>{selectedkey}</td>
+              <td>{type}</td>
+              <td>{originoruse}</td>
+              <td>{vector}</td>
+              <td>{values}</td>
+            </tr>
+          </tbody>
+        </table>
+        <ButtonGroup>
+          <Button>+</Button>
+          <Button>-</Button>
+        </ButtonGroup>
+      </div>
     );
   }
 }
 
-ComponentEdit = connect(state => { return { selectedkey: state.selectedkey } })(ComponentEdit);
+ComponentEditor = connect(state => {
+  return {
+    selectedkey: state.selectedkey,
+    components: state.components
+  }
+})(ComponentEditor);
 
 
 export class ComponentList extends React.Component {
@@ -66,26 +88,33 @@ export class ComponentList extends React.Component {
 
     const componentlist = components.map(
       (component, i) => {
-        return (<Component
-                    key={i}
-                    id={i}
-                    {...component} />)
+        return (<Component key={i} id={i} {...component} />)
       }
     );
 
     return (
-      <Panel header="Energía suministrada o producida en el edificio">
+      <div>
+
         <ButtonGroup>
           <Button onClick={this.handleAdd.bind(this)}>+</Button>
-          <Button>Middle</Button>
-          <Button>Right</Button>
+          <Button>-</Button>
         </ButtonGroup>
+
         <table id="components" className="table-striped table-bordered table-condensed">
+          <thead>
+            <tr>
+              <td>#</td>
+              <td>Tipo</td>
+              <td>Origen/Uso</td>
+              <td>Vector energético</td>
+              <td>Valores</td>
+            </tr>
+          </thead>
           <tbody>
             {componentlist}
           </tbody>
         </table>
-      </Panel>
+      </div>
     );
   }
 
