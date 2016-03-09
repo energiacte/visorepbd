@@ -1,26 +1,37 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { addComponent, selectComponent } from 'actions/actions.js';
+import { addComponent,
+         selectComponent,
+         changeKexp,
+         changeKrdel } from 'actions/actions.js';
+
+function valuestostring(values) {
+  // convert list of values to comma separated list of values
+  // with 2 digit precision
+  return values.map(
+    val => (Math.round(val * 100) / 100).toFixed(2)
+  ).join(',');
+}
 
 class Component extends React.Component {
-
+  // Component modelling the and energy component (values + carrier + use)
   static propTypes = {
     type: PropTypes.string.isRequired,
     originoruse: PropTypes.string.isRequired,
-    vector: PropTypes.string.isRequired,
+    carrier: PropTypes.string.isRequired,
     values: React.PropTypes.arrayOf(React.PropTypes.number).isRequired
   }
 
   render() {
-    const { selectedkey, id, type, originoruse, vector, values } = this.props;
+    const { selectedkey, id, type, originoruse, carrier, values } = this.props;
     return (
       <tr onClick={this.onClick.bind(this)}
           className={selectedkey === id | false ? 'bg-info' : ''}>
         <td>{id}</td>
         <td>{type}</td>
         <td>{originoruse}</td>
-        <td>{vector}</td>
+        <td>{carrier}</td>
         <td>{values}</td>
       </tr>
     );
@@ -45,7 +56,7 @@ export class ComponentEditor extends React.Component {
 
   render() {
     const { selectedkey, components } = this.props;
-    const { type, originoruse, vector, values } = components[selectedkey];
+    const { type, originoruse, carrier, values } = components[selectedkey];
 
     return (
       <div>
@@ -76,8 +87,8 @@ export class ComponentEditor extends React.Component {
               <td>{selectedkey}</td>
               <td>{type}</td>
               <td>{originoruse}</td>
-              <td>{vector}</td>
-              <td>{values}</td>
+              <td>{carrier}</td>
+              <td>{valuestostring(values)}</td>
             </tr>
           </tbody>
         </table>
@@ -92,7 +103,7 @@ export class ComponentEditor extends React.Component {
   handleAdd(event) {
     this.props.dispatch(addComponent({type: 'Suministro',
                                       originoruse: 'EPB',
-                                      vector: 'ELECTRICIDAD',
+                                      carrier: 'ELECTRICIDAD',
                                       values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     }));
   }
@@ -102,6 +113,8 @@ export class ComponentEditor extends React.Component {
 ComponentEditor = connect(state => {
   return {
     selectedkey: state.selectedkey,
+    kexp: state.kexp,
+    krdel: state.krdel,
     components: state.components
   }
 })(ComponentEditor);
