@@ -6,12 +6,21 @@ import { addComponent,
          changeKexp,
          changeKrdel } from 'actions/actions.js';
 
+
+function singledigitprec(number) {
+  // return number with one digit precision
+  return parseFloat(Math.round(number * 10) / 10).toFixed(1);
+}
+
+function doubledigitprec(number) {
+  // return number with two digit precision
+  return parseFloat(Math.round(number * 100) / 100).toFixed(2);
+}
+
 function valuestostring(values) {
   // convert list of values to comma separated list of values
   // with 2 digit precision
-  return values.map(
-    val => (Math.round(val * 100) / 100).toFixed(2)
-  ).join(',');
+  return values.map(val => doubledigitprec(val)).join(',');
 }
 
 class Component extends React.Component {
@@ -48,37 +57,35 @@ Component = connect (
     return {
       selectedkey: state.selectedkey
     }
-  }//, // mapStateToProps /* dispatch => { return { onClick: (id) => {dispatch(selectComponent(id))} } } */
+  }//, dispatch => { return { onClick: (id) => {dispatch(selectComponent(id))} } }
 )(Component);
 
 
 export class ComponentEditor extends React.Component {
 
   render() {
-    const { selectedkey, components } = this.props;
+    const { selectedkey, kexp, krdel, components, dispatch } = this.props;
     const { type, originoruse, carrier, values } = components[selectedkey];
 
     return (
       <div>
         <div id="kexp">
           <span>k<sub>exp</sub> </span>
-          <input id="kexprange"
-                 type="range"
-                 min="0" max="1" step="0.1"
-                 defaultValue="1.0"
-                 onChange={() => $('#kexptextbox').val(parseFloat(Math.round($('#kexprange').val() * 10) / 10).toFixed(1)) } />
+          <input type="range" min="0" max="1" step="0.1"
+                 defaultValue={kexp}
+                 onChange={ (ev) => dispatch(changeKexp(ev.target.value)) } />
           <span>  </span>
-          <input id="kexptextbox" type="text" readOnly pattern="/\d\.\d/" maxLength="3" size="3" placeholder="1.0" />
+          <input type="text" readOnly maxLength="3" size="3"
+                 value={singledigitprec(kexp)} />
         </div>
         <div id="krdel">
           <span>k<sub>rdel</sub> </span>
-          <input id="krdelrange"
-                 type="range"
-                 min="0" max="1" step="0.1"
-                 defaultValue="1.0"
-                 onChange={() => $('#krdeltextbox').val(parseFloat(Math.round($('#krdelrange').val() * 10) / 10).toFixed(1)) } />
+          <input type="range" min="0" max="1" step="0.1"
+                 defaultValue={krdel}
+                 onChange={ (ev) => dispatch(changeKrdel(ev.target.value)) } />
           <span>  </span>
-          <input id="krdeltextbox" type="text" readOnly pattern="/\d\.\d/" maxLength="3" size="3" placeholder="1.0" />
+          <input type="text" readOnly maxLength="3" size="3"
+                 value={singledigitprec(krdel)} />
         </div>
 
         <table id="editor" className="table-striped table-bordered table-condensed">
