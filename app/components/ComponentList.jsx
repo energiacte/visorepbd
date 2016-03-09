@@ -1,10 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import Panel from 'react-bootstrap/lib/Panel';
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
-import Button from 'react-bootstrap/lib/Button';
-
 import { addComponent, selectComponent } from 'actions/actions.js';
 
 class Component extends React.Component {
@@ -64,13 +60,22 @@ export class ComponentEditor extends React.Component {
             </tr>
           </tbody>
         </table>
-        <ButtonGroup>
-          <Button>+</Button>
-          <Button>-</Button>
-        </ButtonGroup>
+        <div className="btn-group">
+          <button className="btn btn-default" type="button" onClick={this.handleAdd.bind(this)}>+</button>
+          <button className="btn btn-default" type="button">-</button>
+        </div>
       </div>
     );
   }
+
+  handleAdd(event) {
+    this.props.dispatch(addComponent({type: 'Suministro',
+                                      originoruse: 'EPB',
+                                      vector: 'ELECTRICIDAD',
+                                      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    }));
+  }
+
 }
 
 ComponentEditor = connect(state => {
@@ -93,37 +98,21 @@ export class ComponentList extends React.Component {
     );
 
     return (
-      <div>
-
-        <ButtonGroup>
-          <Button onClick={this.handleAdd.bind(this)}>+</Button>
-          <Button>-</Button>
-        </ButtonGroup>
-
-        <table id="components" className="table-striped table-bordered table-condensed">
-          <thead>
-            <tr>
-              <td>#</td>
-              <td>Tipo</td>
-              <td>Origen/Uso</td>
-              <td>Vector energético</td>
-              <td>Valores</td>
-            </tr>
-          </thead>
-          <tbody>
-            {componentlist}
-          </tbody>
-        </table>
-      </div>
+      <table id="components" className="table-striped table-bordered table-condensed">
+        <thead>
+          <tr>
+            <td>#</td>
+            <td>Tipo</td>
+            <td>Origen/Uso</td>
+            <td>Vector energético</td>
+            <td>Valores</td>
+          </tr>
+        </thead>
+        <tbody>
+          {componentlist}
+        </tbody>
+      </table>
     );
-  }
-
-  handleAdd(event) {
-    this.props.dispatch(addComponent({type: 'Suministro',
-                                      originoruse: 'EPB',
-                                      vector: 'ELECTRICIDAD',
-                                      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    }));
   }
 
 }

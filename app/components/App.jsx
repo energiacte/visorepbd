@@ -1,8 +1,5 @@
 import React from 'react';
 
-import PageHeader from 'react-bootstrap/lib/PageHeader';
-import Panel from 'react-bootstrap/lib/Panel';
-
 import Navigation from 'components/Navigation.jsx';
 import { ComponentList, ComponentEditor } from 'components/ComponentList';
 
@@ -13,23 +10,30 @@ export default class App extends React.Component {
       <div>
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
-          <PageHeader>CTE DB-HE, aplicación de ISO 52000-1</PageHeader>
+          <div className="page-header">
+            <h1>CTE DB-HE, aplicación de ISO 52000-1</h1>
+          </div>
           <p className="lead">Energía suministrada y producida:</p>
 
-          <Panel bsStyle="primary"
-                 header="Energía suministrada o producida en el edificio">
+          <div className="panel panel-primary">
+            <div className="panel-heading">
+              Energía suministrada o producida en el edificio
+            </div>
+            <div className="panel-body">
+              <div id="results">
+                Resultados
+              </div>
 
-            <div id="results">
-              Resultados
+              <div className="panel panel-default">
+                <div className="panel-heading">Entrada de datos</div>
+                <div className="panel-body bg-info">
+                  <ComponentEditor />
+                </div>
+                <ComponentList />
+              </div>
             </div>
 
-            <Panel header="Entrada de datos">
-              <ComponentEditor />
-              <ComponentList />
-            </Panel>
-
-          </Panel>
-
+          </div>
         </div>
       </div>
     );

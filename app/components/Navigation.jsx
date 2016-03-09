@@ -1,9 +1,5 @@
 import React from 'react';
 
-import Navbar from 'react-bootstrap/lib/Navbar';
-import Nav from 'react-bootstrap/lib/Nav';
-import NavItem from 'react-bootstrap/lib/NavItem';
-
 class Navigation extends React.Component {
 
   static contextTypes = {
@@ -12,20 +8,21 @@ class Navigation extends React.Component {
 
   render() {
     return (
-      <Navbar inverse fixedTop>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <a href="/#/">{this.props.projectName}</a>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav>
-            <NavItem className="active" eventKey={1} href="/#/">Inicio</NavItem>
-            <NavItem eventKey={2} href="/#/about">Créditos</NavItem>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <nav className="navbar navbar-inverse navbar-fixed-top">
+        <div className="container">
+          <div className="navbar-header">
+            <a className="navbar-brand" href="/#/">{this.props.projectName}</a>
+            <button className="navbar-toggle" type="button" />
+          </div>
+          <div className="navbar-collapse collapse">
+            <ul className="nav navbar-nav">
+              <li className="active" role="presentation">
+                <a href="/#/">Inicio</a></li>
+              <li role="presentation"><a href="/#/about">Créditos</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     );
   }
 }
