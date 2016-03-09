@@ -25,7 +25,7 @@ var plugins = [
   new webpack.HotModuleReplacementPlugin(),
   new ExtractTextPlugin('bundle.css', {allChunks: true}),
   new HtmlWebpackPlugin({
-    title: "Pruebas para implementación de la ISO 52000-1 en CTE DB-HE",
+    title: "DB-HE NZEB: implementación de la ISO 52000-1 en el CTE DB-HE",
     //favicon: 'favicon.ico',
     filename: 'index.html'
   }),
