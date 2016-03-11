@@ -144,9 +144,7 @@ export class ComponentList extends React.Component {
     const { components } = this.props;
 
     const componentlist = components.map(
-      (component, i) => {
-        return (<Component key={i} id={i} {...component} />)
-      }
+      (component, i) => {return (<Component key={i} id={i} {...component} />)}
     );
 
     return (
