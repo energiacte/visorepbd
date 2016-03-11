@@ -7,3 +7,5 @@ install:
 analyze:
 	webpack --json > stats.json
 	webpack-bundle-size-analyzer stats.json
+deploy:
+	npm run buildprod
