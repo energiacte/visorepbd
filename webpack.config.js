@@ -83,7 +83,7 @@ if (production) {
 var config = {
   debug: !production,
   cache: true,
-  devtool: production ? false : 'cheap-module-source-map',
+  devtool: production ? 'source-map' : 'cheap-module-source-map',
   entry: {
     app: [PATHS.app, 'bootstrap-loader']
   },
