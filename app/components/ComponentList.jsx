@@ -153,11 +153,11 @@ export class ComponentList extends React.Component {
       <table id="components" className="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
-            <td>#</td>
-            <td>Tipo</td>
-            <td>Origen/Uso</td>
-            <td>Vector energético</td>
-            <td>Valores</td>
+            <th>#</th>
+            <th>Tipo</th>
+            <th>Origen/Uso</th>
+            <th>Vector energético</th>
+            <th>Valores</th>
           </tr>
         </thead>
         <tbody>
