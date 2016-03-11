@@ -101,7 +101,7 @@ var config = {
   },
   output: {
     path: PATHS.build,
-    filename: '[name].js'
+    filename: '[name]-[hash].js'
     //publicPath: '/build/' // This is used to generate URLs to e.g. images
   },
   resolve: { // you can now import 'file' instead of import 'file.json'
