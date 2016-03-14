@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf build/",
-    "buildprod": "webpack --progress --colors -p",
+    "buildprod": "NODE_ENV=production webpack --progress --colors -p",
     "builddev": "webpack --progress --colors --watch --devtool eval-source-map",
     "webpack-server": "webpack-dev-server --hot --inline --colors",
     "web-server": "http-server -p 3000 ./build",
