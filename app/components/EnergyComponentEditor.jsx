@@ -23,11 +23,10 @@ function valuestostring(values) {
   return values.map(val => doubledigitprec(val)).join(',');
 }
 
-class EnergyComponentEditor extends React.Component {
+class GlobalVarsControl extends React.Component {
 
   render() {
-    const { selectedkey, kexp, krdel, components, dispatch } = this.props;
-    const { type, originoruse, carrier, values } = components[selectedkey];
+    const { kexp, krdel, dispatch } = this.props;
 
     return (
       <div>
@@ -49,33 +48,38 @@ class EnergyComponentEditor extends React.Component {
           <input type="text" readOnly maxLength="3" size="3"
                  value={singledigitprec(krdel)} />
         </div>
+      </div>
+    );
+  }
+}
 
-        <table id="editor" className="table-striped table-bordered table-condensed">
-          <tbody>
-            <tr>
-              <td>{selectedkey}</td>
-              <td>{type}</td>
-              <td>{originoruse}</td>
-              <td>{carrier}</td>
-              <td>{valuestostring(values)}</td>
-            </tr>
-          </tbody>
-        </table>
+GlobalVarsControl = connect(state => {
+  return {
+    kexp: state.kexp,
+    krdel: state.krdel
+  }
+})(GlobalVarsControl);
 
-        <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
-          <button className="btn" id="add" onClick={this.handleAdd.bind(this)}>
-            <span className="glyphicon glyphicon-plus"></span> Añadir
-          </button>
-          <button className="btn" id="remove">
-            <span className="glyphicon glyphicon-minus"></span> Borrar
-          </button>
-          <button className="btn" id="modify">
-            <span className="glyphicon glyphicon-refresh"></span> Modificar
-          </button>
-          <button className="btn" id="clean">
-            <span className="glyphicon glyphicon-trash"></span> Limpiar
-          </button>
-        </div>
+
+class ActionsPanel extends React.Component {
+
+  render() {
+    const { selectedkey, dispatch } = this.props;
+
+    return (
+      <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
+        <button className="btn" id="add" onClick={this.handleAdd.bind(this)}>
+          <span className="glyphicon glyphicon-plus"></span> Añadir
+        </button>
+        <button className="btn" id="remove">
+          <span className="glyphicon glyphicon-minus"></span> Borrar
+        </button>
+        <button className="btn" id="modify">
+          <span className="glyphicon glyphicon-refresh"></span> Modificar
+        </button>
+        <button className="btn" id="clean">
+          <span className="glyphicon glyphicon-trash"></span> Limpiar
+        </button>
       </div>
     );
   }
@@ -90,11 +94,44 @@ class EnergyComponentEditor extends React.Component {
 
 }
 
+ActionsPanel = connect(state => {
+  return {
+    selectedkey: state.selectedkey
+  }
+})(ActionsPanel);
+
+
+
+class EnergyComponentEditor extends React.Component {
+
+  render() {
+    const { selectedkey, components } = this.props;
+    const { type, originoruse, carrier, values } = components[selectedkey];
+
+    return (
+      <div>
+        <GlobalVarsControl />
+        <table id="editor" className="table-striped table-bordered table-condensed">
+          <tbody>
+            <tr>
+              <td>{selectedkey}</td>
+              <td>{type}</td>
+              <td>{originoruse}</td>
+              <td>{carrier}</td>
+              <td>{valuestostring(values)}</td>
+            </tr>
+          </tbody>
+        </table>
+        <ActionsPanel />
+      </div>
+    );
+  }
+
+}
+
 export default EnergyComponentEditor = connect(state => {
   return {
     selectedkey: state.selectedkey,
-    kexp: state.kexp,
-    krdel: state.krdel,
     components: state.components
   }
 })(EnergyComponentEditor);
