@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Navigation from 'components/Navigation.jsx';
-import { EnergyComponentList, EnergyComponentEditor } from 'components/EnergyComponentList';
+import EnergyComponentList from 'components/EnergyComponentList';
+import EnergyComponentEditor from 'components/EnergyComponentEditor';
 
 export default class App extends React.Component {
 
