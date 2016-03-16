@@ -15,6 +15,7 @@ class EnergyComponentList extends React.Component {
             <th>Tipo</th>
             <th>Origen/Uso</th>
             <th>Vector energético</th>
+            <th>kWh/año</th>
             <th>Valores</th>
           </tr>
         </thead>
@@ -30,6 +31,7 @@ class EnergyComponentList extends React.Component {
                    <td>{type}</td>
                    <td>{originoruse}</td>
                    <td>{carrier}</td>
+                   <td>{_.sum(values)}</td>
                    <td>{values}</td>
                  </tr>
                );
