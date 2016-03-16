@@ -59,6 +59,17 @@ function components(state = [], action) {
   }
 }
 
+// Para comportamiento más sofisticado habría que evitar el combineReducers y hacer algo así, pasando el state general y no solo una parte
+// const reducer = (state = {}, action) => {
+//   return {
+//     selectedkey: selectedkey(state.selectedkey, action),
+//     kexp: kexp(state.kexp, action),
+//     krdel: krdel(state.krdel, action),
+//     components: components(state.components, action)
+//   };
+// };
+// export default reducer;
+
 export default combineReducers({
   selectedkey,
   kexp,
