@@ -13,7 +13,7 @@ function selectedkey(state = null, action) {
   }
 }
 
-function kexp(state = [], action) {
+function kexp(state = 1, action) {
   switch (action.type) {
   case CHANGE_KEXP:
     return action.value;
@@ -22,7 +22,7 @@ function kexp(state = [], action) {
   }
 }
 
-function krdel(state = [], action) {
+function krdel(state = 1, action) {
   switch (action.type) {
   case CHANGE_KRDEL:
     return action.value;
