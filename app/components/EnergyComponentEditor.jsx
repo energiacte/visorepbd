@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { addEnergyComponent,
-         selectEnergyComponent,
+import { selectEnergyComponent,
+         addEnergyComponent,
+         removeEnergyComponent,
+         editEnergyComponent,
          changeKexp,
          changeKrdel } from 'actions/actions.js';
 
@@ -71,14 +73,11 @@ class ActionsPanel extends React.Component {
         <button className="btn" id="add" onClick={this.handleAdd.bind(this)}>
           <span className="glyphicon glyphicon-plus"></span> Añadir
         </button>
-        <button className="btn" id="remove">
+        <button className="btn" id="remove" onClick={this.handleRemove.bind(this, selectedkey)}>
           <span className="glyphicon glyphicon-minus"></span> Borrar
         </button>
-        <button className="btn" id="modify">
-          <span className="glyphicon glyphicon-refresh"></span> Modificar
-        </button>
-        <button className="btn" id="clean">
-          <span className="glyphicon glyphicon-trash"></span> Limpiar
+        <button className="btn" id="modify" onClick={this.handleEdit.bind(this, selectedkey, {})}>
+          <span className="glyphicon glyphicon-edit"></span> Modificar
         </button>
       </div>
     );
@@ -86,6 +85,19 @@ class ActionsPanel extends React.Component {
 
   handleAdd(event) {
     this.props.dispatch(addEnergyComponent({type: 'Suministro',
+                                            originoruse: 'EPB',
+                                            carrier: 'ELECTRICIDAD',
+                                            values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    }));
+  }
+
+  handleRemove(selectedkey, event) {
+    this.props.dispatch(removeEnergyComponent(selectedkey));
+  }
+
+  handleEdit(selectedkey, component, event) {
+    this.props.dispatch(editEnergyComponent(selectedkey,
+                                            {type: 'Suministro',
                                             originoruse: 'EPB',
                                             carrier: 'ELECTRICIDAD',
                                             values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
