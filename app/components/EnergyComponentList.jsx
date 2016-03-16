@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { addComponent,
-         selectComponent,
+import { addEnergyComponent,
+         selectEnergyComponent,
          changeKexp,
          changeKrdel } from 'actions/actions.js';
 
@@ -23,7 +23,7 @@ function valuestostring(values) {
   return values.map(val => doubledigitprec(val)).join(',');
 }
 
-class Component extends React.Component {
+class EnergyComponent extends React.Component {
   // Component modelling the and energy component (values + carrier + use)
   static propTypes = {
     type: PropTypes.string.isRequired,
@@ -47,21 +47,21 @@ class Component extends React.Component {
   }
 
   onClick() {
-    this.props.dispatch(selectComponent(this.props.id));
+    this.props.dispatch(selectEnergyComponent(this.props.id));
   }
 
 }
 
-Component = connect (
+EnergyComponent = connect (
   state => {
     return {
       selectedkey: state.selectedkey
     }
-  }//, dispatch => { return { onClick: (id) => {dispatch(selectComponent(id))} } }
-)(Component);
+  }//, dispatch => { return { onClick: (id) => {dispatch(selectEnergyComponent(id))} } }
+)(EnergyComponent);
 
 
-export class ComponentEditor extends React.Component {
+export class EnergyComponentEditor extends React.Component {
 
   render() {
     const { selectedkey, kexp, krdel, components, dispatch } = this.props;
@@ -119,7 +119,7 @@ export class ComponentEditor extends React.Component {
   }
 
   handleAdd(event) {
-    this.props.dispatch(addComponent({type: 'Suministro',
+    this.props.dispatch(addEnergyComponent({type: 'Suministro',
                                       originoruse: 'EPB',
                                       carrier: 'ELECTRICIDAD',
                                       values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -128,23 +128,23 @@ export class ComponentEditor extends React.Component {
 
 }
 
-ComponentEditor = connect(state => {
+EnergyComponentEditor = connect(state => {
   return {
     selectedkey: state.selectedkey,
     kexp: state.kexp,
     krdel: state.krdel,
     components: state.components
   }
-})(ComponentEditor);
+})(EnergyComponentEditor);
 
 
-export class ComponentList extends React.Component {
+export class EnergyComponentList extends React.Component {
 
   render() {
     const { components } = this.props;
 
     const componentlist = components.map(
-      (component, i) => {return (<Component key={i} id={i} {...component} />)}
+      (component, i) => {return (<EnergyComponent key={i} id={i} {...component} />)}
     );
 
     return (
@@ -160,13 +160,16 @@ export class ComponentList extends React.Component {
         </thead>
         <tbody>
           {components.map( (component, i) =>
-            <Component key={i} id={i} {...component} />
+            <EnergyComponent key={i} id={i} {...component} />
            )}
         </tbody>
       </table>
     );
   }
-
 }
 
-ComponentList = connect(state => { return { components: state.components } })(ComponentList);
+EnergyComponentList = connect(state => {
+  return {
+    components: state.components
+  }
+})(EnergyComponentList);

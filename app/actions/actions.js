@@ -2,8 +2,8 @@
  * action types
  */
 
-export const ADD_COMPONENT = 'ADD_COMPONENT';
-export const SELECT_COMPONENT = 'SELECT_COMPONENT';
+export const ADD_ENERGY_COMPONENT = 'ADD_ENERGY_COMPONENT';
+export const SELECT_ENERGY_COMPONENT = 'SELECT_ENERGY_COMPONENT';
 export const CHANGE_KEXP = 'CHANGE_KEXP';
 export const CHANGE_KRDEL = 'CHANGE_KRDEL';
 
@@ -11,12 +11,12 @@ export const CHANGE_KRDEL = 'CHANGE_KRDEL';
  * action creators
  */
 
-export function addComponent(component) {
-  return { type: ADD_COMPONENT, component };
+export function addEnergyComponent(component) {
+  return { type: ADD_ENERGY_COMPONENT, component };
 }
 
-export function selectComponent(id) {
-  return { type: SELECT_COMPONENT, id };
+export function selectEnergyComponent(id) {
+  return { type: SELECT_ENERGY_COMPONENT, id };
 }
 
 export function changeKexp(value) {

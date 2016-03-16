@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Navigation from 'components/Navigation.jsx';
-import { ComponentList, ComponentEditor } from 'components/ComponentList';
+import { EnergyComponentList, EnergyComponentEditor } from 'components/EnergyComponentList';
 
 export default class App extends React.Component {
 
@@ -23,9 +23,9 @@ export default class App extends React.Component {
             <div className="panel-body">
               <div className="panel panel-default">
                 <div className="panel-body bg-info">
-                  <ComponentEditor />
+                  <EnergyComponentEditor />
                 </div>
-                <ComponentList />
+                <EnergyComponentList />
               </div>
             </div>
 
