@@ -23,44 +23,6 @@ function valuestostring(values) {
   return values.map(val => doubledigitprec(val)).join(',');
 }
 
-class EnergyComponent extends React.Component {
-  // Component modelling the and energy component (values + carrier + use)
-  static propTypes = {
-    type: PropTypes.string.isRequired,
-    originoruse: PropTypes.string.isRequired,
-    carrier: PropTypes.string.isRequired,
-    values: React.PropTypes.arrayOf(React.PropTypes.number).isRequired
-  }
-
-  render() {
-    const { selectedkey, id, type, originoruse, carrier, values } = this.props;
-    return (
-      <tr onClick={this.onClick.bind(this)}
-          className={selectedkey === id | false ? 'bg-info' : ''}>
-        <td>{id}</td>
-        <td>{type}</td>
-        <td>{originoruse}</td>
-        <td>{carrier}</td>
-        <td>{values}</td>
-      </tr>
-    );
-  }
-
-  onClick() {
-    this.props.dispatch(selectEnergyComponent(this.props.id));
-  }
-
-}
-
-EnergyComponent = connect (
-  state => {
-    return {
-      selectedkey: state.selectedkey
-    }
-  }//, dispatch => { return { onClick: (id) => {dispatch(selectEnergyComponent(id))} } }
-)(EnergyComponent);
-
-
 export class EnergyComponentEditor extends React.Component {
 
   render() {
@@ -141,12 +103,7 @@ EnergyComponentEditor = connect(state => {
 export class EnergyComponentList extends React.Component {
 
   render() {
-    const { components } = this.props;
-
-    const componentlist = components.map(
-      (component, i) => {return (<EnergyComponent key={i} id={i} {...component} />)}
-    );
-
+    const { components, selectedkey } = this.props;
     return (
       <table id="components" className="table table-striped table-bordered table-condensed">
         <thead>
@@ -159,17 +116,36 @@ export class EnergyComponentList extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {components.map( (component, i) =>
-            <EnergyComponent key={i} id={i} {...component} />
+          {components.map(
+             (component, i) => {
+               const { type, originoruse, carrier, values } = component;
+               return (
+                 <tr key={i}
+                     className={selectedkey === i | false ? 'bg-info' : ''}
+                     onClick={this.onClick.bind(this, i)}>
+                   <td>{i}</td>
+                   <td>{type}</td>
+                   <td>{originoruse}</td>
+                   <td>{carrier}</td>
+                   <td>{values}</td>
+                 </tr>
+               );
+             }
            )}
         </tbody>
       </table>
     );
   }
+
+  onClick(i, event) {
+    this.props.dispatch(selectEnergyComponent(i));
+  }
+
 }
 
 EnergyComponentList = connect(state => {
   return {
+    selectedkey: state.selectedkey,
     components: state.components
   }
 })(EnergyComponentList);
