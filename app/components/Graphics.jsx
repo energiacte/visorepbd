@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 
 import 'd3';
 import dimple from 'dimple-js/dist/dimple.latest.js';
+
 
 export default class Graphics extends React.Component {
 
@@ -44,6 +46,43 @@ export default class Graphics extends React.Component {
     var styles = {width: this.props.width || "100%",
                   height: this.props.height || "200px"};
     return <div ref="chartbox" style={styles} />;
+  }
+
+}
+
+export class EnergyValuesGraphic extends React.Component {
+
+  componentDidMount () {
+    this.updateChart();
+  }
+
+  shouldComponentUpdate() {
+    this.updateChart();
+  }
+
+  updateChart(node) {
+    var data = this.props.values.map((value, i) => {
+      return {"Mes": i, "Value": value};
+    });
+
+    /* var node = this.refs.chartbox; */
+    var node = ReactDOM.findDOMNode(this);
+    const svg = dimple.newSvg(node, "100%", "100%");
+    const chart = new dimple.chart(svg, data)
+                            .setMargins("20px", "20px",
+                                        "20px", "20px");
+    chart.addCategoryAxis("x", "Mes");
+    chart.addMeasureAxis("y", "Value");
+    chart.addSeries("mySerie", dimple.plot.bar);
+    chart.draw();
+
+    return chart;
+  }
+
+  render() {
+    var styles = {width: this.props.width || "100%",
+                  height: this.props.height || "200px"};
+    return <div style={styles} />;
   }
 
 }
