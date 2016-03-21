@@ -116,7 +116,8 @@ var config = {
       'components': PATHS.components,
       'actions': PATHS.actions,
       'reducers': PATHS.reducers,
-      'store': PATHS.store
+      'store': PATHS.store,
+      'node': PATHS.node
     }
   },
   module: {
