@@ -7,28 +7,28 @@ const initialState = {
   krdel: 1.0,
   components: [ // Energy components array
     {
-      type: 'Suministro',
+      carrier: 'ELECTRICIDAD',
+      type: 'SUMINISTRO',
       originoruse: 'EPB',
-      carrier: 'ELECTRICIDAD',
-      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      values: [9.67,7.74,4.84,4.35,2.42,2.90,3.87,3.39,2.42,3.87,5.80,7.74]
     },
     {
-      type: 'Suministro',
+      carrier: 'ELECTRICIDAD',
+      type: 'SUMINISTRO',
       originoruse: 'NEPB',
-      carrier: 'ELECTRICIDAD',
-      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
-      type: 'Producción',
-      originoruse: 'INSITU',
       carrier: 'MEDIOAMBIENTE',
-      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      type: 'SUMINISTRO',
+      originoruse: 'EPB',
+      values: [21.48,17.18,10.74,9.66,5.37,6.44,8.59,7.52,5.37,8.59,12.89,17.18]
     },
     {
-      type: 'Producción',
+      carrier: 'MEDIOAMBIENTE',
+      type: 'PRODUCCION',
       originoruse: 'COGENERACION',
-      carrier: 'ELECTRICIDAD',
-      values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      values: [21.48,17.18,10.74,9.66,5.37,6.44,8.59,7.52,5.37,8.59,12.89,17.18]
     }
   ]
 

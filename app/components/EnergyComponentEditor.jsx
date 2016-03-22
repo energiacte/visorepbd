@@ -84,7 +84,7 @@ class ActionsPanel extends React.Component {
   }
 
   handleAdd(event) {
-    this.props.dispatch(addEnergyComponent({type: 'Suministro',
+    this.props.dispatch(addEnergyComponent({type: 'SUMINISTRO',
                                             originoruse: 'EPB',
                                             carrier: 'ELECTRICIDAD',
                                             values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -97,7 +97,7 @@ class ActionsPanel extends React.Component {
 
   handleEdit(selectedkey, component, event) {
     this.props.dispatch(editEnergyComponent(selectedkey,
-                                            {type: 'Suministro',
+                                            {type: 'SUMINISTRO',
                                             originoruse: 'EPB',
                                             carrier: 'ELECTRICIDAD',
                                             values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]

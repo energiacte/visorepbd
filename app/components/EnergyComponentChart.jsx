@@ -26,7 +26,7 @@ export default class EnergyComponentChart extends React.Component {
     this.yaxis.overrideMax = this.props.maxvalue;
     chart.addSeries(null,dimple.plot.bar).barGap = 0;
     chart.defaultColors = [
-      this.props.type === 'Suministro' ? new dimple.color("red") : new dimple.color("green")
+      this.props.type === 'SUMINISTRO' ? new dimple.color("red") : new dimple.color("green")
     ];
     chart.draw();
     this.chart = chart;
