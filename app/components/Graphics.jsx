@@ -50,38 +50,43 @@ export default class Graphics extends React.Component {
 
 }
 
-export class EnergyValuesGraphic extends React.Component {
+export class ComponentChart extends React.Component {
 
-  componentDidMount () {
-    this.updateChart();
+  chart = null
+  yaxis = null
+
+  state = {
+    data: this.props.values.map(
+      (value, i) => { return {"Mes": i, "Valor": value};}
+    )
   }
 
-  shouldComponentUpdate() {
-    this.updateChart();
-  }
-
-  updateChart(node) {
-    var data = this.props.values.map((value, i) => {
-      return {"Mes": i, "Value": value};
-    });
-
-    /* var node = this.refs.chartbox; */
-    var node = ReactDOM.findDOMNode(this);
+  componentDidMount() {
+    let node = ReactDOM.findDOMNode(this);
     const svg = dimple.newSvg(node, "100%", "100%");
-    const chart = new dimple.chart(svg, data)
-                            .setMargins("20px", "20px",
-                                        "20px", "20px");
-    chart.addCategoryAxis("x", "Mes");
-    chart.addMeasureAxis("y", "Value");
-    chart.addSeries("mySerie", dimple.plot.bar);
+    const chart = new dimple.chart(svg, this.state.data).setMargins("1", "1", "1", "1");
+    const x = chart.addCategoryAxis("x", "Mes");
+    x.hidden = true;
+    this.yaxis = chart.addMeasureAxis("y", "Valor");
+    this.yaxis.hidden = true;
+    this.yaxis.overrideMax = this.props.maxvalue;
+    chart.addSeries(null,dimple.plot.bar).barGap = 0;
+    chart.defaultColors = [
+      this.props.type === 'Suministro' ? new dimple.color("red") : new dimple.color("green")
+    ];
     chart.draw();
+    this.chart = chart;
+  }
 
-    return chart;
+  componentDidUpdate() {
+    this.chart.data = this.state.data;
+    this.yaxis.overrideMax = this.props.maxvalue;
+    this.chart.draw();
   }
 
   render() {
-    var styles = {width: this.props.width || "100%",
-                  height: this.props.height || "200px"};
+    var styles = {width: "200px",
+                  height: "20px"};
     return <div style={styles} />;
   }
 

@@ -3,20 +3,26 @@ import { connect } from 'react-redux';
 
 import { selectEnergyComponent } from 'actions/actions.js';
 
-import Graphics, { EnergyValuesGraphic } from 'components/Graphics.jsx';
+import Graphics, { ComponentChart } from 'components/Graphics.jsx';
 
 class EnergyComponentList extends React.Component {
 
+  maxvalue() {
+    return _.max(
+      this.props.components.map(
+        (component) => { return _.max(component.values) }
+      )
+    );
+  }
+
   render() {
     const { components, selectedkey } = this.props;
+
     return (
       <table id="components" className="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Tipo</th>
-            <th>Origen/Uso</th>
-            <th>Vector energético</th>
+            <th>Tipo</th><th>Origen/Uso</th><th>Vector energético</th>
             <th>kWh/año</th>
             <th>Valores</th>
             <th>Valores</th>
@@ -30,17 +36,15 @@ class EnergyComponentList extends React.Component {
                  <tr key={i}
                      className={selectedkey === i | false ? 'bg-info' : ''}
                      onClick={this.onClick.bind(this, i)}>
-                   <td>{i}</td>
-                   <td>{type}</td>
-                   <td>{originoruse}</td>
-                   <td>{carrier}</td>
+                   <td>{type}</td><td>{originoruse}</td><td>{carrier}</td>
                    <td>{_.sum(values)}</td>
                    <td>{values}</td>
-                   <td><EnergyValuesGraphic width="300px" height="50px" values={values} /></td>
+                   <td><ComponentChart type={ type } values={ values } maxvalue={ this.maxvalue() } /></td>
                  </tr>
                );
              }
-           )}
+           )
+          }
         </tbody>
       </table>
     );
