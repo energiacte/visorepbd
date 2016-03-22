@@ -2,10 +2,11 @@ import { createStore } from 'redux';
 import reducer from 'reducers/reducers.js';
 
 const initialState = {
-  selectedkey: 0,
+  maxvalue: 1, // Maximum value in all component values
+  selectedkey: 0, // Currently selected component
   kexp: 1.0,
   krdel: 1.0,
-  components: [
+  components: [ // Energy components array
     {
       type: 'Suministro',
       originoruse: 'EPB',
