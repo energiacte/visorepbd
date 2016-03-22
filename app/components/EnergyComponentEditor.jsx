@@ -104,6 +104,10 @@ class EnergyComponentEditor extends React.Component {
     const { selectedkey, components } = this.props;
     const { type, originoruse, carrier, values } = components[selectedkey];
 
+    // Mostrar Chart con tooltips con los Valores
+    // Editor de Valores
+    // Desplegables para otros datos
+
     return (
       <div>
         <GlobalVarsControl />
