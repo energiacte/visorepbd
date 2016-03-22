@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { selectEnergyComponent } from 'actions/actions.js';
 
-import Graphics, { ComponentChart } from 'components/Graphics.jsx';
+import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 
 class EnergyComponentList extends React.Component {
 
@@ -39,7 +39,7 @@ class EnergyComponentList extends React.Component {
                    <td>{type}</td><td>{originoruse}</td><td>{carrier}</td>
                    <td>{_.sum(values)}</td>
                    <td>{values}</td>
-                   <td><ComponentChart type={ type } values={ values } maxvalue={ this.maxvalue() } /></td>
+                   <td><EnergyComponentChart type={ type } values={ values } maxvalue={ this.maxvalue() } /></td>
                  </tr>
                );
              }
