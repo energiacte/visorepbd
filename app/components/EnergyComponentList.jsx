@@ -1,3 +1,5 @@
+import numeral from 'numeral';
+
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -37,8 +39,8 @@ class EnergyComponentList extends React.Component {
                      className={selectedkey === i | false ? 'bg-info' : ''}
                      onClick={this.onClick.bind(this, i)}>
                    <td>{type}</td><td>{originoruse}</td><td>{carrier}</td>
-                   <td>{_.sum(values)}</td>
-                   <td>{values}</td>
+                   <td>{numeral(_.sum(values)).format('0.00')}</td>
+                   <td>{values.map((value)=> numeral(value).format('0.0')).join(', ')}</td>
                    <td><EnergyComponentChart type={ type } values={ values } maxvalue={ this.maxvalue() } /></td>
                  </tr>
                );

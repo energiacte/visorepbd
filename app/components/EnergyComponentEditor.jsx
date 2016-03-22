@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import numeral from 'numeral';
 
 import { selectEnergyComponent,
          addEnergyComponent,
@@ -7,23 +8,6 @@ import { selectEnergyComponent,
          editEnergyComponent,
          changeKexp,
          changeKrdel } from 'actions/actions.js';
-
-
-function singledigitprec(number) {
-  // return number with one digit precision
-  return parseFloat(Math.round(number * 10) / 10).toFixed(1);
-}
-
-function doubledigitprec(number) {
-  // return number with two digit precision
-  return parseFloat(Math.round(number * 100) / 100).toFixed(2);
-}
-
-function valuestostring(values) {
-  // convert list of values to comma separated list of values
-  // with 2 digit precision
-  return values.map(val => doubledigitprec(val)).join(',');
-}
 
 class GlobalVarsControl extends React.Component {
 
@@ -39,7 +23,7 @@ class GlobalVarsControl extends React.Component {
                  onChange={ (ev) => dispatch(changeKexp(ev.target.value)) } />
           <span>  </span>
           <input type="text" readOnly maxLength="3" size="3"
-                 value={singledigitprec(kexp)} />
+                 value={numeral(kexp).format('0.0')} />
         </div>
         <div id="krdel">
           <span>k<sub>rdel</sub> </span>
@@ -48,7 +32,7 @@ class GlobalVarsControl extends React.Component {
                  onChange={ (ev) => dispatch(changeKrdel(ev.target.value)) } />
           <span>  </span>
           <input type="text" readOnly maxLength="3" size="3"
-                 value={singledigitprec(krdel)} />
+                 value={numeral(krdel).format('0.0')} />
         </div>
       </div>
     );
@@ -130,7 +114,9 @@ class EnergyComponentEditor extends React.Component {
               <td>{type}</td>
               <td>{originoruse}</td>
               <td>{carrier}</td>
-              <td>{valuestostring(values)}</td>
+              <td>{values.map(val => numeral(val).format('0.0'))
+                         .join(',')
+                  }</td>
             </tr>
           </tbody>
         </table>
