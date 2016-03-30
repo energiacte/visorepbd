@@ -17,7 +17,7 @@ export default class EnergyComponentChart extends React.Component {
   static defaultProps =  {width: "200px",
                           height: "20px"}
 
-  createChart() {
+  drawChart() {
     const { data, maxvalue, type } = this.props;
 
     var svg = d3.select(ReactDOM.findDOMNode(this)).append('svg')
@@ -40,22 +40,17 @@ export default class EnergyComponentChart extends React.Component {
 
     this.chart = c;
     this.yaxis = yaxis;
-  }
 
-  componentDidMount() {
-    this.createChart();
     this.chart.draw();
   }
 
+  componentDidMount() {
+    this.drawChart();
+  }
+
   ShouldComponentUpdate(nextProps) {
-    // ver http://busypeoples.github.io/post/d3-with-react-js/
-    if (nextProps.data != this.props.data) {
-      this.chart.data = nextProps.data;
-      this.yaxis.overrideMax = nextProps.maxvalue;
-      this.chart.draw();
-    }
-    // No need to re-render the react component, D3 did it.
-    return false;
+    return (nextProps.data != this.props.data |
+            nextProps.maxvalue != this.props.maxvalue)
   }
 
   render() {
