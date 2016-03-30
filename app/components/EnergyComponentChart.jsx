@@ -6,9 +6,6 @@ import dimple from 'dimple-js/dist/dimple.latest.js';
 
 export default class EnergyComponentChart extends React.Component {
 
-  chart = null
-  yaxis = null
-
   static propTypes = {
     type: React.PropTypes.string,
     data: React.PropTypes.array.isRequired
@@ -26,22 +23,22 @@ export default class EnergyComponentChart extends React.Component {
                 .style("overflow", "visible");
     const c = new dimple.chart(svg, data)
                         .setMargins("1", "1", "1", "1");
-    const xaxis = c.addCategoryAxis("x", "Mes");
-    const yaxis = c.addMeasureAxis("y", "Valor");
+
     const csum = new dimple.color("red");
     const cprod = new dimple.color("green");
+    c.defaultColors = [type === 'SUMINISTRO' ?  csum : cprod];
 
+    const xaxis = c.addCategoryAxis("x", "Mes");
+    const yaxis = c.addMeasureAxis("y", "Valor");
     xaxis.hidden = true;
     yaxis.hidden = true;
     yaxis.overrideMax = maxvalue;
 
-    c.addSeries(null, dimple.plot.bar).barGap = 0;
-    c.defaultColors = [type === 'SUMINISTRO' ?  csum : cprod];
+    const mySeries = c.addSeries(null, dimple.plot.bar);
+    mySeries.barGap = 0;
+    mySeries.getTooltipText = (e) => [e.yValue];
 
-    this.chart = c;
-    this.yaxis = yaxis;
-
-    this.chart.draw();
+    c.draw();
   }
 
   componentDidMount() {
