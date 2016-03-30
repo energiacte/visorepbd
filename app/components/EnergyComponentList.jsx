@@ -19,6 +19,7 @@ class EnergyComponentList extends React.Component {
 
   render() {
     const { components, selectedkey } = this.props;
+    const maxvalue = this.maxvalue();
 
     return (
       <table id="components" className="table table-striped table-bordered table-condensed">
@@ -34,6 +35,8 @@ class EnergyComponentList extends React.Component {
           {components.map(
              (component, i) => {
                const { type, originoruse, carrier, values } = component;
+               const data = values.map((value, i) => { return {"Mes": i, "Valor": value};});
+
                return (
                  <tr key={i}
                      className={selectedkey === i | false ? 'bg-info' : ''}
@@ -41,7 +44,7 @@ class EnergyComponentList extends React.Component {
                    <td>{type}</td><td>{originoruse}</td><td>{carrier}</td>
                    <td>{numeral(_.sum(values)).format('0.00')}</td>
                    <td>{values.map((value)=> numeral(value).format('0.0')).join(', ')}</td>
-                   <td><EnergyComponentChart type={ type } values={ values } maxvalue={ this.maxvalue() } /></td>
+                   <td><EnergyComponentChart type={ type } data={ data } maxvalue={ maxvalue } /></td>
                  </tr>
                );
              }

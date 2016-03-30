@@ -9,39 +9,58 @@ export default class EnergyComponentChart extends React.Component {
   chart = null
   yaxis = null
 
-  state = {
-    data: this.props.values.map(
-      (value, i) => { return {"Mes": i, "Valor": value};}
-    )
+  static propTypes = {
+    type: React.PropTypes.string,
+    data: React.PropTypes.array.isRequired
+  }
+
+  static defaultProps =  {width: "200px",
+                          height: "20px"}
+
+  createChart() {
+    const { data, maxvalue, type } = this.props;
+
+    var svg = d3.select(ReactDOM.findDOMNode(this)).append('svg')
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .style("overflow", "visible");
+    const c = new dimple.chart(svg, data)
+                        .setMargins("1", "1", "1", "1");
+    const xaxis = c.addCategoryAxis("x", "Mes");
+    const yaxis = c.addMeasureAxis("y", "Valor");
+    const csum = new dimple.color("red");
+    const cprod = new dimple.color("green");
+
+    xaxis.hidden = true;
+    yaxis.hidden = true;
+    yaxis.overrideMax = maxvalue;
+
+    c.addSeries(null, dimple.plot.bar).barGap = 0;
+    c.defaultColors = [type === 'SUMINISTRO' ?  csum : cprod];
+
+    this.chart = c;
+    this.yaxis = yaxis;
   }
 
   componentDidMount() {
-    let node = ReactDOM.findDOMNode(this);
-    const svg = dimple.newSvg(node, "100%", "100%");
-    const chart = new dimple.chart(svg, this.state.data).setMargins("1", "1", "1", "1");
-    const x = chart.addCategoryAxis("x", "Mes");
-    x.hidden = true;
-    this.yaxis = chart.addMeasureAxis("y", "Valor");
-    this.yaxis.hidden = true;
-    this.yaxis.overrideMax = this.props.maxvalue;
-    chart.addSeries(null,dimple.plot.bar).barGap = 0;
-    chart.defaultColors = [
-      this.props.type === 'SUMINISTRO' ? new dimple.color("red") : new dimple.color("green")
-    ];
-    chart.draw();
-    this.chart = chart;
-  }
-
-  componentDidUpdate() {
-    this.chart.data = this.state.data;
-    this.yaxis.overrideMax = this.props.maxvalue;
+    this.createChart();
     this.chart.draw();
   }
 
+  ShouldComponentUpdate(nextProps) {
+    // ver http://busypeoples.github.io/post/d3-with-react-js/
+    if (nextProps.data != this.props.data) {
+      this.chart.data = nextProps.data;
+      this.yaxis.overrideMax = nextProps.maxvalue;
+      this.chart.draw();
+    }
+    // No need to re-render the react component, D3 did it.
+    return false;
+  }
+
   render() {
-    var styles = {width: "200px",
-                  height: "20px"};
-    return <div style={styles} />;
+    return <div style={ {width: this.props.width,
+                         height: this.props.height} }></div>;
   }
 
 }
