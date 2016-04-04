@@ -7,5 +7,6 @@ install:
 analyze:
 	webpack --json > stats.json
 	webpack-bundle-size-analyzer stats.json
-deploy:
+.PHONY: build
+build:
 	npm run buildprod
