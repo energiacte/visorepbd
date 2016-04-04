@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "d3": "^3.5.16",
-    "dimple-js": "^2.1.4",
+    "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
     "jquery": "^2.2.2",
     "lodash": "^4.7.0",
     "numeral": "^1.5.3",

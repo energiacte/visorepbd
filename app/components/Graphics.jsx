@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
 import 'd3';
-import dimple from 'dimple-js/dist/dimple.latest.js';
+import dimple from 'dimple';
 
 
 export default class Graphics extends React.Component {
