@@ -12,7 +12,9 @@ const production = process.env.NODE_ENV === 'production';
 const PATHS = {
   app: path.resolve(path.join(__dirname, 'app')),
   build: path.resolve(path.join(__dirname, 'build')),
+  bowerdir: 'bower_components',
   bower: path.resolve(path.join(__dirname, 'bower_components')),
+  nodedir: 'node_modules',
   node: path.resolve(path.join(__dirname, 'node_modules')),
   styles: path.resolve(path.join(__dirname, 'app', 'css')),
   components: path.resolve(path.join(__dirname, 'app', 'components')),
@@ -23,13 +25,18 @@ const PATHS = {
 
 var plugins = [
   new webpack.HotModuleReplacementPlugin(),
-  new ExtractTextPlugin('bundle.css', {allChunks: true}),
+  new ExtractTextPlugin('bundle-[hash].css', {allChunks: true}),
   new HtmlWebpackPlugin({
     title: "DB-HE NZEB: implementación de la ISO 52000-1 en el CTE DB-HE",
     //favicon: 'favicon.ico',
     filename: 'index.html'
   }),
   new webpack.NoErrorsPlugin(),
+  new webpack.optimize.CommonsChunkPlugin({
+    name: "vendor",
+    filename: "vendor-[hash].js",
+    minChunks: Infinity // only vendor chunks here
+  }),
   new webpack.ProvidePlugin({ // Detect free vars in modules and do automatic import
     jQuery: 'jquery',
     jquery: 'jquery',
@@ -53,7 +60,8 @@ if (production) { // Production plugins go here
     // Prevent Webpack from creating too small chunks
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 51200 }), // ~50kb
     // Minify all the Javascript code of the final bundle
-    new webpack.optimize.UglifyJsPlugin({ minimize: true }),
+    new webpack.optimize.UglifyJsPlugin({ minimize: true,
+                                          compress: { warnings: false } }),
     new webpack.optimize.AggressiveMergingPlugin(),
     // Define variables, useful to distinguish production and devel
     new webpack.DefinePlugin({
@@ -71,9 +79,10 @@ if (production) { // Production plugins go here
 var config = {
   debug: !production,
   cache: true,
-  devtool: production ? 'source-map' : 'cheap-module-source-map',
+  devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
-    app: [PATHS.app, 'bootstrap-loader']
+    app: [PATHS.app, 'bootstrap-loader'],
+    vendor: ['d3', 'dimple', 'jquery', 'lodash', 'numeral', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   devServer: {
     contentBase: PATHS.build,
@@ -91,7 +100,8 @@ var config = {
     //publicPath: '/build/' // This is used to generate URLs to e.g. images
   },
   resolve: {
-    modulesDirectories: [PATHS.app, PATHS.bower, PATHS.node],
+    root: [PATHS.app, PATHS.bower, PATHS.node],
+    modulesDirectories: [PATHS.bowerdir, PATHS.nodedir],
     extensions: ['', '.js', '.jsx', '.json'],
     alias: { // Para usar alias en imports
       'styles': PATHS.styles,
