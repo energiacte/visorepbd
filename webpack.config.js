@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 
-var production = process.env.NODE_ENV === 'production';
+const production = process.env.NODE_ENV === 'production';
 
 const PATHS = {
   app: path.resolve(path.join(__dirname, 'app')),
@@ -30,9 +30,7 @@ var plugins = [
     filename: 'index.html'
   }),
   new webpack.NoErrorsPlugin(),
-  new webpack.ProvidePlugin({
-    // Detect names as free vars in modules
-    // and automatically import the corresponding library
+  new webpack.ProvidePlugin({ // Detect free vars in modules and do automatic import
     jQuery: 'jquery',
     jquery: 'jquery',
     $: 'jquery',
@@ -40,38 +38,29 @@ var plugins = [
     _: 'lodash',
     lodash: 'lodash',
     React: 'react',
-    ReactDOM: 'react-dom'//,
+    ReactDOM: 'react-dom'
   })
 ];
 
-if (production) {
-  plugins = plugins.concat([ // Production plugins go here
-    // Cleanup the builds/ folder before
-    // compiling our final assets
+if (production) { // Production plugins go here
+  plugins = plugins.concat([
+    // Cleanup the builds/ folder before compiling final assets
     new CleanPlugin('build'),
-    // This plugin looks for similar chunks and files
-    // and merges them for better caching by the user
+    // Looks for similar chunks and files and merge them
     new webpack.optimize.DedupePlugin(),
-    // This plugins optimizes chunks and modules by
-    // how much they are used in your app
+    // Optimize chunks and modules by how much they are used
     new webpack.optimize.OccurenceOrderPlugin(),
-    // This plugin prevents Webpack from creating chunks
-    // that would be too small to be worth loading separately
-    new webpack.optimize.MinChunkSizePlugin({
-      minChunkSize: 51200 // ~50kb
-    }),
-    // This plugin minifies all the Javascript code of the final bundle
-    new webpack.optimize.UglifyJsPlugin({minimize: true}),
+    // Prevent Webpack from creating too small chunks
+    new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 51200 }), // ~50kb
+    // Minify all the Javascript code of the final bundle
+    new webpack.optimize.UglifyJsPlugin({ minimize: true }),
     new webpack.optimize.AggressiveMergingPlugin(),
-    // This plugins defines various variables that we can set to false
-    // in production to avoid code related to them from being compiled
-    // in our final bundle
+    // Define variables, useful to distinguish production and devel
     new webpack.DefinePlugin({
       __SERVER__:      !production,
       __DEVELOPMENT__: !production,
       __DEVTOOLS__:    !production,
-      // This has effect on the react lib size
-      'process.env': {
+      'process.env': { // This has effect on the react lib size
         'NODE_ENV': JSON.stringify('production'),
         'BABEL_ENV': JSON.stringify(process.env.NODE_ENV)
       }
@@ -79,7 +68,6 @@ if (production) {
   ]);
 }
 
-// ver https://docs.omniref.com/js/npm/bootstrap-sass-loader/0.0.5
 var config = {
   debug: !production,
   cache: true,
@@ -89,9 +77,7 @@ var config = {
   },
   devServer: {
     contentBase: PATHS.build,
-    // Enable history API fallback so HTML5 History API based
-    // routing works. This is a good default that will come
-    // in handy in more complicated setups.
+    // Enable history API fallback so HTML5 History API based routing works.
     historyApiFallback: true,
     hot: true,
     inline: true,
@@ -104,12 +90,8 @@ var config = {
     filename: '[name]-[hash].js'
     //publicPath: '/build/' // This is used to generate URLs to e.g. images
   },
-  resolve: { // you can now import 'file' instead of import 'file.json'
-    modulesDirectories: [
-      PATHS.app,
-      PATHS.bower,
-      PATHS.node
-    ],
+  resolve: {
+    modulesDirectories: [PATHS.app, PATHS.bower, PATHS.node],
     extensions: ['', '.js', '.jsx', '.json'],
     alias: { // Para usar alias en imports
       'styles': PATHS.styles,
@@ -148,7 +130,6 @@ var config = {
       { // IMG  inline base64 URLs for <=8k images, direct URLs for the rest
         test: /\.(png|jpe?g|gif)$/i,
         include: PATHS.app,
-        //exclude: [/node_modules/, /bower_components/],
         loader: 'url?limit=8192!img'
       },
       // required for bootstrap icons
@@ -156,8 +137,6 @@ var config = {
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=5000&minetype=application/octet-stream' },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file' },
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=5000&minetype=image/svg+xml' },
-      // { test: /bootstrap\/js\//, // EDIT THE REGEX TO MATCH YOUR BOOTSTRAP PATH
-      //   loader: 'imports?jQuery=jquery,$=jquery,this=>window' },
       // Bootstrap 3
       { test: /bootstrap-sass\/assets\/javascripts\//, loader: 'imports?jQuery=jquery' },
       // Bootstrap 4
