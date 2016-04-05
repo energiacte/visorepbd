@@ -28,7 +28,6 @@ class EnergyComponentList extends React.Component {
             <th>Tipo</th><th>Origen/Uso</th><th>Vector energético</th>
             <th>kWh/año</th>
             <th>Valores</th>
-            <th>Valores</th>
           </tr>
         </thead>
         <tbody>
@@ -43,7 +42,6 @@ class EnergyComponentList extends React.Component {
                      onClick={this.onClick.bind(this, i)}>
                    <td>{ctype}</td><td>{originoruse}</td><td>{carrier}</td>
                    <td>{numeral(_.sum(values)).format('0.00')}</td>
-                   <td>{values.map((value)=> numeral(value).format('0.0')).join(', ')}</td>
                    <td><EnergyComponentChart type={ ctype } data={ data } maxvalue={ maxvalue } /></td>
                  </tr>
                );
