@@ -45,7 +45,7 @@ export default class EnergyComponentChart extends React.Component {
     this.drawChart();
   }
 
-  ShouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps) {
     return (nextProps.data != this.props.data |
             nextProps.maxvalue != this.props.maxvalue)
   }
