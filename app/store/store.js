@@ -8,25 +8,25 @@ const initialState = {
   components: [ // Energy components array
     {
       carrier: 'ELECTRICIDAD',
-      type: 'SUMINISTRO',
+      ctype: 'SUMINISTRO',
       originoruse: 'EPB',
       values: [9.67,7.74,4.84,4.35,2.42,2.90,3.87,3.39,2.42,3.87,5.80,7.74]
     },
     {
       carrier: 'ELECTRICIDAD',
-      type: 'SUMINISTRO',
+      ctype: 'SUMINISTRO',
       originoruse: 'NEPB',
       values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     {
       carrier: 'MEDIOAMBIENTE',
-      type: 'SUMINISTRO',
+      ctype: 'SUMINISTRO',
       originoruse: 'EPB',
       values: [21.48,17.18,10.74,9.66,5.37,6.44,8.59,7.52,5.37,8.59,12.89,17.18]
     },
     {
       carrier: 'MEDIOAMBIENTE',
-      type: 'PRODUCCION',
+      ctype: 'PRODUCCION',
       originoruse: 'COGENERACION',
       values: [21.48,17.18,10.74,9.66,5.37,6.44,8.59,7.52,5.37,8.59,12.89,17.18]
     }

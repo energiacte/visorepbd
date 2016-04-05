@@ -68,7 +68,7 @@ class ActionsPanel extends React.Component {
   }
 
   handleAdd(event) {
-    this.props.dispatch(addEnergyComponent({type: 'SUMINISTRO',
+    this.props.dispatch(addEnergyComponent({ctype: 'SUMINISTRO',
                                             originoruse: 'EPB',
                                             carrier: 'ELECTRICIDAD',
                                             values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -81,7 +81,7 @@ class ActionsPanel extends React.Component {
 
   handleEdit(selectedkey, component, event) {
     this.props.dispatch(editEnergyComponent(selectedkey,
-                                            {type: 'SUMINISTRO',
+                                            {ctype: 'SUMINISTRO',
                                             originoruse: 'EPB',
                                             carrier: 'ELECTRICIDAD',
                                             values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -102,7 +102,7 @@ class EnergyComponentEditor extends React.Component {
 
   render() {
     const { selectedkey, components } = this.props;
-    const { type, originoruse, carrier, values } = components[selectedkey];
+    const { ctype, originoruse, carrier, values } = components[selectedkey];
 
     // Mostrar Chart con tooltips con los Valores
     // Editor de Valores
@@ -115,7 +115,7 @@ class EnergyComponentEditor extends React.Component {
           <tbody>
             <tr>
               <td>{selectedkey}</td>
-              <td>{type}</td>
+              <td>{ctype}</td>
               <td>{originoruse}</td>
               <td>{carrier}</td>
               <td>{values.map(val => numeral(val).format('0.0'))
