@@ -5,7 +5,7 @@ import 'd3';
 import dimple from 'dimple';
 
 
-export default class Graphics extends React.Component {
+export default class IndicatorsChart extends React.Component {
 
   componentDidMount () {
     this.updateChart();

@@ -3,7 +3,7 @@ import React from 'react';
 import Navigation from 'components/Navigation.jsx';
 import EnergyComponentList from 'components/EnergyComponentList';
 import EnergyComponentEditor from 'components/EnergyComponentEditor';
-import Graphics from 'components/Graphics';
+import IndicatorsChart from 'components/IndicatorsChart';
 
 export default class App extends React.Component {
 
@@ -16,7 +16,7 @@ export default class App extends React.Component {
             <h1>CTE DB-HE, aplicación de ISO 52000-1</h1>
           </div>
 
-          <Graphics width="50%" height="200" />
+          <IndicatorsChart width="50%" height="200" />
 
           <div id="results">
             Resultados
