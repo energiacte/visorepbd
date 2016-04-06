@@ -42,7 +42,7 @@ class EnergyComponentList extends React.Component {
                      onClick={this.onClick.bind(this, i)}>
                    <td>{ctype}</td><td>{originoruse}</td><td>{carrier}</td>
                    <td>{numeral(_.sum(values)).format('0.00')}</td>
-                   <td><EnergyComponentChart type={ ctype } data={ data } maxvalue={ maxvalue } /></td>
+                   <td><EnergyComponentChart ctype={ ctype } data={ data } maxvalue={ maxvalue } /></td>
                  </tr>
                );
              }

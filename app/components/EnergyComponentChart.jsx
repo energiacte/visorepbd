@@ -14,10 +14,11 @@ export default class EnergyComponentChart extends React.Component {
   static defaultProps =  {width: "200px",
                           height: "20px"}
 
-  drawChart() {
-    const { data, maxvalue, type } = this.props;
+  drawChart(node, props) {
+    const { data, maxvalue, ctype } = props;
 
-    var svg = d3.select(ReactDOM.findDOMNode(this)).append('svg')
+    d3.select(node).select("svg").remove();
+    var svg = d3.select(node).append('svg')
                 .attr("width", "100%")
                 .attr("height", "100%")
                 .style("overflow", "visible");
@@ -26,7 +27,7 @@ export default class EnergyComponentChart extends React.Component {
 
     const csum = new dimple.color("red");
     const cprod = new dimple.color("green");
-    c.defaultColors = [type === 'SUMINISTRO' ?  csum : cprod];
+    c.defaultColors = [ctype === 'SUMINISTRO' ?  csum : cprod];
 
     const xaxis = c.addCategoryAxis("x", "Mes");
     const yaxis = c.addMeasureAxis("y", "Valor");
@@ -38,16 +39,22 @@ export default class EnergyComponentChart extends React.Component {
     mySeries.barGap = 0;
     mySeries.getTooltipText = (e) => [e.yValue];
 
-    c.draw();
+    c.ease = "linear";
+    c.draw(800);
   }
 
   componentDidMount() {
-    this.drawChart();
+    const node = ReactDOM.findDOMNode(this);
+    this.drawChart(node, this.props);
   }
 
   shouldComponentUpdate(nextProps) {
-    return (nextProps.data != this.props.data |
-            nextProps.maxvalue != this.props.maxvalue)
+    if (nextProps.data != this.props.data |
+        nextProps.maxvalue != this.props.maxvalue) {
+          const node = ReactDOM.findDOMNode(this);
+          this.drawChart(node, nextProps);
+    }
+    return false;
   }
 
   render() {
