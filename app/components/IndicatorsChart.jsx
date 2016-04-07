@@ -9,22 +9,40 @@ import dimple from 'dimple';
 class IndicatorsChart extends React.Component {
 
   static defaultProps = {
-    width: "100%",
+    width: "50%",
     height: "200px"
   }
 
   static chart = null
 
-  getData(props) {
+  updateChart(props) {
     const { kexp, krdel, components } = props;
 
-    var data = [
-      {Paso: "A", Componente: "no renovable", "kWh/m²·año": 12.0 * kexp},
-      {Paso: "A", Componente: "renovable", "kWh/m²·año": 23.0 * krdel},
-      {Paso: "A+B", Componente: "no renovable", "kWh/m²·año": 10.0 + 3 * components.length},
-      {Paso: "A+B", Componente: "renovable", "kWh/m²·año": 23.0},
-    ];
-    return data;
+    $.ajax({
+      url: 'http://localhost:8000/epindicators',
+      method: "POST", // http method
+      dataType: "json",
+      data: JSON.stringify({
+        kexp: kexp,
+        krdel: krdel,
+        components: components
+      }),
+      crossDomain: false, // needed so request.is_ajax works
+      success: (json) => {
+        const data = [
+          {Paso: "A", Componente: "EP_nren", "kWh/m²·año": json.EPAnren},
+          {Paso: "A", Componente: "EP_ren", "kWh/m²·año": json.EPAren},
+          {Paso: "A+B", Componente: "EP_nren", "kWh/m²·año": json.EPnren},
+          {Paso: "A+B", Componente: "EP_ren", "kWh/m²·año": json.EPren},
+        ];
+        this.chart.data = data;
+        this.chart.draw(100);
+        this.drawSubtitle(props);
+      },
+      error: (xhr, errmsg, err) => {
+        console.log(xhr.status + ": " + xhr.responseText);
+      }
+    });
   }
 
   drawSubtitle(props) {
@@ -34,7 +52,7 @@ class IndicatorsChart extends React.Component {
     svg.select("#subtitle").remove();
     svg.append("text")
        .attr("id", "subtitle")
-       .attr("x","50%").attr("y","10%")
+       .attr("x","50%").attr("y","30px")
        .attr("text-anchor", "middle")
        .style("fill","black")
        .style("font-size","12px")
@@ -43,21 +61,27 @@ class IndicatorsChart extends React.Component {
   }
 
   drawChart(node, props) {
+    const data = [
+      {Paso: "A", Componente: "EP_nren", "kWh/m²·año": 0.0},
+      {Paso: "A", Componente: "EP_ren", "kWh/m²·año": 0.0},
+      {Paso: "A+B", Componente: "EP_nren", "kWh/m²·año": 0.0},
+      {Paso: "A+B", Componente: "EP_ren", "kWh/m²·año": 0.0},
+    ];
+
     const svg = d3.select(node).append('svg')
                   .attr("width", "100%")
                   .attr("height", "100%")
                   .style("overflow", "visible");
 
-    svg.append("text").attr("x","50%").attr("y","0%")
+    svg.append("text").attr("x","50%").attr("y","15px")
        .attr("text-anchor", "middle")
        .style("fill","black").style("font-size","15px")
        .text("Consumo de energía primaria");
 
-    const c = new dimple.chart(svg, this.getData(props))
-                        .setMargins("20px", "30px",
-                                    "20px", "45px");
+    const c = new dimple.chart(svg, data);
+    c.setMargins("50px", "50px", "20px", "45px"); // left, top, right, bottom
     this.chart = c;
-    this.drawSubtitle(props);
+    this.drawSubtitle({krdel: 1.0, kexp: 1.0});
 
     c.defaultColors = [new dimple.color("green"),
                        new dimple.color("red")];
@@ -65,26 +89,24 @@ class IndicatorsChart extends React.Component {
     c.addCategoryAxis("x", "Paso");
     c.addMeasureAxis("y", "kWh/m²·año");
     c.addSeries("Componente", dimple.plot.bar)
-     .addOrderRule(["no renovable", "renovable"]);
+     .addOrderRule(["EP_nren", "EP_ren"]);
     c.addLegend('0%', '100%', '100%', '50%', "right");
 
     c.ease = "linear";
-    c.draw(800);
+    c.draw(400);
   }
 
   componentDidMount () {
     var node = ReactDOM.findDOMNode(this);
     this.drawChart(node, this.props);
+    this.updateChart(this.props);
   }
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.components != this.props.components |
         nextProps.krdel != this.props.krdel |
         nextProps.kexp != this.props.kexp) {
-          var data = this.getData(nextProps);
-          this.chart.data = data;
-          this.chart.draw(800);
-          this.drawSubtitle(nextProps);
+          this.updateChart(nextProps);
     }
     return false;
   }
