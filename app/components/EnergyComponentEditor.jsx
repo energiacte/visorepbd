@@ -68,10 +68,10 @@ class ActionsPanel extends React.Component {
   }
 
   handleAdd(event) {
-    this.props.dispatch(addEnergyComponent({ctype: 'SUMINISTRO',
-                                            originoruse: 'EPB',
+    this.props.dispatch(addEnergyComponent({ctype: 'PRODUCCION',
+                                            originoruse: 'INSITU',
                                             carrier: 'ELECTRICIDAD',
-                                            values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                                            values: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
     }));
   }
 
