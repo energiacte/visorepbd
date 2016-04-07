@@ -7,7 +7,8 @@ import dimple from 'dimple';
 export default class EnergyComponentChart extends React.Component {
 
   static propTypes = {
-    type: React.PropTypes.string,
+    ctype: React.PropTypes.string.isRequired,
+    maxvalue: React.PropTypes.number.isRequired,
     data: React.PropTypes.array.isRequired
   }
 
@@ -25,8 +26,8 @@ export default class EnergyComponentChart extends React.Component {
     const c = new dimple.chart(svg, data)
                         .setMargins("1", "1", "1", "1");
 
-    const csum = new dimple.color("red");
-    const cprod = new dimple.color("green");
+    const csum = new dimple.color("gray");
+    const cprod = new dimple.color("blue");
     c.defaultColors = [ctype === 'SUMINISTRO' ?  csum : cprod];
 
     const xaxis = c.addCategoryAxis("x", "Mes");
@@ -40,7 +41,7 @@ export default class EnergyComponentChart extends React.Component {
     mySeries.getTooltipText = (e) => [e.yValue];
 
     c.ease = "linear";
-    c.draw(800);
+    c.draw(200);
   }
 
   componentDidMount() {

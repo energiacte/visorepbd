@@ -35,7 +35,7 @@ class EnergyComponentList extends React.Component {
              (component, i) => {
                const { ctype, originoruse, carrier, values } = component;
                const data = values.map((value, i) => { return {"Mes": i, "Valor": value};});
-               const ctypestyle = {color: ctype === 'SUMINISTRO' ? 'red': 'green'};
+               const ctypestyle = {color: ctype === 'SUMINISTRO' ? 'black': 'blue'};
 
                return (
                  <tr key={i}
