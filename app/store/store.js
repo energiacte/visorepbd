@@ -5,7 +5,7 @@ const initialState = {
   selectedkey: 0, // Currently selected component
   kexp: 1.0,
   krdel: 1.0,
-  components: [ // Energy components array
+  components: [ // Energy components array (ejemplo3PVBdC.csv)
     {
       carrier: 'ELECTRICIDAD',
       ctype: 'SUMINISTRO',
@@ -14,9 +14,9 @@ const initialState = {
     },
     {
       carrier: 'ELECTRICIDAD',
-      ctype: 'SUMINISTRO',
-      originoruse: 'NEPB',
-      values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ctype: 'PRODUCCION',
+      originoruse: 'INSITU',
+      values: [1.13,1.42,1.99,2.84,4.82,5.39,5.67,5.11,4.54,3.40,2.27,1.42]
     },
     {
       carrier: 'MEDIOAMBIENTE',
@@ -27,7 +27,7 @@ const initialState = {
     {
       carrier: 'MEDIOAMBIENTE',
       ctype: 'PRODUCCION',
-      originoruse: 'COGENERACION',
+      originoruse: 'INSITU',
       values: [21.48,17.18,10.74,9.66,5.37,6.44,8.59,7.52,5.37,8.59,12.89,17.18]
     }
   ]
