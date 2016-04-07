@@ -35,12 +35,13 @@ class EnergyComponentList extends React.Component {
              (component, i) => {
                const { ctype, originoruse, carrier, values } = component;
                const data = values.map((value, i) => { return {"Mes": i, "Valor": value};});
+               const ctypestyle = {color: ctype === 'SUMINISTRO' ? 'red': 'green'};
 
                return (
                  <tr key={i}
                      className={selectedkey === i | false ? 'bg-info' : ''}
                      onClick={this.onClick.bind(this, i)}>
-                   <td>{ctype}</td><td>{originoruse}</td><td>{carrier}</td>
+                   <td style={ctypestyle}>{ctype}</td><td>{originoruse}</td><td>{carrier}</td>
                    <td>{numeral(_.sum(values)).format('0.00')}</td>
                    <td><EnergyComponentChart ctype={ ctype } data={ data } maxvalue={ maxvalue } /></td>
                  </tr>
