@@ -98,9 +98,9 @@ class IndicatorsChart extends React.Component {
     this.chart = c;
     this.drawSubtitle({krdel: 1.0, kexp: 1.0});
 
-    c.defaultColors = [new dimple.color("red"),
-                       new dimple.color("green"),
-                       new dimple.color("blue")];
+    c.defaultColors = [new dimple.color("blue"),
+                       new dimple.color("red"),
+                       new dimple.color("green")];
 
     c.addCategoryAxis("x", ["Paso", "Componente"]);
     c.addMeasureAxis("y", "kWh/m²·año");
