@@ -39,7 +39,9 @@ class IndicatorsChart extends React.Component {
         ];
         this.chart.data = data;
         this.chart.draw(100);
-        this.drawSubtitle(props);
+        this.drawSubtitle({ kexp, krdel,
+                            EPArer: json.EPArer,
+                            EPrer: json.EPrer});
       },
       error: (xhr, errmsg, err) => {
         console.log(xhr.status + ": " + xhr.responseText);
@@ -47,8 +49,8 @@ class IndicatorsChart extends React.Component {
     });
   }
 
-  drawSubtitle(props) {
-    const { kexp, krdel } = props;
+  drawSubtitle(params) {
+    const { kexp, krdel, EPrer, EPArer } = params;
     const svg = this.chart.svg;
 
     svg.select("#subtitle").remove();
@@ -60,6 +62,15 @@ class IndicatorsChart extends React.Component {
        .style("font-size","12px")
        .text('kexp: '+ numeral(kexp).format('0.0') +
              ', krdel: ' + numeral(krdel).format('0.0') );
+    svg.select("#subsubtitle").remove();
+    svg.append("text")
+       .attr("id", "subsubtitle")
+       .attr("x","50%").attr("y","45px")
+       .attr("text-anchor", "middle")
+       .style("fill","black")
+       .style("font-size","12px")
+       .html('RER(A): '+ numeral(EPArer).format('0.00') +
+             ', RER(A+B): ' + numeral(EPrer).format('0.00') );
   }
 
   drawChart(node, props) {
