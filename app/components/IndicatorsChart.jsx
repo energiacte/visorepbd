@@ -32,8 +32,10 @@ class IndicatorsChart extends React.Component {
         const data = [
           {Paso: "A", Componente: "EP_nren", "kWh/m²·año": json.EPAnren},
           {Paso: "A", Componente: "EP_ren", "kWh/m²·año": json.EPAren},
+          {Paso: "A", Componente: "EP_total", "kWh/m²·año": json.EPAtotal},
           {Paso: "A+B", Componente: "EP_nren", "kWh/m²·año": json.EPnren},
           {Paso: "A+B", Componente: "EP_ren", "kWh/m²·año": json.EPren},
+          {Paso: "A+B", Componente: "EP_total", "kWh/m²·año": json.EPtotal},
         ];
         this.chart.data = data;
         this.chart.draw(100);
@@ -64,8 +66,10 @@ class IndicatorsChart extends React.Component {
     const data = [
       {Paso: "A", Componente: "EP_nren", "kWh/m²·año": 0.0},
       {Paso: "A", Componente: "EP_ren", "kWh/m²·año": 0.0},
+      {Paso: "A", Componente: "EP_total", "kWh/m²·año": 0.0},
       {Paso: "A+B", Componente: "EP_nren", "kWh/m²·año": 0.0},
       {Paso: "A+B", Componente: "EP_ren", "kWh/m²·año": 0.0},
+      {Paso: "A+B", Componente: "EP_total", "kWh/m²·año": 0.0},
     ];
 
     const svg = d3.select(node).append('svg')
@@ -84,12 +88,13 @@ class IndicatorsChart extends React.Component {
     this.drawSubtitle({krdel: 1.0, kexp: 1.0});
 
     c.defaultColors = [new dimple.color("red"),
-                       new dimple.color("green")];
+                       new dimple.color("green"),
+                       new dimple.color("blue")];
 
-    c.addCategoryAxis("x", "Paso");
+    c.addCategoryAxis("x", ["Paso", "Componente"]);
     c.addMeasureAxis("y", "kWh/m²·año");
     c.addSeries("Componente", dimple.plot.bar)
-     .addOrderRule(["EP_nren", "EP_ren"]);
+     .addOrderRule(["EP_total", "EP_nren", "EP_ren"]);
     c.addLegend('0%', '100%', '100%', '50%', "right");
 
     c.ease = "linear";
