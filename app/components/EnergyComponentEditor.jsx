@@ -39,66 +39,29 @@ class GlobalVarsControl extends React.Component {
   }
 }
 
-GlobalVarsControl = connect(state => {
-  return {
-    kexp: state.kexp,
-    krdel: state.krdel
-  }
-})(GlobalVarsControl);
-
-
 class ActionsPanel extends React.Component {
 
   render() {
-    const { selectedkey, dispatch } = this.props;
+    const { onAdd, onRemove, onUpdate } = this.props;
 
     return (
       <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
-        <button className="btn" id="add" onClick={this.handleAdd.bind(this)}>
+        <button className="btn" id="add" onClick={onAdd}>
           <span className="glyphicon glyphicon-plus"></span> Añadir
         </button>
-        <button className="btn" id="remove" onClick={this.handleRemove.bind(this, selectedkey)}>
+        <button className="btn" id="remove" onClick={onRemove}>
           <span className="glyphicon glyphicon-minus"></span> Borrar
         </button>
-        <button className="btn" id="modify" onClick={this.handleEdit.bind(this, selectedkey, {})}>
+        <button className="btn" id="modify" onClick={onUpdate}>
           <span className="glyphicon glyphicon-edit"></span> Modificar
         </button>
       </div>
     );
   }
 
-  handleAdd(event) {
-    this.props.dispatch(addEnergyComponent({ctype: 'PRODUCCION',
-                                            originoruse: 'INSITU',
-                                            carrier: 'ELECTRICIDAD',
-                                            values: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-    }));
-  }
-
-  handleRemove(selectedkey, event) {
-    this.props.dispatch(removeEnergyComponent(selectedkey));
-  }
-
-  handleEdit(selectedkey, component, event) {
-    this.props.dispatch(editEnergyComponent(selectedkey,
-                                            {ctype: 'SUMINISTRO',
-                                            originoruse: 'EPB',
-                                            carrier: 'ELECTRICIDAD',
-                                            values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    }));
-  }
-
 }
 
-ActionsPanel = connect(state => {
-  return {
-    selectedkey: state.selectedkey
-  }
-})(ActionsPanel);
-
-
-
-class EnergyComponentEditor extends React.Component {
+class ECEditor extends React.Component {
 
   render() {
     const { selectedkey, components } = this.props;
@@ -109,8 +72,6 @@ class EnergyComponentEditor extends React.Component {
     // Desplegables para otros datos
 
     return (
-      <div>
-        <GlobalVarsControl />
         <table id="editor" className="table-striped table-bordered table-condensed">
           <tbody>
             <tr>
@@ -124,15 +85,61 @@ class EnergyComponentEditor extends React.Component {
             </tr>
           </tbody>
         </table>
-        <ActionsPanel />
+    );
+  }
+
+}
+
+class EnergyComponentEditor extends React.Component {
+
+  render() {
+    const { selectedkey, kexp, krdel, components } = this.props;
+    const { ctype, originoruse, carrier, values } = components[selectedkey];
+
+    // Mostrar Chart con tooltips con los Valores
+    // Editor de Valores
+    // Desplegables para otros datos
+
+    return (
+      <div>
+        <GlobalVarsControl kexp={kexp}
+                           krdel={krdel}
+                           dispatch={this.props.dispatch} />
+        <ECEditor {...this.props} />
+        <ActionsPanel onAdd={() => this.handleAdd(selectedkey)}
+                      onRemove={() => this.handleRemove(selectedkey)}
+                      onUpdate={() => this.handleUpdate(selectedkey, {})} />
       </div>
     );
+  }
+
+  handleAdd(selectedkey, event) {
+    this.props.dispatch(addEnergyComponent({ctype: 'PRODUCCION',
+                                            originoruse: 'INSITU',
+                                            carrier: 'ELECTRICIDAD',
+                                            values: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+    }));
+  }
+
+  handleRemove(selectedkey, event) {
+    this.props.dispatch(removeEnergyComponent(selectedkey));
+  }
+
+  handleUpdate(selectedkey, component, event) {
+    this.props.dispatch(editEnergyComponent(selectedkey,
+                                            {ctype: 'SUMINISTRO',
+                                             originoruse: 'EPB',
+                                             carrier: 'ELECTRICIDAD',
+                                             values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                                            }));
   }
 
 }
 
 export default EnergyComponentEditor = connect(state => {
   return {
+    kexp: state.kexp,
+    krdel: state.krdel,
     selectedkey: state.selectedkey,
     components: state.components
   }
