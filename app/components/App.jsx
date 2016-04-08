@@ -16,7 +16,7 @@ export default class App extends React.Component {
             <h1>CTE DB-HE, aplicación de ISO 52000-1</h1>
           </div>
 
-          <IndicatorsChart width="50%" height="200" />
+          <IndicatorsChart width="100%" height="200px" />
 
           <div id="results">
             Resultados
