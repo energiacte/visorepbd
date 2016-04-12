@@ -4,7 +4,7 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectEnergyComponent } from 'actions/actions.js';
+import { selectEnergyComponent, editEnergyComponent } from 'actions/actions.js';
 
 import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 
@@ -17,6 +17,20 @@ class EnergyComponentList extends React.Component {
         (component) => { return _.max(component.values); }
       )
     );
+  }
+
+  handleClick(i, event) {
+    // Seleccionar componente
+    this.props.dispatch(selectEnergyComponent(i));
+  }
+
+  handleChange(i, event) {
+    // Cambiar estado activo del componente
+    const component = this.props.components[i];
+    this.props.dispatch(
+      editEnergyComponent(i,
+                          { ...component,
+                            active: !component.active }));
   }
 
   render() {
@@ -36,17 +50,25 @@ class EnergyComponentList extends React.Component {
         <tbody>
           {components.map(
              (component, i) => {
-               const { ctype, originoruse, carrier, values } = component;
-               const data = values.map((value, i) => { return {"Mes": i, "Valor": value};});
-               const ctypestyle = {color: ctype === 'SUMINISTRO' ? 'black': 'blue'};
-
+               const { active, ctype, originoruse, carrier, values } = component;
+               const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
+               const rowstyles = [
+                 (selectedkey === i) ? 'bg-info' : '',
+                 active ? '' : 'inactivecomponent',
+                 (ctype === 'SUMINISTRO') ? 'deliveredstyle' : ''
+               ].join(' ');
                return (
                  <tr key={i}
-                     className={selectedkey === i | false ? 'bg-info' : ''}
-                     onClick={this.onClick.bind(this, i)}>
-                   <td style={ctypestyle}>{ctype}</td><td>{originoruse}</td><td>{carrier}</td>
-                   <td>{numeral(_.sum(values)).format('0.00')}</td>
-                   <td><EnergyComponentChart ctype={ ctype } data={ data } maxvalue={ maxvalue } /></td>
+                     className={ rowstyles }
+                     onClick={this.handleClick.bind(this, i)}>
+                   <td><input type="checkbox" defaultChecked={active}
+                              onClick={ this.handleChange.bind(this, i) } /></td>
+                   <td>{ ctype }</td>
+                   <td>{ originoruse }</td><td>{ carrier }</td>
+                   <td>{ numeral(_.sum(values)).format('0.00') }</td>
+                   <td><EnergyComponentChart ctype={ ctype }
+                                             data={ data }
+                                             maxvalue={ maxvalue } /></td>
                  </tr>
                );
              }
@@ -55,10 +77,6 @@ class EnergyComponentList extends React.Component {
         </tbody>
       </table>
     );
-  }
-
-  onClick(i, event) {
-    this.props.dispatch(selectEnergyComponent(i));
   }
 
 }

@@ -18,6 +18,9 @@ class IndicatorsChart extends React.Component {
 
   updateChart(props) {
     const { kexp, krdel, components } = props;
+    const activecomponents = components.filter(
+      (component) => { return component.active; }
+    );
 
     $.ajax({
       url: 'http://localhost:8000/epindicators',
@@ -26,7 +29,7 @@ class IndicatorsChart extends React.Component {
       data: JSON.stringify({
         kexp: kexp,
         krdel: krdel,
-        components: components
+        components: activecomponents
       }),
       crossDomain: false, // needed so request.is_ajax works
       success: (json) => {

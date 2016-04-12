@@ -5,6 +5,8 @@ html {
         padding-top: 40px;
         #components {
            .bg-info {background-color: #b7caff; cursor: pointer;}
+           .deliveredstyle * {color: blue;}
+           .inactivecomponent * {color: gray;}
            }
         #kexp, #krdel {
                display: inline-block;

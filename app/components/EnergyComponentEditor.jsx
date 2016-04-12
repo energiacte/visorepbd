@@ -111,7 +111,8 @@ class EnergyComponentEditor extends React.Component {
   handleAdd(selectedkey, event) {
     this.props.dispatch(
       addEnergyComponent(
-        { ctype: 'PRODUCCION',
+        { active: true,
+          ctype: 'PRODUCCION',
           originoruse: 'INSITU',
           carrier: 'ELECTRICIDAD',
           values: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
@@ -126,7 +127,8 @@ class EnergyComponentEditor extends React.Component {
     this.props.dispatch(
       editEnergyComponent(
         selectedkey,
-        { ctype: 'SUMINISTRO',
+        { active: true,
+          ctype: 'SUMINISTRO',
           originoruse: 'EPB',
           carrier: 'ELECTRICIDAD',
           values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
