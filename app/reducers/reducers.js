@@ -4,7 +4,7 @@ import { SELECT_ENERGY_COMPONENT,
          REMOVE_ENERGY_COMPONENT,
          EDIT_ENERGY_COMPONENT,
          CHANGE_KEXP,
-         CHANGE_KRDEL} from '../actions/actions.js';
+         CHANGE_KRDEL } from '../actions/actions.js';
 
 function selectedkey(state = null, action) {
   switch (action.type) {
@@ -59,7 +59,9 @@ function components(state = [], action) {
   }
 }
 
-// Para comportamiento más sofisticado habría que evitar el combineReducers y hacer algo así, pasando el state general y no solo una parte
+// Para comportamiento más sofisticado habría que
+// evitar el combineReducers y hacer algo así, pasando el state general
+// y no solo una parte
 // const reducer = (state = {}, action) => {
 //   return {
 //     selectedkey: selectedkey(state.selectedkey, action),

@@ -1,4 +1,5 @@
 import numeral from 'numeral';
+import _ from 'lodash';
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
@@ -10,9 +11,10 @@ import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 class EnergyComponentList extends React.Component {
 
   maxvalue() {
+    // Valor máximo de los valores de los componentes
     return _.max(
       this.props.components.map(
-        (component) => { return _.max(component.values) }
+        (component) => { return _.max(component.values); }
       )
     );
   }
@@ -25,7 +27,8 @@ class EnergyComponentList extends React.Component {
       <table id="components" className="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
-            <th>Tipo</th><th>Origen/Uso</th><th>Vector energético</th>
+            <th></th><th>Tipo</th>
+            <th>Origen/Uso</th><th>Vector energético</th>
             <th>kWh/año</th>
             <th>Valores</th>
           </tr>
@@ -64,5 +67,5 @@ export default EnergyComponentList = connect(state => {
   return {
     selectedkey: state.selectedkey,
     components: state.components
-  }
+  };
 })(EnergyComponentList);

@@ -17,7 +17,7 @@ const GlobalVarsControl = (props) => {
         <input type="range" min="0" max="1" step="0.1"
                defaultValue={props.kexp}
                onChange={props.onChangeKexp} />
-        <span>  </span>
+        <span>&nbsp;&nbsp</span>
         <input type="text" readOnly maxLength="3" size="3"
                value={numeral(props.kexp).format('0.0')} />
       </div>
@@ -26,13 +26,13 @@ const GlobalVarsControl = (props) => {
         <input type="range" min="0" max="1" step="0.1"
                defaultValue={props.krdel}
                onChange={props.onChangeKrdel} />
-        <span>  </span>
+        <span>&nbsp;&nbsp</span>
         <input type="text" readOnly maxLength="3" size="3"
                value={numeral(props.krdel).format('0.0')} />
       </div>
     </div>
   );
-}
+};
 
 const ActionsPanel = (props) => {
   return (
@@ -47,7 +47,7 @@ const ActionsPanel = (props) => {
           <span className="glyphicon glyphicon-edit"></span> Modificar
         </button>
     </div>);
-}
+};
 
 
 class ECEditor extends React.Component {
@@ -111,10 +111,10 @@ class EnergyComponentEditor extends React.Component {
   handleAdd(selectedkey, event) {
     this.props.dispatch(
       addEnergyComponent(
-        {ctype: 'PRODUCCION',
-         originoruse: 'INSITU',
-         carrier: 'ELECTRICIDAD',
-         values: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        { ctype: 'PRODUCCION',
+          originoruse: 'INSITU',
+          carrier: 'ELECTRICIDAD',
+          values: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
     }));
   }
 
@@ -126,10 +126,10 @@ class EnergyComponentEditor extends React.Component {
     this.props.dispatch(
       editEnergyComponent(
         selectedkey,
-        {ctype: 'SUMINISTRO',
-         originoruse: 'EPB',
-         carrier: 'ELECTRICIDAD',
-         values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        { ctype: 'SUMINISTRO',
+          originoruse: 'EPB',
+          carrier: 'ELECTRICIDAD',
+          values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         }));
   }
 
@@ -141,6 +141,6 @@ export default EnergyComponentEditor = connect(state => {
     krdel: state.krdel,
     selectedkey: state.selectedkey,
     components: state.components
-  }
+  };
 })(EnergyComponentEditor);
 
