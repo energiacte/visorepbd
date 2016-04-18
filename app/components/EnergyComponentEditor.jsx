@@ -17,7 +17,7 @@ const GlobalVarsControl = (props) => {
         <input type="range" min="0" max="1" step="0.1"
                defaultValue={props.kexp}
                onChange={props.onChangeKexp} />
-        <span>&nbsp;&nbsp</span>
+        <span>&nbsp;&nbsp;</span>
         <input type="text" readOnly maxLength="3" size="3"
                value={numeral(props.kexp).format('0.0')} />
       </div>
@@ -26,7 +26,7 @@ const GlobalVarsControl = (props) => {
         <input type="range" min="0" max="1" step="0.1"
                defaultValue={props.krdel}
                onChange={props.onChangeKrdel} />
-        <span>&nbsp;&nbsp</span>
+        <span>&nbsp;&nbsp;</span>
         <input type="text" readOnly maxLength="3" size="3"
                value={numeral(props.krdel).format('0.0')} />
       </div>
