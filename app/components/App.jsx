@@ -12,15 +12,8 @@ export default class App extends React.Component {
       <div>
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
-          <div className="page-header">
-            <h1>CTE DB-HE, aplicación de ISO 52000-1</h1>
-          </div>
 
           <IndicatorsChart width="100%" height="200px" />
-
-          <div id="results">
-            Resultados
-          </div>
 
           <div className="panel panel-primary">
             <div className="panel-heading">Entrada de datos</div>

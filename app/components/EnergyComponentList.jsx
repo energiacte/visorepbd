@@ -10,8 +10,8 @@ import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 
 class EnergyComponentList extends React.Component {
 
+  // Valor máximo de los valores de los componentes
   maxvalue() {
-    // Valor máximo de los valores de los componentes
     return _.max(
       this.props.components.map(
         (component) => { return _.max(component.values); }
@@ -19,13 +19,13 @@ class EnergyComponentList extends React.Component {
     );
   }
 
+  // Seleccionar componente
   handleClick(i, event) {
-    // Seleccionar componente
     this.props.dispatch(selectEnergyComponent(i));
   }
 
+  // Cambiar estado activo del componente
   handleChange(i, event) {
-    // Cambiar estado activo del componente
     const component = this.props.components[i];
     this.props.dispatch(
       editEnergyComponent(i,

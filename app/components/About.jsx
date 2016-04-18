@@ -10,9 +10,9 @@ export default React.createClass({
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
           <div className="page-header">
-            <h1>Créditos:</h1>
+            <h1>CTE DB-HE, aplicación de ISO 52000-1</h1>
           </div>
-          <p className="lead">Acerca de...</p>
+          <p className="lead">Evaluación de indicadores de la ISO 52000-1 para su aplicación en el CTE DB-HE.</p>
         </div>
       </div>
     );
