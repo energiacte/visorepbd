@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-import numeral from 'numeral';
-import $ from 'jquery';
 import d3 from 'd3';
 import dimple from 'dimple';
+import $ from 'jquery';
+import _ from 'lodash';
+import numeral from 'numeral';
 
 class IndicatorsChart extends React.Component {
 
@@ -42,6 +43,7 @@ class IndicatorsChart extends React.Component {
           { Paso: 'A+B', Componente: 'EP_total', 'kWh/m²·año': json.EPtotal }
         ];
         this.chart.data = data;
+        this.fixscale(data);
         this.chart.draw(100);
         this.drawSubtitle({ kexp, krdel,
                             EPArer: json.EPArer,
@@ -51,6 +53,21 @@ class IndicatorsChart extends React.Component {
         console.log(xhr.status + ': ' + xhr.responseText);
       }
     });
+  }
+
+  fixscale(data) {
+    const values = _.map(data, 'kWh/m²·año');
+
+    let max = _.max(values);
+    let min = _.min(values);
+    let step = 10;
+
+    if (Math.max(Math.abs(max), Math.abs(min)) > 100) { step = 100; }
+    max = Math.round(max / step) * step;
+    min = Math.round(min / step) * step;
+    const y = this.chart.axes[1];
+    y.overrideMax = max;
+    y.overrideMin = min;
   }
 
   drawSubtitle(params) {
@@ -113,7 +130,7 @@ class IndicatorsChart extends React.Component {
     c.addLegend('0%', '90%', '100%', '50%', 'right');
 
     c.ease = 'linear';
-    c.draw(400);
+    // c.draw(400);
   }
 
   componentDidMount() {
