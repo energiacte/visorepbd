@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import GlobalVarsControl from 'components/GlobalVarsControl';
+import ActionsPanel from 'components/ActionsPanel';
 
 import _ from 'lodash';
 import numeral from 'numeral';
@@ -12,21 +13,6 @@ import { selectEnergyComponent,
          editEnergyComponent,
          changeKexp,
          changeKrdel } from 'actions/actions.js';
-
-const ActionsPanel = (props) => {
-  return (
-    <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
-      <button className="btn" id="add" onClick={props.onAdd}>
-        <span className="glyphicon glyphicon-plus"></span> Añadir
-      </button>
-      <button className="btn" id="remove" onClick={props.onRemove}>
-        <span className="glyphicon glyphicon-minus"></span> Borrar
-      </button>
-        <button className="btn" id="modify" onClick={props.onUpdate}>
-          <span className="glyphicon glyphicon-edit"></span> Modificar
-        </button>
-    </div>);
-};
 
 
 class ECEditor extends React.Component {
