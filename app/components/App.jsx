@@ -18,12 +18,8 @@ export default class App extends React.Component {
           <div className="panel panel-primary">
             <div className="panel-heading">Entrada de datos</div>
             <div className="panel-body">
-              <div className="panel panel-default">
-                <div className="panel-body bg-info">
-                  <EnergyComponentEditor />
-                </div>
+                <EnergyComponentEditor />
                 <EnergyComponentList />
-              </div>
             </div>
 
           </div>

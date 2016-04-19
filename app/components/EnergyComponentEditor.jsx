@@ -91,11 +91,13 @@ class EnergyComponentEditor extends React.Component {
             krdel={krdel}
             onChangeKexp={(ev) => this.handleChangeKexp(ev)}
             onChangeKrdel={(ev) => this.handleChangeKrdel(ev)} />
-        <ECEditor {...this.props} />
-        <ActionsPanel
-            onAdd={() => this.handleAdd(selectedkey)}
-            onRemove={() => this.handleRemove(selectedkey)}
-            onUpdate={() => this.handleUpdate(selectedkey, {})} />
+        <div className="panel-body bg-info">
+          <ECEditor {...this.props} />
+          <ActionsPanel
+              onAdd={() => this.handleAdd(selectedkey)}
+              onRemove={() => this.handleRemove(selectedkey)}
+              onUpdate={() => this.handleUpdate(selectedkey, {})} />
+        </div>
       </div>
     );
   }
