@@ -12,17 +12,9 @@ export default class App extends React.Component {
       <div>
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
-
           <IndicatorsChart width="100%" height="200px" />
-
-          <div className="panel panel-primary">
-            <div className="panel-heading">Entrada de datos</div>
-            <div className="panel-body">
-                <EnergyComponentEditor />
-                <EnergyComponentList />
-            </div>
-
-          </div>
+          <EnergyComponentEditor />
+          <EnergyComponentList />
         </div>
       </div>
     );
