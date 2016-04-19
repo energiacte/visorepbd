@@ -43,7 +43,8 @@ module.exports = {
     // The following rules point out areas where you might have made mistakes.
     //
     "no-cond-assign": [2, "always"], // disallow assignment in conditional expressions
-    "no-console": 1, // disallow use of console (off by default in the node environment)
+    "no-console": 0,
+    //"no-console": 1, // disallow use of console (off by default in the node environment)
     "no-constant-condition": 1, // disallow use of constant expressions in conditions
     "no-control-regex": 2, // disallow control characters in regular expressions
     "no-debugger": 2, // disallow use of debugger
@@ -188,7 +189,7 @@ module.exports = {
     }], // require a space after and before certain keywords
     "lines-around-comment": 0, // enforces empty lines around comments
     "linebreak-style": [2, "unix"], // unix linebreaks
-    "max-len": [2, 100, 2, {
+    "max-len": [2, 120, 2, {
       "ignoreUrls": true,
       "ignoreComments": false
     }], // specify the maximum length of a line in your program (off by default)
