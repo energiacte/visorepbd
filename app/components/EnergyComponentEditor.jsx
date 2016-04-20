@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import GlobalVarsControl from 'components/GlobalVarsControl';
 import ActionsPanel from 'components/ActionsPanel';
+import EnergyComponentChart from 'components/EnergyComponentChart';
+import GlobalVarsControl from 'components/GlobalVarsControl';
 
 import _ from 'lodash';
 import numeral from 'numeral';
@@ -14,40 +15,38 @@ import { selectEnergyComponent,
          changeKexp,
          changeKrdel } from 'actions/actions.js';
 
-
-class ECEditor extends React.Component {
-
-  render() {
-    const { selectedkey, components } = this.props;
-    const { ctype, originoruse, carrier, values } = components[selectedkey];
-
-    // Mostrar Chart con tooltips con los Valores
-    // Editor de Valores
-    // Desplegables para otros datos
-
-    return (
-        <table id="editor" className="table-striped table-bordered table-condensed">
-          <tbody>
-            <tr>
-              <td>{selectedkey}</td>
-              <td>{ctype}</td>
-              <td>{originoruse}</td>
-              <td>{carrier}</td>
-              <td>{values.map(val => numeral(val).format('0.0'))
-                         .join(',')
-                  }</td>
-            </tr>
-          </tbody>
-        </table>
-    );
+const validData = {
+  SUMINISTRO: {
+    EPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
+          'COGENERACION', 'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+          'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
+          'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE'],
+    NEPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
+           'COGENERACION', 'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+           'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
+           'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE']
+  },
+  PRODUCCION: {
+    INSITU: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+             'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA',
+             'MEDIOAMBIENTE'],
+    COGENERACION: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+                   'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA']
   }
-
-}
+};
 
 class EnergyComponentEditor extends React.Component {
 
+  static state = {}
+
   render() {
-    const { selectedkey, kexp, krdel } = this.props;
+    const { kexp, krdel, selectedkey, components } = this.props;
+    const { ctype, originoruse, carrier, values } = components[selectedkey];
+
+    const ctypevalues = _.keys(validData);
+    const originorusevalues = _.keys(validData[ctype]);
+    const carriervalues = validData[ctype][originoruse];
+    const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
 
     return (
       <div>
@@ -57,11 +56,67 @@ class EnergyComponentEditor extends React.Component {
             onChangeKexp={(ev) => this.handleChangeKexp(ev)}
             onChangeKrdel={(ev) => this.handleChangeKrdel(ev)} />
         <div className="panel-body bg-info">
-          <ECEditor {...this.props} />
+
+          <div>
+            <form className="form-horizontal">
+              <fieldset>
+                <div className="form-group">
+
+                  <label className="col-md-1 control-label"
+                         htmlFor="selectctype">Tipo</label>
+                  <div className="col-md-3">
+                    <select ref="selectctype"
+                            name="selectctype" className="form-control"
+                            onChange={ (e) => this.handleChange(e) }
+                            value={ ctype } >
+                      { ctypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                    </select>
+                  </div>
+
+                  <label className="col-md-1 control-label"
+                         htmlFor="selectoriginoruse">Origen/Uso</label>
+                  <div className="col-md-3">
+                    <select ref="selectoriginoruse"
+                            name="selectoriginoruse" className="form-control"
+                            onChange={ (e) => this.handleChange(e) }
+                            value={ originoruse } >
+                      { originorusevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                    </select>
+                  </div>
+
+                  <label className="col-md-1 control-label"
+                         htmlFor="selectcarrier">Vector</label>
+                  <div className="col-md-3">
+                    <select ref="selectcarrier"
+                            name="selectcarrier" className="form-control"
+                            onChange={ (e) => this.handleChange(e) }
+                            value={ carrier }>
+                      { carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                    </select>
+                  </div>
+
+                </div>
+
+                <div className="form-group">
+                  <div className="col-md-4" />
+                  <div className="col-md-4" />
+                  <div className="col-md-4">
+                  <EnergyComponentChart ctype={ ctype }
+                                        maxvalue={ _.max(values) }
+                                        data={ data }
+                                        width="100%" height="40px" />
+                  </div>
+                </div>
+
+              </fieldset>
+            </form>
+
+          </div>
+
           <ActionsPanel
               onAdd={() => this.handleAdd(selectedkey)}
               onRemove={() => this.handleRemove(selectedkey)}
-              onUpdate={() => this.handleUpdate(selectedkey, {})} />
+              onRestore={() => this.handleRestore()} />
         </div>
       </div>
     );
@@ -73,6 +128,35 @@ class EnergyComponentEditor extends React.Component {
 
   handleChangeKrdel(ev) {
     this.props.dispatch(changeKrdel(ev.target.value));
+  }
+
+  handleChange(e) {
+    const { selectedkey, components } = this.props;
+    let prop = e.target.name.replace(/^select/, '');
+    let value = e.target.value;
+    let currentcomponent = { ...components[selectedkey] };
+
+    if (currentcomponent[prop] === value) { return; }
+
+    if (prop === 'ctype') {
+      const originorusekey0 = Object.keys(validData[value])[0];
+      currentcomponent.ctype = value;
+      currentcomponent.originoruse = originorusekey0;
+      currentcomponent.carrier = validData[value][originorusekey0][0];
+    }
+
+    if (prop === 'originoruse') {
+      const currctype = currentcomponent.ctype;
+      currentcomponent.originoruse = value;
+      currentcomponent.carrier = validData[currctype][value][0];
+    }
+
+    if (prop === 'carrier') {
+      currentcomponent.carrier = value;
+    }
+
+    this.props.dispatch(
+      editEnergyComponent(selectedkey, currentcomponent));
   }
 
   handleAdd(selectedkey, event) {
@@ -90,16 +174,14 @@ class EnergyComponentEditor extends React.Component {
     this.props.dispatch(removeEnergyComponent(selectedkey));
   }
 
-  handleUpdate(selectedkey, component, event) {
+  handleRestore(event) {
+    console.log(this.props.selectedkey,
+                this.props.storedcomponent);
     this.props.dispatch(
       editEnergyComponent(
-        selectedkey,
-        { active: true,
-          ctype: 'SUMINISTRO',
-          originoruse: 'EPB',
-          carrier: 'ELECTRICIDAD',
-          values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        }));
+        this.props.selectedkey,
+        this.props.storedcomponent
+        ));
   }
 
 }
@@ -108,6 +190,7 @@ export default EnergyComponentEditor = connect(state => {
   return {
     kexp: state.kexp,
     krdel: state.krdel,
+    storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
     components: state.components
   };
