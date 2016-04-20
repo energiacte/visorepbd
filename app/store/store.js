@@ -2,6 +2,13 @@ import { createStore } from 'redux';
 import reducer from 'reducers/reducers.js';
 
 const initialState = {
+  storedcomponent: {
+    active: true,
+    carrier: 'ELECTRICIDAD',
+    ctype: 'SUMINISTRO',
+    originoruse: 'EPB',
+    values: [9.67, 7.74, 4.84, 4.35, 2.42, 2.90, 3.87, 3.39, 2.42, 3.87, 5.80, 7.74]
+  },
   selectedkey: 0, // Currently selected component
   kexp: 1.0,
   krdel: 1.0,

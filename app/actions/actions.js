@@ -13,8 +13,8 @@ export const CHANGE_KRDEL = 'CHANGE_KRDEL';
  * action creators
  */
 
-export function selectEnergyComponent(id) {
-  return { type: SELECT_ENERGY_COMPONENT, id };
+export function selectEnergyComponent(id, component) {
+  return { type: SELECT_ENERGY_COMPONENT, id, component };
 }
 
 export function addEnergyComponent(component) {

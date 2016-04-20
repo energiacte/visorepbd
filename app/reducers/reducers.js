@@ -6,6 +6,17 @@ import { SELECT_ENERGY_COMPONENT,
          CHANGE_KEXP,
          CHANGE_KRDEL } from '../actions/actions.js';
 
+function storedcomponent(state = null, action) {
+  switch (action.type) {
+  case SELECT_ENERGY_COMPONENT:
+    return action.component;
+  case EDIT_ENERGY_COMPONENT:
+    return action.newcomponent;
+  default:
+    return state;
+  }
+}
+
 function selectedkey(state = null, action) {
   switch (action.type) {
   case SELECT_ENERGY_COMPONENT:
@@ -73,6 +84,7 @@ function components(state = [], action) {
 // export default reducer;
 
 export default combineReducers({
+  storedcomponent,
   selectedkey,
   kexp,
   krdel,

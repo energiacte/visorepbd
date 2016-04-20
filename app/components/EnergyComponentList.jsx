@@ -21,7 +21,8 @@ class EnergyComponentList extends React.Component {
 
   // Seleccionar componente
   handleClick(i, event) {
-    this.props.dispatch(selectEnergyComponent(i));
+    const component = this.props.components[i];
+    this.props.dispatch(selectEnergyComponent(i, component));
   }
 
   // Cambiar estado activo del componente

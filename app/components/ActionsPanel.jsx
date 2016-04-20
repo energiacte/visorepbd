@@ -9,8 +9,8 @@ const ActionsPanel = (props) => {
       <button className="btn" id="remove" onClick={props.onRemove}>
         <span className="glyphicon glyphicon-minus"></span> Borrar
       </button>
-        <button className="btn" id="modify" onClick={props.onUpdate}>
-          <span className="glyphicon glyphicon-edit"></span> Modificar
+        <button className="btn" id="modify" onClick={props.onRestore}>
+          <span className="glyphicon glyphicon-edit"></span> Deshacer
         </button>
     </div>);
 };
