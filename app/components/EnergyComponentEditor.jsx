@@ -33,14 +33,17 @@ const validData = {
   }
 };
 
+const curveValues = ['ACTUAL', 'CONSTANTE', 'CONCAVA', 'CONVEXA', 'CRECIENTE', 'DECRECIENTE'];
+
 class EnergyComponentEditor extends React.Component {
 
-  static state = {}
+  state = { curve: 'ACTUAL', totalenergy: 0 }
 
   render() {
     const { kexp, krdel, selectedkey, components } = this.props;
     const { ctype, originoruse, carrier, values } = components[selectedkey];
 
+    this.state.totalenergy = _.sum(values);
     const ctypevalues = _.keys(validData);
     const originorusevalues = _.keys(validData[ctype]);
     const carriervalues = validData[ctype][originoruse];
@@ -96,9 +99,39 @@ class EnergyComponentEditor extends React.Component {
                 </div>
 
                 <div className="form-group">
-                  <div className="col-md-4" />
-                  <div className="col-md-4" />
-                  <div className="col-md-4">
+
+                  <label className="col-md-1 control-label"
+                         htmlFor="selectcurve">Curva</label>
+                  <div className="col-md-3">
+                    <select ref="selectcurve"
+                            name="selectcurve" className="form-control"
+                            onChange={ (e) => this.handleChangeCurve(e) }>
+                      { curveValues.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                    </select>
+                  </div>
+
+                  <label className="col-md-1 control-label"
+                         htmlFor="rangecontrol">Curva</label>
+                  <div className="col-md-2">
+                    <input className="form-control"
+                           ref="totalenergyrange"
+                           name="totalenergyrange"
+                           type="range"
+                           min="0"
+                           defaultValue={ this.state.totalenergy }
+                           max={ 2 * Math.round(this.state.totalenergy / 100) * 100 }
+                           step="0.1"
+                           onChange={ (e) => this.handleChangeTotalEnergy(e) } />
+                  </div>
+                  <div className="col-md-2">
+                    <input className="form-control"
+                           ref="totalenergyentry"
+                           name="totalenergyentry"
+                           type="number"
+                           defaultValue={ this.state.totalenergy }
+                           onChange={ (e) => this.handleChangeTotalEnergy(e) }/>
+                  </div>
+                  <div className="col-md-3">
                   <EnergyComponentChart ctype={ ctype }
                                         maxvalue={ _.max(values) }
                                         data={ data }
@@ -144,20 +177,20 @@ class EnergyComponentEditor extends React.Component {
       const originorusekey0 = Object.keys(validData[value])[0];
       currentcomponent.ctype = value;
       currentcomponent.originoruse = originorusekey0;
-      if (!_.includes(validData[value][originorusekey0],
-                      currentcomponent.carrier))
-      {
-        currentcomponent.carrier = validData[value][originorusekey0][0];
+      if (!_.includes(
+        validData[value][originorusekey0],
+        currentcomponent.carrier)) {
+          currentcomponent.carrier = validData[value][originorusekey0][0];
       }
     }
 
     if (prop === 'originoruse') {
       const currctype = currentcomponent.ctype;
       currentcomponent.originoruse = value;
-      if (!_.includes(validData[currctype][value],
-                      currentcomponent.carrier))
-      {
-        currentcomponent.carrier = validData[currctype][value][0];
+      if (!_.includes(
+        validData[currctype][value],
+        currentcomponent.carrier)) {
+          currentcomponent.carrier = validData[currctype][value][0];
       }
     }
 
@@ -167,6 +200,47 @@ class EnergyComponentEditor extends React.Component {
 
     this.props.dispatch(
       editEnergyComponent(selectedkey, currentcomponent));
+  }
+
+  // Handle changes in curve type used to modify energyvalues
+  handleChangeCurve(e) {
+    const { selectedkey, components } = this.props;
+    let value = e.target.value;
+    let currentcomponent = { ...components[selectedkey] };
+
+    if (value === 'ACTUAL') { return; }
+
+    this.setState({ curve: value });
+
+    if (value === 'CONSTANTE') { return; }
+
+    console.log(this.state.curve);
+    /* this.props.dispatch(
+       editEnergyComponent(selectedkey, currentcomponent)); */
+  }
+
+  handleChangeTotalEnergy(e) {
+    let amount = e.target.value;
+    if (this.state.totalenergy === amount) { return; }
+
+    this.setState({ totalenergy: amount });
+
+    if (e.target.name === 'totalenergyrange') {
+      if (this.refs.totalenergyentry.value === amount) { return; }
+      this.refs.totalenergyentry.value = amount;
+    }
+
+    if (e.target.name === 'totalenergyentry') {
+      if (this.refs.totalenergyrange.value === amount) { return; }
+
+      let rangemax = this.refs.totalenergyrange.max;
+      if (rangemax <= amount) {
+        this.refs.totalenergyrange.max = rangemax * 2;
+      }
+      this.refs.totalenergyrange.value = amount;
+    }
+
+    console.log('Actualizar valores de elemento actual usando curva, totalenergyentry, ...');
   }
 
   // Add component to component list
