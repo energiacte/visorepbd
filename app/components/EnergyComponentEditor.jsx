@@ -132,6 +132,8 @@ class EnergyComponentEditor extends React.Component {
     this.props.dispatch(changeKrdel(e.target.value));
   }
 
+  // Handle changes in ctype, originoruse and carrier select boxes
+  // It tries to keep coherent values
   handleChange(e) {
     const { selectedkey, components } = this.props;
     let prop = e.target.name.replace(/^select/, '');
@@ -161,6 +163,7 @@ class EnergyComponentEditor extends React.Component {
       editEnergyComponent(selectedkey, currentcomponent));
   }
 
+  // Add component to component list
   handleAdd(selectedkey, event) {
     this.props.dispatch(
       addEnergyComponent(
@@ -172,13 +175,13 @@ class EnergyComponentEditor extends React.Component {
     }));
   }
 
+  // Remove current component to component list
   handleRemove(selectedkey, event) {
     this.props.dispatch(removeEnergyComponent(selectedkey));
   }
 
+  // Restore current component to stored state
   handleRestore(event) {
-    console.log(this.props.selectedkey,
-                this.props.storedcomponent);
     this.props.dispatch(
       editEnergyComponent(
         this.props.selectedkey,
