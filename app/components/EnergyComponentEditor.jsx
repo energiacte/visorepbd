@@ -122,12 +122,14 @@ class EnergyComponentEditor extends React.Component {
     );
   }
 
-  handleChangeKexp(ev) {
-    this.props.dispatch(changeKexp(ev.target.value));
+  // Handle changes in the kexp slider
+  handleChangeKexp(e) {
+    this.props.dispatch(changeKexp(e.target.value));
   }
 
-  handleChangeKrdel(ev) {
-    this.props.dispatch(changeKrdel(ev.target.value));
+  // Handle changes in the krdel slider
+  handleChangeKrdel(e) {
+    this.props.dispatch(changeKrdel(e.target.value));
   }
 
   handleChange(e) {
