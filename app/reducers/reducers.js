@@ -10,8 +10,6 @@ function storedcomponent(state = null, action) {
   switch (action.type) {
   case SELECT_ENERGY_COMPONENT:
     return action.component;
-  case EDIT_ENERGY_COMPONENT:
-    return action.newcomponent;
   default:
     return state;
   }
