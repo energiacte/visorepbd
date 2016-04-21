@@ -6,10 +6,8 @@ import EnergyComponentChart from 'components/EnergyComponentChart';
 import GlobalVarsControl from 'components/GlobalVarsControl';
 
 import _ from 'lodash';
-import numeral from 'numeral';
 
-import { selectEnergyComponent,
-         addEnergyComponent,
+import { addEnergyComponent,
          removeEnergyComponent,
          editEnergyComponent,
          changeKexp,
