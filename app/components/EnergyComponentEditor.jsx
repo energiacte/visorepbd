@@ -146,13 +146,21 @@ class EnergyComponentEditor extends React.Component {
       const originorusekey0 = Object.keys(validData[value])[0];
       currentcomponent.ctype = value;
       currentcomponent.originoruse = originorusekey0;
-      currentcomponent.carrier = validData[value][originorusekey0][0];
+      if (!_.includes(validData[value][originorusekey0],
+                      currentcomponent.carrier))
+      {
+        currentcomponent.carrier = validData[value][originorusekey0][0];
+      }
     }
 
     if (prop === 'originoruse') {
       const currctype = currentcomponent.ctype;
       currentcomponent.originoruse = value;
-      currentcomponent.carrier = validData[currctype][value][0];
+      if (!_.includes(validData[currctype][value],
+                      currentcomponent.carrier))
+      {
+        currentcomponent.carrier = validData[currctype][value][0];
+      }
     }
 
     if (prop === 'carrier') {
