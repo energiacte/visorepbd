@@ -41,7 +41,16 @@ export default class EnergyComponentChart extends React.Component {
     mySeries.getTooltipText = (e) => [e.yValue];
 
     c.ease = 'linear';
-    c.draw(200);
+    c.draw(400);
+
+    this.chart = c;
+  }
+
+  updateChart(props) {
+    //const node = ReactDOM.findDOMNode(this);
+    this.chart.data = props.data;
+    this.chart.axes[1].overrideMax = props.maxvalue;
+    this.chart.draw(400);
   }
 
   componentDidMount() {
@@ -52,8 +61,7 @@ export default class EnergyComponentChart extends React.Component {
   shouldComponentUpdate(nextProps) {
     if (nextProps.data !== this.props.data |
         nextProps.maxvalue !== this.props.maxvalue) {
-          const node = ReactDOM.findDOMNode(this);
-          this.drawChart(node, nextProps);
+          this.updateChart(nextProps);
     }
     return false;
   }
