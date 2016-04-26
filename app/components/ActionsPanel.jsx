@@ -10,7 +10,7 @@ const ActionsPanel = (props) => {
         <span className="glyphicon glyphicon-minus"></span> Borrar
       </button>
         <button className="btn" id="modify" onClick={props.onRestore}>
-          <span className="glyphicon glyphicon-edit"></span> Deshacer
+          <span className="glyphicon glyphicon-repeat"></span> Restaurar
         </button>
     </div>);
 };
