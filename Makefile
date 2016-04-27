@@ -15,3 +15,7 @@ analyze:
 .PHONY: build
 build:
 	npm run buildprod
+	mkdir -p epbdserver/static
+	mkdir -p epbdserver/templates
+	cp build/* epbdserver/static/
+	mv epbdserver/static/index.html epbdserver/templates/
