@@ -18,6 +18,8 @@ class Navigation extends React.Component {
             <ul className="nav navbar-nav">
               <li className="active" role="presentation">
                 <a href="/#/">Inicio</a></li>
+            </ul>
+            <ul className="nav navbar-nav navbar-right">
               <li role="presentation"><a href="/#/about">Créditos</a></li>
             </ul>
           </div>
