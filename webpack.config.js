@@ -96,8 +96,8 @@ var config = {
   },
   output: {
     path: PATHS.build,
-    filename: '[name]-[hash].js'
-    //publicPath: '/build/' // This is used to generate URLs to e.g. images
+    filename: '[name]-[hash].js',
+    publicPath: production ? '/static/': '' // This is used to generate URLs to e.g. images
   },
   resolve: {
     root: [PATHS.app, PATHS.bower, PATHS.node],
