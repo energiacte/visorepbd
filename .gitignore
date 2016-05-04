@@ -2,7 +2,9 @@ node_modules
 bower_components
 dist
 public
+venv
 epbdserver/templates/*
 epbdserver/static/*
+stats.json
 *.generated.*
 npm-debug.log
