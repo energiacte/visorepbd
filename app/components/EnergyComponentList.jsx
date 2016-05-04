@@ -1,8 +1,8 @@
-import numeral from 'numeral';
-import _ from 'lodash';
-
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+
+import numeral from 'numeral';
+import _ from 'lodash';
 
 import { selectEnergyComponent, editEnergyComponent } from 'actions/actions.js';
 
