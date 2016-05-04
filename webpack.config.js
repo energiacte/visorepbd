@@ -27,7 +27,10 @@ var plugins = [
   new webpack.HotModuleReplacementPlugin(),
   new ExtractTextPlugin('bundle-[hash].css', {allChunks: true}),
   new HtmlWebpackPlugin({
+    // https://github.com/jaketrent/html-webpack-template
+    template: 'app/index.template.html',
     title: "DB-HE NZEB: implementación de la ISO 52000-1 en el CTE DB-HE",
+    inject: false,
     //favicon: 'favicon.ico',
     filename: 'index.html'
   }),
