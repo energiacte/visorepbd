@@ -125,8 +125,8 @@ class IndicatorsChart extends React.Component {
 
     c.addCategoryAxis('x', ['Paso', 'Componente']);
     c.addMeasureAxis('y', 'kWh/m²·año');
-    c.addSeries('Componente', dimple.plot.bar)
-     .addOrderRule(['EP_total', 'EP_nren', 'EP_ren']);
+    const s = c.addSeries('Componente', dimple.plot.bar);
+    s.addOrderRule(['EP_total', 'EP_nren', 'EP_ren']);
     c.addLegend('0%', '90%', '100%', '50%', 'right');
 
     c.ease = 'linear';
