@@ -2,5 +2,7 @@ node_modules
 bower_components
 dist
 public
+epbdserver/templates/*
+epbdserver/static/*
 *.generated.*
 npm-debug.log
