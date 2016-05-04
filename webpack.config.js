@@ -39,17 +39,6 @@ var plugins = [
     name: "vendor",
     minChunks: Infinity // only vendor chunks here
   })
-  // ,
-  // new webpack.ProvidePlugin({ // Detect free vars in modules and do automatic import
-  //   jQuery: 'jquery',
-  //   jquery: 'jquery',
-  //   $: 'jquery',
-  //   'windows.jQuery': 'jquery',
-  //   _: 'lodash',
-  //   lodash: 'lodash',
-  //   React: 'react',
-  //   ReactDOM: 'react-dom'
-  // })
 ];
 
 if (production) { // Production plugins go here
