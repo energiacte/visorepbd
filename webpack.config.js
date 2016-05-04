@@ -34,7 +34,6 @@ var plugins = [
   new webpack.NoErrorsPlugin(),
   new webpack.optimize.CommonsChunkPlugin({
     name: "vendor",
-    filename: "vendor-[hash].js",
     minChunks: Infinity // only vendor chunks here
   }),
   new webpack.ProvidePlugin({ // Detect free vars in modules and do automatic import
