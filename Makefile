@@ -31,30 +31,30 @@ buildjs:
 
 # antes hacer un git pull
 update: updaterepo
-    $(info [INFO]: actualización del proyecto completada. Complete la operación con $ sudo make restart)
+	$(info [INFO]: actualización del proyecto completada. Complete la operación con $ sudo make restart)
 
 updaterepo: ${REPODIR}/requirements.txt ${REPODIR}/package.json updateresources
-    $(info [INFO]: actualizando dependencias)
-    ${VPYTHON} -m pip install -Ur ${REPODIR}/requirements.txt
-    ${VPYTHON} -m pip install -U gunicorn setproctitle
-    cd ${REPODIR} && npm install
+	$(info [INFO]: actualizando dependencias)
+	${VPYTHON} -m pip install -Ur ${REPODIR}/requirements.txt
+	${VPYTHON} -m pip install -U gunicorn setproctitle
+	cd ${REPODIR} && npm install
 
 updateresources: ${RESDIR}/secretkey.txt ${RESDIR}/production.py ${RESDIR}/gunicorn_start.bash
-    $(info [INFO]: actualizando recursos de despliegue)
-    cp -p ${RESDIR}/secretkey.txt ${PRJDIR}/secretkey.txt
-    cp -p ${RESDIR}/production.py ${REPODIR}/epbdpanel/epbdserver/settings/production.py
-    cp -p ${RESDIR}/gunicorn_start.bash ${VENVBINDIR}/
-    touch ${PRJDIR}/gunicorn_supervisor.log
-    chown webapps:www-data ${PRJDIR}/gunicorn_supervisor.log
+	$(info [INFO]: actualizando recursos de despliegue)
+	cp -p ${RESDIR}/secretkey.txt ${PRJDIR}/secretkey.txt
+	cp -p ${RESDIR}/production.py ${REPODIR}/epbdpanel/epbdserver/settings/production.py
+	cp -p ${RESDIR}/gunicorn_start.bash ${VENVBINDIR}/
+	touch ${PRJDIR}/gunicorn_supervisor.log
+	chown webapps:www-data ${PRJDIR}/gunicorn_supervisor.log
 
 restart: updateresources ${RESDIR}/${NGINXCONF} ${RESDIR}/${SUPERVISORCONF}
-    $(info [INFO]: copiando configuración)
-    sudo cp ${RESDIR}/${NGINXCONF} /etc/nginx/sites-available/
-    sudo cp ${RESDIR}/${SUPERVISORCONF} /etc/supervisor/conf.d/
-    $(info [INFO]: reiniciando servicios)
-    sudo supervisorctl reread
-    sudo supervisorctl update
-    sudo supervisorctl restart ${SUPERVISORAPPNAME}
+	$(info [INFO]: copiando configuración)
+	sudo cp ${RESDIR}/${NGINXCONF} /etc/nginx/sites-available/
+	sudo cp ${RESDIR}/${SUPERVISORCONF} /etc/supervisor/conf.d/
+	$(info [INFO]: reiniciando servicios)
+	sudo supervisorctl reread
+	sudo supervisorctl update
+	sudo supervisorctl restart ${SUPERVISORAPPNAME}
 	sudo service nginx restart
 
 installpackages:
