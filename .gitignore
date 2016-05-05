@@ -6,5 +6,6 @@ venv
 epbdserver/templates/*
 epbdserver/static/*
 stats.json
+*.log
 *.generated.*
 npm-debug.log
