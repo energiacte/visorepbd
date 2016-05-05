@@ -32,7 +32,11 @@ var plugins = [
     title: "DB-HE NZEB: implementación de la ISO 52000-1 en el CTE DB-HE",
     inject: false,
     //favicon: 'favicon.ico',
-    filename: 'index.html'
+    filename: 'index.html',
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true
+    }
   }),
   new webpack.NoErrorsPlugin(),
   new webpack.optimize.CommonsChunkPlugin({
