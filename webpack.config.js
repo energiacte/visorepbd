@@ -25,7 +25,7 @@ const PATHS = {
 
 var plugins = [
   new webpack.HotModuleReplacementPlugin(),
-  new ExtractTextPlugin('bundle-[hash].css', {allChunks: true}),
+  new ExtractTextPlugin('bundle-[hash].css', { allChunks: true }),
   new HtmlWebpackPlugin({
     // https://github.com/jaketrent/html-webpack-template
     template: 'app/index.template.html',
@@ -33,16 +33,9 @@ var plugins = [
     inject: false,
     //favicon: 'favicon.ico',
     filename: 'index.html',
-    minify: {
-      removeComments: true,
-      collapseWhitespace: true
-    }
+    minify: { removeComments: true, collapseWhitespace: true }
   }),
-  new webpack.NoErrorsPlugin(),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: "vendor",
-    minChunks: Infinity // only vendor chunks here
-  })
+  new webpack.NoErrorsPlugin()
 ];
 
 if (production) { // Production plugins go here
@@ -77,8 +70,7 @@ var config = {
   cache: true,
   devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
-    app: [PATHS.app, 'bootstrap-loader'],
-    vendor: ['d3', 'dimple', 'jquery', 'lodash', 'numeral', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
+    app: [PATHS.app, 'bootstrap-loader', 'numeral']
   },
   devServer: {
     contentBase: PATHS.build,
@@ -94,6 +86,18 @@ var config = {
     path: PATHS.build,
     filename: '[name]-[hash].js',
     publicPath: production ? '/static/': '' // This is used to generate URLs to e.g. images
+  },
+  externals: {
+    // require("key") is external and available on the global var value
+    d3: 'd3',
+    dimple: 'dimple',
+    jquery: 'jQuery',
+    lodash: '_',
+    react: 'React',
+    'react-dom': 'ReactDOM',
+    'react-redux': 'ReactRedux',
+    'react-router': 'ReactRouter',
+    redux: 'Redux'
   },
   resolve: {
     root: [PATHS.app, PATHS.bower, PATHS.node],
