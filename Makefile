@@ -37,7 +37,6 @@ update: updaterepo
 updaterepo: ${REPODIR}/requirements.txt ${REPODIR}/package.json updateresources
 	$(info [INFO]: actualizando dependencias)
 	${VPYTHON} -m pip install -Ur ${REPODIR}/requirements.txt
-	${VPYTHON} -m pip install -U gunicorn setproctitle
 	cd ${REPODIR} && npm install
 
 updateresources: ${RESDIR}/secretkey.txt ${RESDIR}/production.py ${RESDIR}/gunicorn_start.bash
