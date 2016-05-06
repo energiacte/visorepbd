@@ -8,6 +8,9 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 
 const production = process.env.NODE_ENV === 'production';
+// Permitirmos usar la variable de entorno EPBDURLPREFIX para añadir prefijo
+// a las direcciones estáticas y la url del servicio que llamamos con ajax
+const epbdurlprefix = process.env.EPBDURLPREFIX || '';
 
 const PATHS = {
   app: path.resolve(path.join(__dirname, 'app')),
@@ -24,6 +27,9 @@ const PATHS = {
 };
 
 var plugins = [
+  new webpack.DefinePlugin({
+    __EPBDURLPREFIX__: JSON.stringify(epbdurlprefix)
+  }),
   new webpack.HotModuleReplacementPlugin(),
   new ExtractTextPlugin('bundle-[hash].css', { allChunks: true }),
   new HtmlWebpackPlugin({
@@ -85,7 +91,7 @@ var config = {
   output: {
     path: PATHS.build,
     filename: '[name]-[hash].js',
-    publicPath: production ? '/static/': '' // This is used to generate URLs to e.g. images
+    publicPath: production ? epbdurlprefix + '/static/': '' // This is used to generate URLs to e.g. images
   },
   externals: {
     // require("key") is external and available on the global var value

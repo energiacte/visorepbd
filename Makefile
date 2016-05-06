@@ -6,6 +6,8 @@ VPYTHON:=${VENVBINDIR}/python
 NGINXCONF:=epbdpanel.nginx.conf
 SUPERVISORCONF:=epbdpanel.supervisor.conf
 SUPERVISORAPPNAME:=epbdpanel
+# usar variable de entorno EPBDURLPREFIX para cambiar prefijos de static y url para ajax
+EPBDURLPREFIX:=/epbdpanel
 
 dev:
 	venv/bin/python epbdserver/manage.py runserver
@@ -29,6 +31,9 @@ buildjs:
 	rm -f epbdserver/static/*
 	cp build/* epbdserver/static/
 	mv epbdserver/static/index.html epbdserver/templates/
+
+buildprodjs:
+	EPBDURLPREFIX=${EPBDURLPREFIX} make buildjs
 
 # antes hacer un git pull
 update: updaterepo

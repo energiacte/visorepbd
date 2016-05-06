@@ -38,7 +38,7 @@ class IndicatorsChart extends React.Component {
 
     $.ajax({
       // document.location.host = host + port
-      url: 'http://' + document.location.host + '/epindicators',
+      url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/epindicators',
       method: 'POST', // http method
       dataType: 'json',
       data: JSON.stringify({ kexp: kexp, krdel: krdel, components: activecomponents }),
