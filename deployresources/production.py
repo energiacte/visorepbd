@@ -28,7 +28,7 @@ from .base import *
 #DEBUG=False
 ALLOWED_HOSTS='*'
 
-FORCE_SCRIPT_NAME='/epbdpanel'
+#FORCE_SCRIPT_NAME='/epbdpanel'
 
 with open("/home/webapps/epbdpanel/secretkey.txt") as f:
 	SECRET_KEY = f.read().strip()
