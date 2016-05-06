@@ -52,6 +52,18 @@ class IndicatorsChart extends React.Component {
       },
       error: (xhr, errmsg, err) => {
         console.log(xhr.status + ': ' + xhr.responseText);
+        const data = [
+          { Paso: 'A', Componente: 'EP_nren', 'kWh/m²·año': 0 },
+          { Paso: 'A', Componente: 'EP_ren', 'kWh/m²·año': 0 },
+          { Paso: 'A', Componente: 'EP_total', 'kWh/m²·año': 0 },
+          { Paso: 'A+B', Componente: 'EP_nren', 'kWh/m²·año': 0 },
+          { Paso: 'A+B', Componente: 'EP_ren', 'kWh/m²·año': 0 },
+          { Paso: 'A+B', Componente: 'EP_total', 'kWh/m²·año': 0 }
+        ];
+        this.chart.data = data;
+        this.fixscale(data);
+        this.chart.draw(100);
+        this.drawSubtitle({ kexp, krdel, EPArer: 0, EPrer: 0, error: true });
       }
     });
   }
@@ -72,7 +84,7 @@ class IndicatorsChart extends React.Component {
   }
 
   drawSubtitle(params) {
-    const { kexp, krdel, EPrer, EPArer } = params;
+    const { kexp, krdel, EPrer, EPArer, error } = params;
     const svg = this.chart.svg;
 
     svg.select('#subtitle').remove();
@@ -85,6 +97,7 @@ class IndicatorsChart extends React.Component {
        .text('kexp: ' + numeral(kexp).format('0.0') +
              ', krdel: ' + numeral(krdel).format('0.0'));
     svg.select('#subsubtitle').remove();
+    const errortxt = error ? 'Error al conectar con el servidor' : '';
     svg.append('text')
        .attr('id', 'subsubtitle')
        .attr('x', '50%').attr('y', '45px')
@@ -92,7 +105,7 @@ class IndicatorsChart extends React.Component {
        .style('fill', 'black')
        .style('font-size', '12px')
        .html('RER(A): ' + numeral(EPArer).format('0.00') +
-             ', RER(A+B): ' + numeral(EPrer).format('0.00'));
+             ', RER(A+B): ' + numeral(EPrer).format('0.00') + errortxt);
   }
 
   drawChart(node, props) {
