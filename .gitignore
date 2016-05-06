@@ -5,6 +5,7 @@ public
 venv
 epbdserver/templates/*
 epbdserver/static/*
+epbdserver/epbdserver/settings/production.py
 stats.json
 *.log
 *.generated.*
