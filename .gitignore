@@ -5,7 +5,6 @@ public
 venv
 epbdserver/templates/*
 epbdserver/static/*
-epbdserver/epbdserver/settings/production.py
 secretkey.txt
 stats.json
 *.log
