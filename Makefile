@@ -16,6 +16,7 @@ npminstall:
 	curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
 	sudo apt-get install -y nodejs
 	npm install -g eslint babel-eslint eslint-plugin-react http-server webpack webpack-dev-server
+	npm install
 .PHONY: analyze
 analyze:
 	webpack --json > stats.json
