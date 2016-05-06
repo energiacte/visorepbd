@@ -42,7 +42,7 @@ updaterepo: ${REPODIR}/requirements.txt ${REPODIR}/package.json updateresources
 updateresources: ${RESDIR}/secretkey.txt ${RESDIR}/production.py ${RESDIR}/gunicorn_start.bash
 	$(info [INFO]: actualizando recursos de despliegue)
 	cp -p ${RESDIR}/secretkey.txt ${PRJDIR}/secretkey.txt
-	cp -p ${RESDIR}/production.py ${REPODIR}/epbdpanel/epbdserver/settings/production.py
+	cp -p ${RESDIR}/production.py ${REPODIR}/epbdserver/settings/production.py
 	cp -p ${RESDIR}/gunicorn_start.bash ${VENVBINDIR}/
 	touch ${PRJDIR}/gunicorn_supervisor.log
 	chown webapps:www-data ${PRJDIR}/gunicorn_supervisor.log
