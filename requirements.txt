@@ -1,8 +1,10 @@
 Django==1.9.5
 django-cors-headers==1.1.0
+gunicorn==19.4.5
 numpy==1.11.0
 pandas==0.18.0
 pyepbd==2.1
 python-dateutil==2.5.2
 pytz==2016.3
+setproctitle==1.1.9
 six==1.10.0
