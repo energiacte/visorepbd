@@ -58,7 +58,7 @@ class EnergyComponentEditor extends React.Component {
             onChangeKrdel={(ev) => this.handleChangeKrdel(ev)} />
         <div className="panel-body bg-info">
 
-          <div>
+          <div key={ 'selected' + selectedkey } >
             <form className="form-horizontal"
                   onSubmit={ (e) => { e.preventDefault(); make} }>
               <fieldset>
