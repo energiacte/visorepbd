@@ -15,7 +15,7 @@ import { addEnergyComponent,
          changeKrdel } from 'actions/actions.js';
 
 const validData = {
-  SUMINISTRO: {
+  CONSUMO: {
     EPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
           //'COGENERACION',
           'ELECTRICIDAD', 'ELECTRICIDADBALEARES',

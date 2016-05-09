@@ -56,7 +56,7 @@ class EnergyComponentList extends React.Component {
                const rowstyles = [
                  (selectedkey === i) ? 'bg-info' : '',
                  active ? '' : 'inactivecomponent',
-                 (ctype === 'SUMINISTRO') ? 'deliveredstyle' : ''
+                 (ctype === 'CONSUMO') ? 'deliveredstyle' : ''
                ].join(' ');
                return (
                  <tr key={i}

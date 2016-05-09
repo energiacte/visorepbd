@@ -28,7 +28,7 @@ export default class EnergyComponentChart extends React.Component {
 
     const csum = new dimple.color('blue');
     const cprod = new dimple.color('gray');
-    c.defaultColors = [ctype === 'SUMINISTRO' ? csum : cprod];
+    c.defaultColors = [ctype === 'CONSUMO' ? csum : cprod];
 
     const xaxis = c.addCategoryAxis('x', 'Mes');
     const yaxis = c.addMeasureAxis('y', 'Valor');
