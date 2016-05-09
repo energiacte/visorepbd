@@ -120,8 +120,8 @@ class EnergyComponentEditor extends React.Component {
                            name="totalenergyrange"
                            type="range"
                            min="0"
-                           max={ Math.max(10, 10 + 2 * Math.round(currenttotalenergy / 100) * 100) }
-                           step="0.1"
+                           max={ Math.max(10, 10 + 1.5 * Math.round(currenttotalenergy / 5) * 5) }
+                           step="5"
                            defaultValue={ currenttotalenergy }
                            onChange={ (e) => this.handleChangeTotalEnergy(e) } />
                   </div>
