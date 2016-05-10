@@ -48,27 +48,62 @@ class IndicatorsChart extends React.Component {
         data = buildData(json);
         subtitle = { kexp, krdel, EPArer: json.EPArer, EPrer: json.EPrer, error: false };
         this.chart.data = data;
-        this.fixscale(data);
-        this.chart.draw(100);
-        this.drawSubtitle(subtitle);
+        this.redrawChart(data, subtitle);
       })
       .fail((xhr, errmsg, err) => {
         console.log(xhr.status + ': ' + xhr.responseText);
         data = buildData(null);
         subtitle = { kexp, krdel, EPArer: 0, EPrer: 0, error: true };
-        this.fixscale(data);
-        this.chart.draw(100);
-        this.drawSubtitle(subtitle);
+        this.redrawChart(data, subtitle);
       });
   }
 
-  fixscale(data) {
+  redrawChart(data, subtitle) {
+    const chart = this.chart;
+    const x = chart.axes[0];
+    const y = chart.axes[1];
+    const svg = this.chart.svg;
+
     const max = _.max(_.map(data, 'kWh/m²·año'));
     const step = (Math.abs(max) > 100) ? 100 : 10;
-    const y = this.chart.axes[1];
 
     y.overrideMax = (1 + Math.round(max / step)) * step;
     y.overrideMin = 0.0;
+
+    chart.draw(100);
+    const chartheight = parseInt(chart.svg.style("height"), 10);
+    const chartwidth = parseInt(chart.svg.style("width"), 10);
+    const charty = parseInt(chart.y, 10);
+
+    svg.selectAll('text.ylabel').remove();
+    // After drawing we can access the shapes and their associated data
+    // to add labels.
+    const s = chart.series[0];
+    s.shapes.each(function(d) {
+      // Get the shape as a d3 selection
+      const rect = this;
+      const rx = parseFloat(rect.x.animVal.value);
+      const rwidth = parseFloat(rect.width.animVal.value);
+
+      const posx = x._scale(d.x) + (1 + d.xOffset) * rwidth + d.xOffset * rwidth * s.barGap / 2;
+      const posy = y._scale(d.yValue) - 6;
+
+      // Add a text label for the value
+      svg.append("text")
+                             .attr("class", "ylabel")
+                             .attr("x", posx)
+                             .attr("y", posy)
+        // Centre align
+                             .style("text-anchor", "middle")
+                             .style("font-size", "10px")
+                             .style("font-family", "sans-serif")
+        // Make it a little transparent to tone down the black
+                             .style("opacity", 0.7)
+        // Format the number
+                             .text(d3.format(",.2f")(d.yValue));
+    });
+
+    this.drawSubtitle(subtitle);
   }
 
   drawSubtitle(params) {
