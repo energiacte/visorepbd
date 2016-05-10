@@ -67,7 +67,7 @@ class IndicatorsChart extends React.Component {
     const step = (Math.abs(max) > 100) ? 100 : 10;
     const y = this.chart.axes[1];
 
-    y.overrideMax = Math.round(max / step) * step;
+    y.overrideMax = (1 + Math.round(max / step)) * step;
     y.overrideMin = 0.0;
   }
 
