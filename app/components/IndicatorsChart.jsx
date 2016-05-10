@@ -63,18 +63,12 @@ class IndicatorsChart extends React.Component {
   }
 
   fixscale(data) {
-    const values = _.map(data, 'kWh/m²·año');
-
-    let max = _.max(values);
-    let min = _.min(values);
-    let step = 10;
-
-    if (Math.max(Math.abs(max), Math.abs(min)) > 100) { step = 100; }
-    max = Math.round(max / step) * step;
-    min = Math.round(min / step) * step;
+    const max = _.max(_.map(data, 'kWh/m²·año'));
+    const step = (Math.abs(max) > 100) ? 100 : 10;
     const y = this.chart.axes[1];
-    y.overrideMax = max;
-    y.overrideMin = min;
+
+    y.overrideMax = Math.round(max / step) * step;
+    y.overrideMin = 0.0;
   }
 
   drawSubtitle(params) {
