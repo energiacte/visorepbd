@@ -14,7 +14,7 @@ const epbdurlprefix = process.env.EPBDURLPREFIX || '';
 
 const PATHS = {
   app: path.resolve(path.join(__dirname, 'app')),
-  build: path.resolve(path.join(__dirname, 'build')),
+  build: path.resolve(path.join(__dirname, 'epbdserver', 'static')),
   bowerdir: 'bower_components',
   bower: path.resolve(path.join(__dirname, 'bower_components')),
   nodedir: 'node_modules',
@@ -38,7 +38,7 @@ var plugins = [
     title: "DB-HE NZEB: implementación de la ISO 52000-1 en el CTE DB-HE",
     inject: false,
     //favicon: 'favicon.ico',
-    filename: 'index.html',
+    filename: '../templates/index.html', // relativo al output path
     minify: { removeComments: true, collapseWhitespace: true }
   }),
   new webpack.NoErrorsPlugin()
@@ -47,7 +47,7 @@ var plugins = [
 if (production) { // Production plugins go here
   plugins = plugins.concat([
     // Cleanup the builds/ folder before compiling final assets
-    new CleanPlugin('build'),
+    new CleanPlugin('epbdserver/static'),
     // Looks for similar chunks and files and merge them
     new webpack.optimize.DedupePlugin(),
     // Optimize chunks and modules by how much they are used
@@ -78,20 +78,10 @@ var config = {
   entry: {
     app: [PATHS.app, 'bootstrap-loader', 'numeral']
   },
-  devServer: {
-    contentBase: PATHS.build,
-    // Enable history API fallback so HTML5 History API based routing works.
-    historyApiFallback: true,
-    hot: true,
-    inline: true,
-    progress: true,
-    // Display only errors to reduce the amount of output.
-    stats: 'errors-only'
-  },
   output: {
     path: PATHS.build,
     filename: '[name]-[hash].js',
-    publicPath: production ? epbdurlprefix + '/static/': '' // This is used to generate URLs to e.g. images
+    publicPath: production ? epbdurlprefix + '/static/': '/static/' // This is used to generate URLs to e.g. images
   },
   externals: {
     // require("key") is external and available on the global var value

@@ -23,14 +23,12 @@ npminstall:
 analyze:
 	webpack --json > stats.json
 	webpack-bundle-size-analyzer stats.json
+.PHONY: builddevjs
+builddevjs:
+	npm run builddev
 .PHONY: buildjs
 buildjs:
 	npm run buildprod
-	mkdir -p epbdserver/static
-	mkdir -p epbdserver/templates
-	rm -f epbdserver/static/*
-	cp build/* epbdserver/static/
-	mv epbdserver/static/index.html epbdserver/templates/
 
 buildprodjs:
 	EPBDURLPREFIX=${EPBDURLPREFIX} make buildjs
