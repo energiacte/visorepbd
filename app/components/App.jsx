@@ -1,9 +1,10 @@
 import React from 'react';
 
-import Navigation from 'components/Navigation.jsx';
+import Navigation from 'components/Navigation';
 import EnergyComponentList from 'components/EnergyComponentList';
 import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import IndicatorsChart from 'components/IndicatorsChart';
+import Footer from 'components/Footer';
 
 export default class App extends React.Component {
 
@@ -16,6 +17,7 @@ export default class App extends React.Component {
           <EnergyComponentEditor />
           <EnergyComponentList />
         </div>
+        <Footer />
       </div>
     );
   }
