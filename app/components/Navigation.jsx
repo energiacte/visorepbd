@@ -11,16 +11,16 @@ class Navigation extends React.Component {
       <nav className="navbar navbar-inverse navbar-fixed-top">
         <div className="container">
           <div className="navbar-header">
-            <a className="navbar-brand" href="/#/">{this.props.projectName}</a>
+            <a className="navbar-brand" href={ __EPBDURLPREFIX__ + '/#/' }>{ this.props.projectName }</a>
             <button className="navbar-toggle" type="button" />
           </div>
           <div className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
               <li className="active" role="presentation">
-                <a href="/#/">Inicio</a></li>
+                <a href={ __EPBDURLPREFIX__ + '/#/' }>Inicio</a></li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
-              <li role="presentation"><a href="/#/about">Créditos</a></li>
+              <li role="presentation"><a href={ __EPBDURLPREFIX__ + '/#/about' }>Créditos</a></li>
             </ul>
           </div>
         </div>
