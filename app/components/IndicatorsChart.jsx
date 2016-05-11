@@ -63,12 +63,13 @@ class IndicatorsChart extends React.Component {
     const x = chart.axes[0];
     const y = chart.axes[1];
     const svg = this.chart.svg;
+    const values = _.map(data, 'kWh/m²·año');
 
-    const max = _.max(_.map(data, 'kWh/m²·año'));
+    const max = _.max(values);
     const step = (Math.abs(max) > 100) ? 100 : 10;
 
     y.overrideMax = (1 + Math.round(max / step)) * step;
-    y.overrideMin = 0.0;
+    y.overrideMin = Math.min(0.0, _.min(values));
 
     chart.draw(100);
     const chartheight = parseInt(chart.svg.style("height"), 10);
