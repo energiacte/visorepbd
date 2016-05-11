@@ -20,6 +20,7 @@ const PATHS = {
   nodedir: 'node_modules',
   node: path.resolve(path.join(__dirname, 'node_modules')),
   styles: path.resolve(path.join(__dirname, 'app', 'css')),
+  images: path.resolve(path.join(__dirname, 'app', 'img')),
   components: path.resolve(path.join(__dirname, 'app', 'components')),
   actions: path.resolve(path.join(__dirname, 'app', 'actions')),
   reducers: path.resolve(path.join(__dirname, 'app', 'reducers')),
@@ -102,6 +103,7 @@ var config = {
     alias: { // Para usar alias en imports
       'styles': PATHS.styles,
       'components': PATHS.components,
+      'img': PATHS.images,
       'actions': PATHS.actions,
       'reducers': PATHS.reducers,
       'store': PATHS.store,
