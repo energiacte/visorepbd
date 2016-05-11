@@ -40,19 +40,22 @@ function getcoefs(curvename, numsteps) {
 function getvalues(curvename, newtotalenergy, currentvalues) {
   let values = [];
   let scale = newtotalenergy;
+  const currenttotalenergy = _.sum(currentvalues);
+  const numsteps = currentvalues.length;
 
-  if (curvename === 'ACTUAL') {
-    let currenttotalenergy = _.sum(currentvalues);
+  if (currenttotalenergy === 0) {
+    const val = newtotalenergy / numsteps;
+    values = currentvalues.map(value => val);
+  } else if (curvename === 'ACTUAL') {
     if (currenttotalenergy !== newtotalenergy) {
-      scale = newtotalenergy / currenttotalenergy;
+      scale = (newtotalenergy === 0) ? 0 : newtotalenergy / currenttotalenergy;
     } else {
       return currentvalues;
     }
-    values = currentvalues.map((value) => { return value * scale; });
+    values = currentvalues.map(value => value * scale);
   } else {
-    const numsteps = currentvalues.length;
     let coefs = getcoefs(curvename, numsteps);
-    values = coefs.map((value) => { return value * scale; });
+    values = coefs.map(value => value * scale);
   }
   return values;
 }
