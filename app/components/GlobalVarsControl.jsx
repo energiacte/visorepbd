@@ -8,6 +8,7 @@ const GlobalVarsControl = (props) => {
       <div id="kexp">
         <span>k<sub>exp</sub> </span>
         <input type="range" min="0" max="1" step="0.1"
+               className="form-control"
                defaultValue={props.kexp}
                onChange={props.onChangeKexp} />
         <span>&nbsp;&nbsp;</span>
@@ -17,6 +18,7 @@ const GlobalVarsControl = (props) => {
       <div id="krdel">
         <span>k<sub>rdel</sub> </span>
         <input type="range" min="0" max="1" step="0.1"
+               className="form-control"
                defaultValue={props.krdel}
                onChange={props.onChangeKrdel} />
         <span>&nbsp;&nbsp;</span>
