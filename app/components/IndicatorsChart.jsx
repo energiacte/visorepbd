@@ -16,7 +16,7 @@ function buildData(values) {
       { Paso: 'A', Componente: 'EP_ren', 'kWh/m²·año': v.EPAren },
       { Paso: 'A', Componente: 'EP_total', 'kWh/m²·año': v.EPAtotal },
       { Paso: 'A+B', Componente: 'EP_nren', 'kWh/m²·año': v.EPnren },
-      { Paso: 'A+B', Componente: 'EP_ren', 'kWh/m²·año': v.EPAren },
+      { Paso: 'A+B', Componente: 'EP_ren', 'kWh/m²·año': v.EPren },
       { Paso: 'A+B', Componente: 'EP_total', 'kWh/m²·año': v.EPtotal }
     ];
 }
