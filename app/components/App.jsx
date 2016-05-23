@@ -3,7 +3,7 @@ import React from 'react';
 import Navigation from 'components/Navigation';
 import EnergyComponentList from 'components/EnergyComponentList';
 import EnergyComponentEditor from 'components/EnergyComponentEditor';
-import IndicatorsChart from 'components/IndicatorsChart';
+import ChartsContainer from 'components/ChartsContainer';
 import Footer from 'components/Footer';
 
 export default class App extends React.Component {
@@ -13,7 +13,7 @@ export default class App extends React.Component {
       <div>
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
-          <IndicatorsChart width="100%" height="200px" />
+          <ChartsContainer width="100%" height="200px" />
           <EnergyComponentEditor />
           <EnergyComponentList />
         </div>

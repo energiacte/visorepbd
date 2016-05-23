@@ -21,46 +21,12 @@ function buildCData(values) {
     ];
 }
 
-class IndicatorsChart extends React.Component {
+// Full Indicators Chart
+export class IChartA extends React.Component {
 
-  static defaultProps = { width: '50%', height: '200px' }
+  static defaultProps = { width: '100%', height: '100%' }
 
   static chart = null
-
-  constructor() {
-    super();
-    this.state = { data: null };
-  }
-
-  loadData(props) {
-    const { kexp, krdel, components } = props;
-    const activecomponents = components.filter(
-      (component) => { return component.active; }
-    );
-
-    $.ajax({
-      // document.location.host = host + port
-      url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/epindicators',
-      method: 'POST', // http method
-      dataType: 'json',
-      data: JSON.stringify({ kexp: kexp, krdel: krdel, components: activecomponents }),
-      crossDomain: false // needed so request.is_ajax works
-    })
-     .done((json) => this.setState({ data: json }))
-     .fail((xhr, errmsg, err) => {
-       console.log(xhr.status + ': ' + xhr.responseText);
-       this.setState({ data: null });
-     })
-     .always(() => {
-       const cData = buildCData(this.state.data);
-       // TODO: Crear componentes que reciben this.state.data como prop, junto con kexp, krdel, etc...
-       // y ya no hay que hacer esto y lo podemos separar todo mejor
-       // pensar cómo es el redibujado
-       this.chart.data = cData;
-       this.redrawChart(cData);
-     }
-     );
-  }
 
   createChart() {
     const svg = d3.select(ReactDOM.findDOMNode(this.refs.chartsvg));
@@ -70,7 +36,7 @@ class IndicatorsChart extends React.Component {
        .style('fill', 'black').style('font-size', '15px')
        .text('Consumo de energía primaria');
 
-    const c = new dimple.chart(svg, buildCData(null));
+    const c = new dimple.chart(svg, buildCData(this.props.data));
     c.setMargins('50px', '50px', '20px', '45px'); // left, top, right, bottom
     this.chart = c;
 
@@ -86,15 +52,17 @@ class IndicatorsChart extends React.Component {
     c.ease = 'linear';
   }
 
-  redrawChart(data) {
-    const { kexp, krdel } = this.props;
+  drawChart(props) {
+    const { kexp, krdel, data } = props;
+
+    const cData = buildCData(data);
 
     let EPArer = 0,
         EPrer = 0,
         error = true;
-    if (this.state.data !== null) {
-      EPArer = this.state.data.EPArer,
-      EPrer = this.state.data.EPrer,
+    if (data !== null) {
+      EPArer = data.EPArer,
+      EPrer = data.EPrer,
       error = false;
     }
 
@@ -102,8 +70,8 @@ class IndicatorsChart extends React.Component {
     const x = chart.axes[0];
     const y = chart.axes[1];
     const svg = this.chart.svg;
-    const values = _.map(data, 'kWh/m²·año');
 
+    const values = _.map(cData, 'kWh/m²·año');
     const max = _.max(values);
     const step = (Math.abs(max) > 100) ? 100 : 10;
 
@@ -134,6 +102,7 @@ class IndicatorsChart extends React.Component {
              errortxt);
 
     // Draw so geometry properties are available to compute tooltips
+    this.chart.data = cData;
     chart.draw(100);
 
     // Tooltips
@@ -165,33 +134,24 @@ class IndicatorsChart extends React.Component {
 
   componentDidMount() {
     this.createChart();
-    this.loadData(this.props);
+    this.drawChart(this.props);
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.components !== this.props.components |
+    if (nextProps.data !== this.props.data |
         nextProps.krdel !== this.props.krdel |
         nextProps.kexp !== this.props.kexp) {
-          this.loadData(nextProps);
+          this.drawChart(nextProps);
     }
     return false;
   }
 
   render() {
-    return (
-      <div style={ { width: this.props.width,
-                     height: this.props.height } }>
-        <svg ref='chartsvg' width='100%' height='100%' style={ {overflow: 'visible'} } />
-      </div>);
+    return (<svg ref='chartsvg'
+                 width={ this.props.width }
+                 height={ this.props.height }
+                 style={ {overflow: 'visible'} } />);
   }
-
 }
 
-export default IndicatorsChart = connect(state => {
-  return {
-    kexp: state.kexp,
-    krdel: state.krdel,
-    components: state.components
-  };
-})(IndicatorsChart);
 
