@@ -4,7 +4,8 @@ import { SELECT_ENERGY_COMPONENT,
          REMOVE_ENERGY_COMPONENT,
          EDIT_ENERGY_COMPONENT,
          CHANGE_KEXP,
-         CHANGE_KRDEL } from '../actions/actions.js';
+         CHANGE_KRDEL,
+         RECEIVE_DATA } from '../actions/actions.js';
 
 function storedcomponent(state = null, action) {
   switch (action.type) {
@@ -68,6 +69,15 @@ function components(state = [], action) {
   }
 }
 
+function data(state = {}, action) {
+  switch (action.type) {
+  case RECEIVE_DATA:
+    return action.newdata;
+  default:
+    return state;
+  }
+}
+
 // Para comportamiento más sofisticado habría que
 // evitar el combineReducers y hacer algo así, pasando el state general
 // y no solo una parte
@@ -84,6 +94,7 @@ function components(state = [], action) {
 // export default reducer;
 
 export default combineReducers({
+  data,
   storedcomponent,
   selectedkey,
   kexp,

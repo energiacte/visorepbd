@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /*
  * action types
  */
@@ -8,6 +10,7 @@ export const REMOVE_ENERGY_COMPONENT = 'REMOVE_ENERGY_COMPONENT';
 export const EDIT_ENERGY_COMPONENT = 'EDIT_ENERGY_COMPONENT';
 export const CHANGE_KEXP = 'CHANGE_KEXP';
 export const CHANGE_KRDEL = 'CHANGE_KRDEL';
+export const RECEIVE_DATA = 'RECEIVE_DATA';
 
 /*
  * action creators
@@ -36,3 +39,32 @@ export function changeKexp(value) {
 export function changeKrdel(value) {
   return { type: CHANGE_KRDEL, value };
 }
+
+export function deliverData(newdata) {
+  return { type: RECEIVE_DATA, newdata };
+}
+
+/* async action creator: thunk (redux-thunk middleware) */
+
+export function fetchData(kexp, krdel, components) {
+  const activecomponents = components.filter(
+    component => component.active
+  );
+
+  return dispatch => {
+    return $.ajax({
+      // document.location.host = host + port
+      url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/epindicators',
+      method: 'POST', // http method
+      dataType: 'json',
+      data: JSON.stringify({ kexp: kexp, krdel: krdel, components: activecomponents }),
+      crossDomain: false // needed so request.is_ajax works
+    }).done(
+      json => dispatch(deliverData(json))
+    ).fail((xhr, errmsg, err) => {
+      console.log(xhr.status + ': ' + xhr.responseText + ': ' + err);
+      dispatch(deliverData(null));
+    });
+  };
+}
+

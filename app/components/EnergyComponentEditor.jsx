@@ -12,7 +12,8 @@ import { addEnergyComponent,
          removeEnergyComponent,
          editEnergyComponent,
          changeKexp,
-         changeKrdel } from 'actions/actions.js';
+         changeKrdel,
+         fetchData } from 'actions/actions.js';
 
 const validData = {
   CONSUMO: {
@@ -37,6 +38,18 @@ const validData = {
 };
 
 class EnergyComponentEditor extends React.Component {
+
+  // Carga los indicadores al inicializar
+  componentWillMount() {
+    const { dispatch, kexp, krdel, components } = this.props;
+    dispatch(fetchData(kexp, krdel, components));
+  }
+
+  // Actualiza indicadores al cambiar las propiedades relevantes
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, kexp, krdel, components } = nextProps;
+    dispatch(fetchData(kexp, krdel, components));
+  }
 
   render() {
     const { kexp, krdel, selectedkey, components } = this.props;
@@ -203,8 +216,7 @@ class EnergyComponentEditor extends React.Component {
       currentcomponent.carrier = value;
     }
 
-    this.props.dispatch(
-      editEnergyComponent(selectedkey, currentcomponent));
+    this.props.dispatch(editEnergyComponent(selectedkey, currentcomponent));
   }
 
   handleChangeTotalEnergy(e) {

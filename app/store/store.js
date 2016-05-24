@@ -1,7 +1,10 @@
-import { createStore } from 'redux';
+import thunk from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
 import reducer from 'reducers/reducers.js';
 
 const initialState = {
+  data: { EPnren: 0, EPren: 0, EPtotal: 0, EPrer: 0,
+          EPAnren: 0, EPAren: 0, EPAtotal: 0, EPArer: 0 },
   storedcomponent: {
     active: true,
     carrier: 'ELECTRICIDAD',
@@ -47,5 +50,6 @@ const initialState = {
 
 export default createStore(
   reducer,
-  initialState
+  initialState,
+  applyMiddleware(thunk)
 );
