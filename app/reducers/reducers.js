@@ -73,10 +73,12 @@ function components(state = [], action) {
 // y no solo una parte
 // const reducer = (state = {}, action) => {
 //   return {
+//     storedcomponent: storedcomponent(state.storedcomponent, action),
 //     selectedkey: selectedkey(state.selectedkey, action),
 //     kexp: kexp(state.kexp, action),
 //     krdel: krdel(state.krdel, action),
-//     components: components(state.components, action)
+//     components: components(state.components, action),
+//     data: data(state, action)
 //   };
 // };
 // export default reducer;
