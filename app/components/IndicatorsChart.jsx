@@ -10,9 +10,9 @@ import numeral from 'numeral';
 
 function buildDataA(values) {
   return [
-    { Componente: 'EP_nren', 'kWh/m²·año': values.EPnren },
-    { Componente: 'EP_ren', 'kWh/m²·año': values.EPren },
-    { Componente: 'EP_total', 'kWh/m²·año': values.EPtotal },
+    { Componente: 'EP_total', 'kWh/m²·año': values.EPAtotal, Order: 1 },
+    { Componente: 'EP_nren', 'kWh/m²·año': values.EPAnren, Order: 2 },
+    { Componente: 'EP_ren', 'kWh/m²·año': values.EPAren, Order: 3 }
   ];
 }
 
@@ -25,24 +25,18 @@ export class IChartA extends React.Component {
 
   createChart() {
     const svg = d3.select(ReactDOM.findDOMNode(this.refs.chartsvg));
-
-    svg.append('text').attr('x', '50%').attr('y', '15px')
-       .attr('text-anchor', 'middle')
-       .style('fill', 'black').style('font-size', '15px')
-       .text('Consumo de energía primaria (Paso A)');
-
     const c = new dimple.chart(svg, buildDataA(this.props.data));
-    c.setMargins('50px', '50px', '20px', '45px'); // left, top, right, bottom
     this.chart = c;
 
-    c.defaultColors = [new dimple.color('blue'),
-                       new dimple.color('red'),
-                       new dimple.color('green')];
-
-    c.addCategoryAxis('x', 'Componente');
+    c.setMargins('50px', '50px', '20px', '45px'); // left, top, right, bottom
+    c.addCategoryAxis('x', 'Componente')
+     .addOrderRule('Order');
     c.addMeasureAxis('y', 'kWh/m²·año');
-    const s = c.addSeries('Componente', dimple.plot.bar);
-    s.addOrderRule(['EP_total', 'EP_nren', 'EP_ren']);
+    c.addSeries('Componente', dimple.plot.bar)
+     .addOrderRule(['EP_ren', 'EP_nren', 'EP_total']);
+    c.assignColor('EP_total', 'blue');
+    c.assignColor('EP_nren', 'red');
+    c.assignColor('EP_ren', 'green');
     c.addLegend('0%', '90%', '100%', '50%', 'right');
     c.ease = 'linear';
   }
@@ -55,40 +49,24 @@ export class IChartA extends React.Component {
     const chart = this.chart;
     const x = chart.axes[0];
     const y = chart.axes[1];
-    const svg = this.chart.svg;
+    const svg = chart.svg;
 
     y.overrideMax = props.max;
     y.overrideMin = props.min;
 
     // Subtitle
-    svg.select('#subtitle').remove();
-    svg.append('text')
-       .attr('id', 'subtitle')
-       .attr('x', '50%').attr('y', '30px')
-       .attr('text-anchor', 'middle')
-       .style('fill', 'black')
-       .style('font-size', '12px')
+    svg.select('text#subtitle')
        .text('kexp: ' + numeral(kexp).format('0.0') +
              ', krdel: ' + numeral(krdel).format('0.0'));
     // Subsubtitle
-    svg.select('#subsubtitle').remove();
-    svg.append('text')
-       .attr('id', 'subsubtitle')
-       .attr('x', '50%').attr('y', '45px')
-       .attr('text-anchor', 'middle')
-       .style('fill', 'black')
-       .style('font-size', '12px')
-       .html('RER(A): ' + numeral(this.props.rer).format('0.00'));
+    svg.select('text#subsubtitle')
+       .html('RER(A): ' + numeral(data.EPArer).format('0.00'));
 
     // Draw so geometry properties are available to compute tooltips
     this.chart.data = cData;
     chart.draw(100);
 
     // Tooltips
-    const chartheight = parseInt(chart.svg.style("height"), 10);
-    const chartwidth = parseInt(chart.svg.style("width"), 10);
-    const charty = parseInt(chart.y, 10);
-
     svg.selectAll('text.ylabel').remove();
     const s = chart.series[0];
     s.shapes.each(function(d) {
@@ -96,7 +74,8 @@ export class IChartA extends React.Component {
       const rx = parseFloat(rect.x.animVal.value);
       const rwidth = parseFloat(rect.width.animVal.value);
       const posx = x._scale(d.x) + (1 + d.xOffset) * rwidth + d.xOffset * rwidth * s.barGap / 2;
-      const posy = y._scale(d.yValue) - 6;
+      const yoffset = d.yValue > 0 ? -6 : 16;
+      const posy = y._scale(d.yValue) + yoffset;
       // Add a text label for the value
       svg.append("text")
          .attr("class", "ylabel")
@@ -121,18 +100,28 @@ export class IChartA extends React.Component {
   }
 
   render() {
-    return (<svg ref='chartsvg'
-                 width={ this.props.width }
-                 height={ this.props.height }
-                 style={ {overflow: 'visible'} } />);
+    return (
+      <svg ref='chartsvg'
+           width={ this.props.width }
+           height={ this.props.height }
+           style={ {overflow: 'visible'} }>
+        <text id='title' x='50%' y='15px'
+              fill='black' textAnchor='middle' fontSize='15px'>
+          Consumo de energía primaria (Paso A)
+        </text>
+        <text id='subtitle' x='50%' y='30px'
+              fill='black' textAnchor='middle' fontSize='12px' />
+        <text id='subsubtitle' x='50%' y='45px'
+              fill='black' textAnchor='middle' fontSize='12px' />
+</svg>);
   }
 }
 
 function buildDataAB(values) {
   return [
-    { Componente: 'EP_nren', 'kWh/m²·año': values.EPnren },
-    { Componente: 'EP_ren', 'kWh/m²·año': values.EPren },
-    { Componente: 'EP_total', 'kWh/m²·año': values.EPtotal },
+    { Componente: 'EP_total', 'kWh/m²·año': values.EPtotal, Order: 1 },
+    { Componente: 'EP_nren', 'kWh/m²·año': values.EPnren, Order: 2 },
+    { Componente: 'EP_ren', 'kWh/m²·año': values.EPren, Order: 3 }
   ];
 }
 
@@ -145,24 +134,18 @@ export class IChartAB extends React.Component {
 
   createChart() {
     const svg = d3.select(ReactDOM.findDOMNode(this.refs.chartsvg));
-
-    svg.append('text').attr('x', '50%').attr('y', '15px')
-       .attr('text-anchor', 'middle')
-       .style('fill', 'black').style('font-size', '15px')
-       .text('Consumo de energía primaria (Paso A+B)');
-
     const c = new dimple.chart(svg, buildDataAB(this.props.data));
-    c.setMargins('50px', '50px', '20px', '45px'); // left, top, right, bottom
     this.chart = c;
 
-    c.defaultColors = [new dimple.color('blue'),
-                       new dimple.color('red'),
-                       new dimple.color('green')];
-
-    c.addCategoryAxis('x', 'Componente');
+    c.setMargins('50px', '50px', '20px', '45px') // left, top, right, bottom
+    c.addCategoryAxis('x', 'Componente')
+     .addOrderRule('Order');
     c.addMeasureAxis('y', 'kWh/m²·año');
-    const s = c.addSeries('Componente', dimple.plot.bar);
-    s.addOrderRule(['EP_total', 'EP_nren', 'EP_ren']);
+    c.addSeries('Componente', dimple.plot.bar)
+     .addOrderRule(['EP_ren', 'EP_nren', 'EP_total']);
+    c.assignColor('EP_total', 'blue');
+    c.assignColor('EP_nren', 'red');
+    c.assignColor('EP_ren', 'green');
     c.addLegend('0%', '90%', '100%', '50%', 'right');
     c.ease = 'linear';
   }
@@ -175,40 +158,24 @@ export class IChartAB extends React.Component {
     const chart = this.chart;
     const x = chart.axes[0];
     const y = chart.axes[1];
-    const svg = this.chart.svg;
+    const svg = chart.svg;
 
     y.overrideMax = props.max;
     y.overrideMin = props.min;
 
     // Subtitle
-    svg.select('#subtitle').remove();
-    svg.append('text')
-       .attr('id', 'subtitle')
-       .attr('x', '50%').attr('y', '30px')
-       .attr('text-anchor', 'middle')
-       .style('fill', 'black')
-       .style('font-size', '12px')
+    svg.select('text#subtitle')
        .text('kexp: ' + numeral(kexp).format('0.0') +
              ', krdel: ' + numeral(krdel).format('0.0'));
     // Subsubtitle
-    svg.select('#subsubtitle').remove();
-    svg.append('text')
-       .attr('id', 'subsubtitle')
-       .attr('x', '50%').attr('y', '45px')
-       .attr('text-anchor', 'middle')
-       .style('fill', 'black')
-       .style('font-size', '12px')
-       .html('RER(A+B): ' + numeral(this.props.rer).format('0.00'));
+    svg.select('text#subsubtitle')
+       .html('RER(A+B): ' + numeral(data.EPrer).format('0.00'));
 
     // Draw so geometry properties are available to compute tooltips
     this.chart.data = cData;
     chart.draw(100);
 
     // Tooltips
-    const chartheight = parseInt(chart.svg.style("height"), 10);
-    const chartwidth = parseInt(chart.svg.style("width"), 10);
-    const charty = parseInt(chart.y, 10);
-
     svg.selectAll('text.ylabel').remove();
     const s = chart.series[0];
     s.shapes.each(function(d) {
@@ -216,7 +183,8 @@ export class IChartAB extends React.Component {
       const rx = parseFloat(rect.x.animVal.value);
       const rwidth = parseFloat(rect.width.animVal.value);
       const posx = x._scale(d.x) + (1 + d.xOffset) * rwidth + d.xOffset * rwidth * s.barGap / 2;
-      const posy = y._scale(d.yValue) - 6;
+      const yoffset = d.yValue > 0 ? -6 : 16;
+      const posy = y._scale(d.yValue) + yoffset;
       // Add a text label for the value
       svg.append("text")
          .attr("class", "ylabel")
@@ -241,10 +209,20 @@ export class IChartAB extends React.Component {
   }
 
   render() {
-    return (<svg ref='chartsvg'
-                 width={ this.props.width }
-                 height={ this.props.height }
-                 style={ {overflow: 'visible'} } />);
+    return (
+      <svg ref='chartsvg'
+      width={ this.props.width }
+      height={ this.props.height }
+      style={ {overflow: 'visible'} }>
+      <text id='title' x='50%' y='15px'
+            fill='black' textAnchor='middle' fontSize='15px'>
+        Consumo de energía primaria (Paso A+B)
+      </text>
+      <text id='subtitle' x='50%' y='30px'
+            fill='black' textAnchor='middle' fontSize='12px' />
+      <text id='subsubtitle' x='50%' y='45px'
+            fill='black' textAnchor='middle' fontSize='12px' />
+      </svg>);
   }
 }
 
