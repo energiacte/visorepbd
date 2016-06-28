@@ -200,6 +200,7 @@ class EnergyComponentEditor extends React.Component {
     this.props.dispatch(editEnergyComponent(selectedkey, currentcomponent));
   }
 
+  // Handle changes in total energy through UI
   handleChangeTotalEnergy(e) {
     const newvalue = e.target.value;
 
