@@ -15,6 +15,7 @@ const initialState = {
   selectedkey: 0, // Currently selected component
   kexp: 1.0,
   krdel: 1.0,
+  area: 1,
   components: [ // Energy components array (ejemplo3PVBdC.csv)
     {
       active: true,

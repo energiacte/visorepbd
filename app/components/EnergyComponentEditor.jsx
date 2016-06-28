@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import ActionsPanel from 'components/ActionsPanel';
 import EnergyComponentChart from 'components/EnergyComponentChart';
-import GlobalVarsControl from 'components/GlobalVarsControl';
 import { getvalues, CURVENAMES } from '../epbdutils';
 
 import _ from 'lodash';
@@ -11,8 +10,6 @@ import _ from 'lodash';
 import { addEnergyComponent,
          removeEnergyComponent,
          editEnergyComponent,
-         changeKexp,
-         changeKrdel,
          fetchData } from 'actions/actions.js';
 
 const validData = {
@@ -41,18 +38,18 @@ class EnergyComponentEditor extends React.Component {
 
   // Carga los indicadores al inicializar
   componentWillMount() {
-    const { dispatch, kexp, krdel, components } = this.props;
-    dispatch(fetchData(kexp, krdel, components));
+    const { dispatch, kexp, krdel, area, components } = this.props;
+    dispatch(fetchData(kexp, krdel, area, components));
   }
 
   // Actualiza indicadores al cambiar las propiedades relevantes
   componentWillReceiveProps(nextProps) {
-    const { dispatch, kexp, krdel, components } = nextProps;
-    dispatch(fetchData(kexp, krdel, components));
+    const { dispatch, kexp, krdel, area, components } = nextProps;
+    dispatch(fetchData(kexp, krdel, area, components));
   }
 
   render() {
-    const { kexp, krdel, selectedkey, components } = this.props;
+    const { kexp, krdel, area, selectedkey, components } = this.props;
     const { ctype, originoruse, carrier, values } = components[selectedkey];
 
     const ctypevalues = _.keys(validData);
@@ -64,13 +61,7 @@ class EnergyComponentEditor extends React.Component {
 
     return (
       <div>
-        <GlobalVarsControl
-            kexp={kexp}
-            krdel={krdel}
-            onChangeKexp={(ev) => this.handleChangeKexp(ev)}
-            onChangeKrdel={(ev) => this.handleChangeKrdel(ev)} />
         <div className="panel-body bg-info">
-
           <div key={ 'selected' + selectedkey } >
             <form className="form-horizontal"
                   onSubmit={ (e) => { e.preventDefault(); make} }>
@@ -169,16 +160,6 @@ class EnergyComponentEditor extends React.Component {
         </div>
       </div>
     );
-  }
-
-  // Handle changes in the kexp slider
-  handleChangeKexp(e) {
-    this.props.dispatch(changeKexp(e.target.value));
-  }
-
-  // Handle changes in the krdel slider
-  handleChangeKrdel(e) {
-    this.props.dispatch(changeKrdel(e.target.value));
   }
 
   // Handle changes in ctype, originoruse and carrier select boxes
@@ -290,6 +271,7 @@ export default EnergyComponentEditor = connect(state => {
   return {
     kexp: state.kexp,
     krdel: state.krdel,
+    area: state.area,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
     components: state.components

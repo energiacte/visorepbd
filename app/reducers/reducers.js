@@ -5,6 +5,7 @@ import { SELECT_ENERGY_COMPONENT,
          EDIT_ENERGY_COMPONENT,
          CHANGE_KEXP,
          CHANGE_KRDEL,
+         CHANGE_AREA,
          RECEIVE_DATA } from '../actions/actions.js';
 
 function storedcomponent(state = null, action) {
@@ -31,7 +32,7 @@ function selectedkey(state = null, action) {
 function kexp(state = 1, action) {
   switch (action.type) {
   case CHANGE_KEXP:
-    return action.value;
+    return Number(action.value);
   default:
     return state;
   }
@@ -40,7 +41,17 @@ function kexp(state = 1, action) {
 function krdel(state = 1, action) {
   switch (action.type) {
   case CHANGE_KRDEL:
-    return action.value;
+    return Number(action.value);
+  default:
+    return state;
+  }
+}
+
+function area(state = 1, action) {
+  switch (action.type) {
+  case CHANGE_AREA:
+    console.log("area :", action.value);
+    return Number(action.value);
   default:
     return state;
   }
@@ -99,5 +110,6 @@ export default combineReducers({
   selectedkey,
   kexp,
   krdel,
+  area,
   components
 });

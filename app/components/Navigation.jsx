@@ -17,7 +17,11 @@ class Navigation extends React.Component {
           <div className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
               <li className="active" role="presentation">
-                <a href={ __EPBDURLPREFIX__ + '/#/' }>Inicio</a></li>
+                <a href={ __EPBDURLPREFIX__ + '/#/' }>Inicio</a>
+              </li>
+              <li role="presentation">
+                <a href={ __EPBDURLPREFIX__ + '/#/weightingfactors' }>Factores de paso</a>
+              </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li role="presentation"><a href={ __EPBDURLPREFIX__ + '/#/about' }>Créditos</a></li>

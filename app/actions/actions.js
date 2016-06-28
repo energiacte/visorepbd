@@ -10,6 +10,7 @@ export const REMOVE_ENERGY_COMPONENT = 'REMOVE_ENERGY_COMPONENT';
 export const EDIT_ENERGY_COMPONENT = 'EDIT_ENERGY_COMPONENT';
 export const CHANGE_KEXP = 'CHANGE_KEXP';
 export const CHANGE_KRDEL = 'CHANGE_KRDEL';
+export const CHANGE_AREA = 'CHANGE_AREA';
 export const RECEIVE_DATA = 'RECEIVE_DATA';
 
 /*
@@ -40,13 +41,17 @@ export function changeKrdel(value) {
   return { type: CHANGE_KRDEL, value };
 }
 
+export function changeArea(value) {
+  return { type: CHANGE_AREA, value };
+}
+
 export function deliverData(newdata) {
   return { type: RECEIVE_DATA, newdata };
 }
 
 /* async action creator: thunk (redux-thunk middleware) */
 
-export function fetchData(kexp, krdel, components) {
+export function fetchData(kexp, krdel, area, components) {
   const activecomponents = components.filter(
     component => component.active
   );
@@ -57,7 +62,7 @@ export function fetchData(kexp, krdel, components) {
       url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/epindicators',
       method: 'POST', // http method
       dataType: 'json',
-      data: JSON.stringify({ kexp: kexp, krdel: krdel, components: activecomponents }),
+      data: JSON.stringify({ kexp, krdel, area, components: activecomponents }),
       crossDomain: false // needed so request.is_ajax works
     }).done(
       json => dispatch(deliverData(json))

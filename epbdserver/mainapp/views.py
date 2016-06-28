@@ -16,12 +16,14 @@ def epindicators(request):
             data = json.loads(request.body.decode('utf-8'))
             krdel = float(data.get('krdel', 1.0))
             kexp = float(data.get('kexp', 1.0))
+            area = float(data.get('area', 1.0))
             components = data.get('components', [])
 
             f.write("krdel: %s\n"
-                    "kexp: %s \n"
+                    "kexp: %s\n"
+                    "area: %s\n"
                     "components: %s\n %s %s %s\n" %
-                    (krdel, kexp, components,
+                    (krdel, kexp, area, components,
                      type(krdel), type(kexp), type(components)))
 
             data = readenergydata(components)
@@ -29,7 +31,7 @@ def epindicators(request):
             f.write("Energy data: %s" % data)
 
             epresults = weighted_energy(data, krdel, FACTORESDEPASOOFICIALES, kexp)
-            result = ep2dict(epresults)
+            result = ep2dict(epresults, area)
             return JsonResponse(result)
 
     return HttpResponse('API service')
