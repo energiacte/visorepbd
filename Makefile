@@ -10,27 +10,34 @@ SUPERVISORAPPNAME:=epbdpanel
 EPBDURLPREFIX:=/epbdpanel
 
 dev:
+	$(info [INFO]: Servidor de desarrollo. Actualiza el código de frontend usando 'make builddevjs' o 'make buildprodjs')
 	venv/bin/python epbdserver/manage.py runserver
 createenv:
+	$(info [INFO]: Creando entorno virtual de Python 3)
 	python3 -m venv ./venv
 	venv/bin/python -m pip install -Ur requirements.txt
 npminstall:
+	$(info [INFO]: Instalación de nodejs y dependencias JS)
 	curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
 	sudo apt-get install -y nodejs
 	npm install -g eslint babel-eslint eslint-plugin-react http-server webpack webpack-dev-server
 	npm install
 .PHONY: analyze
 analyze:
+	$(info [INFO]: Estadísticas de rendimiento de webpack)
 	webpack --json > stats.json
 	webpack-bundle-size-analyzer stats.json
 .PHONY: builddevjs
 builddevjs:
+	$(info [INFO]: Generando bundle JS para desarrollo)
 	npm run builddev
 .PHONY: buildjs
 buildjs:
+	$(info [INFO]: Generando bundle JS de producción)
 	npm run buildprod
 
 buildprodjs:
+	$(info [INFO]: Generando bundle JS de producción con prefijo de URL)
 	EPBDURLPREFIX=${EPBDURLPREFIX} make buildjs
 
 # antes hacer un git pull
