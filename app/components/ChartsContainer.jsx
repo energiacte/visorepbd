@@ -8,7 +8,6 @@ import $ from 'jquery';
 import _ from 'lodash';
 import numeral from 'numeral';
 
-import { fetchData } from 'actions/actions';
 import { IChartA, IChartAB } from 'components/IndicatorsChart';
 
 function datalimits(data) {
