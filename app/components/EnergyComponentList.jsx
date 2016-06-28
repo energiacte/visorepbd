@@ -4,11 +4,9 @@ import { connect } from 'react-redux';
 import numeral from 'numeral';
 import _ from 'lodash';
 
-import { selectEnergyComponent, editEnergyComponent } from 'actions/actions.js';
-
 import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 
-class EnergyComponentList extends React.Component {
+export default class EnergyComponentList extends React.Component {
 
   // Valor máximo de los valores de los componentes
   maxvalue() {
@@ -22,16 +20,13 @@ class EnergyComponentList extends React.Component {
   // Seleccionar componente
   handleClick(i, event) {
     const component = this.props.components[i];
-    this.props.dispatch(selectEnergyComponent(i, component));
+    this.props.onSelect(i, component);
   }
 
   // Cambiar estado activo del componente
   handleChange(i, event) {
     const component = this.props.components[i];
-    this.props.dispatch(
-      editEnergyComponent(i,
-                          { ...component,
-                            active: !component.active }));
+    this.props.onEdit(i, { ...component, active: !component.active });
   }
 
   render() {
@@ -81,10 +76,3 @@ class EnergyComponentList extends React.Component {
   }
 
 }
-
-export default EnergyComponentList = connect(state => {
-  return {
-    selectedkey: state.selectedkey,
-    components: state.components
-  };
-})(EnergyComponentList);

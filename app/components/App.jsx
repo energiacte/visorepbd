@@ -45,7 +45,11 @@ class App extends React.Component {
               onAdd={ component => { dispatch(addEnergyComponent(component))} }
               onRemove={ key => { dispatch(removeEnergyComponent(key))} }
               onEdit={ (key, component) => { dispatch(editEnergyComponent(key, component)) } } />
-          <EnergyComponentList />
+          <EnergyComponentList
+              selectedkey = { selectedkey }
+              components = { components }
+              onSelect={ (key, component) => { dispatch(selectEnergyComponent(key, component))} }
+              onEdit={ (key, component) => { dispatch(editEnergyComponent(key, component)) } } />
         </div>
         <Footer />
       </div>
