@@ -14,6 +14,7 @@ import { changeKexp,
          addEnergyComponent,
          removeEnergyComponent,
          editEnergyComponent,
+         selectEnergyComponent,
          fetchData } from 'actions/actions.js';
 
 class App extends React.Component {
