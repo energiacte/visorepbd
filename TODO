@@ -3,6 +3,8 @@
 - Poner logos
 - Mostrar otros valores intermedios (energía exportada, energía suministrada por vector, etc)
 - Permitir subir archivos EPBDCALC
+- Permitir subir archivos de factores de paso
+- Permitir guardar casos
 - Ayuda con ejemplos
 - Mejorar svg y comportamiento del subtítulo
 
