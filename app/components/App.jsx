@@ -8,7 +8,10 @@ import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 
-import { addEnergyComponent,
+import { changeKexp,
+         changeKrdel,
+         changeArea,
+         addEnergyComponent,
          removeEnergyComponent,
          editEnergyComponent,
          fetchData } from 'actions/actions.js';
@@ -22,19 +25,26 @@ class App extends React.Component {
   componentWillReceiveProps(nextProps) { this.props.dispatch(fetchData()); }
 
   render() {
+    const { kexp, krdel, area, selectedkey, components, storedcomponent, dispatch } = this.props;
     return (
       <div>
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
           <ChartsContainer width="100%" height="200px" />
-          <GlobalVarsControl />
+          <GlobalVarsControl
+              kexp={ kexp }
+              krdel={ krdel }
+              area={ area }
+              onChangeKexp={ value => { dispatch(changeKexp(value))} }
+              onChangeKrdel={ value => { dispatch(changeKrdel(value))} }
+              onChangeArea={ value => { dispatch(changeArea(value))} } />
           <EnergyComponentEditor
-              selectedkey = { this.props.selectedkey }
-              components = { this.props.components }
-              storedcomponent = { this.props.storedcomponent }
-              onAdd={ component => { this.props.dispatch(addEnergyComponent(component))} }
-              onRemove={ key => { this.props.dispatch(removeEnergyComponent(key))} }
-              onEdit={ (key, component) => { this.props.dispatch(editEnergyComponent(key, component)) } } />
+              selectedkey = { selectedkey }
+              components = { components }
+              storedcomponent = { storedcomponent }
+              onAdd={ component => { dispatch(addEnergyComponent(component))} }
+              onRemove={ key => { dispatch(removeEnergyComponent(key))} }
+              onEdit={ (key, component) => { dispatch(editEnergyComponent(key, component)) } } />
           <EnergyComponentList />
         </div>
         <Footer />
