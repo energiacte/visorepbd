@@ -50,7 +50,6 @@ function krdel(state = 1, action) {
 function area(state = 1, action) {
   switch (action.type) {
   case CHANGE_AREA:
-    console.log("area :", action.value);
     return Number(action.value);
   default:
     return state;
