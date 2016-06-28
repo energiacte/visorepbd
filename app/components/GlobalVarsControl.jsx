@@ -35,7 +35,7 @@ class GlobalVarsControl extends React.Component {
                  value={ numeral(krdel).format('0.0') } />
         </div>
         <div id="area" className="pull-right">
-          <span>area </span>
+          <span>Superficie de referencia (m²) </span>
           <input ref={ (ref) => this.areaEntry = ref }
                  name="areaentry"
                  type="number"
