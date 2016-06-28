@@ -8,13 +8,13 @@ import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 export default class EnergyComponentList extends React.Component {
 
   // Seleccionar componente
-  handleClick(i, event) {
+  handleClick(i) {
     const component = this.props.components[i];
     this.props.onSelect(i, component);
   }
 
   // Cambiar estado activo del componente
-  handleChange(i, event) {
+  handleChange(i) {
     const component = this.props.components[i];
     this.props.onEdit(i, { ...component, active: !component.active });
   }
@@ -46,9 +46,9 @@ export default class EnergyComponentList extends React.Component {
                return (
                  <tr key={i}
                      className={ rowstyles }
-                     onClick={this.handleClick.bind(this, i)}>
+                     onClick={ e => this.handleClick(i) }>
                    <td><input type="checkbox" defaultChecked={active}
-                              onClick={ this.handleChange.bind(this, i) } /></td>
+                              onClick={ e => this.handleChange(i) } /></td>
                    <td>{ ctype }</td>
                    <td>{ originoruse }</td><td>{ carrier }</td>
                    <td>{ numeral(_.sum(values)).format('0.00') }</td>
