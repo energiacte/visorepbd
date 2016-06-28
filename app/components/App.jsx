@@ -23,7 +23,13 @@ class App extends React.Component {
   componentWillMount() { this.props.dispatch(fetchData()); }
 
   // Carga datos desde API al cambiar las propiedades (y antes de renderizar hijos)
-  componentWillReceiveProps(nextProps) { this.props.dispatch(fetchData()); }
+  componentWillReceiveProps(nextProps) {
+    const { kexp, krdel, area, components } = this.props;
+    const np = nextProps;
+    if ((kexp !== np.kexp) || (krdel !== np.krdel) || (area !== np.area) || (components !== np.components)) {
+      this.props.dispatch(fetchData());
+    }
+  }
 
   render() {
     const { kexp, krdel, area, selectedkey, components, storedcomponent,
