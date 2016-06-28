@@ -49,14 +49,15 @@ export function deliverData(newdata) {
   return { type: RECEIVE_DATA, newdata };
 }
 
-/* async action creator: thunk (redux-thunk middleware) */
+// async action creator to get API data: thunk (redux-thunk middleware)
+export function fetchData() {
+  // this async action also reads state
+  return (dispatch, getState) => {
+    const { kexp, krdel, area, components } = getState();
+    const activecomponents = components.filter(
+      component => component.active
+    );
 
-export function fetchData(kexp, krdel, area, components) {
-  const activecomponents = components.filter(
-    component => component.active
-  );
-
-  return dispatch => {
     return $.ajax({
       // document.location.host = host + port
       url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/epindicators',
