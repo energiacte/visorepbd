@@ -26,12 +26,18 @@ class App extends React.Component {
   componentWillReceiveProps(nextProps) { this.props.dispatch(fetchData()); }
 
   render() {
-    const { kexp, krdel, area, selectedkey, components, storedcomponent, dispatch } = this.props;
+    const { kexp, krdel, area, selectedkey, components, storedcomponent,
+            data, dispatch } = this.props;
     return (
       <div>
         <Navigation projectName="DB-HE NZEB" />
         <div className="container">
-          <ChartsContainer width="100%" height="200px" />
+          <ChartsContainer
+              width="100%" height="200px"
+              kexp={ kexp }
+              krdel={ krdel }
+              data={ data }
+          />
           <GlobalVarsControl
               kexp={ kexp }
               krdel={ krdel }
@@ -63,6 +69,7 @@ export default App = connect(state => {
     kexp: state.kexp,
     krdel: state.krdel,
     area: state.area,
+    data: state.data,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
     components: state.components

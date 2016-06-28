@@ -20,7 +20,7 @@ function datalimits(data) {
   return {min, max};
 }
 
-class ChartsContainer extends React.Component {
+export default class ChartsContainer extends React.Component {
 
   static defaultProps = { width: '50%', height: '200px' }
 
@@ -42,14 +42,3 @@ class ChartsContainer extends React.Component {
   }
 
 }
-
-export default ChartsContainer = connect(state => {
-  return {
-    data: state.data,
-    kexp: state.kexp,
-    krdel: state.krdel,
-    components: state.components,
-  };
-})(ChartsContainer);
-
-
