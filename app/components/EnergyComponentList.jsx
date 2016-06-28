@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 import numeral from 'numeral';
 import _ from 'lodash';
@@ -7,15 +6,6 @@ import _ from 'lodash';
 import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 
 export default class EnergyComponentList extends React.Component {
-
-  // Valor máximo de los valores de los componentes
-  maxvalue() {
-    return _.max(
-      this.props.components.map(
-        (component) => { return _.max(component.values); }
-      )
-    );
-  }
 
   // Seleccionar componente
   handleClick(i, event) {
@@ -31,7 +21,7 @@ export default class EnergyComponentList extends React.Component {
 
   render() {
     const { components, selectedkey } = this.props;
-    const maxvalue = this.maxvalue();
+    const maxvalue = _.max(components.map(component => _.max(component.values)));
 
     return (
       <table id="components" className="table table-striped table-bordered table-condensed">

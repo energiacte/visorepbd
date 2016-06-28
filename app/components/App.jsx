@@ -36,21 +36,21 @@ class App extends React.Component {
               kexp={ kexp }
               krdel={ krdel }
               area={ area }
-              onChangeKexp={ value => { dispatch(changeKexp(value))} }
-              onChangeKrdel={ value => { dispatch(changeKrdel(value))} }
-              onChangeArea={ value => { dispatch(changeArea(value))} } />
+              onChangeKexp={ value => dispatch(changeKexp(value)) }
+              onChangeKrdel={ value => dispatch(changeKrdel(value)) }
+              onChangeArea={ value => dispatch(changeArea(value)) } />
           <EnergyComponentEditor
               selectedkey = { selectedkey }
               components = { components }
               storedcomponent = { storedcomponent }
-              onAdd={ component => { dispatch(addEnergyComponent(component))} }
-              onRemove={ key => { dispatch(removeEnergyComponent(key))} }
-              onEdit={ (key, component) => { dispatch(editEnergyComponent(key, component)) } } />
+              onAdd={ component => dispatch(addEnergyComponent(component)) }
+              onRemove={ key => dispatch(removeEnergyComponent(key)) }
+              onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) } />
           <EnergyComponentList
               selectedkey = { selectedkey }
               components = { components }
-              onSelect={ (key, component) => { dispatch(selectEnergyComponent(key, component))} }
-              onEdit={ (key, component) => { dispatch(editEnergyComponent(key, component)) } } />
+              onSelect={ (key, component) => dispatch(selectEnergyComponent(key, component)) }
+              onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) } />
         </div>
         <Footer />
       </div>
