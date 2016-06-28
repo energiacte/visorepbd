@@ -8,6 +8,7 @@ import 'styles/style.scss'; // CSS
 import store from 'store/store.js';
 import App from 'components/App.jsx';
 import About from 'components/About.jsx';
+import WeightingFactors from 'components/WeightingFactors.jsx';
 
 // Render
 ReactDOM.render((
@@ -15,6 +16,7 @@ ReactDOM.render((
     <Router history={hashHistory}>
     <Route path="/" component={App}/>
     <Route path="/about" component={About}/>
+    <Route path="/weightingfactors" component={WeightingFactors}/>
     </Router>
     </Provider>),
   document.body.appendChild(document.createElement('div')));
