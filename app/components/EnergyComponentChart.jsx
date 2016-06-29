@@ -13,7 +13,10 @@ export default class EnergyComponentChart extends React.Component {
   }
 
   static defaultProps = { width: '200px',
-                          height: '20px' }
+                          height: '20px',
+                          display:'inline-block',
+                          padding:'0 0 0 12px',
+                          className:'' }
 
   drawChart(node, props) {
     const { data, maxvalue, ctype } = props;
@@ -59,7 +62,7 @@ export default class EnergyComponentChart extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.data !== this.props.data |
+    if (nextProps.data !== this.props.data ||
         nextProps.maxvalue !== this.props.maxvalue) {
           this.updateChart(nextProps);
     }
@@ -68,7 +71,10 @@ export default class EnergyComponentChart extends React.Component {
 
   render() {
     return (<div style={ { width: this.props.width,
-                           height: this.props.height } }></div>);
+                           height: this.props.height,
+                           display: this.props.display,
+                           padding: this.props.padding,
+                           className: this.props.className } }></div>);
   }
 
 }

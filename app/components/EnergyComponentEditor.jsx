@@ -43,104 +43,101 @@ export default class EnergyComponentEditor extends React.Component {
     const currenttotalenergy = _.sum(values);
 
     return (
-      <div>
-        <div className="panel-body bg-info">
-          <div key={ 'selected' + selectedkey } >
-            <form className="form-horizontal"
-                  onSubmit={ (e) => { e.preventDefault(); make} }>
-              <fieldset>
-                <div className="form-group">
+      <div id="energycomponenteditor" className="panel-body bg-info" key={ 'selected' + selectedkey } >
+        <form className="form-horizontal"
+              onSubmit={ e => e.preventDefault() }>
+          <fieldset>
+            <div className="form-group">
 
-                  <label className="col-md-1 control-label"
-                         htmlFor="selectctype">Tipo</label>
-                  <div className="col-md-3">
-                    <select ref="selectctype"
-                            name="selectctype" className="form-control"
-                            onChange={ (e) => this.handleChange(e) }
-                            value={ ctype } >
-                      { ctypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
-                    </select>
-                  </div>
+              <label className="col-md-1 control-label"
+                     htmlFor="selectctype">Tipo</label>
+              <div className="col-md-3">
+                <select ref="selectctype"
+                        name="selectctype" className="form-control"
+                        onChange={ (e) => this.handleChange(e) }
+                        value={ ctype } >
+                  { ctypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                </select>
+              </div>
 
-                  <label className="col-md-1 control-label"
-                         htmlFor="selectoriginoruse">Origen/Uso</label>
-                  <div className="col-md-3">
-                    <select ref="selectoriginoruse"
-                            name="selectoriginoruse" className="form-control"
-                            onChange={ (e) => this.handleChange(e) }
-                            value={ originoruse } >
-                      { originorusevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
-                    </select>
-                  </div>
+              <label className="col-md-1 control-label"
+                     htmlFor="selectoriginoruse">Origen/Uso</label>
+              <div className="col-md-3">
+                <select ref="selectoriginoruse"
+                        name="selectoriginoruse" className="form-control"
+                        onChange={ (e) => this.handleChange(e) }
+                        value={ originoruse } >
+                  { originorusevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                </select>
+              </div>
 
-                  <label className="col-md-1 control-label"
-                         htmlFor="selectcarrier">Vector</label>
-                  <div className="col-md-3">
-                    <select ref="selectcarrier"
-                            name="selectcarrier" className="form-control"
-                            onChange={ (e) => this.handleChange(e) }
-                            value={ carrier }>
-                      { carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
-                    </select>
-                  </div>
+              <label className="col-md-1 control-label"
+                     htmlFor="selectcarrier">Vector</label>
+              <div className="col-md-3">
+                <select ref="selectcarrier"
+                        name="selectcarrier" className="form-control"
+                        onChange={ (e) => this.handleChange(e) }
+                        value={ carrier }>
+                  { carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                </select>
+              </div>
 
-                </div>
+            </div>
 
-                <div className="form-group">
+            <div className="form-group">
 
-                  <label className="col-md-1 control-label"
-                         htmlFor="selectcurve">Curva</label>
-                  <div className="col-md-3">
-                    <select ref={ (ref) => this.CurveSelect = ref }
-                            name="selectcurve" className="form-control"
-                            defaultValue={ CURVENAMES[0] }
-                            onChange={ (e) => this.updateValues() }>
-                      { CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>) }
-                    </select>
-                  </div>
+              <label className="col-md-1 control-label"
+                     htmlFor="selectcurve">Curva</label>
+              <div className="col-md-3">
+                <select ref={ (ref) => this.CurveSelect = ref }
+                        name="selectcurve" className="form-control"
+                        style={{width:'50%', display:'inline-block', 'vertical-align':'top'}}
+                        defaultValue={ CURVENAMES[0] }
+                        onChange={ (e) => this.updateValues() }>
+                  { CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                </select>
+                <EnergyComponentChart ctype={ ctype }
+                                      maxvalue={ _.max(values) }
+                                      data={ data }
+                                      className="form-control"
+                                      width="50%" height="34px" />
+              </div>
 
-                  <label className="col-md-1 control-label"
-                         htmlFor="rangecontrol">Energía Total</label>
-                  <div className="col-md-2">
-                    <input className="form-control"
-                           ref={ (ref) => this.totalEnergyRange = ref }
-                           name="totalenergyrange"
-                           type="range"
-                           min="0"
-                           max={ Math.max(10, 10 + 1.5 * Math.round(currenttotalenergy / 5) * 5) }
-                           step="5"
-                           defaultValue={ currenttotalenergy }
-                           onChange={ (e) => this.handleChangeTotalEnergy(e) } />
-                  </div>
-                  <div className="col-md-2">
-                    <input className="form-control"
-                           ref={ (ref) => this.totalEnergyEntry = ref }
-                           name="totalenergyentry"
-                           type="number"
-                           lang="es"
-                           min="0"
-                           step="0.01"
-                           defaultValue={ currenttotalenergy }
-                           onChange={ (e) => this.handleChangeTotalEnergy(e) }/>
-                  </div>
-                  <div className="col-md-3">
-                  <EnergyComponentChart ctype={ ctype }
-                                        maxvalue={ _.max(values) }
-                                        data={ data }
-                                        width="100%" height="40px" />
-                  </div>
-                </div>
+              <label className="col-md-1 control-label"
+                     htmlFor="rangecontrol">E.Total</label>
+              <div className="col-md-3">
+                <input className="form-control col-md-2"
+                       ref={ (ref) => this.totalEnergyRange = ref }
+                       name="totalenergyrange"
+                       type="range"
+                       min="0"
+                       max={ Math.max(10, 10 + 1.5 * Math.round(currenttotalenergy / 5) * 5) }
+                       step="5"
+                       style={{width:'50%'}}
+                       defaultValue={ currenttotalenergy }
+                       onChange={ (e) => this.handleChangeTotalEnergy(e) } />
+                <input className="form-control col-md-1"
+                       ref={ (ref) => this.totalEnergyEntry = ref }
+                       name="totalenergyentry"
+                       type="number"
+                       lang="es"
+                       min="0"
+                       step="0.01"
+                       style={{width:'50%'}}
+                       defaultValue={ currenttotalenergy }
+                       onChange={ (e) => this.handleChangeTotalEnergy(e) }/>
+              </div>
+              <div className="col-md-4 control-label">
+                <ActionsPanel
+                    onAdd={() => this.handleAdd(selectedkey)}
+                    onRemove={() => this.handleRemove(selectedkey)}
+                    onRestore={() => this.handleRestore()} />
+              </div>
+            </div>
 
-              </fieldset>
-            </form>
+          </fieldset>
+        </form>
 
-          </div>
-
-          <ActionsPanel
-              onAdd={() => this.handleAdd(selectedkey)}
-              onRemove={() => this.handleRemove(selectedkey)}
-              onRestore={() => this.handleRestore()} />
-        </div>
       </div>
     );
   }

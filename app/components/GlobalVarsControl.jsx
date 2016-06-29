@@ -9,7 +9,7 @@ export default class GlobalVarsControl extends React.Component {
     const { kexp, krdel, area, onChangeKexp, onChangeKrdel, onChangeArea } = this.props;
 
     return (
-      <div className="form-horizontal bg-primary">
+      <div id="globalvarscontrol" className="form-horizontal bg-primary">
         <div id="kexp" className="form-group">
           <label className="control-label" htmlFor="kexprange">k<sub>exp</sub> </label>
           <input type="range" min="0" max="1" step="0.1"
