@@ -3,23 +3,20 @@ html {
         /* font-size: 100%;
         background: url(../img/repeater.jpg); */
         padding-top: 60px;
+        .panel-body {padding:5px;}
         #components {
            .bg-info {background-color: #b7caff; cursor: pointer;}
            .deliveredstyle * {color: blue;}
            .inactivecomponent * {color: gray;}
            }
-        #kexp, #krdel {
+        #kexp, #krdel, #area {
+               margin:0;
                display: inline-block;
-               padding: 5px 5% 5px 0;
-               span {font-weight: bold;};
-               input[type=range] {
-                                 width: 150px;
-                                 display: inline;
-                                 vertical-align: middle;
-                                 }
-        }
-        #area {display: inline-block;
-               span {font-weight: bold;};
+               padding: 5px;
+               label {display: inline;}
+               input[type=range] {width: 40%; display: inline; vertical-align: middle;}
+               input[type=text] {width: 20%; display: inline; vertical-align: middle; color:black;}
+               input[type=number] {width: 60%; display: inline; vertical-align: middle;}
         }
     }
 }
