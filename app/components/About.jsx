@@ -10,7 +10,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <Navigation projectName="DB-HE NZEB" />
+        <Navigation projectName="DB-HE NZEB" route={ this.props.route } />
         <div className="container">
           <div className="page-header">
             <h1>CTE DB-HE, aplicación de ISO 52000-1</h1>

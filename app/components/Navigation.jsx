@@ -2,11 +2,9 @@ import React from 'react';
 
 class Navigation extends React.Component {
 
-  static contextTypes = {
-    store: React.PropTypes.object
-  }
-
   render() {
+    const currpath = this.props.route.path;
+    console.log(currpath);
     return (
       <nav className="navbar navbar-inverse navbar-fixed-top">
         <div className="container">
@@ -16,15 +14,17 @@ class Navigation extends React.Component {
           </div>
           <div className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
-              <li className="active" role="presentation">
+              <li className={ currpath === '/'?"active":"" } role="presentation">
                 <a href={ __EPBDURLPREFIX__ + '/#/' }>Inicio</a>
               </li>
-              <li role="presentation">
+              <li className={ currpath === '/weightingfactors'?"active":"" } role="presentation">
                 <a href={ __EPBDURLPREFIX__ + '/#/weightingfactors' }>Factores de paso</a>
               </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
-              <li role="presentation"><a href={ __EPBDURLPREFIX__ + '/#/about' }>Créditos</a></li>
+              <li className={ currpath === '/about'?"active":"" } role="presentation">
+                <a href={ __EPBDURLPREFIX__ + '/#/about' }>Créditos</a>
+              </li>
             </ul>
           </div>
         </div>
