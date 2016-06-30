@@ -24,8 +24,7 @@ urlpatterns = [
     #url(r'^admin/', include(admin.site.urls)),
     # Send the csrf cookie in the main view, so we can use it in the POST request
     url(r'^$',
-        ensure_csrf_cookie(TemplateView.as_view(template_name='index.html')),
-        name='home'),
+        ensure_csrf_cookie(TemplateView.as_view(template_name='index.html')), name='home'),
     url(r'^api/', include(api.urls, namespace='api')),
 ]
 
