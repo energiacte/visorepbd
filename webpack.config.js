@@ -118,7 +118,7 @@ var config = {
         include: PATHS.app,
         loader: 'babel',
         query: {cacheDirectory: true,
-                presets: ['es2015-webpack', 'stage-0', 'react']}
+                presets: ['es2015', 'stage-0', 'react']}
       },
       { // CSS
         test: /\.css$/,
