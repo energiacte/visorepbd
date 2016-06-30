@@ -20,7 +20,7 @@ from mainapp import views
 
 urlpatterns = [
     #url(r'^admin/', include(admin.site.urls)),
-    url(r'^epindicators', views.epindicators, name=u'epindicators'),
+    url(r'^epindicators', views.EPIndicatorsView.as_view(), name=u'epindicators'),
     url(r'^$',
         TemplateView.as_view(template_name='index.html'),
         name='home'),

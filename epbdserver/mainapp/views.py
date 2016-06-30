@@ -1,17 +1,20 @@
 import json
 
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
+from django.views.generic import View
 
 from pyepbd import FACTORESDEPASOOFICIALES, weighted_energy, readenergydata, ep2dict
 
-@csrf_exempt
-def epindicators(request):
-    fakeresult = {"EPAren": 1.0, "EPAnren": 1.0, "EPAtotal": 2.0, "EPArer": 0.5,
-                  "EPren": 1.0, "EPnren": 0.75, "EPtotal": 1.75, "EPrer": 0.6}
-    f = open('pachi.log', 'w')
+#@method_decorator(csrf_protect, name='dispatch')
+#@method_decorator(ensure_csrf_cookie, name='dispatch')
+@method_decorator(csrf_exempt, name='dispatch')
+class EPIndicatorsView(View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse('API service')
 
-    if request.method == 'POST':
+    def post(self, request, *args, **kwargs):
         if request.is_ajax():
             data = json.loads(request.body.decode('utf-8'))
             krdel = float(data.get('krdel', 1.0))
@@ -19,19 +22,17 @@ def epindicators(request):
             area = float(data.get('area', 1.0))
             components = data.get('components', [])
 
-            f.write("krdel: %s\n"
-                    "kexp: %s\n"
-                    "area: %s\n"
-                    "components: %s\n %s %s %s\n" %
-                    (krdel, kexp, area, components,
-                     type(krdel), type(kexp), type(components)))
+            # f.write("krdel: %s\n"
+            #         "kexp: %s\n"
+            #         "area: %s\n"
+            #         "components: %s\n %s %s %s\n" %
+            #         (krdel, kexp, area, components,
+            #          type(krdel), type(kexp), type(components)))
 
             data = readenergydata(components)
 
-            f.write("Energy data: %s" % data)
+            # f.write("Energy data: %s" % data)
 
             epresults = weighted_energy(data, krdel, FACTORESDEPASOOFICIALES, kexp)
             result = ep2dict(epresults, area)
             return JsonResponse(result)
-
-    return HttpResponse('API service')
