@@ -48,7 +48,7 @@ var plugins = [
 if (production) { // Production plugins go here
   plugins = plugins.concat([
     // Cleanup the builds/ folder before compiling final assets
-    new CleanPlugin('epbdserver/static'),
+    new CleanPlugin(PATHS.build),
     // Looks for similar chunks and files and merge them
     new webpack.optimize.DedupePlugin(),
     // Optimize chunks and modules by how much they are used
