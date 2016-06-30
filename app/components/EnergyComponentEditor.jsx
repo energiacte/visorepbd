@@ -54,7 +54,7 @@ export default class EnergyComponentEditor extends React.Component {
               <div className="col-md-3">
                 <select ref="selectctype"
                         name="selectctype" className="form-control"
-                        onChange={ (e) => this.handleChange(e) }
+                        onChange={ e => this.handleChange(e) }
                         value={ ctype } >
                   { ctypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
@@ -65,7 +65,7 @@ export default class EnergyComponentEditor extends React.Component {
               <div className="col-md-3">
                 <select ref="selectoriginoruse"
                         name="selectoriginoruse" className="form-control"
-                        onChange={ (e) => this.handleChange(e) }
+                        onChange={ e => this.handleChange(e) }
                         value={ originoruse } >
                   { originorusevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
@@ -76,7 +76,7 @@ export default class EnergyComponentEditor extends React.Component {
               <div className="col-md-3">
                 <select ref="selectcarrier"
                         name="selectcarrier" className="form-control"
-                        onChange={ (e) => this.handleChange(e) }
+                        onChange={ e => this.handleChange(e) }
                         value={ carrier }>
                   { carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
@@ -89,11 +89,11 @@ export default class EnergyComponentEditor extends React.Component {
               <label className="col-md-1 control-label"
                      htmlFor="selectcurve">Curva</label>
               <div className="col-md-3">
-                <select ref={ (ref) => this.CurveSelect = ref }
+                <select ref={ ref => this.CurveSelect = ref }
                         name="selectcurve" className="form-control"
                         style={{width:'50%', display:'inline-block', 'vertical-align':'top'}}
                         defaultValue={ CURVENAMES[0] }
-                        onChange={ (e) => this.updateValues() }>
+                        onChange={ e => this.updateValues() }>
                   { CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
                 <EnergyComponentChart ctype={ ctype }
@@ -107,7 +107,7 @@ export default class EnergyComponentEditor extends React.Component {
                      htmlFor="rangecontrol">E.Total</label>
               <div className="col-md-3">
                 <input className="form-control col-md-2"
-                       ref={ (ref) => this.totalEnergyRange = ref }
+                       ref={ ref => this.totalEnergyRange = ref }
                        name="totalenergyrange"
                        type="range"
                        min="0"
@@ -115,9 +115,9 @@ export default class EnergyComponentEditor extends React.Component {
                        step="5"
                        style={{width:'50%'}}
                        defaultValue={ currenttotalenergy }
-                       onChange={ (e) => this.handleChangeTotalEnergy(e) } />
+                       onChange={ e => this.handleChangeTotalEnergy(e) } />
                 <input className="form-control col-md-1"
-                       ref={ (ref) => this.totalEnergyEntry = ref }
+                       ref={ ref => this.totalEnergyEntry = ref }
                        name="totalenergyentry"
                        type="number"
                        lang="es"
@@ -125,7 +125,7 @@ export default class EnergyComponentEditor extends React.Component {
                        step="0.01"
                        style={{width:'50%'}}
                        defaultValue={ currenttotalenergy }
-                       onChange={ (e) => this.handleChangeTotalEnergy(e) }/>
+                       onChange={ e => this.handleChangeTotalEnergy(e) }/>
               </div>
               <div className="col-md-4 control-label">
                 <ActionsPanel
