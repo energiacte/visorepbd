@@ -7,13 +7,7 @@ from django.views.generic import View
 
 from pyepbd import FACTORESDEPASOOFICIALES, weighted_energy, readenergydata, ep2dict
 
-#@method_decorator(csrf_protect, name='dispatch')
-#@method_decorator(ensure_csrf_cookie, name='dispatch')
-@method_decorator(csrf_exempt, name='dispatch')
 class EPIndicatorsView(View):
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('API service')
-
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
             data = json.loads(request.body.decode('utf-8'))

@@ -15,14 +15,16 @@ Including another URLconf
 """
 #from django.contrib import admin
 from django.conf.urls import url
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 from mainapp import views
 
 urlpatterns = [
     #url(r'^admin/', include(admin.site.urls)),
     url(r'^epindicators', views.EPIndicatorsView.as_view(), name=u'epindicators'),
+    # We send the csrf cookie in the main view, so we can use it in the POST request
     url(r'^$',
-        TemplateView.as_view(template_name='index.html'),
+        ensure_csrf_cookie(TemplateView.as_view(template_name='index.html')),
         name='home'),
 ]
 
