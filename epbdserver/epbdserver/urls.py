@@ -14,10 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 #from django.contrib import admin
-from django.conf.urls import url
+from django.conf.urls import include, url
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-from api import views
+#from api import views
+import api.urls
 
 urlpatterns = [
     #url(r'^admin/', include(admin.site.urls)),
@@ -25,6 +26,7 @@ urlpatterns = [
     url(r'^$',
         ensure_csrf_cookie(TemplateView.as_view(template_name='index.html')),
         name='home'),
-    url(r'^epindicators', views.EPIndicatorsView.as_view(), name=u'epindicators'),
+    #url(r'^epindicators', views.EPIndicatorsView.as_view(), name=u'epindicators'),
+    url(r'^api/', include(api.urls, namespace='api')),
 ]
 

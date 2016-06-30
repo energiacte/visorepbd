@@ -63,11 +63,10 @@ export function fetchData() {
     const { kexp, krdel, area, components } = getState();
     const activecomponents = components.filter(component => component.active);
     const csrftoken = Cookies.get('csrftoken');
-    console.log(csrftoken);
 
     return $.ajax({
       // document.location.host = host + port
-      url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/epindicators',
+      url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/api/epindicators',
       method: 'POST', // http method
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
