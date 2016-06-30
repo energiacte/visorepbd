@@ -26,7 +26,6 @@ urlpatterns = [
     url(r'^$',
         ensure_csrf_cookie(TemplateView.as_view(template_name='index.html')),
         name='home'),
-    #url(r'^epindicators', views.EPIndicatorsView.as_view(), name=u'epindicators'),
     url(r'^api/', include(api.urls, namespace='api')),
 ]
 

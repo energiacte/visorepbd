@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
@@ -24,9 +23,6 @@ SECRET_KEY = 'yh3e=zw1k6ge_t_acw@p!fj5mt4x=%qiahl88ku&&46gps!i0#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-# CORS settings from package django-cors-headers
-#CORS_ORIGIN_ALLOW_ALL = True
 
 ALLOWED_HOSTS = []
 
@@ -39,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'corsheaders', # corsheaders
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -51,8 +46,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'corsheaders.middleware.CorsMiddleware', # corsheaders
-    #'django.middleware.common.CommonMiddleware', # corsheaders
 ]
 
 ROOT_URLCONF = 'epbdserver.urls'
