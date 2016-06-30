@@ -26,7 +26,7 @@ SECRET_KEY = 'yh3e=zw1k6ge_t_acw@p!fj5mt4x=%qiahl88ku&&46gps!i0#'
 DEBUG = True
 
 # CORS settings from package django-cors-headers
-CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ORIGIN_ALLOW_ALL = True
 
 ALLOWED_HOSTS = []
 
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders', # corsheaders
+    #'corsheaders', # corsheaders
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -51,8 +51,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware', # corsheaders
-    'django.middleware.common.CommonMiddleware', # corsheaders
+    #'corsheaders.middleware.CorsMiddleware', # corsheaders
+    #'django.middleware.common.CommonMiddleware', # corsheaders
 ]
 
 ROOT_URLCONF = 'epbdserver.urls'
