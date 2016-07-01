@@ -2,31 +2,9 @@ import React, { PropTypes } from 'react';
 
 import ActionsPanel from 'components/ActionsPanel';
 import EnergyComponentChart from 'components/EnergyComponentChart';
-import { getvalues, CURVENAMES } from '../epbdutils';
+import { getValues, CURVENAMES, VALIDDATA } from '../epbdutils';
 
 import _ from 'lodash';
-
-const validData = {
-  CONSUMO: {
-    EPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
-          //'COGENERACION',
-          'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-          'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
-          'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2'],
-    NEPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
-           //'COGENERACION',
-           'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-           'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
-           'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2']
-  },
-  PRODUCCION: {
-    INSITU: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-             'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA',
-             'MEDIOAMBIENTE'],
-    COGENERACION: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-                   'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA']
-  }
-};
 
 export default class EnergyComponentEditor extends React.Component {
 
@@ -34,9 +12,9 @@ export default class EnergyComponentEditor extends React.Component {
     const { selectedkey, components } = this.props;
     const { ctype, originoruse, carrier, values } = components[selectedkey];
 
-    const ctypevalues = _.keys(validData);
-    const originorusevalues = _.keys(validData[ctype]);
-    const carriervalues = validData[ctype][originoruse];
+    const ctypevalues = _.keys(VALIDDATA);
+    const originorusevalues = _.keys(VALIDDATA[ctype]);
+    const carriervalues = VALIDDATA[ctype][originoruse];
     const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
 
     const currenttotalenergy = _.sum(values);
@@ -153,13 +131,13 @@ export default class EnergyComponentEditor extends React.Component {
     if (currentcomponent[prop] === value) { return; }
 
     if (prop === 'ctype') {
-      const originorusekey0 = Object.keys(validData[value])[0];
+      const originorusekey0 = Object.keys(VALIDDATA[value])[0];
       currentcomponent.ctype = value;
       currentcomponent.originoruse = originorusekey0;
       if (!_.includes(
-        validData[value][originorusekey0],
+        VALIDDATA[value][originorusekey0],
         currentcomponent.carrier)) {
-          currentcomponent.carrier = validData[value][originorusekey0][0];
+          currentcomponent.carrier = VALIDDATA[value][originorusekey0][0];
       }
     }
 
@@ -167,9 +145,9 @@ export default class EnergyComponentEditor extends React.Component {
       const currctype = currentcomponent.ctype;
       currentcomponent.originoruse = value;
       if (!_.includes(
-        validData[currctype][value],
+        VALIDDATA[currctype][value],
         currentcomponent.carrier)) {
-          currentcomponent.carrier = validData[currctype][value][0];
+          currentcomponent.carrier = VALIDDATA[currctype][value][0];
       }
     }
 
@@ -206,7 +184,7 @@ export default class EnergyComponentEditor extends React.Component {
     const { selectedkey, components, onEdit } = this.props;
     let currentcomponent = { ...components[selectedkey] };
     let currentvalues = currentcomponent.values;
-    let newvalues = getvalues(this.CurveSelect.value,
+    let newvalues = getValues(this.CurveSelect.value,
                               this.totalEnergyEntry.value,
                               currentvalues);
     currentcomponent.values = newvalues;

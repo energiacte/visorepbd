@@ -1,5 +1,27 @@
 import _ from 'lodash';
 
+const VALIDDATA = {
+  CONSUMO: {
+    EPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
+          //'COGENERACION',
+          'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+          'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
+          'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2'],
+    NEPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
+           //'COGENERACION',
+           'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+           'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
+           'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2']
+  },
+  PRODUCCION: {
+    INSITU: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+             'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA',
+             'MEDIOAMBIENTE'],
+    COGENERACION: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+                   'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA']
+  }
+};
+
 const CURVENAMES = ['ACTUAL', 'CONSTANTE', 'CONCAVA', 'CONVEXA', 'CRECIENTE', 'DECRECIENTE'];
 
 // Calculate a list of numsteps coefficients with a shape defined by curvename
@@ -38,7 +60,7 @@ function getcoefs(curvename, numsteps) {
 }
 
 // get new timestep values using curvename, newtotalenergy and currentvalues
-function getvalues(curvename, newtotalenergy, currentvalues) {
+function getValues(curvename, newtotalenergy, currentvalues) {
   let values = [];
   let scale = newtotalenergy;
   const currenttotalenergy = _.sum(currentvalues);
@@ -91,4 +113,4 @@ function getComponents(data) {
   return dlist.length === 0 ? null : dlist;
 }
 
-export { getvalues, CURVENAMES, getComponents };
+export { VALIDDATA, CURVENAMES, getComponents, getValues };
