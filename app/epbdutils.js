@@ -97,18 +97,26 @@ function getComponents(data) {
 
   // Create component object from data line
   const vectorLineToComponent = elem => {
-    let [carrier, ctype, originoruse, ...values] = elem.split(',');
-    return { active: true,
-             carrier,
-             ctype,
-             originoruse,
-             values: values.map(Number) };
+    let [carrier, ctype, originoruse, ...values] = elem.split(',').map(e => e.trim());
+    // Basic validation
+    if (_.indexOf(_.keys(VALIDDATA), ctype) > -1 &&
+        _.indexOf(_.keys(VALIDDATA[ctype]), originoruse) > -1 &&
+        _.indexOf(VALIDDATA[ctype][originoruse], carrier) > -1) {
+      return { active: true,
+               carrier,
+               ctype,
+               originoruse,
+               values: values.map(Number) };
+    }
+    return null;
   };
 
+  // Build component list
   let dlist = data
       .split('\n')
       .filter(isDataLine)
-      .map(vectorLineToComponent);
+      .map(vectorLineToComponent)
+      .filter(e => e !== null);
 
   return dlist.length === 0 ? null : dlist;
 }
