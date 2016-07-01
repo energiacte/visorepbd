@@ -9,6 +9,7 @@ export const SELECT_ENERGY_COMPONENT = 'SELECT_ENERGY_COMPONENT';
 export const ADD_ENERGY_COMPONENT = 'ADD_ENERGY_COMPONENT';
 export const REMOVE_ENERGY_COMPONENT = 'REMOVE_ENERGY_COMPONENT';
 export const EDIT_ENERGY_COMPONENT = 'EDIT_ENERGY_COMPONENT';
+export const LOAD_ENERGY_COMPONENTS = 'LOAD_ENERGY_COMPONENTS';
 export const CHANGE_KEXP = 'CHANGE_KEXP';
 export const CHANGE_KRDEL = 'CHANGE_KRDEL';
 export const CHANGE_AREA = 'CHANGE_AREA';
@@ -32,6 +33,10 @@ export function removeEnergyComponent(id) {
 
 export function editEnergyComponent(id, newcomponent) {
   return { type: EDIT_ENERGY_COMPONENT, id, newcomponent };
+}
+
+export function loadEnergyComponents(newcomponents) {
+  return { type: LOAD_ENERGY_COMPONENTS, newcomponents };
 }
 
 export function changeKexp(value) {

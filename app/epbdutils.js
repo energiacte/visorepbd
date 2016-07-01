@@ -37,6 +37,7 @@ function getcoefs(curvename, numsteps) {
   return coefs;
 }
 
+// get new timestep values using curvename, newtotalenergy and currentvalues
 function getvalues(curvename, newtotalenergy, currentvalues) {
   let values = [];
   let scale = newtotalenergy;
@@ -60,4 +61,34 @@ function getvalues(curvename, newtotalenergy, currentvalues) {
   return values;
 }
 
-export { getvalues, CURVENAMES };
+// Create components array from text data (loaded from file)
+// return null if conversion fails
+function getComponents(data) {
+  // check if line is blank, a comment (#) or a header
+  const isDataLine = (elem, index) => {
+    let e = elem.trim();
+    return !(e === '' || /* whiteline */
+             (e.startsWith('vector') && index === 0) || /* header */
+             e.startsWith('#') /* comment */
+            );
+  };
+
+  // Create component object from data line
+  const vectorLineToComponent = elem => {
+    let [carrier, ctype, originoruse, ...values] = elem.split(',');
+    return { active: true,
+             carrier,
+             ctype,
+             originoruse,
+             values: values.map(Number) };
+  };
+
+  let dlist = data
+      .split('\n')
+      .filter(isDataLine)
+      .map(vectorLineToComponent);
+
+  return dlist.length === 0 ? null : dlist;
+}
+
+export { getvalues, CURVENAMES, getComponents };

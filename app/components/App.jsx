@@ -15,6 +15,7 @@ import { changeKexp,
          removeEnergyComponent,
          editEnergyComponent,
          selectEnergyComponent,
+         loadEnergyComponents,
          fetchData } from 'actions/actions.js';
 
 class App extends React.Component {
@@ -57,7 +58,8 @@ class App extends React.Component {
               storedcomponent = { storedcomponent }
               onAdd={ component => dispatch(addEnergyComponent(component)) }
               onRemove={ key => dispatch(removeEnergyComponent(key)) }
-              onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) } />
+              onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
+              onLoad={ textdata => dispatch(loadEnergyComponents(textdata)) } />
           <EnergyComponentList
               selectedkey = { selectedkey }
               components = { components }

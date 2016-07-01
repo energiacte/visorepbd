@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 import ActionsPanel from 'components/ActionsPanel';
 import EnergyComponentChart from 'components/EnergyComponentChart';
@@ -131,7 +130,8 @@ export default class EnergyComponentEditor extends React.Component {
                 <ActionsPanel
                     onAdd={() => this.handleAdd(selectedkey)}
                     onRemove={() => this.handleRemove(selectedkey)}
-                    onRestore={() => this.handleRestore()} />
+                    onRestore={() => this.handleRestore()}
+                    onLoad={ this.props.onLoad } />
               </div>
             </div>
 

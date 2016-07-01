@@ -3,6 +3,7 @@ import { SELECT_ENERGY_COMPONENT,
          ADD_ENERGY_COMPONENT,
          REMOVE_ENERGY_COMPONENT,
          EDIT_ENERGY_COMPONENT,
+         LOAD_ENERGY_COMPONENTS,
          CHANGE_KEXP,
          CHANGE_KRDEL,
          CHANGE_AREA,
@@ -57,21 +58,28 @@ function area(state = 1, action) {
 }
 
 function components(state = [], action) {
+  let currlist;
+
   switch (action.type) {
   case ADD_ENERGY_COMPONENT:
-    return ([... state, action.component]);
+    return [... state, action.component];
   case REMOVE_ENERGY_COMPONENT:
     if (state.length > 0) {
-      let currlist = [... state];
+      currlist = [... state];
       currlist.splice(action.id, 1);
-      return (currlist);
+      return currlist;
     }
     return state;
   case EDIT_ENERGY_COMPONENT:
     if (action.id < state.length) {
-      let currlist = [... state];
+      currlist = [... state];
       currlist[action.id] = action.newcomponent;
-      return (currlist);
+      return currlist;
+    }
+    return state;
+  case LOAD_ENERGY_COMPONENTS:
+    if (action.newcomponents !== null) {
+      return action.newcomponents;
     }
     return state;
   default:
