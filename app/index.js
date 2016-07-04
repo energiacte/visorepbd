@@ -8,15 +8,15 @@ import 'styles/style.scss'; // CSS
 import store from 'store/store.js';
 import MainPage from 'components/MainPage.jsx';
 import AboutPage from 'components/AboutPage.jsx';
-import WeightingFactors from 'components/WeightingFactors.jsx';
+import WeightingFactorsPage from 'components/WeightingFactorsPage.jsx';
 
 // Render
 ReactDOM.render(
   (<Provider store={store} >
    <Router history={hashHistory}>
    <Route path="/" component={MainPage}/>
-   <Route path="/about" component={About}/>
-   <Route path="/weightingfactors" component={WeightingFactors}/>
+   <Route path="/about" component={AboutPage}/>
+   <Route path="/weightingfactors" component={WeightingFactorsPage}/>
    </Router>
    </Provider>
   ),
