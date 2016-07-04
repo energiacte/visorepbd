@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import 'styles/style.scss'; // CSS
 import store from 'store/store.js';
 import MainPage from 'components/MainPage.jsx';
-import About from 'components/About.jsx';
+import AboutPage from 'components/AboutPage.jsx';
 import WeightingFactors from 'components/WeightingFactors.jsx';
 
 // Render
