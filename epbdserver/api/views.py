@@ -5,7 +5,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.views.generic import View
 
-from pyepbd import FACTORESDEPASOOFICIALES, weighted_energy, readenergydata, ep2dict
+from pyepbd import (FACTORESDEPASO, FACTORESDEPASOOFICIALES,
+                    weighted_energy, readenergydata, ep2dict)
 
 class EPIndicatorsView(View):
     def post(self, request, *args, **kwargs):
@@ -30,3 +31,8 @@ class EPIndicatorsView(View):
             epresults = weighted_energy(data, krdel, FACTORESDEPASOOFICIALES, kexp)
             result = ep2dict(epresults, area)
             return JsonResponse(result)
+
+class WFactorsView(View):
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({'wfactors': FACTORESDEPASO})
+
