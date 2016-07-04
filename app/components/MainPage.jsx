@@ -18,7 +18,7 @@ import { changeKexp,
          loadEnergyComponents,
          fetchData } from 'actions/actions.js';
 
-class App extends React.Component {
+class MainPage extends React.Component {
 
   // Carga datos desde API al inicializar
   componentWillMount() { this.props.dispatch(fetchData()); }
@@ -72,7 +72,7 @@ class App extends React.Component {
   }
 }
 
-export default App = connect(state => {
+export default MainPage = connect(state => {
   return {
     kexp: state.kexp,
     krdel: state.krdel,
@@ -82,4 +82,4 @@ export default App = connect(state => {
     selectedkey: state.selectedkey,
     components: state.components
   };
-})(App);
+})(MainPage);

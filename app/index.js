@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 
 import 'styles/style.scss'; // CSS
 import store from 'store/store.js';
-import App from 'components/App.jsx';
+import MainPage from 'components/MainPage.jsx';
 import About from 'components/About.jsx';
 import WeightingFactors from 'components/WeightingFactors.jsx';
 
@@ -14,7 +14,7 @@ import WeightingFactors from 'components/WeightingFactors.jsx';
 ReactDOM.render(
   (<Provider store={store} >
    <Router history={hashHistory}>
-   <Route path="/" component={App}/>
+   <Route path="/" component={MainPage}/>
    <Route path="/about" component={About}/>
    <Route path="/weightingfactors" component={WeightingFactors}/>
    </Router>
