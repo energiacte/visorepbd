@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Navigation from 'components/Navigation';
+import NavBar from 'components/NavBar';
 import Footer from 'components/Footer';
 import mfomlogo from 'img/logomfom.png';
 import ietcclogo from 'img/logoietcccsic.png';
@@ -10,7 +10,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <Navigation route={ this.props.route } />
+        <NavBar route={ this.props.route } />
         <div className="container">
           <div className="page-header">
             <h1>CTE DB-HE, aplicación de ISO 52000-1</h1>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Navigation from 'components/Navigation';
+import NavBar from 'components/NavBar';
 import ChartsContainer from 'components/ChartsContainer';
 import GlobalVarsControl from 'components/GlobalVarsControl';
 import EnergyComponentEditor from 'components/EnergyComponentEditor';
@@ -37,7 +37,7 @@ class MainPage extends React.Component {
             data, dispatch } = this.props;
     return (
       <div>
-        <Navigation route={ this.props.route } />
+        <NavBar route={ this.props.route } />
         <div className="container">
           <ChartsContainer
               width="100%" height="200px"

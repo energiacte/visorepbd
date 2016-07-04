@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class Navigation extends React.Component {
+export default class NavBar extends React.Component {
 
   static defaultProps = { projectName: 'DB-HE NZEB' }
 
