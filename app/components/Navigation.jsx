@@ -2,6 +2,8 @@ import React from 'react';
 
 export default class Navigation extends React.Component {
 
+  static defaultProps = { projectName: 'DB-HE NZEB' }
+
   render() {
     const currpath = this.props.route.path;
     const activeIfCurrent = path => currpath === path ? 'active' : '';
@@ -34,4 +36,3 @@ export default class Navigation extends React.Component {
     );
   }
 }
-

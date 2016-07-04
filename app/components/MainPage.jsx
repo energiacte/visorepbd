@@ -37,7 +37,7 @@ class MainPage extends React.Component {
             data, dispatch } = this.props;
     return (
       <div>
-        <Navigation projectName="DB-HE NZEB" route={ this.props.route } />
+        <Navigation route={ this.props.route } />
         <div className="container">
           <ChartsContainer
               width="100%" height="200px"
