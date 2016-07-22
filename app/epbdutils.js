@@ -97,6 +97,7 @@ function getComponents(data) {
 
   // Create component object from data line
   const vectorLineToComponent = elem => {
+    elem = elem.split('#')[0];
     let [carrier, ctype, originoruse, ...values] = elem.split(',').map(e => e.trim());
     // Basic validation
     if (_.indexOf(_.keys(VALIDDATA), ctype) > -1 &&
