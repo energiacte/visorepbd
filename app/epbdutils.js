@@ -118,8 +118,21 @@ function getComponents(data) {
       .filter(isDataLine)
       .map(vectorLineToComponent)
       .filter(e => e !== null);
+  dlist = dlist.length === 0 ? null : dlist;
 
-  return dlist.length === 0 ? null : dlist;
+  // Find building area
+  let area = data
+      .split('\n')
+      .filter(e => e.trim().startsWith('#'))
+      .filter(e => e.trim().slice(1).trim().startsWith('Area_ref:'));
+  if (area.length !== 0) {
+    area = parseFloat(area[0].split(':')[1]);
+    area = isNaN(area) ? 1 : area;
+  } else {
+    area = 1;
+  }
+
+  return { components: dlist, area: area };
 }
 
 export { VALIDDATA, CURVENAMES, getComponents, getValues };

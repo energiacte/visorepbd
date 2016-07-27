@@ -59,7 +59,12 @@ class MainPage extends React.Component {
               onAdd={ component => dispatch(addEnergyComponent(component)) }
               onRemove={ key => dispatch(removeEnergyComponent(key)) }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
-              onLoad={ textdata => dispatch(loadEnergyComponents(textdata)) } />
+              onLoad={ parseddata => {
+                  const { components, area } = parseddata;
+                  dispatch(loadEnergyComponents(components));
+                  dispatch(changeArea(area));
+                }
+                     } />
           <EnergyComponentList
               selectedkey = { selectedkey }
               components = { components }
