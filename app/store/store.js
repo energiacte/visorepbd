@@ -13,8 +13,8 @@ const initialState = {
     values: [9.67, 7.74, 4.84, 4.35, 2.42, 2.90, 3.87, 3.39, 2.42, 3.87, 5.80, 7.74]
   },
   selectedkey: 0, // Currently selected component
-  kexp: 1.0,
-  krdel: 1.0,
+  kexp: 0.0,
+  krdel: 0.0,
   area: 1,
   components: [ // Energy components array (ejemplo3PVBdC.csv)
     {
