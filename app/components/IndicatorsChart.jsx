@@ -37,7 +37,6 @@ export class IChartA extends React.Component {
     c.assignColor('EP_total', 'blue');
     c.assignColor('EP_nren', 'red');
     c.assignColor('EP_ren', 'green');
-    c.addLegend('0%', '90%', '100%', '50%', 'right');
     c.ease = 'linear';
   }
 
@@ -146,7 +145,6 @@ export class IChartAB extends React.Component {
     c.assignColor('EP_total', 'blue');
     c.assignColor('EP_nren', 'red');
     c.assignColor('EP_ren', 'green');
-    c.addLegend('0%', '90%', '100%', '50%', 'right');
     c.ease = 'linear';
   }
 
