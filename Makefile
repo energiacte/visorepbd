@@ -18,9 +18,9 @@ createenv:
 	venv/bin/python -m pip install -Ur requirements.txt
 npminstall:
 	$(info [INFO]: Instalación de nodejs y dependencias JS)
-	curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 	sudo apt-get install -y nodejs
-	npm install -g eslint babel-eslint eslint-plugin-react http-server webpack webpack-dev-server
+	sudo npm install -g eslint babel-eslint eslint-plugin-react http-server webpack webpack-dev-server
 	npm install
 .PHONY: analyze
 analyze:
