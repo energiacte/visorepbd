@@ -1,5 +1,7 @@
-import $ from 'jquery';
-import Cookies from 'js-cookie';
+import { weighted_energy,
+         readenergydata,
+         ep2dict,
+         FACTORESDEPASO } from 'energycalculations';
 
 /*
  * action types
@@ -56,37 +58,15 @@ export function deliverData(newdata) {
 }
 
 // async action creator to get API data: thunk (redux-thunk middleware)
-
-function csrfSafeMethod(method) {
-  // these HTTP methods do not require CSRF protection
-  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-
+// could get params from store.getState() (import store from '../store/store.js') and return deliverData(res)
 export function fetchData() {
   // this async action also reads state
   return (dispatch, getState) => {
     const { kexp, krdel, area, components } = getState();
     const activecomponents = components.filter(component => component.active);
-    const csrftoken = Cookies.get('csrftoken');
-
-    return $.ajax({
-      // document.location.host = host + port
-      url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/api/epindicators',
-      method: 'POST', // http method
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      data: JSON.stringify({ kexp, krdel, area, components: activecomponents }),
-      crossDomain: false, // needed so request.is_ajax works
-      beforeSend(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-          xhr.setRequestHeader('X-CSRFToken', csrftoken);
-        }
-      }
-    }).done(
-      json => dispatch(deliverData(json))
-    ).fail((xhr, errmsg, err) => {
-      console.log(xhr.status + ': ' + xhr.responseText + ': ' + err);
-      dispatch(deliverData(null));
-    });
+    const data = readenergydata(activecomponents);
+    const res = ep2dict(weighted_energy(data, krdel, FACTORESDEPASO, kexp),
+                        area);
+    dispatch(deliverData(res));
   };
 }
