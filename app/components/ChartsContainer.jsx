@@ -2,11 +2,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-import d3 from 'd3';
-import dimple from 'dimple';
-import $ from 'jquery';
 import _ from 'lodash';
-import numeral from 'numeral';
 
 import { IChartA, IChartAB } from 'components/IndicatorsChart';
 

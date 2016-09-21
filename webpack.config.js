@@ -77,7 +77,7 @@ var config = {
   cache: true,
   devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
-    app: [PATHS.app, 'bootstrap-loader', 'numeral', 'js-cookie']
+    app: [PATHS.app, 'bootstrap-loader']
   },
   output: {
     path: PATHS.build,

@@ -1,8 +1,8 @@
-- Añadir superficie del edificio y reflejar indicadores por m2 de superficie acondicionada
-- Pestaña con factores de paso
+- Cambiar a mobx desde redux
+- Mover factores de paso de estado del componente a store global
+- Convertir a single page app sin server. Ya no nos hace falta.
 - Poner logos
 - Mostrar otros valores intermedios (energía exportada, energía suministrada por vector, etc)
-- Permitir subir archivos EPBDCALC
 - Permitir subir archivos de factores de paso
 - Permitir guardar casos
 - Ayuda con ejemplos

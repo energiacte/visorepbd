@@ -1,6 +1,4 @@
 import React, { PropTypes } from 'react';
-
-import numeral from 'numeral';
 import _ from 'lodash';
 
 import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
@@ -51,7 +49,7 @@ export default class EnergyComponentList extends React.Component {
                               onClick={ e => this.handleChange(i) } /></td>
                    <td>{ ctype }</td>
                    <td>{ originoruse }</td><td>{ carrier }</td>
-                   <td>{ numeral(_.sum(values)).format('0.00') }</td>
+                   <td>{ _.sum(values).toFixed(2) }</td>
                    <td><EnergyComponentChart ctype={ ctype }
                                              data={ data }
                                              maxvalue={ maxvalue } /></td>

@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import numeral from 'numeral';
-
 export default class GlobalVarsControl extends React.Component {
 
   render() {
@@ -18,7 +16,7 @@ export default class GlobalVarsControl extends React.Component {
                  defaultValue={ kexp }
                  onChange={ e => onChangeKexp(e.target.value) } />
           <input type="text" readOnly maxLength="3" size="3"
-                 value={ numeral(kexp).format('0.0') } />
+                 value={ kexp.toFixed(1) } />
         </div>
         <div id="krdel" className="form-group col-md-3">
           <label className="control-label" htmlFor="krdelrange">k<sub>rdel</sub> </label>
@@ -28,7 +26,7 @@ export default class GlobalVarsControl extends React.Component {
                  defaultValue={ krdel }
                  onChange={ e => onChangeKrdel(e.target.value) } />
           <input type="text" readOnly maxLength="3" size="3"
-                 value={ numeral(krdel).format('0.0') } />
+                 value={ krdel.toFixed(1) } />
         </div>
         <div className="form-group col-md-3" />
         <div id="area" className="form-group col-md-3">
@@ -36,7 +34,7 @@ export default class GlobalVarsControl extends React.Component {
           <input type="number" lang="es" min="1" step="1"
                  name="areaentry"
                  className="form-control"
-                 value={ numeral(area).format('0') }
+                 value={ area.toFixed(0) }
                  onChange={ e => onChangeArea(e.target.value) } />
         </div>
       </div>

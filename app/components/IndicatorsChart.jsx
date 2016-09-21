@@ -6,8 +6,6 @@ import d3 from 'd3';
 import dimple from 'dimple';
 import $ from 'jquery';
 import _ from 'lodash';
-import numeral from 'numeral';
-
 function buildDataA(values) {
   return [
     { Componente: 'EP_total', 'kWh/m²·año': values.EPAtotal, Order: 1 },
@@ -55,11 +53,11 @@ export class IChartA extends React.Component {
 
     // Subtitle
     svg.select('text#subtitle')
-       .text('kexp: ' + numeral(kexp).format('0.0') +
-             ', krdel: ' + numeral(krdel).format('0.0'));
+       .text('kexp: ' + kexp.toFixed(1) +
+             ', krdel: ' + krdel.toFixed(1));
     // Subsubtitle
     svg.select('text#subsubtitle')
-       .html('RER(A): ' + numeral(data.EPArer).format('0.00'));
+       .html('RER(A): ' + data.EPArer.toFixed(2));
 
     // Draw so geometry properties are available to compute tooltips
     this.chart.data = cData;
@@ -163,11 +161,11 @@ export class IChartAB extends React.Component {
 
     // Subtitle
     svg.select('text#subtitle')
-       .text('kexp: ' + numeral(kexp).format('0.0') +
-             ', krdel: ' + numeral(krdel).format('0.0'));
+       .text('kexp: ' + kexp.toFixed(1) +
+             ', krdel: ' + krdel.toFixed(1));
     // Subsubtitle
     svg.select('text#subsubtitle')
-       .html('RER(A+B): ' + numeral(data.EPrer).format('0.00'));
+       .html('RER(A+B): ' + data.EPrer.toFixed(2));
 
     // Draw so geometry properties are available to compute tooltips
     this.chart.data = cData;

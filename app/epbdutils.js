@@ -83,6 +83,7 @@ function getValues(curvename, newtotalenergy, currentvalues) {
   return values;
 }
 
+// TODO: hacer con epbdcalculations.js
 // Create components array from text data (loaded from file)
 // return null if conversion fails
 function getComponents(data) {
