@@ -1,7 +1,6 @@
 import React from 'react';
 
-import numeral from 'numeral';
-import $ from 'jquery';
+import { FACTORESDEPASO } from 'energycalculations';
 
 import NavBar from 'components/NavBar';
 import Footer from 'components/Footer';
@@ -11,16 +10,8 @@ import ietcclogo from 'img/logoietcccsic.png';
 export default class WeightingFactorsPage extends React.Component {
   constructor() {
     super();
-    this.state = {wfactors: []};
-  }
-
-  componentDidMount = () => {
-    $.ajax({
-      url: 'http://' + document.location.host + __EPBDURLPREFIX__ + '/api/wfactors',
-      dataType: 'json',
-      cache: false})
-     .done(data => { this.setState({ wfactors: data.wfactors }); })
-     .fail((xhr, status, err) => { console.error(xhr.status + ':' + xhr.responseText + ':' + err); });
+    // TODO: mover a store;
+    this.state = { wfactors: FACTORESDEPASO };
   }
 
   render() {
@@ -43,14 +34,14 @@ export default class WeightingFactorsPage extends React.Component {
             </thead>
             <tbody>
               { this.state.wfactors.map( entry => {
-                  const [carrier, origin, use, step, fpren, fpnren] = entry;
+                  const { vector, fuente, uso, step, fren, fnren } = entry;
                   return (<tr>
-              <td>{ carrier }</td>
-              <td>{ origin }</td>
-              <td>{ use }</td>
+              <td>{ vector }</td>
+              <td>{ fuente }</td>
+              <td>{ uso }</td>
               <td>{ step }</td>
-              <td>{ numeral(fpren).format('0.000') }</td>
-              <td>{ numeral(fpnren).format('0.000') }</td>
+              <td>{ fren.toFixed(3) }</td>
+              <td>{ fnren.toFixed(3) }</td>
                   </tr>); })
               }
             </tbody>
