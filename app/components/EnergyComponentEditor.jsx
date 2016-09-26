@@ -12,7 +12,6 @@ export default class EnergyComponentEditor extends React.Component {
   render() {
     const { selectedkey, components } = this.props;
     const { carrier, ctype, originoruse, values, comment } = components[selectedkey];
-    console.log(comment);
     const ctypevalues = _.keys(VALIDDATA);
     const originorusevalues = _.keys(VALIDDATA[ctype]);
     const carriervalues = VALIDDATA[ctype][originoruse];
