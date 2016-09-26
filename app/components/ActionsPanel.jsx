@@ -12,14 +12,14 @@ export default class ActionsPanel extends React.Component {
       file = e.target.files[0];
     }
 
-    let getComponents2 = str => {
+    let getData = str => {
       let { components, meta } = readenergystring(str);
       components = components.map(dd => { return {...dd, active: true }; });
       return { components, meta };
     };
 
     const reader = new FileReader();
-    reader.onload = e => onLoadHandler(getComponents2(e.target.result));
+    reader.onload = e => onLoadHandler(getData(e.target.result));
     reader.readAsText(file);
   }
 
