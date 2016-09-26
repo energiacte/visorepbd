@@ -1,0 +1,7 @@
+pyepbd/examples/ejemplo5cgnbiogas.csv
+Usando factor de resuministro krdel = 1.00
+Usando factor de exportación kexp = 1.00
+Archivo de factores de paso: pyepbd/examples/factores_paso_test.csv 
+Superficie de referencia: 1.00
+EP(step A)  , ren =   145.8, nren=   125.8, tot =   271.6, RER =    0.54
+EP(step A+B), ren =   159.8, nren=    69.8, tot =   229.6, RER =    0.70

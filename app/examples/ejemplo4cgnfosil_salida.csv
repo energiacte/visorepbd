@@ -1,0 +1,7 @@
+pyepbd/examples/ejemplo4cgnfosil.csv
+Usando factor de resuministro krdel = 1.00
+Usando factor de exportación kexp = 1.00
+Archivo de factores de paso: pyepbd/examples/factores_paso_test.csv 
+Superficie de referencia: 1.00
+EP(step A)  , ren =   -28.0, nren=   283.8, tot =   255.8, RER =   -0.11
+EP(step A+B), ren =   -14.0, nren=   227.8, tot =   213.8, RER =   -0.07
