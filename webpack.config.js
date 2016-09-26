@@ -6,6 +6,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const production = process.env.NODE_ENV === 'production';
 // Permitirmos usar la variable de entorno EPBDURLPREFIX para añadir prefijo
@@ -14,9 +15,7 @@ const epbdurlprefix = process.env.EPBDURLPREFIX || '';
 
 const PATHS = {
   app: path.resolve(path.join(__dirname, 'app')),
-  build: path.resolve(path.join(__dirname, 'epbdserver', 'static')),
-  bowerdir: 'bower_components',
-  bower: path.resolve(path.join(__dirname, 'bower_components')),
+  build: path.resolve(path.join(__dirname, 'build')),
   nodedir: 'node_modules',
   node: path.resolve(path.join(__dirname, 'node_modules')),
   styles: path.resolve(path.join(__dirname, 'app', 'css')),
@@ -31,6 +30,7 @@ var plugins = [
   new webpack.DefinePlugin({
     __EPBDURLPREFIX__: JSON.stringify(epbdurlprefix)
   }),
+  new LodashModuleReplacementPlugin,
   new webpack.HotModuleReplacementPlugin(),
   new ExtractTextPlugin('bundle-[hash].css', { allChunks: true }),
   new HtmlWebpackPlugin({
@@ -39,10 +39,14 @@ var plugins = [
     title: "DB-HE NZEB: implementación de la ISO 52000-1 en el CTE DB-HE",
     inject: false,
     //favicon: 'favicon.ico',
-    filename: '../templates/index.html', // relativo al output path
+    filename: './index.html', // relativo al output path
     minify: { removeComments: true, collapseWhitespace: true }
   }),
-  new webpack.NoErrorsPlugin()
+  new webpack.NoErrorsPlugin(),
+  new webpack.optimize.CommonsChunkPlugin({
+   name: "vendor",
+   minChunks: Infinity // only vendor chunks here
+  })
 ];
 
 if (production) { // Production plugins go here
@@ -77,28 +81,17 @@ var config = {
   cache: true,
   devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
-    app: [PATHS.app, 'bootstrap-loader']
+    app: [PATHS.app, 'bootstrap-loader'],
+    vendor: ['d3', 'dimple', 'jquery', 'lodash', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   output: {
     path: PATHS.build,
     filename: '[name]-[hash].js',
-    publicPath: production ? epbdurlprefix + '/static/': '/static/' // This is used to generate URLs to e.g. images
-  },
-  externals: {
-    // require("key") is external and available on the global var value
-    d3: 'd3',
-    dimple: 'dimple',
-    jquery: 'jQuery',
-    lodash: '_',
-    react: 'React',
-    'react-dom': 'ReactDOM',
-    'react-redux': 'ReactRedux',
-    'react-router': 'ReactRouter',
-    redux: 'Redux'
+    publicPath: production ? epbdurlprefix: '' // This is used to generate URLs to e.g. images
   },
   resolve: {
-    root: [PATHS.app, PATHS.bower, PATHS.node],
-    modulesDirectories: [PATHS.bowerdir, PATHS.nodedir],
+    root: [PATHS.app, PATHS.node],
+    modulesDirectories: [PATHS.nodedir],
     extensions: ['', '.js', '.jsx', '.json'],
     alias: { // Para usar alias en imports
       'styles': PATHS.styles,
@@ -118,6 +111,7 @@ var config = {
         include: PATHS.app,
         loader: 'babel',
         query: {cacheDirectory: true,
+                plugins: ['lodash'],
                 presets: ['es2015', 'stage-0', 'react']}
       },
       { // CSS
@@ -136,15 +130,20 @@ var config = {
         loaders: ExtractTextPlugin.extract('style', ['css', 'postcss', 'less'])
       },
       { // IMG  inline base64 URLs for <=8k images, direct URLs for the rest
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|ico)$/i,
         include: PATHS.app,
-        loader: 'url?limit=8192!img'
+        loader: 'url?limit=8192!img!file?name=img/[name]-[hash].[ext]'
+      },
+      { // .ico files
+        test: /\.ico$/i,
+        include: PATHS.app,
+        loader: 'img!file?name=[name].[ext]'
       },
       // required for bootstrap icons
-      { test: /\.woff2?$/, loader: 'url?limit=5000&mimetype=application/font-woff' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=5000&minetype=application/octet-stream' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=5000&minetype=image/svg+xml' },
+      { test: /\.woff2?$/, loader: 'url?limit=5000&mimetype=application/font-woff!file?name=fonts/[name]-[hash].[ext]' },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=5000&minetype=application/octet-stream!file?name=img/[name]-[hash].[ext]' },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=fonts/[name]-[hash].[ext]' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=5000&minetype=image/svg+xml!file?name=img/[name]-[hash].[ext]' },
       // Bootstrap 3
       { test: /bootstrap-sass\/assets\/javascripts\//, loader: 'imports?jQuery=jquery' },
       // Bootstrap 4

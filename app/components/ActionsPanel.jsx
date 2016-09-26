@@ -32,7 +32,7 @@ export default class ActionsPanel extends React.Component {
         </button>
         <input ref="fileInput" type="file"
                onChange={ e => this.handleFiles(e, this.props.onLoad) }
-               style={{visibility:'hidden', position:'absolute', top:'-50', left:'-50'}} />
+               style={{visibility:'hidden', position:'absolute', top:'-50px', left:'-50px'}} />
         <button className="btn bg-primary" id="modify"
                 onClick={ e => this.refs.fileInput.click() }>
           <span className="glyphicon glyphicon-upload"></span> Cargar datos

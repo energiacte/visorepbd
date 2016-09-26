@@ -68,7 +68,7 @@ export default class EnergyComponentEditor extends React.Component {
               <div className="col-md-3">
                 <select ref={ ref => this.CurveSelect = ref }
                         name="selectcurve" className="form-control"
-                        style={{width:'50%', display:'inline-block', 'vertical-align':'top'}}
+                        style={{width:'50%', display:'inline-block', verticalAlign:'top'}}
                         defaultValue={ CURVENAMES[0] }
                         onChange={ e => this.updateValues() }>
                   { CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>) }
@@ -97,11 +97,11 @@ export default class EnergyComponentEditor extends React.Component {
                        ref={ ref => this.totalEnergyEntry = ref }
                        name="totalenergyentry"
                        type="number"
-                       lang="es"
+                       lang="en"
                        min="0"
                        step="0.01"
                        style={{width:'50%'}}
-                       defaultValue={ currenttotalenergy }
+                       defaultValue={ currenttotalenergy.toFixed(2) }
                        onChange={ e => this.handleChangeTotalEnergy(e) }/>
               </div>
               <div className="col-md-4 control-label">
@@ -160,7 +160,7 @@ export default class EnergyComponentEditor extends React.Component {
 
   // Handle changes in total energy through UI
   handleChangeTotalEnergy(e) {
-    const newvalue = e.target.value;
+    const newvalue = parseFloat(e.target.value.replace(',', '.')).toFixed(2);
 
     if (e.target.name === 'totalenergyrange') {
       if (this.totalEnergyEntry.value === newvalue) { return; }
@@ -168,7 +168,7 @@ export default class EnergyComponentEditor extends React.Component {
     }
 
     if (e.target.name === 'totalenergyentry') {
-      if (this.totalEnergyRange.value === newvalue) { return; }
+      if (parseFloat(this.totalEnergyRange.value.replace(',', '.')).toFixed(2) === newvalue) { return; }
 
       let rangemax = this.totalEnergyRange.max;
       if (rangemax <= newvalue) {
@@ -185,7 +185,7 @@ export default class EnergyComponentEditor extends React.Component {
     let currentcomponent = { ...components[selectedkey] };
     let currentvalues = currentcomponent.values;
     let newvalues = getValues(this.CurveSelect.value,
-                              this.totalEnergyEntry.value,
+                              parseFloat(this.totalEnergyEntry.value.replace(',', '.')).toFixed(2),
                               currentvalues);
     currentcomponent.values = newvalues;
     onEdit(selectedkey, currentcomponent);
@@ -214,8 +214,9 @@ export default class EnergyComponentEditor extends React.Component {
 
     this.CurveSelect.value = CURVENAMES[0];
     this.totalEnergyRange.max = Math.max(10, 10 + 2 * Math.round(currenttotalenergy / 100) * 100);
-    this.totalEnergyRange.value = currenttotalenergy;
-    this.totalEnergyEntry.value = currenttotalenergy;
+    this.totalEnergyRange.value = currenttotalenergy.toFixed(2);
+    this.totalEnergyEntry.value = currenttotalenergy.toFixed(2);
+    storedcomponent.active = true;
 
     onEdit(selectedkey, storedcomponent);
   }

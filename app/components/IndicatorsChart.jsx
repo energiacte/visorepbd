@@ -94,6 +94,7 @@ export class IChartA extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     this.drawChart(nextProps);
+    return false;
   }
 
   render() {
@@ -202,6 +203,7 @@ export class IChartAB extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     this.drawChart(nextProps);
+    return false;
   }
 
   render() {

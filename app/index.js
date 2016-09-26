@@ -4,6 +4,7 @@ import { Router, Route, hashHistory } from 'react-router';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
+import 'img/favicon.ico';
 import 'styles/style.scss'; // CSS
 import store from 'store/store.js';
 import MainPage from 'components/MainPage.jsx';
