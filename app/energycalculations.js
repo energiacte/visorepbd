@@ -26,7 +26,6 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
 */
 
 import _ from 'lodash';
-//import { min, sum, zip } from 'lodash';
 
 // ---------------------------------------------------------------------------------------------------------
 // Default values for energy efficiency calculation
@@ -35,8 +34,6 @@ import _ from 'lodash';
 // building code regulations (Código Técnico de la Edificación CTE).
 //
 // Weighting factors are based on primary energy use.
-//
-// These are all provisional values subject to change
 // ---------------------------------------------------------------------------------------------------------
 
 export const K_EXP = 0.0;
@@ -112,14 +109,40 @@ export const FACTORESDEPASO = [
         ['GLP',                 'grid',         'input',     'A', 0.030, 1.201], // Delivered energy
         ['RED1',                'grid',         'input',     'A', 0.000, 1.300], // User defined!, district heating/cooling carrier
         ['RED2',                'grid',         'input',     'A', 0.000, 1.300]  // User defined!, district heating/cooling carrier
-      ].map(([vector, fuente, uso, step, fren, fnren]) => {
-        return { vector, fuente, uso, step, fren, fnren };
-      });
+].map(([vector, fuente, uso, step, fren, fnren]) => {
+  return { vector, fuente, uso, step, fren, fnren };
+});
+
+// ------------------------------------------------------------------------------------
+// Constraints
+// ------------------------------------------------------------------------------------
+
+export const VALIDDATA = {
+  CONSUMO: {
+    EPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
+          // 'COGENERACION',
+          'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+          'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
+          'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2'],
+    NEPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
+           // 'COGENERACION',
+           'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+           'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
+           'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2']
+  },
+  PRODUCCION: {
+    INSITU: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+             'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA',
+             'MEDIOAMBIENTE'],
+    COGENERACION: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
+                   'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA']
+  }
+};
 
 // Custom exception
 function UserException(message) {
-   this.message = message;
-   this.name = 'UserException';
+  this.message = message;
+  this.name = 'UserException';
 }
 
 // -----------------------------------------------------------------------------------
@@ -185,7 +208,7 @@ export function readenergydata(datalist) {
 
   let energydata = {};
   datalist.forEach(
-    function (data, ii) {
+    (data, ii) => {
       const { carrier, ctype, originoruse } = data;
       const values = data.values.map(value => parseFloat(value));
 
@@ -209,31 +232,47 @@ export function readenergydata(datalist) {
 // Read energy input data from string and return data structure
 // Data structure is defined in readenergydata
 export function readenergystring(datastring) {
-  const data = datastring
-    .replace('\n\r', '\n')
-    .split('\n')
+  const datalines = datastring.replace('\n\r', '\n').split('\n')
     .map(line => line.trim())
-    .filter(line => !(line === ''
-                      || line.startsWith('#')
-                      || line.startsWith('vector')))
+    .filter(line => !(line === '' || line.startsWith('vector')));
+  const [commentlines, componentlines] = _.partition(datalines,
+                                                     line => line.startsWith('#'));
+
+  const components = componentlines
+        .map(line => {
+          let parts = line.split('#').map(part => part.trim());
+          return (parts.lenght > 1) ? [parts[0], parts[1]] : [parts[0], ''];
+        })
+        .map(([fieldsstring, comment]) => {
+          const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
+          let [ carrier, ctype, originoruse, ...values ] = fieldslist;
+          // Minimal consistency checks
+          if (fieldslist.length > 3
+              && _.indexOf(_.keys(VALIDDATA), ctype) > -1
+              && _.indexOf(_.keys(VALIDDATA[ctype]), originoruse) > -1
+              && _.indexOf(VALIDDATA[ctype][originoruse], carrier) > -1) {
+            values = values.map(Number);
+            return { carrier, ctype, originoruse, values, comment };
+          }
+          return null;
+        })
+        .filter(v => v !== null);
+
+  const meta = {};
+  commentlines
+    .filter(line => line.startsWith('#CTE_'))
+    .map(line => line.slice('#CTE_'.length))
     .map(line => {
-      let parts = line.split('#').map(part => part.trim());
-      return (parts.lenght > 1) ? [parts[0], parts[1]] : [parts[0], ''];
-    })
-    .map(([fieldsstring, comment]) => {
-      const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
-      let [ carrier, ctype, originoruse, ...values ] = fieldslist;
-      values = values.map(Number);
-      return { carrier, ctype, originoruse, values, comment };
+      let [key, value] = line.split(':').map(l => l.trim());
+      value = value.match(/^-?\d*[\.|,]?\d+$/) ? parseFloat(value) : value;
+      meta[key] = value;
     });
-  return readenergydata(data);
+  return { components, meta };
 }
 
 // Read energy weighting factors data from string
 export function readfactors(factorsstring) {
-  return factorsstring
-    .replace('\n\r', '\n')
-    .split('\n')
+  return factorsstring.replace('\n\r', '\n').split('\n')
     .map(line => line.trim())
     .filter(line => !(line === ''
                       || line.startsWith('#')
@@ -249,7 +288,7 @@ export function readfactors(factorsstring) {
       }
       let [ vector, fuente, uso, step, fren, fnren ] = fieldslist;
       fren = parseFloat(fren);
-        fnren = parseFloat(fnren);
+      fnren = parseFloat(fnren);
       return { vector, fuente, uso, step, fren, fnren, comment };
     });
 }

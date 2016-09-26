@@ -124,7 +124,7 @@ ${ ep2string(EPB) }`;
 function epfromfile(filename, krdel, kexp, fp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const data = readenergystring(datastring);
+  const data = readenergydata(readenergystring(datastring).components);
   return { ...weighted_energy(data, krdel, fp, kexp), path: filename };
 }
 

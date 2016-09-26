@@ -1,27 +1,5 @@
 import _ from 'lodash';
 
-const VALIDDATA = {
-  CONSUMO: {
-    EPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
-          //'COGENERACION',
-          'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-          'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
-          'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2'],
-    NEPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
-           //'COGENERACION',
-           'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-           'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
-           'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2']
-  },
-  PRODUCCION: {
-    INSITU: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-             'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA',
-             'MEDIOAMBIENTE'],
-    COGENERACION: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-                   'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA']
-  }
-};
-
 const CURVENAMES = ['ACTUAL', 'CONSTANTE', 'CONCAVA', 'CONVEXA', 'CRECIENTE', 'DECRECIENTE'];
 
 // Calculate a list of numsteps coefficients with a shape defined by curvename
@@ -83,57 +61,4 @@ function getValues(curvename, newtotalenergy, currentvalues) {
   return values;
 }
 
-// TODO: hacer con epbdcalculations.js
-// Create components array from text data (loaded from file)
-// return null if conversion fails
-function getComponents(data) {
-  // check if line is blank, a comment (#) or a header
-  const isDataLine = (elem, index) => {
-    let e = elem.trim();
-    return !(e === '' || /* whiteline */
-             (e.startsWith('vector') && index === 0) || /* header */
-             e.startsWith('#') /* comment */
-            );
-  };
-
-  // Create component object from data line
-  const vectorLineToComponent = elem => {
-    elem = elem.split('#')[0];
-    let [carrier, ctype, originoruse, ...values] = elem.split(',').map(e => e.trim());
-    // Basic validation
-    if (_.indexOf(_.keys(VALIDDATA), ctype) > -1 &&
-        _.indexOf(_.keys(VALIDDATA[ctype]), originoruse) > -1 &&
-        _.indexOf(VALIDDATA[ctype][originoruse], carrier) > -1) {
-      return { active: true,
-               carrier,
-               ctype,
-               originoruse,
-               values: values.map(Number) };
-    }
-    return null;
-  };
-
-  // Build component list
-  let dlist = data
-      .split('\n')
-      .filter(isDataLine)
-      .map(vectorLineToComponent)
-      .filter(e => e !== null);
-  dlist = dlist.length === 0 ? null : dlist;
-
-  // Find building area
-  let area = data
-      .split('\n')
-      .filter(e => e.trim().startsWith('#'))
-      .filter(e => e.trim().slice(1).trim().startsWith('Area_ref:'));
-  if (area.length !== 0) {
-    area = parseFloat(area[0].split(':')[1]);
-    area = isNaN(area) ? 1 : area;
-  } else {
-    area = 1;
-  }
-
-  return { components: dlist, area: area };
-}
-
-export { VALIDDATA, CURVENAMES, getComponents, getValues };
+export { CURVENAMES, getValues };

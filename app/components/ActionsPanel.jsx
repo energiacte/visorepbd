@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getComponents } from '../epbdutils.js';
+import { readenergystring } from '../energycalculations.js';
 
 export default class ActionsPanel extends React.Component {
 
@@ -12,9 +12,14 @@ export default class ActionsPanel extends React.Component {
       file = e.target.files[0];
     }
 
-    //console.log("Name: ", file.name, ", Type: ", file.type);
+    let getComponents2 = str => {
+      let { components, meta } = readenergystring(str);
+      components = components.map(dd => { return {...dd, active: true }; });
+      return { components, meta };
+    };
+
     const reader = new FileReader();
-    reader.onload = e => onLoadHandler(getComponents(e.target.result));
+    reader.onload = e => onLoadHandler(getComponents2(e.target.result));
     reader.readAsText(file);
   }
 

@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 
 import ActionsPanel from 'components/ActionsPanel';
 import EnergyComponentChart from 'components/EnergyComponentChart';
-import { getValues, CURVENAMES, VALIDDATA } from '../epbdutils';
+import { getValues, CURVENAMES } from '../epbdutils';
+import { VALIDDATA } from '../energycalculations';
 
 import _ from 'lodash';
 
