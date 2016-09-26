@@ -11,8 +11,8 @@ export default class EnergyComponentEditor extends React.Component {
 
   render() {
     const { selectedkey, components } = this.props;
-    const { ctype, originoruse, carrier, values } = components[selectedkey];
-
+    const { carrier, ctype, originoruse, values, comment } = components[selectedkey];
+    console.log(comment);
     const ctypevalues = _.keys(VALIDDATA);
     const originorusevalues = _.keys(VALIDDATA[ctype]);
     const carriervalues = VALIDDATA[ctype][originoruse];
@@ -112,6 +112,10 @@ export default class EnergyComponentEditor extends React.Component {
                     onRestore={() => this.handleRestore()}
                     onLoad={ this.props.onLoad } />
               </div>
+            </div>
+            <div className="form-group">
+              <label className="col-md-1">Comentario</label>
+              <p className="col-md-11">{ comment || '' }</p>
             </div>
 
           </fieldset>
