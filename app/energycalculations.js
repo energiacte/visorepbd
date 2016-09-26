@@ -145,6 +145,8 @@ function UserException(message) {
   this.name = 'UserException';
 }
 
+const EMPTYCOMPONENT = { active: true, carrier: 'ELECTRICIDAD', ctype: 'CONSUMO', originoruse: 'EPB', values: [0.0] };
+
 // -----------------------------------------------------------------------------------
 // Vector utilities
 // -----------------------------------------------------------------------------------
@@ -238,25 +240,26 @@ export function readenergystring(datastring) {
   const [commentlines, componentlines] = _.partition(datalines,
                                                      line => line.startsWith('#'));
 
-  const components = componentlines
-        .map(line => {
-          let parts = line.split('#').map(part => part.trim());
-          return (parts.lenght > 1) ? [parts[0], parts[1]] : [parts[0], ''];
-        })
-        .map(([fieldsstring, comment]) => {
-          const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
-          let [ carrier, ctype, originoruse, ...values ] = fieldslist;
-          // Minimal consistency checks
-          if (fieldslist.length > 3
-              && _.indexOf(_.keys(VALIDDATA), ctype) > -1
-              && _.indexOf(_.keys(VALIDDATA[ctype]), originoruse) > -1
-              && _.indexOf(VALIDDATA[ctype][originoruse], carrier) > -1) {
-            values = values.map(Number);
-            return { carrier, ctype, originoruse, values, comment };
-          }
-          return null;
-        })
-        .filter(v => v !== null);
+  let components = componentlines
+      .map(line => {
+        let parts = line.split('#').map(part => part.trim());
+        return (parts.lenght > 1) ? [parts[0], parts[1]] : [parts[0], ''];
+      })
+      .map(([fieldsstring, comment]) => {
+        const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
+        let [ carrier, ctype, originoruse, ...values ] = fieldslist;
+        // Minimal consistency checks
+        if (fieldslist.length > 3
+            && _.indexOf(_.keys(VALIDDATA), ctype) > -1
+            && _.indexOf(_.keys(VALIDDATA[ctype]), originoruse) > -1
+            && _.indexOf(VALIDDATA[ctype][originoruse], carrier) > -1) {
+          values = values.map(Number);
+          return { carrier, ctype, originoruse, values, comment };
+        }
+        return null;
+      })
+      .filter(v => v !== null);
+  if (components.length === 0) components.push(EMPTYCOMPONENT);
 
   const meta = {};
   commentlines
@@ -267,6 +270,7 @@ export function readenergystring(datastring) {
       value = value.match(/^-?\d*[\.|,]?\d+$/) ? parseFloat(value) : value;
       meta[key] = value;
     });
+
   return { components, meta };
 }
 
