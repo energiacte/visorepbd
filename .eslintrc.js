@@ -165,7 +165,7 @@ module.exports = {
     // These rules are purely matters of style and are quite subjective.
     //
     "brace-style": [2, "1tbs", { "allowSingleLine": true }], // enforce one true brace style (off by default)
-    "camelcase": [2, { "properties": "never" }], // require camel case names
+    //"camelcase": [2, { "properties": "never" }], // require camel case names
     "comma-spacing": [1, {"before": false, "after": true}], // enforce spacing before and after comma
     "comma-style": [2, "last"], // enforce one true comma style (off by default)
     "consistent-this": 0, // enforces consistent naming when capturing the current execution context (off by default)
