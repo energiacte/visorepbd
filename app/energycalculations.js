@@ -242,8 +242,8 @@ export function readenergystring(datastring) {
 
   let components = componentlines
       .map(line => {
-        let parts = line.split('#').map(part => part.trim());
-        return (parts.lenght > 1) ? [parts[0], parts[1]] : [parts[0], ''];
+        const parts = line.split('#').map(pp => pp.trim());
+        return (parts.length > 1) ? [parts[0], parts[1]] : [parts[0], ''];
       })
       .map(([fieldsstring, comment]) => {
         const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
@@ -270,7 +270,6 @@ export function readenergystring(datastring) {
       value = value.match(/^-?\d*[\.|,]?\d+$/) ? parseFloat(value) : value;
       meta[key] = value;
     });
-
   return { components, meta };
 }
 
