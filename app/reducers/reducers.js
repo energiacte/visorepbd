@@ -13,6 +13,8 @@ function storedcomponent(state = null, action) {
   switch (action.type) {
   case SELECT_ENERGY_COMPONENT:
     return action.component;
+  case LOAD_ENERGY_COMPONENTS:
+    return action.newcomponents[0];
   default:
     return state;
   }
@@ -25,6 +27,8 @@ function selectedkey(state = null, action) {
   case REMOVE_ENERGY_COMPONENT:
     if (action.id !== 0) return state - 1;
     return state;
+  case LOAD_ENERGY_COMPONENTS:
+    return 0;
   default:
     return state;
   }
