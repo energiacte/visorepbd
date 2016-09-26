@@ -59,11 +59,9 @@ class MainPage extends React.Component {
               onAdd={ component => dispatch(addEnergyComponent(component)) }
               onRemove={ key => dispatch(removeEnergyComponent(key)) }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
-              onLoad={ parseddata => {
-                  const { components, meta } = parseddata;
+              onLoad={ ({ components, meta }) => {
                   dispatch(loadEnergyComponents(components));
-                  let area = meta.hasOwnProperty('Area_ref') ? meta['Area_ref'] : 1;
-                  dispatch(changeArea(area));
+                  dispatch(changeArea(meta['Area_ref'] || 1.0));
                 }
                      } />
           <EnergyComponentList
