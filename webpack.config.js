@@ -130,7 +130,7 @@ var config = {
         loaders: ExtractTextPlugin.extract('style', ['css', 'postcss', 'less'])
       },
       { // IMG  inline base64 URLs for <=8k images, direct URLs for the rest
-        test: /\.(png|jpe?g|gif|ico)$/i,
+        test: /\.(png|jpe?g|gif)$/i,
         include: PATHS.app,
         loader: 'url?limit=8192!img!file?name=img/[name]-[hash].[ext]'
       },
