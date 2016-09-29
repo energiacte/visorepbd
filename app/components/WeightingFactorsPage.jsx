@@ -44,11 +44,17 @@ class WeightingFactorsPage extends React.Component {
           </table>
           <div className="small bg-info">
             <p><b>Notas</b>:</p>
+            <p>Vector:</p>
+            <ul>
+              <li><tt>MEDIOAMBIENTE</tt>: energía térmica procedente del medioambiente</li>
+              <li><tt>RED1</tt>: vector genérico (p.e. para energía procedente de red de distrito y calefacción)</li>
+              <li><tt>RED2</tt>: vector genérico (p.e. para energía procedente de red de distrito y refrigeración)</li>
+            </ul>
             <p>Origen:</p>
             <ul>
               <li><tt>grid</tt>: red</li>
               <li><tt>INSITU</tt>: producción 'in situ'</li>
-              <li><tt>COGENERACION</tt>: red</li>
+              <li><tt>COGENERACION</tt>: energía procedente de la cogeneración (debe aplicarse únicamente a la energía eléctrica producida, considerando la energía térmica dentro de la frontera de evaluación)</li>
             </ul>
             <p>Uso:</p>
             <ul>
