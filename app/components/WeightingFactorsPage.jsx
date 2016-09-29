@@ -32,13 +32,13 @@ class WeightingFactorsPage extends React.Component {
             <tbody>
               <tr>
                 <td>RED1</td><td>grid</td><td>input</td><td>A</td>
-                <td>{ red1.fren.toFixed(3) }</td>
-                <td>{ red1.fnren.toFixed(3) }</td>
+                <td contentEditable>{ red1.fren.toFixed(3) }</td>
+                <td contentEditable>{ red1.fnren.toFixed(3) }</td>
               </tr>
               <tr>
                 <td>RED2</td><td>grid</td><td>input</td><td>A</td>
-                <td>{ red2.fren.toFixed(3) }</td>
-                <td>{ red2.fnren.toFixed(3) }</td>
+                <td contentEditable>{ red2.fren.toFixed(3) }</td>
+                <td contentEditable>{ red2.fnren.toFixed(3) }</td>
               </tr>
             </tbody>
           </table>

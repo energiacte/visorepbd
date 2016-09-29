@@ -81,8 +81,8 @@ var config = {
   cache: true,
   devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
-    app: [PATHS.app, 'bootstrap-loader'],
-    vendor: ['d3', 'dimple', 'jquery', 'lodash', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
+    app: [PATHS.app],
+    vendor: ['bootstrap-loader', 'd3', 'dimple', 'jquery', 'lodash', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   output: {
     path: PATHS.build,
@@ -129,10 +129,10 @@ var config = {
         include: PATHS.app,
         loaders: ExtractTextPlugin.extract('style', ['css', 'postcss', 'less'])
       },
-      { // IMG  inline base64 URLs for <=8k images, direct URLs for the rest
+      { // IMG  direct URLs for the rest
         test: /\.(png|jpe?g|gif)$/i,
         include: PATHS.app,
-        loader: 'url?limit=8192!img!file?name=img/[name]-[hash].[ext]'
+        loader: 'img!file?name=img/[name]-[hash].[ext]'
       },
       { // .ico files
         test: /\.ico$/i,
