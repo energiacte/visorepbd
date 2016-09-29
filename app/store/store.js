@@ -1,6 +1,7 @@
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import reducer from 'reducers/reducers.js';
+import { FACTORESDEPASO } from 'energycalculations';
 
 const initialState = {
   data: { EPnren: 0, EPren: 0, EPtotal: 0, EPrer: 0,
@@ -16,6 +17,7 @@ const initialState = {
   kexp: 0.0,
   krdel: 0.0,
   area: 1,
+  wfactors: FACTORESDEPASO,
   components: [ // Energy components array (ejemplo3PVBdC.csv)
     {
       active: true,

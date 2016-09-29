@@ -1,7 +1,6 @@
 import { weighted_energy,
          readenergydata,
-         ep2dict,
-         FACTORESDEPASO } from 'energycalculations';
+         ep2dict } from 'energycalculations';
 
 /*
  * action types
@@ -15,6 +14,7 @@ export const LOAD_ENERGY_COMPONENTS = 'LOAD_ENERGY_COMPONENTS';
 export const CHANGE_KEXP = 'CHANGE_KEXP';
 export const CHANGE_KRDEL = 'CHANGE_KRDEL';
 export const CHANGE_AREA = 'CHANGE_AREA';
+export const EDIT_WFACTORS = 'EDIT_WFACTORS';
 export const RECEIVE_DATA = 'RECEIVE_DATA';
 
 /*
@@ -53,6 +53,10 @@ export function changeArea(value) {
   return { type: CHANGE_AREA, value };
 }
 
+export function editWFactors(newfactors) {
+  return { type: EDIT_WFACTORS, newfactors };
+}
+
 export function deliverData(newdata) {
   return { type: RECEIVE_DATA, newdata };
 }
@@ -62,10 +66,10 @@ export function deliverData(newdata) {
 export function fetchData() {
   // this async action also reads state
   return (dispatch, getState) => {
-    const { kexp, krdel, area, components } = getState();
+    const { kexp, krdel, area, components, wfactors } = getState();
     const activecomponents = components.filter(component => component.active);
     const data = readenergydata(activecomponents);
-    const res = ep2dict(weighted_energy(data, krdel, FACTORESDEPASO, kexp),
+    const res = ep2dict(weighted_energy(data, krdel, wfactors, kexp),
                         area);
     dispatch(deliverData(res));
   };

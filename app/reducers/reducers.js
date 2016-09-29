@@ -7,6 +7,7 @@ import { SELECT_ENERGY_COMPONENT,
          CHANGE_KEXP,
          CHANGE_KRDEL,
          CHANGE_AREA,
+         EDIT_WFACTORS,
          RECEIVE_DATA } from '../actions/actions.js';
 
 function storedcomponent(state = null, action) {
@@ -56,6 +57,15 @@ function area(state = 1, action) {
   switch (action.type) {
   case CHANGE_AREA:
     return Number(action.value);
+  default:
+    return state;
+  }
+}
+
+function wfactors(state = [], action) {
+  switch (action.type) {
+  case EDIT_WFACTORS:
+    return action.newfactors;
   default:
     return state;
   }
@@ -122,5 +132,6 @@ export default combineReducers({
   kexp,
   krdel,
   area,
+  wfactors,
   components
 });

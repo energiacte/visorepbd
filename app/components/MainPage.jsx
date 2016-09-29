@@ -84,6 +84,7 @@ export default MainPage = connect(state => {
     data: state.data,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
+    wfactors: state.wfactors,
     components: state.components
   };
 })(MainPage);

@@ -1,20 +1,16 @@
 import React from 'react';
-
-import { FACTORESDEPASO } from 'energycalculations';
+import { connect } from 'react-redux';
 
 import NavBar from 'components/NavBar';
 import Footer from 'components/Footer';
 import mfomlogo from 'img/logomfom.png';
 import ietcclogo from 'img/logoietcccsic.png';
 
-export default class WeightingFactorsPage extends React.Component {
-  constructor() {
-    super();
-    // TODO: mover a store;
-    this.state = { wfactors: FACTORESDEPASO };
-  }
+class WeightingFactorsPage extends React.Component {
 
   render() {
+    const { wfactors, dispatch } = this.props;
+
     return (
       <div>
         <NavBar route={ this.props.route } />
@@ -33,7 +29,7 @@ export default class WeightingFactorsPage extends React.Component {
               </tr>
             </thead>
             <tbody>
-              { this.state.wfactors.map( entry => {
+              { wfactors.map( entry => {
                   const { vector, fuente, uso, step, fren, fnren } = entry;
                   return (<tr key={ `${vector}-${fuente}-${uso}-${step}` }>
               <td>{ vector }</td>
@@ -69,3 +65,9 @@ export default class WeightingFactorsPage extends React.Component {
     );
   }
 };
+
+export default WeightingFactorsPage = connect(state => {
+  return {
+    wfactors: state.wfactors
+  };
+})(WeightingFactorsPage);
