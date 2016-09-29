@@ -197,13 +197,17 @@ export default class EnergyComponentEditor extends React.Component {
 
   // Add component to component list
   handleAdd(selectedkey, event) {
-    this.props.onAdd({
-      active: true,
-      ctype: 'PRODUCCION',
-      originoruse: 'INSITU',
-      carrier: 'ELECTRICIDAD',
-      values: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-    });
+    let currentcomponent = (selectedkey !== null) ?
+                           { ...this.props.components[selectedkey] } :
+                           {
+                             active: true,
+                             ctype: 'PRODUCCION',
+                             originoruse: 'INSITU',
+                             carrier: 'ELECTRICIDAD',
+                             values: [10] * 12
+                           }
+
+    this.props.onAdd(currentcomponent);
   }
 
   // Remove current component to component list
