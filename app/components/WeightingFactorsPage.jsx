@@ -35,7 +35,7 @@ export default class WeightingFactorsPage extends React.Component {
             <tbody>
               { this.state.wfactors.map( entry => {
                   const { vector, fuente, uso, step, fren, fnren } = entry;
-                  return (<tr>
+                  return (<tr key={ `${vector}-${fuente}-${uso}-${step}` }>
               <td>{ vector }</td>
               <td>{ fuente }</td>
               <td>{ uso }</td>
