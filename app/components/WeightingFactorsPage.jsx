@@ -10,6 +10,9 @@ class WeightingFactorsPage extends React.Component {
 
   render() {
     const { wfactors, dispatch } = this.props;
+    const wfactors2 = wfactors.filter(e => !e.vector.startsWith('RED'));
+    const red1 = wfactors.filter(e => e.vector === 'RED1')[0];
+    const red2 = wfactors.filter(e => e.vector === 'RED2')[0];
 
     return (
       <div>
@@ -19,6 +22,27 @@ class WeightingFactorsPage extends React.Component {
             <h1>Factores de ponderación</h1>
             <p>Factores de paso de energía final a energía primaria.</p>
           </div>
+
+          <table id="weditor" className="table table-striped table-bordered table-condensed">
+            <thead>
+              <tr>
+                <th>Vector energético</th><th>Origen</th><th>Uso</th><th>Paso</th><th>Fp_ren</th><th>Fp_nren</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RED1</td><td>grid</td><td>input</td><td>A</td>
+                <td>{ red1.fren.toFixed(3) }</td>
+                <td>{ red1.fnren.toFixed(3) }</td>
+              </tr>
+              <tr>
+                <td>RED2</td><td>grid</td><td>input</td><td>A</td>
+                <td>{ red2.fren.toFixed(3) }</td>
+                <td>{ red2.fnren.toFixed(3) }</td>
+              </tr>
+            </tbody>
+          </table>
+
           <table id="components" className="table table-striped table-bordered table-condensed">
             <thead>
               <tr>
@@ -29,7 +53,7 @@ class WeightingFactorsPage extends React.Component {
               </tr>
             </thead>
             <tbody>
-              { wfactors.map( entry => {
+              { wfactors2.map( entry => {
                   const { vector, fuente, uso, step, fren, fnren } = entry;
                   return (<tr key={ `${vector}-${fuente}-${uso}-${step}` }>
               <td>{ vector }</td>
