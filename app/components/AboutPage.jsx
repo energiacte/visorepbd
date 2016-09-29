@@ -15,7 +15,7 @@ export default React.createClass({
           <div className="page-header">
             <h1>CTE DB-HE, aplicación de ISO 52000-1</h1>
           </div>
-          <p className="lead">Evaluación de indicadores de la ISO 52000-1 para su aplicación en el CTE DB-HE.</p>
+          <p className="lead">Evaluación de indicadores de la ISO 52000-1 (EN 15603) para su aplicación en el CTE DB-HE.</p>
           <p>Este programa presenta una interfaz web a la aplicación <a href="https://github.com/pachi/epbdcalc">epbdcalc</a>.</p>
           <p>Equipo de desarrollo (IETcc-CSIC):</p>
           <ul>
