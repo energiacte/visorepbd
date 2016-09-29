@@ -96,11 +96,8 @@ export default class EnergyComponentEditor extends React.Component {
                 <input className="form-control col-md-1"
                        ref={ ref => this.totalEnergyEntry = ref }
                        name="totalenergyentry"
-                       type="number"
-                       lang="en"
-                       min="0"
-                       step="0.01"
-                       style={{width:'50%'}}
+                       type="text"
+                       style={ { width:'50%' } }
                        defaultValue={ currenttotalenergy.toFixed(2) }
                        onChange={ e => this.handleChangeTotalEnergy(e) }/>
               </div>
@@ -162,9 +159,37 @@ export default class EnergyComponentEditor extends React.Component {
     onEdit(selectedkey, currentcomponent);
   }
 
+  parseTotalEnergyValue(value) {
+    const sanitizedValue = value.replace(',', '.');
+    return Math.abs(parseFloat(sanitizedValue)).toFixed(2);
+  }
+
   // Handle changes in total energy through UI
   handleChangeTotalEnergy(e) {
-    const newvalue = parseFloat(e.target.value.replace(',', '.')).toFixed(2);
+    let newvalue;
+    if (!/^[+-]?([0-9]*[.])?[0-9]+$/.test(e.target.value)) {
+      if (e.target.value.endsWith('=')) {
+        newvalue = e.target.value.replace(/,/g, '.');
+        let [ expr, val1, op, val2 ] = newvalue.match(/^((?:[0-9]*[.])?[0-9]+)([\/*+-])((?:[0-9]*[.])?[0-9]+)=$/);
+        val1 = parseFloat(val1);
+        val2 = parseFloat(val2);
+        if (op === '+') {
+          newvalue = (val1 + val2).toFixed(2);
+        } else if (op === '-') {
+          newvalue = Math.max((val1 - val2), 0.0).toFixed(2);
+        } else if (op === '*') {
+          newvalue = (val1 * val2).toFixed(2);
+        } else if (op === '/') {
+          newvalue = (val1 / val2).toFixed(2);
+        }
+      } else {
+        return;
+      }
+    } else {
+      newvalue = this.parseTotalEnergyValue(e.target.value);
+    }
+
+    if (isNaN(newvalue)) return;
 
     if (e.target.name === 'totalenergyrange') {
       if (this.totalEnergyEntry.value === newvalue) { return; }
@@ -172,13 +197,15 @@ export default class EnergyComponentEditor extends React.Component {
     }
 
     if (e.target.name === 'totalenergyentry') {
-      if (parseFloat(this.totalEnergyRange.value.replace(',', '.')).toFixed(2) === newvalue) { return; }
+      const currentValue = parseFloat(this.totalEnergyEntry.value);
+      if ( currentValue === newvalue) { return; }
 
       let rangemax = this.totalEnergyRange.max;
       if (rangemax <= newvalue) {
         this.totalEnergyRange.max = rangemax * 2;
       }
       this.totalEnergyRange.value = newvalue;
+      this.totalEnergyEntry.value = newvalue;
     }
     this.updateValues();
   }
@@ -189,7 +216,7 @@ export default class EnergyComponentEditor extends React.Component {
     let currentcomponent = { ...components[selectedkey] };
     let currentvalues = currentcomponent.values;
     let newvalues = getValues(this.CurveSelect.value,
-                              parseFloat(this.totalEnergyEntry.value.replace(',', '.')).toFixed(2),
+                              this.parseTotalEnergyValue(this.totalEnergyEntry.value),
                               currentvalues);
     currentcomponent.values = newvalues;
     onEdit(selectedkey, currentcomponent);
