@@ -273,6 +273,27 @@ export function readenergystring(datastring) {
   return { components, meta };
 }
 
+// Save energy data and metadata to string
+export function saveenergystring(components, meta) {
+  const metalines = [
+    `#CTE_Name: EPBDpanel`,
+    `#CTE_Datetime: ${ new Date().toLocaleString() }`,
+    `#CTE_Area_ref: ${ meta.area.toFixed(1) }`,
+    `#CTE_kexp: ${ meta.kexp.toFixed(2) }`,
+    `#CTE_krdel: ${ meta.krdel.toFixed(2) }`
+  ];
+  const componentlines = components
+        .filter(cc => cc.active)
+        .map(
+          cc => {
+            const { carrier, ctype, originoruse, values, comment } = cc;
+            const valuelist = values.map(v=> v.toFixed(2)).join(',');
+            return `${ carrier },${ ctype },${ originoruse },${ valuelist } #${ comment }`;
+          }
+        );
+  return [...metalines, 'vector,tipo,src_dst', ...componentlines].join('\n');
+}
+
 // Read energy weighting factors data from string
 export function readfactors(factorsstring) {
   return factorsstring.replace('\n\r', '\n').split('\n')
