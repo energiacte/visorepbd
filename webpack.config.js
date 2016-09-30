@@ -81,13 +81,15 @@ var config = {
   cache: true,
   devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
-    app: [PATHS.app],
-    vendor: ['bootstrap-loader', 'd3', 'dimple', 'jquery', 'lodash', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
+    app: [PATHS.app, 'bootstrap-loader'],
+    vendor: ['d3', 'dimple', 'jquery', 'lodash', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   output: {
     path: PATHS.build,
     filename: '[name]-[hash].js',
-    publicPath: production ? epbdurlprefix: '' // This is used to generate URLs to e.g. images
+    // publicPath: "http://localhost:8080/", // Development server
+    // publicPath: "http://example.com/", // Production
+    publicPath: production ? epbdurlprefix : '' // This is used to generate URLs to e.g. images,css
   },
   resolve: {
     root: [PATHS.app, PATHS.node],
