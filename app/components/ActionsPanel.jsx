@@ -40,23 +40,26 @@ export default class ActionsPanel extends React.Component {
   render() {
     return (
       <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
-        <button className="btn" id="add" onClick={this.props.onAdd}>
+        <button className="btn" id="add" type="button"
+                onClick={this.props.onAdd}>
           <span className="glyphicon glyphicon-plus"></span> Añadir
         </button>
-        <button className="btn" id="remove" onClick={this.props.onRemove}>
+        <button className="btn" id="remove" type="button"
+                onClick={this.props.onRemove}>
           <span className="glyphicon glyphicon-minus"></span> Borrar
         </button>
-        <button className="btn" id="modify" onClick={this.props.onRestore}>
+        <button className="btn" id="modify" type="button"
+                onClick={this.props.onRestore}>
           <span className="glyphicon glyphicon-repeat"></span> Restaurar
         </button>
         <input ref="fileInput" type="file"
                onChange={ e => this.handleFiles(e, this.props.onLoad) }
                style={{visibility:'hidden', position:'absolute', top:'-50px', left:'-50px'}} />
-        <button className="btn bg-primary" id="modify"
+        <button className="btn bg-primary" id="modify" type="button"
                 onClick={ e => this.refs.fileInput.click() }>
           <span className="glyphicon glyphicon-upload"></span> Cargar datos
         </button>
-        <button className="btn bg-primary" id="save"
+        <button className="btn bg-primary" id="save" type="button"
                 onClick={ e => this.downloadFile(e, this.props.getEnergyString) }>
           <span className="glyphicon glyphicon-download"></span> Guardar datos
         </button>
