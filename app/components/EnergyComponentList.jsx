@@ -18,7 +18,7 @@ export default class EnergyComponentList extends React.Component {
   }
 
   render() {
-    const { components, selectedkey } = this.props;
+    const { components, selectedkey, area } = this.props;
     const maxvalue = _.max(components.map(component => _.max(component.values)));
 
     return (
@@ -28,6 +28,7 @@ export default class EnergyComponentList extends React.Component {
             <th></th><th>Tipo</th>
             <th>Origen/Uso</th><th>Vector energético</th>
             <th>kWh/año</th>
+            <th>kWh/año·m²</th>
             <th>Valores</th>
           </tr>
         </thead>
@@ -41,6 +42,7 @@ export default class EnergyComponentList extends React.Component {
                  active ? '' : 'inactivecomponent',
                  (ctype === 'CONSUMO') ? 'deliveredstyle' : ''
                ].join(' ');
+               const sumvalues = _.sum(values);
                return (
                  <tr key={i}
                      className={ rowstyles }
@@ -49,7 +51,8 @@ export default class EnergyComponentList extends React.Component {
                               onClick={ e => this.handleChange(i) } /></td>
                    <td>{ ctype }</td>
                    <td>{ originoruse }</td><td>{ carrier }</td>
-                   <td>{ _.sum(values).toFixed(2) }</td>
+                   <td>{ sumvalues.toFixed(2) }</td>
+                   <td>{ (sumvalues / area).toFixed(2) }</td>
                    <td><EnergyComponentChart ctype={ ctype }
                                              data={ data }
                                              maxvalue={ maxvalue } /></td>

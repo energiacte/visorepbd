@@ -63,7 +63,9 @@ class MainPage extends React.Component {
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
               onLoad={ ({ components, meta }) => {
                   dispatch(loadEnergyComponents(components));
-                  dispatch(changeArea(meta['Area_ref'] || 1.0));
+                  dispatch(changeArea(meta.Area_ref || 1.0));
+                  dispatch(changeKexp(meta.kexp || kexp));
+                  dispatch(changeKrdel(meta.krdel || krdel));
                 }
                      }
               getEnergyString={ () => this.getEnergyString() }
@@ -71,6 +73,7 @@ class MainPage extends React.Component {
           <EnergyComponentList
               selectedkey = { selectedkey }
               components = { components }
+              area ={ area }
               onSelect={ (key, component) => dispatch(selectEnergyComponent(key, component)) }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) } />
         </div>
