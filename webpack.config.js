@@ -81,7 +81,10 @@ var config = {
   cache: true,
   devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
-    app: [PATHS.app, 'bootstrap-loader'],
+    app: [
+      //'babel-polyfill',
+      PATHS.app,
+      'bootstrap-loader'],
     vendor: ['d3', 'dimple', 'jquery', 'lodash', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   output: {
@@ -142,10 +145,10 @@ var config = {
         loader: 'img!file?name=[name].[ext]'
       },
       // required for bootstrap icons
-      { test: /\.woff2?$/, loader: 'url?limit=5000&mimetype=application/font-woff!file?name=fonts/[name]-[hash].[ext]' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=5000&minetype=application/octet-stream!file?name=img/[name]-[hash].[ext]' },
+      { test: /\.woff2?$/, loader: 'file?name=fonts/[name]-[hash].[ext]' },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=fonts/[name]-[hash].[ext]' },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=fonts/[name]-[hash].[ext]' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=5000&minetype=image/svg+xml!file?name=img/[name]-[hash].[ext]' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=img/[name]-[hash].[ext]' },
       // Bootstrap 3
       { test: /bootstrap-sass\/assets\/javascripts\//, loader: 'imports?jQuery=jquery' },
       // Bootstrap 4
