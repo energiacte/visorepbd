@@ -1,10 +1,10 @@
 - Cambiar a mobx desde redux
-- Mover factores de paso de estado del componente a store global
-- Convertir a single page app sin server. Ya no nos hace falta.
 - Poner logos
 - Mostrar otros valores intermedios (energía exportada, energía suministrada por vector, etc)
-- Permitir subir archivos de factores de paso
-- Permitir guardar casos
 - Ayuda con ejemplos
 - Mejorar svg y comportamiento del subtítulo
-
+- Cargar RED1 y RED2 desde metadatos
+- Poner metadatos en estado
+- Mostrar y editar meta.Name
+- Permitir editar comentarios
+- Mostrar al final de la lista, los totales de energía y energía por superficie para todos los vectores
