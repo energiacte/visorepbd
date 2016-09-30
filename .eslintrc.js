@@ -219,16 +219,16 @@ module.exports = {
     "no-whitespace-before-property": 2,
     // require padding inside curly braces
     "object-curly-spacing": [2, "always"],
-    "one-var": [2, "never"], // allow just one var statement per function (off by default)
+    //"one-var": [2, "never"], // allow just one var statement per function (off by default)
     // require a newline around variable declaration
     // http://eslint.org/docs/rules/one-var-declaration-per-line
-    "one-var-declaration-per-line": [2, "always"],
+    //"one-var-declaration-per-line": [2, "always"],
     "operator-assignment": 0, // require assignment operator shorthand where possible or prohibit it entirely (off by default)
     // enforce operators to be placed before or after line breaks
     "operator-linebreak": 0,
     "padded-blocks": [2, "never"], // enforce padding within blocks (off by default)
     "quote-props": [2, "as-needed", { "keywords": false, "unnecessary": true, "numbers": false }], // require quotes around object literal property names (off by default)
-    "quotes": [1, "single", "avoid-escape"], // specify whether double or single quotes should be used
+    //"quotes": [1, "single", "avoid-escape"], // specify whether double or single quotes should be used
     // require identifiers to match the provided regular expression
     "id-match": 0,
     "semi": [2, "always"], // require or disallow use of semicolons instead of ASI
