@@ -112,8 +112,17 @@ export default class EnergyComponentEditor extends React.Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="col-md-1">Comentario</label>
-              <p className="col-md-11">{ comment || '' }</p>
+              <label className="col-md-1 control-label"
+                     htmlFor="commentinput">Comentario</label>
+              <div className="col-md-11">
+                <input className="form-control"
+                       name="commentinput"
+                       type="text"
+                       style={ { width:'100%' } }
+                       defaultValue={ comment || '' }
+                       onKeyDown={ e => this.handleChangeComment(e) }
+                />
+              </div>
             </div>
 
           </fieldset>
@@ -121,6 +130,16 @@ export default class EnergyComponentEditor extends React.Component {
 
       </div>
     );
+  }
+
+  handleChangeComment(e) {
+    if (e.keyCode !== 13) return;
+    const { selectedkey, components, onEdit } = this.props;
+    let newComment = e.target.value;
+    let currentcomponent = { ...components[selectedkey] };
+    currentcomponent.comment = newComment;
+    console.log(newComment);
+    onEdit(selectedkey, currentcomponent);
   }
 
   // Handle changes in ctype, originoruse and carrier select boxes
