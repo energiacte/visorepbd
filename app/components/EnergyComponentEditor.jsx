@@ -106,7 +106,9 @@ export default class EnergyComponentEditor extends React.Component {
                     onAdd={() => this.handleAdd(selectedkey)}
                     onRemove={() => this.handleRemove(selectedkey)}
                     onRestore={() => this.handleRestore()}
-                    onLoad={ this.props.onLoad } />
+                    onLoad={ this.props.onLoad }
+                    getEnergyString={ this.props.getEnergyString }
+                />
               </div>
             </div>
             <div className="form-group">

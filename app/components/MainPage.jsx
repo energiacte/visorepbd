@@ -8,6 +8,8 @@ import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 
+import { saveenergystring } from '../energycalculations.js';
+
 import { changeKexp,
          changeKrdel,
          changeArea,
@@ -63,7 +65,9 @@ class MainPage extends React.Component {
                   dispatch(loadEnergyComponents(components));
                   dispatch(changeArea(meta['Area_ref'] || 1.0));
                 }
-                     } />
+                     }
+              getEnergyString={ () => this.getEnergyString() }
+          />
           <EnergyComponentList
               selectedkey = { selectedkey }
               components = { components }
@@ -73,6 +77,13 @@ class MainPage extends React.Component {
         <Footer />
       </div>
     );
+  }
+
+  getEnergyString() {
+    const { kexp, krdel, area, components, wfactors } = this.props;
+    const meta = { area , kexp, krdel };
+    const energystring = saveenergystring(components, meta);
+    return energystring;
   }
 }
 

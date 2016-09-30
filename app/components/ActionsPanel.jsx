@@ -23,6 +23,20 @@ export default class ActionsPanel extends React.Component {
     reader.readAsText(file);
   }
 
+  downloadFile(e, getEnergyString) {
+    const energystring = getEnergyString();
+    const data = new Blob([energystring],
+                          { type: 'text/plain;charset=utf8;' });
+    // create hidden link
+    const element = document.createElement('a');
+    document.body.appendChild(element);
+    element.setAttribute('href', window.URL.createObjectURL(data));
+    element.setAttribute('download', 'csvEPBDpanel.csv');
+    element.style.display = '';
+    element.click();
+    document.body.removeChild(element);
+  }
+
   render() {
     return (
       <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
@@ -41,6 +55,10 @@ export default class ActionsPanel extends React.Component {
         <button className="btn bg-primary" id="modify"
                 onClick={ e => this.refs.fileInput.click() }>
           <span className="glyphicon glyphicon-upload"></span> Cargar datos
+        </button>
+        <button className="btn bg-primary" id="save"
+                onClick={ e => this.downloadFile(e, this.props.getEnergyString) }>
+          <span className="glyphicon glyphicon-download"></span> Guardar datos
         </button>
       </div>
     );
