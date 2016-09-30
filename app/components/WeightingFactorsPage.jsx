@@ -1,15 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import NavBar from 'components/NavBar';
 import Footer from 'components/Footer';
 import mfomlogo from 'img/logomfom.png';
 import ietcclogo from 'img/logoietcccsic.png';
 
+import { editWFactors } from 'actions/actions.js';
+
 class WeightingFactorsPage extends React.Component {
 
   render() {
-    const { wfactors, dispatch } = this.props;
+    const { wfactors } = this.props;
     const wfactors2 = wfactors.filter(e => !e.vector.startsWith('RED'));
     const red1 = wfactors.filter(e => e.vector === 'RED1')[0];
     const red2 = wfactors.filter(e => e.vector === 'RED2')[0];
@@ -19,10 +22,11 @@ class WeightingFactorsPage extends React.Component {
         <NavBar route={ this.props.route } />
         <div className="container">
           <div className="page-header">
-            <h1>Factores de ponderación</h1>
-            <p>Factores de paso de energía final a energía primaria.</p>
+            <h1>Factores de paso</h1>
+            <p>Conversión de energía final a energía primaria renovable y no renovable.</p>
           </div>
 
+          <h3>Factores personalizables</h3>
           <table id="weditor" className="table table-striped table-bordered table-condensed">
             <thead>
               <tr>
@@ -32,17 +36,38 @@ class WeightingFactorsPage extends React.Component {
             <tbody>
               <tr>
                 <td>RED1</td><td>grid</td><td>input</td><td>A</td>
-                <td contentEditable>{ red1.fren.toFixed(3) }</td>
-                <td contentEditable>{ red1.fnren.toFixed(3) }</td>
+                <td>
+                  <input type="text" ref="red1fren"
+                         defaultValue={ red1.fren.toFixed(3) }
+                         onChange={ e => this.handleChange('RED1', 'fren', e) }
+                  />
+                </td>
+                <td>
+                  <input type="text" ref="red1fnren"
+                         defaultValue={ red1.fnren.toFixed(3) }
+                         onChange={ e => this.handleChange('RED1', 'fnren', e) }
+                  />
+                </td>
               </tr>
               <tr>
                 <td>RED2</td><td>grid</td><td>input</td><td>A</td>
-                <td contentEditable>{ red2.fren.toFixed(3) }</td>
-                <td contentEditable>{ red2.fnren.toFixed(3) }</td>
+                <td>
+                  <input type="text" ref="red2fren"
+                         defaultValue={ red2.fren.toFixed(3) }
+                         onChange={ e => this.handleChange('RED2', 'fren', e) }
+                  />
+                </td>
+                <td>
+                  <input type="text" contentEditable ref='red2fnren'
+                         defaultValue={ red2.fnren.toFixed(3) }
+                         onChange={ e => this.handleChange('RED2', 'fnren', e) }
+                  />
+                </td>
               </tr>
             </tbody>
           </table>
 
+          <h3>Factores definidos reglamentariamente</h3>
           <table id="components" className="table table-striped table-bordered table-condensed">
             <thead>
               <tr>
@@ -93,6 +118,16 @@ class WeightingFactorsPage extends React.Component {
         <Footer />
       </div>
     );
+  }
+
+  handleChange(vec, factor, e) {
+    const newvalue = parseFloat(e.target.value.replace(/,/g, '.'));
+    if (isNaN(newvalue)) return;
+
+    const { wfactors, dispatch } = this.props;
+    let [[ vecobj ], otherveclist] = _.partition(wfactors, e => e.vector === vec);
+    vecobj[factor] = newvalue;
+    dispatch(editWFactors([...otherveclist, vecobj]));
   }
 };
 
