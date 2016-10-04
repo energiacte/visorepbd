@@ -181,16 +181,10 @@ export default class EnergyComponentEditor extends React.Component {
   }
 
   parseTotalEnergyValue(value) {
-    const sanitizedValue = value.replace(',', '.');
-    return Math.abs(parseFloat(sanitizedValue)).toFixed(2);
-  }
-
-  // Handle changes in total energy through UI
-  handleChangeTotalEnergy(e) {
     let newvalue;
-    if (!/^[+-]?([0-9]*[.])?[0-9]+$/.test(e.target.value)) {
-      if (e.target.value.endsWith('=')) {
-        newvalue = e.target.value.replace(/,/g, '.');
+    if (!/^[+-]?([0-9]*[.])?[0-9]+$/.test(value)) {
+      if (value.endsWith('=')) {
+        newvalue = value.replace(/,/g, '.');
         let [ expr, val1, op, val2 ] = newvalue.match(/^((?:[0-9]*[.])?[0-9]+)([\/*+-])((?:[0-9]*[.])?[0-9]+)=$/);
         val1 = parseFloat(val1);
         val2 = parseFloat(val2);
@@ -204,13 +198,20 @@ export default class EnergyComponentEditor extends React.Component {
           newvalue = (val1 / val2).toFixed(2);
         }
       } else {
-        return;
+        return null;
       }
     } else {
-      newvalue = this.parseTotalEnergyValue(e.target.value);
+      newvalue = Math.abs(parseFloat(value.replace(',', '.')));
     }
+    if (isNaN(newvalue)) newvalue = null;
+    return newvalue;
+  }
 
-    if (isNaN(newvalue)) return;
+  // Handle changes in total energy through UI
+  handleChangeTotalEnergy(e) {
+    let newvalue = this.parseTotalEnergyValue(e.target.value);
+    if (newvalue === null) return;
+    newvalue = newvalue.toFixed(2);
 
     if (e.target.name === 'totalenergyrange') {
       if (this.totalEnergyEntry.value === newvalue) { return; }
@@ -237,7 +238,7 @@ export default class EnergyComponentEditor extends React.Component {
     let currentcomponent = { ...components[selectedkey] };
     let currentvalues = currentcomponent.values;
     let newvalues = getValues(this.CurveSelect.value,
-                              this.parseTotalEnergyValue(this.totalEnergyEntry.value),
+                              parseFloat(this.totalEnergyEntry.value.replace(',', '.')),
                               currentvalues);
     currentcomponent.values = newvalues;
     onEdit(selectedkey, currentcomponent);
