@@ -92,14 +92,14 @@ export default class EnergyComponentEditor extends React.Component {
                        step="5"
                        style={{width:'50%'}}
                        defaultValue={ currenttotalenergy }
-                       onChange={ e => this.handleChangeTotalEnergy(e) } />
+                       onChange={ e => this.handleChangeTotalEnergyRange(e) } />
                 <input className="form-control col-md-1"
                        ref={ ref => this.totalEnergyEntry = ref }
                        name="totalenergyentry"
                        type="text"
                        style={ { width:'50%' } }
                        defaultValue={ currenttotalenergy.toFixed(2) }
-                       onChange={ e => this.handleChangeTotalEnergy(e) }/>
+                       onChange={ e => this.handleChangeTotalEnergyEntry(e) }/>
               </div>
               <div className="col-md-4 control-label">
                 <ActionsPanel
@@ -189,13 +189,13 @@ export default class EnergyComponentEditor extends React.Component {
         val1 = parseFloat(val1);
         val2 = parseFloat(val2);
         if (op === '+') {
-          newvalue = (val1 + val2).toFixed(2);
+          newvalue = (val1 + val2);
         } else if (op === '-') {
-          newvalue = Math.max((val1 - val2), 0.0).toFixed(2);
+          newvalue = Math.max((val1 - val2), 0.0);
         } else if (op === '*') {
-          newvalue = (val1 * val2).toFixed(2);
+          newvalue = (val1 * val2);
         } else if (op === '/') {
-          newvalue = (val1 / val2).toFixed(2);
+          newvalue = (val1 / val2);
         }
       } else {
         return null;
@@ -203,32 +203,27 @@ export default class EnergyComponentEditor extends React.Component {
     } else {
       newvalue = Math.abs(parseFloat(value.replace(',', '.')));
     }
-    if (isNaN(newvalue)) newvalue = null;
-    return newvalue;
+    if (isNaN(newvalue)) {
+      return null;
+    } else {
+      return newvalue.toFixed(2);
+    }
   }
 
-  // Handle changes in total energy through UI
-  handleChangeTotalEnergy(e) {
+  // Handle changes in total energy entry through UI
+  handleChangeTotalEnergyEntry(e) {
     let newvalue = this.parseTotalEnergyValue(e.target.value);
-    if (newvalue === null) return;
-    newvalue = newvalue.toFixed(2);
+    if (newvalue === null || this.totalEnergyEntry.value === newvalue) return;
 
-    if (e.target.name === 'totalenergyrange') {
-      if (this.totalEnergyEntry.value === newvalue) { return; }
-      this.totalEnergyEntry.value = newvalue;
-    }
+    this.totalEnergyEntry.value = newvalue;
+    this.totalEnergyRange.value = newvalue;
+    if (this.totalEnergyRange.max <= newvalue) { this.totalEnergyRange.max = this.totalEnergyRange.max * 2; }
+    this.updateValues();
+  }
 
-    if (e.target.name === 'totalenergyentry') {
-      const currentValue = parseFloat(this.totalEnergyEntry.value);
-      if ( currentValue === newvalue) { return; }
-
-      let rangemax = this.totalEnergyRange.max;
-      if (rangemax <= newvalue) {
-        this.totalEnergyRange.max = rangemax * 2;
-      }
-      this.totalEnergyRange.value = newvalue;
-      this.totalEnergyEntry.value = newvalue;
-    }
+  // Handle changes in total energy range through UI
+  handleChangeTotalEnergyRange(e) {
+    this.totalEnergyEntry.value = parseFloat(e.target.value.replace(',', '.')).toFixed(2);
     this.updateValues();
   }
 
@@ -236,10 +231,9 @@ export default class EnergyComponentEditor extends React.Component {
   updateValues() {
     const { selectedkey, components, onEdit } = this.props;
     let currentcomponent = { ...components[selectedkey] };
-    let currentvalues = currentcomponent.values;
     let newvalues = getValues(this.CurveSelect.value,
                               parseFloat(this.totalEnergyEntry.value.replace(',', '.')),
-                              currentvalues);
+                              currentcomponent.values);
     currentcomponent.values = newvalues;
     onEdit(selectedkey, currentcomponent);
   }
@@ -253,7 +247,8 @@ export default class EnergyComponentEditor extends React.Component {
                              ctype: 'PRODUCCION',
                              originoruse: 'INSITU',
                              carrier: 'ELECTRICIDAD',
-                             values: [10] * 12
+                             values: [10] * 12,
+                             comment:'Comentario'
                            }
 
     this.props.onAdd(currentcomponent);
