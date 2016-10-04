@@ -44,8 +44,9 @@ var plugins = [
   }),
   new webpack.NoErrorsPlugin(),
   new webpack.optimize.CommonsChunkPlugin({
-   name: "vendor",
-   minChunks: Infinity // only vendor chunks here
+    names: ['vendor'],
+    filename: '[name].js',
+    minChunks: Infinity // only vendor chunks here
   })
 ];
 
