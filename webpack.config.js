@@ -83,7 +83,7 @@ var config = {
   devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
     app: [
-      //'babel-polyfill',
+      'babel-polyfill',
       PATHS.app,
       'bootstrap-loader'],
     vendor: ['d3', 'dimple', 'jquery', 'lodash', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
