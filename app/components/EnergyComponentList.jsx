@@ -25,12 +25,14 @@ export default class EnergyComponentList extends React.Component {
       <table id="components" className="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
-            <th></th><th>Tipo</th>
-            <th>Origen/Uso</th><th>Vector energético</th>
-            <th>kWh/año</th>
-            <th>kWh/año·m²</th>
-            <th>Valores</th>
-            <th>Comentario</th>
+            <th></th>
+            <th>Tipo</th>
+            <th className="col-md-1">Origen/Uso</th>
+            <th className="col-md-3">Vector energético</th>
+            <th className="col-md-1">kWh/año</th>
+            <th className="col-md-1">kWh/año·m²</th>
+            <th className="col-md-1">Valores</th>
+            <th className="col-md-4">Comentario</th>
           </tr>
         </thead>
         <tbody>
