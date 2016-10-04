@@ -129,11 +129,6 @@ var config = {
         include: PATHS.app,
         loader: ExtractTextPlugin.extract('style', 'css!postcss!sass?outputStyle=expanded')
       },
-      { // LESS
-        test: /\.less$/,
-        include: PATHS.app,
-        loaders: ExtractTextPlugin.extract('style', ['css', 'postcss', 'less'])
-      },
       { // IMG  direct URLs for the rest
         test: /\.(png|jpe?g|gif)$/i,
         include: PATHS.app,
