@@ -30,12 +30,13 @@ export default class EnergyComponentList extends React.Component {
             <th>kWh/año</th>
             <th>kWh/año·m²</th>
             <th>Valores</th>
+            <th>Comentario</th>
           </tr>
         </thead>
         <tbody>
           {components.map(
              (component, i) => {
-               const { active, ctype, originoruse, carrier, values } = component;
+               const { active, ctype, originoruse, carrier, values, comment } = component;
                const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
                const rowstyles = [
                  (selectedkey === i) ? 'bg-info' : '',
@@ -55,7 +56,9 @@ export default class EnergyComponentList extends React.Component {
                    <td>{ (sumvalues / area).toFixed(2) }</td>
                    <td><EnergyComponentChart ctype={ ctype }
                                              data={ data }
-                                             maxvalue={ maxvalue } /></td>
+                                             maxvalue={ maxvalue }
+                                             width='50px' /></td>
+                   <td>{ comment }</td>
                  </tr>
                );
              }
