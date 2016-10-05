@@ -4,6 +4,11 @@ import { readenergystring } from '../energycalculations.js';
 
 export default class ActionsPanel extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.currentFileName = false;
+  }
+
   handleFiles(e, onLoadHandler) {
     let file;
     if (e.dataTransfer) {
@@ -11,6 +16,7 @@ export default class ActionsPanel extends React.Component {
     } else if (e.target) {
       file = e.target.files[0];
     }
+    this.currentFileName = file.name;
 
     let getData = str => {
       let { components, meta } = readenergystring(str);
@@ -31,7 +37,7 @@ export default class ActionsPanel extends React.Component {
     const element = document.createElement('a');
     document.body.appendChild(element);
     element.setAttribute('href', window.URL.createObjectURL(data));
-    element.setAttribute('download', 'csvEPBDpanel.csv');
+    element.setAttribute('download', this.currentFileName || 'csvEPBDpanel.csv');
     element.style.display = '';
     element.click();
     document.body.removeChild(element);
