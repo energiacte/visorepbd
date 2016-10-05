@@ -112,6 +112,8 @@ export default class EnergyComponentEditor extends React.Component {
                     onRestore={() => this.handleRestore()}
                     onLoad={ this.props.onLoad }
                     getEnergyString={ this.props.getEnergyString }
+                    onChangeCurrentFileName={ this.props.onChangeCurrentFileName }
+                    currentfilename={ this.props.currentfilename }
                 />
               </div>
             </div>

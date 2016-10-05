@@ -8,7 +8,8 @@ import { SELECT_ENERGY_COMPONENT,
          CHANGE_KRDEL,
          CHANGE_AREA,
          EDIT_WFACTORS,
-         RECEIVE_DATA } from '../actions/actions.js';
+         RECEIVE_DATA,
+         CHANGE_CURRENTFILENAME } from '../actions/actions.js';
 
 function storedcomponent(state = null, action) {
   switch (action.type) {
@@ -101,6 +102,15 @@ function components(state = [], action) {
   }
 }
 
+function currentfilename(state = 'csvEPBDpanel.csv', action) {
+  switch (action.type) {
+  case CHANGE_CURRENTFILENAME:
+    return action.newname;
+  default:
+    return state;
+  }
+}
+
 function data(state = {}, action) {
   switch (action.type) {
   case RECEIVE_DATA:
@@ -133,5 +143,6 @@ export default combineReducers({
   krdel,
   area,
   wfactors,
-  components
+  components,
+  currentfilename
 });

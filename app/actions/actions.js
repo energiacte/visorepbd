@@ -14,6 +14,7 @@ export const LOAD_ENERGY_COMPONENTS = 'LOAD_ENERGY_COMPONENTS';
 export const CHANGE_KEXP = 'CHANGE_KEXP';
 export const CHANGE_KRDEL = 'CHANGE_KRDEL';
 export const CHANGE_AREA = 'CHANGE_AREA';
+export const CHANGE_CURRENTFILENAME = 'CHANGE_CURRENTFILENAME';
 export const EDIT_WFACTORS = 'EDIT_WFACTORS';
 export const RECEIVE_DATA = 'RECEIVE_DATA';
 
@@ -55,6 +56,10 @@ export function changeArea(value) {
 
 export function editWFactors(newfactors) {
   return { type: EDIT_WFACTORS, newfactors };
+}
+
+export function changeCurrentFileName(newname) {
+  return { type: CHANGE_CURRENTFILENAME, newname };
 }
 
 export function deliverData(newdata) {

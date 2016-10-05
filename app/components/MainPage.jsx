@@ -18,6 +18,7 @@ import { changeKexp,
          editEnergyComponent,
          selectEnergyComponent,
          loadEnergyComponents,
+         changeCurrentFileName,
          fetchData } from 'actions/actions.js';
 
 class MainPage extends React.Component {
@@ -68,6 +69,8 @@ class MainPage extends React.Component {
                   dispatch(changeKrdel(meta.krdel || krdel));
                 }
                      }
+              onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
+              currentfilename={ this.props.currentfilename }
               getEnergyString={ () => this.getEnergyString() }
           />
           <EnergyComponentList
@@ -99,6 +102,7 @@ export default MainPage = connect(state => {
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
     wfactors: state.wfactors,
-    components: state.components
+    components: state.components,
+    currentfilename: state.currentfilename
   };
 })(MainPage);

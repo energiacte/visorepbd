@@ -51,7 +51,8 @@ const initialState = {
       values: [21.48, 17.18, 10.74, 9.66, 5.37, 6.44, 8.59, 7.52, 5.37, 8.59, 12.89, 17.18],
       comment: 'Linea 4 de ejemplo3PVBdC.csv'
     }
-  ]
+  ],
+  currentfilename: 'csvEPBDpanel.csv'
 
 };
 
