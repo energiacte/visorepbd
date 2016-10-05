@@ -8,6 +8,10 @@ import { VALIDDATA } from '../energycalculations';
 import _ from 'lodash';
 
 export default class EnergyComponentEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { commentOnEdit: false, totalenergyOnEdit: false };
+  }
 
   render() {
     const { selectedkey, components } = this.props;
@@ -97,9 +101,9 @@ export default class EnergyComponentEditor extends React.Component {
                        ref={ ref => this.totalEnergyEntry = ref }
                        name="totalenergyentry"
                        type="text"
-                       style={ { width:'50%' } }
+                       style={ { width:'50%', background: this.state.totalenergyOnEdit ? '#fcf8c3': '' } }
                        defaultValue={ currenttotalenergy.toFixed(2) }
-                       onChange={ e => this.handleChangeTotalEnergyEntry(e) }/>
+                       onKeyDown={ e => this.handleChangeTotalEnergyEntry(e) }/>
               </div>
               <div className="col-md-4 control-label">
                 <ActionsPanel
@@ -115,10 +119,10 @@ export default class EnergyComponentEditor extends React.Component {
               <label className="col-md-1 control-label"
                      htmlFor="commentinput">Comentario</label>
               <div className="col-md-11">
-                <input className="form-control"
+                <input className={ "form-control" }
                        name="commentinput"
                        type="text"
-                       style={ { width:'100%' } }
+                       style={ { width:'100%', backgroundColor: this.state.commentOnEdit ? '#fcf8c3': '' } }
                        defaultValue={ comment || '' }
                        onKeyDown={ e => this.handleChangeComment(e) }
                 />
@@ -133,12 +137,16 @@ export default class EnergyComponentEditor extends React.Component {
   }
 
   handleChangeComment(e) {
-    if (e.keyCode !== 13) return;
     const { selectedkey, components, onEdit } = this.props;
     let newComment = e.target.value;
     let currentcomponent = { ...components[selectedkey] };
+
+    if (e.keyCode !== 13) {
+      if (newComment !== currentcomponent.comment) this.setState({ commentOnEdit: true });
+      return;
+    }
+    this.setState({ commentOnEdit: false });
     currentcomponent.comment = newComment;
-    console.log(newComment);
     onEdit(selectedkey, currentcomponent);
   }
 
@@ -181,29 +189,31 @@ export default class EnergyComponentEditor extends React.Component {
   }
 
   parseTotalEnergyValue(value) {
-    let newvalue;
-    if (!/^[+-]?([0-9]*[.])?[0-9]+$/.test(value)) {
-      if (value.endsWith('=')) {
-        newvalue = value.replace(/,/g, '.');
-        let [ expr, val1, op, val2 ] = newvalue.match(/^((?:[0-9]*[.])?[0-9]+)([\/*+-])((?:[0-9]*[.])?[0-9]+)=$/);
-        val1 = parseFloat(val1);
-        val2 = parseFloat(val2);
-        if (op === '+') {
-          newvalue = (val1 + val2);
-        } else if (op === '-') {
-          newvalue = Math.max((val1 - val2), 0.0);
-        } else if (op === '*') {
-          newvalue = (val1 * val2);
-        } else if (op === '/') {
-          newvalue = (val1 / val2);
-        }
-      } else {
-        return null;
+    const PLAINNUMBERREGEX = /^[+-]?([0-9]*[.])?[0-9]+$/;
+    const SIMPLEEXPRESSIONREGEX = /^((?:[0-9]*[.])?[0-9]+)([\/*+-])((?:[0-9]*[.])?[0-9]+)$/;
+
+    let newvalue = value.replace(/,/g, '.');
+    if (PLAINNUMBERREGEX.test(newvalue)) {
+      newvalue = Math.abs(parseFloat(newvalue));
+    } else if (SIMPLEEXPRESSIONREGEX.test(newvalue)) {
+      let [ expr, val1, op, val2 ] = newvalue.match(SIMPLEEXPRESSIONREGEX);
+      val1 = parseFloat(val1);
+      val2 = parseFloat(val2);
+      if (op === '+') {
+        newvalue = (val1 + val2);
+      } else if (op === '-') {
+        newvalue = Math.max((val1 - val2), 0.0);
+      } else if (op === '*') {
+        newvalue = (val1 * val2);
+      } else if (op === '/') {
+        newvalue = (val1 / val2);
       }
+      newvalue = isNaN(newvalue)? null: newvalue;
     } else {
-      newvalue = Math.abs(parseFloat(value.replace(',', '.')));
+      newvalue = null;
     }
-    if (isNaN(newvalue)) {
+
+    if (newvalue === null) {
       return null;
     } else {
       return newvalue.toFixed(2);
@@ -212,6 +222,11 @@ export default class EnergyComponentEditor extends React.Component {
 
   // Handle changes in total energy entry through UI
   handleChangeTotalEnergyEntry(e) {
+    if (e.keyCode !== 13) {
+      this.setState({ totalenergyOnEdit: true });
+      return;
+    }
+    this.setState({ totalenergyOnEdit: false });
     let newvalue = this.parseTotalEnergyValue(e.target.value);
     if (newvalue === null || this.totalEnergyEntry.value === newvalue) return;
 
