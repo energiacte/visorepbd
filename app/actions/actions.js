@@ -16,7 +16,7 @@ export const CHANGE_KRDEL = 'CHANGE_KRDEL';
 export const CHANGE_AREA = 'CHANGE_AREA';
 export const CHANGE_CURRENTFILENAME = 'CHANGE_CURRENTFILENAME';
 export const EDIT_WFACTORS = 'EDIT_WFACTORS';
-export const RECEIVE_DATA = 'RECEIVE_DATA';
+export const RECEIVE_ENERGYDATA = 'RECEIVE_ENERGYDATA';
 
 /*
  * action creators
@@ -62,13 +62,13 @@ export function changeCurrentFileName(newname) {
   return { type: CHANGE_CURRENTFILENAME, newname };
 }
 
-export function deliverData(newdata) {
-  return { type: RECEIVE_DATA, newdata };
+export function deliverEnergy(newdata) {
+  return { type: RECEIVE_ENERGYDATA, newdata };
 }
 
 // async action creator to get API data: thunk (redux-thunk middleware)
 // could get params from store.getState() (import store from '../store/store.js') and return deliverData(res)
-export function fetchData() {
+export function computeEnergy() {
   // this async action also reads state
   return (dispatch, getState) => {
     const { kexp, krdel, area, components, wfactors } = getState();
@@ -76,6 +76,6 @@ export function fetchData() {
     const data = readenergydata(activecomponents);
     const res = ep2dict(weighted_energy(data, krdel, wfactors, kexp),
                         area);
-    dispatch(deliverData(res));
+    dispatch(deliverEnergy(res));
   };
 }

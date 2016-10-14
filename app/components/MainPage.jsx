@@ -19,19 +19,19 @@ import { changeKexp,
          selectEnergyComponent,
          loadEnergyComponents,
          changeCurrentFileName,
-         fetchData } from 'actions/actions.js';
+         computeEnergy } from 'actions/actions.js';
 
 class MainPage extends React.Component {
 
   // Carga datos desde API al inicializar
-  componentWillMount() { this.props.dispatch(fetchData()); }
+  componentWillMount() { this.props.dispatch(computeEnergy()); }
 
   // Carga datos desde API al cambiar las propiedades (y antes de renderizar hijos)
   componentWillReceiveProps(nextProps) {
     const { kexp, krdel, area, components } = this.props;
     const np = nextProps;
     if ((kexp !== np.kexp) || (krdel !== np.krdel) || (area !== np.area) || (components !== np.components)) {
-      this.props.dispatch(fetchData());
+      this.props.dispatch(computeEnergy());
     }
   }
 

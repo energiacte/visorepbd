@@ -8,7 +8,7 @@ import { SELECT_ENERGY_COMPONENT,
          CHANGE_KRDEL,
          CHANGE_AREA,
          EDIT_WFACTORS,
-         RECEIVE_DATA,
+         RECEIVE_ENERGYDATA,
          CHANGE_CURRENTFILENAME } from '../actions/actions.js';
 
 function storedcomponent(state = null, action) {
@@ -113,7 +113,7 @@ function currentfilename(state = 'csvEPBDpanel.csv', action) {
 
 function data(state = {}, action) {
   switch (action.type) {
-  case RECEIVE_DATA:
+  case RECEIVE_ENERGYDATA:
     return action.newdata;
   default:
     return state;
