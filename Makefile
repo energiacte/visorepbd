@@ -3,7 +3,7 @@ RESDIR:=${PRJDIR}/deployresources
 REPODIR:=${PRJDIR}
 NGINXCONF:=epbdpanel.nginx.conf
 # usar variable de entorno EPBDURLPREFIX para cambiar prefijos de static y url para ajax
-EPBDURLPREFIX:=/epbdpanel
+EPBDURLPREFIX:=/epbdpanel/
 
 .PHONY: builddevjs
 builddevjs:

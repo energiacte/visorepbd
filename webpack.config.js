@@ -141,7 +141,7 @@ var config = {
         loader: 'img!file?name=[name].[ext]'
       },
       // required for bootstrap icons
-      { test: /\.woff2?$/, loader: 'file?name=fonts/[name]-[hash].[ext]' },
+      { test: /\.woff2?$/,                     loader: 'file?name=fonts/[name]-[hash].[ext]' },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=fonts/[name]-[hash].[ext]' },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=fonts/[name]-[hash].[ext]' },
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=img/[name]-[hash].[ext]' },
