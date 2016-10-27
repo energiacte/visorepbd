@@ -22,7 +22,7 @@ buildprodjs:
 update: updaterepo
 	$(info [INFO]: actualización del proyecto completada. Complete la operación con $ sudo make restart)
 
-updaterepo: ${REPODIR}/requirements.txt ${REPODIR}/package.json updateresources
+updaterepo: ${REPODIR}/package.json updateresources
 	$(info [INFO]: actualizando dependencias)
 	cd ${REPODIR} && npm install
 
