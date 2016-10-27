@@ -19,17 +19,12 @@ buildprodjs:
 	EPBDURLPREFIX=${EPBDURLPREFIX} make buildjs
 
 # antes hacer un git pull
-update: updaterepo
-	$(info [INFO]: actualización del proyecto completada. Complete la operación con $ sudo make restart)
-
-updaterepo: ${REPODIR}/package.json updateresources
+update: ${REPODIR}/package.json
 	$(info [INFO]: actualizando dependencias)
 	cd ${REPODIR} && npm install
+	$(info [INFO]: actualización del proyecto completada. Complete la operación con $ sudo make restart)
 
-updateresources:
-	$(info [INFO]: actualizando recursos de despliegue)
-
-restart: updateresources ${RESDIR}/${NGINXCONF}
+restart: ${RESDIR}/${NGINXCONF}
 	$(info [INFO]: copiando configuración)
 	sudo cp ${RESDIR}/${NGINXCONF} /etc/nginx/sites-available/
 	$(info [INFO]: reiniciando servicios)
@@ -47,6 +42,7 @@ analyze:
 	$(info [INFO]: Estadísticas de rendimiento de webpack)
 	webpack --json > stats.json
 	webpack-bundle-size-analyzer stats.json
+
 installpackages:
 	$(info [INFO]: instalación de paquetes)
 	sudo aptitude install nginx git
