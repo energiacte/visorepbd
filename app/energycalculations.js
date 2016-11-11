@@ -599,7 +599,7 @@ function gridsavings_stepB(components, fp, k_exp) {
 //
 // In the context of the CTE regulation weighted energy corresponds to
 // primary energy.
-export function weighted_energy(data, k_rdel, fp, k_exp) {
+export function weighted_energy(data, fp, k_rdel, k_exp) {
   let components = energycomponents(data, k_rdel);
   let EPA = { ren: 0.0, nren: 0.0 },
       EPB = { ren: 0.0, nren: 0.0 };

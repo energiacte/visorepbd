@@ -125,13 +125,13 @@ function epfromfile(filename, krdel, kexp, fp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
   const data = readenergydata(readenergystring(datastring).components);
-  return { ...weighted_energy(data, krdel, fp, kexp), path: filename };
+  return { ...weighted_energy(data, fp, krdel, kexp), path: filename };
 }
 
 // Compute primary energy (weighted energy) from datalist
 function epfromdata(datalist, krdel, kexp, fp) {
   const data = readenergydata(datalist);
-  return { ...weighted_energy(data, krdel, fp, kexp), path: 'data' };
+  return { ...weighted_energy(data, fp, krdel, kexp), path: 'data' };
 }
 
 // Tests ----------------------------------------------------------
