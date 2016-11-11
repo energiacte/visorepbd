@@ -267,6 +267,7 @@ export function readenergystring(datastring) {
     .map(line => line.slice('#CTE_'.length))
     .map(line => {
       let [key, value] = line.split(':').map(l => l.trim());
+      //TODO: allow here lists of numbers too
       value = value.match(/^-?\d*[\.|,]?\d+$/) ? parseFloat(value) : value;
       meta[key] = value;
     });
