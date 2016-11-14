@@ -485,8 +485,8 @@ function energycomponents(datalist, k_rdel) {
   let components = {};
   Object.keys(data).map(carrier => {
     let bal_t = components_t_forcarrier(data[carrier], k_rdel);
-    components[carrier] = { temporal: bal_t,
-                            anual: components_an_forcarrier(bal_t) };
+    components[carrier] = { timestep: bal_t,
+                            annual: components_an_forcarrier(bal_t) };
   });
   return components;
 }
@@ -621,7 +621,7 @@ export function weighted_energy(datalist, fp, k_rdel, k_exp) {
   Object.keys(components).map(
     carrier => {
       let fp_cr = fp.filter(elem => elem.vector === carrier);
-      let components_cr_an = components[carrier].anual;
+      let components_cr_an = components[carrier].annual;
       let delivered_wenergy_stepA = delivered_weighted_energy_stepA(components_cr_an, fp_cr);
       let exported_wenergy_stepA = exported_weighted_energy_stepA(components_cr_an, fp_cr);
       let weighted_energy_stepA = { ren: delivered_wenergy_stepA.ren - exported_wenergy_stepA.ren,
