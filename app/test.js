@@ -26,7 +26,7 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
 */
 
 import { weighted_energy,
-         readenergydata, readenergystring, readfactors,
+         readenergystring, readfactors,
          ep2string } from './energycalculations.js';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -124,14 +124,13 @@ ${ ep2string(EPB) }`;
 function epfromfile(filename, krdel, kexp, fp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const data = readenergydata(readenergystring(datastring).components);
-  return { ...weighted_energy(data, fp, krdel, kexp), path: filename };
+  const componentlist = readenergystring(datastring).components;
+  return { ...weighted_energy(componentlist, fp, krdel, kexp), path: filename };
 }
 
 // Compute primary energy (weighted energy) from datalist
 function epfromdata(datalist, krdel, kexp, fp) {
-  const data = readenergydata(datalist);
-  return { ...weighted_energy(data, fp, krdel, kexp), path: 'data' };
+  return { ...weighted_energy(datalist, fp, krdel, kexp), path: 'data' };
 }
 
 // Tests ----------------------------------------------------------

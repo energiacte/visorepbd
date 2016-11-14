@@ -186,53 +186,22 @@ function veckmul(vec1, k) {
 // Input/Output functions
 // -----------------------------------------------------------------------------------
 
-// Read energy input data from list and return data structure
+// Read energy input data from string and return a list of energy components
 //
-// Returns dict of array of values indexed by carrier, ctype and originoruse
+// List of energy components has the following structure:
 //
-// data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
+// [ {carrier: carrier1, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
+//   {carrier: carrier2, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
+//   ...
+// ]
 //
 // * carrier is an energy carrier
 // * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
 // * originoruse defines:
 //   - the energy origin for produced energy (INSITU or COGENERACION)
 //   - the energy end use (EPB or NEPB) for delivered energy
-// * values
-//
-// List of energy components has the following structure:
-//
-// [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
-//   {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
-//   ...
-// ]
-export function readenergydata(datalist) {
-  const numsteps = Math.max(...datalist.map(data => data.values.length));
-
-  let energydata = {};
-  datalist.forEach(
-    (data, ii) => {
-      const { carrier, ctype, originoruse } = data;
-      const values = data.values.map(value => parseFloat(value));
-
-      if (values.length !== numsteps) {
-        throw new UserException(`All input must have the same number of timesteps.
-                                Problem found in line ${ ii + 1 }: \t${ data }`);
-      }
-      if (!energydata.hasOwnProperty(carrier)) {
-        energydata[carrier] = { CONSUMO: { EPB: new Array(numsteps).fill(0.0),
-                                           NEPB: new Array(numsteps).fill(0.0) },
-                                PRODUCCION: { INSITU: new Array(numsteps).fill(0.0),
-                                              COGENERACION: new Array(numsteps).fill(0.0) }
-                              };
-      }
-      energydata[carrier][ctype][originoruse] = vecvecsum(energydata[carrier][ctype][originoruse], values);
-    }
-  );
-  return energydata;
-}
-
-// Read energy input data from string and return data structure
-// Data structure is defined in readenergydata
+// * values is a list of energy values, one for each timestep
+// * comment is a comment string for the vector
 export function readenergystring(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
     .map(line => line.trim())
@@ -486,11 +455,36 @@ function components_t_forcarrier(vdata, k_rdel) {
 }
 
 // Calculate timestep and annual energy composition by carrier from input data
-function energycomponents(energydata, k_rdel) {
-   // TODO: pasar a map o reduce
+function energycomponents(datalist, k_rdel) {
+  // Sanitize and prepare data structure from list of components
+  // Returns dict of array of values indexed by carrier, ctype and originoruse
+  // data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
+  const numsteps = Math.max(...datalist.map(datum => datum.values.length));
+
+  let data = {};
+  datalist.forEach(
+    (datum, ii) => {
+      const { carrier, ctype, originoruse } = datum;
+      const values = datum.values.map(value => parseFloat(value));
+
+      if (values.length !== numsteps) {
+        throw new UserException(`All input must have the same number of timesteps.
+                                Problem found in line ${ ii + 1 }: \t${ datum }`);
+      }
+      if (!data.hasOwnProperty(carrier)) {
+        data[carrier] = { CONSUMO: { EPB: new Array(numsteps).fill(0.0),
+                                     NEPB: new Array(numsteps).fill(0.0) },
+                          PRODUCCION: { INSITU: new Array(numsteps).fill(0.0),
+                                        COGENERACION: new Array(numsteps).fill(0.0) }
+                         };
+      }
+      data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
+    }
+  );
+
   let components = {};
-  Object.keys(energydata).map(carrier => {
-    let bal_t = components_t_forcarrier(energydata[carrier], k_rdel);
+  Object.keys(data).map(carrier => {
+    let bal_t = components_t_forcarrier(data[carrier], k_rdel);
     components[carrier] = { temporal: bal_t,
                             anual: components_an_forcarrier(bal_t) };
   });
@@ -599,8 +593,28 @@ function gridsavings_stepB(components, fp, k_exp) {
 //
 // In the context of the CTE regulation weighted energy corresponds to
 // primary energy.
-export function weighted_energy(data, fp, k_rdel, k_exp) {
-  let components = energycomponents(data, k_rdel);
+//
+// Reads energy input data from list and returns a data structure
+//
+// The list of energy components (data) has the following structure:
+//
+// [ {carrier: carrier1, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
+//   {carrier: carrier2, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
+//   ...
+// ]
+//
+// * carrier is an energy carrier
+// * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
+// * originoruse defines:
+//   - the energy origin for produced energy (INSITU or COGENERACION)
+//   - the energy end use (EPB or NEPB) for delivered energy
+// * values is a list of energy values for each timestep
+//
+// fp is a list of lists of weighting factors
+// k_rdel is the redelivery energy factor [0, 1]
+// k_exp is the exported energy factor [0, 1]
+export function weighted_energy(datalist, fp, k_rdel, k_exp) {
+  let components = energycomponents(datalist, k_rdel);
   let EPA = { ren: 0.0, nren: 0.0 },
       EPB = { ren: 0.0, nren: 0.0 };
 
