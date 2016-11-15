@@ -186,9 +186,9 @@ function veckmul(vec1, k) {
 // Input/Output functions
 // -----------------------------------------------------------------------------------
 
-// Read energy input data from string and return a list of energy components
+// Read energy input data from string and return a carrier data list
 //
-// List of energy components has the following structure:
+// The carrier data list has the following structure:
 //
 // [ {carrier: carrier1, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
 //   {carrier: carrier2, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
@@ -244,7 +244,7 @@ export function readenergystring(datastring) {
 }
 
 // Save energy data and metadata to string
-export function saveenergystring(components, meta) {
+export function saveenergystring(carrierdata, meta) {
   const metalines = [
     `#CTE_Name: EPBDpanel`,
     `#CTE_Datetime: ${ new Date().toLocaleString() }`,
@@ -252,7 +252,7 @@ export function saveenergystring(components, meta) {
     `#CTE_kexp: ${ meta.kexp.toFixed(2) }`,
     `#CTE_krdel: ${ meta.krdel.toFixed(2) }`
   ];
-  const componentlines = components
+  const carrierlines = carrierdata
         .filter(cc => cc.active)
         .map(
           cc => {
@@ -261,7 +261,7 @@ export function saveenergystring(components, meta) {
             return `${ carrier },${ ctype },${ originoruse },${ valuelist } #${ comment }`;
           }
         );
-  return [...metalines, 'vector,tipo,src_dst', ...componentlines].join('\n');
+  return [...metalines, 'vector,tipo,src_dst', ...carrierlines].join('\n');
 }
 
 // Read energy weighting factors data from string
@@ -338,23 +338,23 @@ const VALIDORIGINS = ['INSITU', 'COGENERACION'];
 //    k_rdel: redelivery factor [0, 1]
 //
 //    This follows the EN15603 procedure for calculation of delivered and
-//    exported energy components.
+//    exported energy balance.
 //
 //    Returns:
 //
-//    components = { 'grid':
-//                       { 'input': value },
-//                   'INSITU':
-//                       { 'input': [ va1, ..., van ],
-//                         'to_nEPB': [ vb1, ..., vbn ],
-//                         'to_grid': [ vc1, ..., vcn ] },
-//                   'COGENERACION':
-//                       { 'input': [ va1, ..., van ],
-//                         'to_nEPB': [ vb1, ..., vbn ],
-//                         'to_grid': [ vc1, ..., vcn ] },
-//                 }
+//    balance = { 'grid':
+//                   { 'input': value },
+//                'INSITU':
+//                    { 'input': [ va1, ..., van ],
+//                      'to_nEPB': [ vb1, ..., vbn ],
+//                      'to_grid': [ vc1, ..., vcn ] },
+//                'COGENERACION':
+//                    { 'input': [ va1, ..., van ],
+//                      'to_nEPB': [ vb1, ..., vbn ],
+//                      'to_grid': [ vc1, ..., vcn ] },
+//              }
 //
-function components_t_forcarrier(carrierdata, k_rdel) {
+function balance_t_forcarrier(carrierdata, k_rdel) {
   // Energy used by technical systems for EPB services, for each time step
   let E_EPus_t = carrierdata.CONSUMO.EPB;
   // Energy used by technical systems for non-EPB services, for each time step
@@ -444,15 +444,15 @@ function components_t_forcarrier(carrierdata, k_rdel) {
   // Corrected temporary exported energy (formula 39)
   // E_exp_tmp_t_corr = [E_exp_tmp_ti * (1 - k_rdel) for E_exp_tmp_ti in E_exp_tmp_t] // not used
 
-  let components_t = { grid: { input: _.sum(E_del_t_corr) } }; // Scalar
+  let balance_t = { grid: { input: _.sum(E_del_t_corr) } }; // Scalar
 
   VALIDORIGINS.map(origin => {
-    components_t[origin] = { input: E_pr_t_byorigin[origin],
+    balance_t[origin] = { input: E_pr_t_byorigin[origin],
                              to_nEPB: E_exp_used_nEPus_t_byorigin[origin],
                              to_grid: E_exp_grid_t_byorigin[origin] };
   });
 
-  return components_t;
+  return balance_t;
 }
 
 // Calculate annual energy balance for carrier from timestep balance
@@ -464,33 +464,33 @@ function components_t_forcarrier(carrierdata, k_rdel) {
 //          'COGENERACION': value3
 //        }
 //
-function components_an_forcarrier(components_t) {
-  let components_an = {};
-  Object.keys(components_t).map(
+function balance_an_forcarrier(balance_t) {
+  let balance_an = {};
+  Object.keys(balance_t).map(
     origin => {
-      let components_t_byorigin = components_t[origin];
-      Object.keys(components_t_byorigin).map(
+      let balance_t_byorigin = balance_t[origin];
+      Object.keys(balance_t_byorigin).map(
         use => {
           let sumforuse = 0.0;
           if (origin === 'grid' && use === 'input') { // we have a scalar
-            sumforuse = components_t_byorigin[use];
+            sumforuse = balance_t_byorigin[use];
           } else { // we have a list
-            sumforuse = _.sum(components_t_byorigin[use]);
+            sumforuse = _.sum(balance_t_byorigin[use]);
           }
-          if (!components_an.hasOwnProperty(origin)) { components_an[origin] = {}; }
+          if (!balance_an.hasOwnProperty(origin)) { balance_an[origin] = {}; }
           if (Math.abs(sumforuse) > 0.01) { // exclude smallish values
-            components_an[origin][use] = sumforuse;
+            balance_an[origin][use] = sumforuse;
           }
         }
       );
     }
   );
-  return components_an;
+  return balance_an;
 }
 
-// Calculate timestep and annual energy composition by carrier
+// Calculate timestep and annual energy balance by carrier
 //
-// carrierlist: list of energy components
+// carrierlist: list of energy carrier data
 //
 //        [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
 //          {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
@@ -509,8 +509,8 @@ function components_an_forcarrier(components_t) {
 // k_rdel: redelivery factor [0, 1]
 //
 // Returns:
-//      components[carrier] = { timestep: [vt1, ..., vtn]
-//                              annual: vannual }
+//      balance[carrier] = { timestep: [vt1, ..., vtn]
+//                           annual: vannual }
 //      where timestep and annual are the timestep and annual
 //      balanced values for carrier.
 function computebalance(carrierlist, k_rdel) {
@@ -540,14 +540,16 @@ function computebalance(carrierlist, k_rdel) {
   );
 
   // Compute timestep and annual balance
-  let components = {};
+  let balance = {};
   Object.keys(data).map(carrier => {
-    let bal_t = components_t_forcarrier(data[carrier], k_rdel);
-    components[carrier] = { timestep: bal_t,
-                            annual: components_an_forcarrier(bal_t) };
+    let bal_t = balance_t_forcarrier(data[carrier], k_rdel);
+    balance[carrier] = { timestep: bal_t,
+                         annual: balance_an_forcarrier(bal_t) };
   });
-  return components;
+  return balance;
 }
+
+//////////////////// Step A and B computations ///////////////////////
 
 // Total delivered (or produced) weighted energy entering the assessment boundary in step A
 //
@@ -555,12 +557,12 @@ function computebalance(carrierlist, k_rdel) {
 //
 // This function returns a data structure with keys 'ren' and 'nren' corresponding
 // to the renewable and not renewable share of this weighted energy (step A).
-function delivered_weighted_energy_stepA(components, fp) {
+function delivered_weighted_energy_stepA(cr_balance_an, fp) {
   let fpA = fp.filter(fpi => fpi.uso === 'input' && fpi.step === 'A');
   let delivered_wenergy_stepA = { ren: 0.0, nren: 0.0 };
-  Object.keys(components).map(
+  Object.keys(cr_balance_an).map(
     source => {
-      let origins = components[source];
+      let origins = cr_balance_an[source];
       if (origins.hasOwnProperty('input')) {
         let factor_paso_A = fpA.filter(fpi => fpi.fuente === source)[0];
         delivered_wenergy_stepA = { ren: delivered_wenergy_stepA.ren + factor_paso_A.fren * origins.input,
@@ -577,14 +579,14 @@ function delivered_weighted_energy_stepA(components, fp) {
 //
 // This function returns a data structure with keys 'ren' and 'nren' corresponding
 // to the renewable and not renewable share of this weighted energy (step A).
-function exported_weighted_energy_stepA(components, fpA) {
+function exported_weighted_energy_stepA(cr_balance_an, fpA) {
   let to_nEPB = { ren: 0.0, nren: 0.0 },
       to_grid = { ren: 0.0, nren: 0.0 };
   let fpAnEPB = fpA.filter(fpi => fpi.uso === 'to_nEPB'),
       fpAgrid = fpA.filter(fpi => fpi.uso === 'to_grid');
-  Object.keys(components).map(
+  Object.keys(cr_balance_an).map(
     source => {
-      let destinations = components[source];
+      let destinations = cr_balance_an[source];
       if (destinations.hasOwnProperty('to_nEPB')) {
         let fp_tmp = fpAnEPB.filter(fpi => fpi.fuente === source)[0] || 0.0;
         to_nEPB = { ren: to_nEPB.ren + fp_tmp.fren * destinations.to_nEPB,
@@ -602,7 +604,7 @@ function exported_weighted_energy_stepA(components, fpA) {
            nren: to_nEPB.nren + to_grid.nren };
 }
 
-// Avoided weighted energy resources in the grid due to exported electricity
+// Weighted energy resources avoided by the grid due to exported electricity
 //
 // The computation is done for a single energy carrier, considering the
 // exported energy used for non-EPB uses (to_nEPB) and the energy exported
@@ -610,7 +612,7 @@ function exported_weighted_energy_stepA(components, fpA) {
 //
 // This function returns a data structure with keys 'ren' and 'nren' corresponding
 // to the renewable and not renewable share of this weighted energy (step B).
-function gridsavings_stepB(components, fp, k_exp) {
+function gridsavings_stepB(cr_balance_an, fp, k_exp) {
   let to_nEPB = { ren: 0.0, nren: 0.0 },
       to_grid = { ren: 0.0, nren: 0.0 };
   let fpA = fp.filter(fpi => fpi.step === 'A'),
@@ -620,9 +622,9 @@ function gridsavings_stepB(components, fp, k_exp) {
       fpBnEPB = fpB.filter(fpi => fpi.uso === 'to_nEPB'),
       fpBgrid = fpB.filter(fpi => fpi.uso === 'to_grid');
 
-  Object.keys(components).map(
+  Object.keys(cr_balance_an).map(
     source => {
-      let destinations = components[source];
+      let destinations = cr_balance_an[source];
       if (destinations.hasOwnProperty('to_nEPB')) {
         let fpA_tmp = fpAnEPB.filter(fpi => fpi.fuente === source)[0] || 0.0,
             fpB_tmp = fpBnEPB.filter(fpi => fpi.fuente === source)[0] || 0.0;
