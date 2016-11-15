@@ -654,7 +654,7 @@ function gridsavings_stepB(components, fp, k_exp) {
 //
 // Reads energy input data from list and returns a data structure
 //
-// The list of energy components (data) has the following structure:
+// carrierlist has the following structure:
 //
 // [ {carrier: carrier1, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
 //   {carrier: carrier2, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
@@ -671,22 +671,25 @@ function gridsavings_stepB(components, fp, k_exp) {
 // fp is a list of lists of weighting factors
 // k_rdel is the redelivery energy factor [0, 1]
 // k_exp is the exported energy factor [0, 1]
-export function weighted_energy(datalist, fp, k_rdel, k_exp) {
-  let balance = computebalance(datalist, k_rdel);
-  let EPA = { ren: 0.0, nren: 0.0 },
-      EPB = { ren: 0.0, nren: 0.0 };
+export function weighted_energy(carrierlist, fp, k_rdel, k_exp) {
+  let balance = computebalance(carrierlist, k_rdel);
+  let EPA = { ren: 0.0, nren: 0.0 };
+  let EPB = { ren: 0.0, nren: 0.0 };
 
   Object.keys(balance).map(
     carrier => {
-      let fp_cr = fp.filter(elem => elem.vector === carrier);
+      let cr_fp = fp.filter(elem => elem.vector === carrier);
       let cr_balance_an = balance[carrier].annual;
-      let delivered_wenergy_stepA = delivered_weighted_energy_stepA(cr_balance_an, fp_cr);
-      let exported_wenergy_stepA = exported_weighted_energy_stepA(cr_balance_an, fp_cr);
+
+      let delivered_wenergy_stepA = delivered_weighted_energy_stepA(cr_balance_an, cr_fp);
+      let exported_wenergy_stepA = exported_weighted_energy_stepA(cr_balance_an, cr_fp);
+      let gsavings_stepB = gridsavings_stepB(cr_balance_an, cr_fp, k_exp);
+
       let weighted_energy_stepA = { ren: delivered_wenergy_stepA.ren - exported_wenergy_stepA.ren,
                                     nren: delivered_wenergy_stepA.nren - exported_wenergy_stepA.nren };
-      let gsavings_stepB = gridsavings_stepB(cr_balance_an, fp_cr, k_exp);
       let weighted_energy_stepAB = { ren: weighted_energy_stepA.ren - gsavings_stepB.ren,
                                      nren: weighted_energy_stepA.nren - gsavings_stepB.nren };
+
       EPA = { ren: EPA.ren + weighted_energy_stepA.ren, nren: EPA.nren + weighted_energy_stepA.nren };
       EPB = { ren: EPB.ren + weighted_energy_stepAB.ren, nren: EPB.nren + weighted_energy_stepAB.nren };
     }
