@@ -323,44 +323,45 @@ export function ep2dict(EP, area = 1.0) {
 
 // Energy calculation functions --------------------------------------------------------
 
-// Calculate annual energy composition by carrier from time step components
-function components_an_forcarrier(components_t) {
-  let components_an = {};
-  Object.keys(components_t).map(
-    origin => {
-      let components_t_byorigin = components_t[origin];
-      Object.keys(components_t_byorigin).map(
-        use => {
-          let sumforuse = 0.0;
-          if (origin === 'grid' && use === 'input') {
-            sumforuse = components_t_byorigin[use];
-          } else {
-            sumforuse = _.sum(components_t_byorigin[use]);
-          }
-          if (!components_an.hasOwnProperty(origin)) { components_an[origin] = {}; }
-          if (Math.abs(sumforuse) > 0.1) { components_an[origin][use] = sumforuse; }
-        }
-      );
-    }
-  );
-  return components_an;
-}
-
 // Origin for produced energy must be either 'INSITU' or 'COGENERACION'
 const VALIDORIGINS = ['INSITU', 'COGENERACION'];
 
-// Calculate energy components for each time step from energy carrier data
+// Calculate timestep energy balance for carrier
 //
-// This follows the EN15603 procedure for calculation of delivered and
-// exported energy components.
-function components_t_forcarrier(vdata, k_rdel) {
+//
+//    carrierdata: { 'CONSUMO': { 'EPB': [vi1, ..., vin],
+//                                'NEPB': [vj1, ..., vjn] },
+//                'PRODUCCION': { 'INSITU': [vk1, ..., vkn]},
+//                                'COGENERACION' : [vl1, ..., vln] }
+//                  } // n: number of timesteps
+//
+//    k_rdel: redelivery factor [0, 1]
+//
+//    This follows the EN15603 procedure for calculation of delivered and
+//    exported energy components.
+//
+//    Returns:
+//
+//    components = { 'grid':
+//                       { 'input': value },
+//                   'INSITU':
+//                       { 'input': [ va1, ..., van ],
+//                         'to_nEPB': [ vb1, ..., vbn ],
+//                         'to_grid': [ vc1, ..., vcn ] },
+//                   'COGENERACION':
+//                       { 'input': [ va1, ..., van ],
+//                         'to_nEPB': [ vb1, ..., vbn ],
+//                         'to_grid': [ vc1, ..., vcn ] },
+//                 }
+//
+function components_t_forcarrier(carrierdata, k_rdel) {
   // Energy used by technical systems for EPB services, for each time step
-  let E_EPus_t = vdata.CONSUMO.EPB;
+  let E_EPus_t = carrierdata.CONSUMO.EPB;
   // Energy used by technical systems for non-EPB services, for each time step
-  let E_nEPus_t = vdata.CONSUMO.NEPB;
+  let E_nEPus_t = carrierdata.CONSUMO.NEPB;
 
   // (Electricity) produced on-site and inside the assessment boundary, by origin
-  let E_pr_t_byorigin = vdata.PRODUCCION;
+  let E_pr_t_byorigin = carrierdata.PRODUCCION;
 
   // (Electric) energy produced on-site and inside the assessment boundary, for each time step (formula 23)
   let E_pr_t = veclistsum(VALIDORIGINS.map(origin => E_pr_t_byorigin[origin]));
@@ -454,15 +455,71 @@ function components_t_forcarrier(vdata, k_rdel) {
   return components_t;
 }
 
-// Calculate timestep and annual energy composition by carrier from input data
-function energycomponents(datalist, k_rdel) {
-  // Sanitize and prepare data structure from list of components
-  // Returns dict of array of values indexed by carrier, ctype and originoruse
-  // data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
-  const numsteps = Math.max(...datalist.map(datum => datum.values.length));
+// Calculate annual energy balance for carrier from timestep balance
+//
+//    Returns:
+//
+//        { 'grid': value1,
+//          'INSITU': value2,
+//          'COGENERACION': value3
+//        }
+//
+function components_an_forcarrier(components_t) {
+  let components_an = {};
+  Object.keys(components_t).map(
+    origin => {
+      let components_t_byorigin = components_t[origin];
+      Object.keys(components_t_byorigin).map(
+        use => {
+          let sumforuse = 0.0;
+          if (origin === 'grid' && use === 'input') { // we have a scalar
+            sumforuse = components_t_byorigin[use];
+          } else { // we have a list
+            sumforuse = _.sum(components_t_byorigin[use]);
+          }
+          if (!components_an.hasOwnProperty(origin)) { components_an[origin] = {}; }
+          if (Math.abs(sumforuse) > 0.01) { // exclude smallish values
+            components_an[origin][use] = sumforuse;
+          }
+        }
+      );
+    }
+  );
+  return components_an;
+}
+
+// Calculate timestep and annual energy composition by carrier
+//
+// carrierlist: list of energy components
+//
+//        [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
+//          {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
+//          ... ]
+//
+//        where:
+//
+//            * carrier is an energy carrier
+//            * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
+//            * originoruse defines:
+//              - the energy origin for produced energy (INSITU or COGENERACION)
+//              - the energy end use (EPB or NEPB) for delivered energy
+//            * values is a list of energy values, one for each timestep
+//            * comment is a comment string for the vector
+//
+// k_rdel: redelivery factor [0, 1]
+//
+// Returns:
+//      components[carrier] = { timestep: [vt1, ..., vtn]
+//                              annual: vannual }
+//      where timestep and annual are the timestep and annual
+//      balanced values for carrier.
+function energycomponents(carrierlist, k_rdel) {
+  // Add all values of vectors with the same carrier ctype and originoruse
+  // datadict[carrier][ctype][originoruse] -> values as np.array with length=numsteps
+  const numsteps = Math.max(...carrierlist.map(datum => datum.values.length));
 
   let data = {};
-  datalist.forEach(
+  carrierlist.forEach(
     (datum, ii) => {
       const { carrier, ctype, originoruse } = datum;
       const values = datum.values.map(value => parseFloat(value));
@@ -482,6 +539,7 @@ function energycomponents(datalist, k_rdel) {
     }
   );
 
+  // Compute timestep and annual balance
   let components = {};
   Object.keys(data).map(carrier => {
     let bal_t = components_t_forcarrier(data[carrier], k_rdel);
