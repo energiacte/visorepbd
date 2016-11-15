@@ -606,8 +606,23 @@ function gridsavings_stepB(cr_balance_an, fp, k_exp) {
 // k_rdel: redelivery factor [0, 1]
 //
 // Returns:
-//      balance[carrier] = { timestep: [vt1, ..., vtn]
-//                           annual: vannual }
+//
+//        balance[carrier] = { 'timestep': { 'grid': { 'input': value },
+//                                           'INSITU': { 'input': [ va1, ..., van ],
+//                                                       'to_nEPB': [ vb1, ..., vbn ],
+//                                                       'to_grid': [ vc1, ..., vcn ]
+//                                                     },
+//                                           'COGENERACION': { 'input': [ va1, ..., van ],
+//                                                             'to_nEPB': [ vb1, ..., vbn ],
+//                                                             'to_grid': [ vc1, ..., vcn ]
+//                                                     },
+//                                         }
+//                             'annual': { 'grid': valuea1,
+//                                         'INSITU': valuea2,
+//                                         'COGENERACION': valuea3
+//                                       }
+//        }
+//
 //      where timestep and annual are the timestep and annual
 //      balanced values for carrier.
 export function compute_balance(carrierlist, k_rdel) {
