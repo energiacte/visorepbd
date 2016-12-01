@@ -6,7 +6,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const production = process.env.NODE_ENV === 'production';
 // Permitirmos usar la variable de entorno EPBDURLPREFIX para añadir prefijo
@@ -30,7 +29,6 @@ var plugins = [
   new webpack.DefinePlugin({
     __EPBDURLPREFIX__: JSON.stringify(epbdurlprefix)
   }),
-  new LodashModuleReplacementPlugin,
   new webpack.HotModuleReplacementPlugin(),
   new ExtractTextPlugin('bundle-[hash].css', { allChunks: true }),
   new HtmlWebpackPlugin({
@@ -86,7 +84,7 @@ var config = {
       'babel-polyfill',
       PATHS.app,
       'bootstrap-loader'],
-    vendor: ['d3', 'dimple', 'jquery', 'lodash', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
+    vendor: ['d3', 'dimple', 'jquery', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   output: {
     path: PATHS.build,
@@ -117,7 +115,6 @@ var config = {
         include: PATHS.app,
         loader: 'babel',
         query: {cacheDirectory: true,
-                plugins: ['lodash'],
                 presets: ['es2015', 'stage-0', 'react']}
       },
       { // CSS
