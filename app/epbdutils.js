@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const CURVENAMES = ['ACTUAL', 'CONSTANTE', 'CONCAVA', 'CONVEXA', 'CRECIENTE', 'DECRECIENTE'];
 
 // Calculate a list of numsteps coefficients with a shape defined by curvename
@@ -31,7 +29,7 @@ function getcoefs(curvename, numsteps) {
     coefs = coefs.map(() => { return 1.0; });
   }
 
-  const areanorm = _.sum(coefs);
+  const areanorm = coefs.reduce((a, b) => a + b, 0);
   coefs = coefs.map((coef) => coef / areanorm);
 
   return coefs;
@@ -41,7 +39,7 @@ function getcoefs(curvename, numsteps) {
 function getValues(curvename, newtotalenergy, currentvalues) {
   let values = [];
   let scale = newtotalenergy;
-  const currenttotalenergy = _.sum(currentvalues);
+  const currenttotalenergy = currentvalues.reduce((a, b) => a + b, 0);
   const numsteps = currentvalues.length;
 
   if (currenttotalenergy === 0) {

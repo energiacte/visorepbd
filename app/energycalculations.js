@@ -25,8 +25,6 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
            Daniel Jiménez González <dani@ietcc.csic.es>
 */
 
-import _ from 'lodash';
-
 // ---------------------------------------------------------------------------------------------------------
 // Default values for energy efficiency calculation
 //
@@ -150,15 +148,16 @@ const EMPTYCOMPONENT = { active: true, carrier: 'ELECTRICIDAD', ctype: 'CONSUMO'
 // -----------------------------------------------------------------------------------
 // Vector utilities
 // -----------------------------------------------------------------------------------
+const zip = (...rows) => [...rows[0]].map((_, c) => rows.map(row => row[c]));
 
 // Elementwise minimum min res[i] = min(vec1[i], vec2[i])
 function vecvecmin(vec1, vec2) {
-  return _.zip(vec1, vec2).map(zarray => _.min(zarray));
+  return zip(vec1, vec2).map(zarray => Math.min(...zarray));
 }
 
 // Elementwise sum res[i] = vec1[i] + vec2[i] + ... + vecj[i]
 function veclistsum(veclist) {
-  return _.zip(...veclist).map(valsi => _.sum(valsi));
+  return zip(...veclist).map(valsi => valsi.reduce((a, b) => a + b, 0));
 }
 
 // Elementwise sum of arrays
@@ -168,12 +167,12 @@ function vecvecsum(vec1, vec2) {
 
 // Elementwise difference res[i] = vec1[i] - vec2[i]
 function vecvecdif(vec1, vec2) {
-  return _.zip(vec1, vec2).map(([v1, v2]) => v1 - v2);
+  return zip(vec1, vec2).map(([v1, v2]) => v1 - v2);
 }
 
 // Elementwise multiplication res[i] = vec1[i] * vec2[i]
 function vecvecmul(vec1, vec2) {
-  return _.zip(vec1, vec2).map(([v1, v2]) => v1 * v2);
+  return zip(vec1, vec2).map(([v1, v2]) => v1 * v2);
 }
 
 // Multiply vector by scalar
@@ -204,10 +203,10 @@ function veckmul(vec1, k) {
 // * comment is a comment string for the vector
 export function readenergystring(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
-    .map(line => line.trim())
-    .filter(line => !(line === '' || line.startsWith('vector')));
-  const [commentlines, componentlines] = _.partition(datalines,
-                                                     line => line.startsWith('#'));
+        .map(line => line.trim())
+        .filter(line => !(line === '' || line.startsWith('vector')));
+  const commentlines = datalines.filter(line => line.startsWith('#'));
+  const componentlines = datalines.filter(line => !line.startsWith('#'));
 
   let components = componentlines
       .map(line => {
@@ -219,9 +218,9 @@ export function readenergystring(datastring) {
         let [ carrier, ctype, originoruse, ...values ] = fieldslist;
         // Minimal consistency checks
         if (fieldslist.length > 3
-            && _.indexOf(_.keys(VALIDDATA), ctype) > -1
-            && _.indexOf(_.keys(VALIDDATA[ctype]), originoruse) > -1
-            && _.indexOf(VALIDDATA[ctype][originoruse], carrier) > -1) {
+            && Object.keys(VALIDDATA).indexOf(ctype) > -1
+            && Object.keys(VALIDDATA[ctype]).indexOf(originoruse) > -1
+            && VALIDDATA[ctype][originoruse].indexOf(carrier) > -1) {
           values = values.map(Number);
           return { carrier, ctype, originoruse, values, comment };
         }
@@ -403,12 +402,12 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
                                }, {});
 
   // Annual exported energy not used for any service (formula 28)
-  let E_exp_nused_an = _.sum(E_exp_nused_t);
+  let E_exp_nused_an = E_exp_nused_t.reduce((a, b) => a + b, 0);
 
   // Delivered (electric) energy for each time step (formula 29)
   let E_del_t = vecvecdif(E_EPus_t, E_pr_used_EPus_t);
   // Annual delivered (electric) energy for EPB uses (formula 30)
-  let E_del_an = _.sum(E_del_t);
+  let E_del_an = E_del_t.reduce((a, b) => a + b, 0);
 
   // Annual temporary exported (electric) energy (formula 31)
   let E_exp_tmp_an = Math.min(E_exp_nused_an, E_del_an);
@@ -420,7 +419,7 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
   let E_del_rdel_t = E_del_t.map(E_del_ti => E_del_an === 0 ? 0 : E_exp_tmp_an * E_del_ti / E_del_an);
 
   // Annual redelivered energy
-  // E_del_rdel_an = _.sum(E_del_rdel_t) // not used
+  // E_del_rdel_an = E_del_rdel_t.reduce((a, b) => a + b, 0) // not used
 
   // Exported (electric) energy to the grid for each time step (formula 34)
   // E_exp_grid_t = vecdif(E_exp_nused_t, E_exp_tmp_t) // not used
@@ -446,7 +445,7 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
   // Corrected temporary exported energy (formula 39)
   // E_exp_tmp_t_corr = [E_exp_tmp_ti * (1 - k_rdel) for E_exp_tmp_ti in E_exp_tmp_t] // not used
 
-  let balance_t = { grid: { input: _.sum(E_del_t_corr) } }; // Scalar
+  let balance_t = { grid: { input: E_del_t_corr.reduce((a, b) => a + b, 0) } }; // Scalar
 
   VALIDORIGINS.map(origin => {
     balance_t[origin] = { input: E_pr_t_byorigin[origin],
@@ -477,7 +476,7 @@ function balance_an_forcarrier(balance_t) {
           if (origin === 'grid' && use === 'input') { // we have a scalar
             sumforuse = balance_t_byorigin[use];
           } else { // we have a list
-            sumforuse = _.sum(balance_t_byorigin[use]);
+            sumforuse = balance_t_byorigin[use].reduce((a, b) => a + b, 0);
           }
           if (!balance_an.hasOwnProperty(origin)) { balance_an[origin] = {}; }
           if (Math.abs(sumforuse) > 0.01) { // exclude smallish values
