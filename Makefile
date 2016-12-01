@@ -1,9 +1,9 @@
-PRJDIR:=/home/webapps/epbdpanel
+PRJDIR:=/home/webapps/visorepbd
 RESDIR:=${PRJDIR}/deployresources
 REPODIR:=${PRJDIR}
-NGINXCONF:=epbdpanel.nginx.conf
+NGINXCONF:=visorepbd.nginx.conf
 # usar variable de entorno EPBDURLPREFIX para cambiar prefijos de static y url para ajax
-EPBDURLPREFIX:=/epbdpanel/
+EPBDURLPREFIX:=/visorepbd/
 
 .PHONY: builddevjs
 builddevjs:

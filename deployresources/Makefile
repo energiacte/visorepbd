@@ -1,7 +1,7 @@
-PRJDIR:=/home/webapps/epbdpanel
+PRJDIR:=/home/webapps/visorepbd
 RESDIR:=${PRJDIR}/deployresources
 REPODIR:=${PRJDIR}
-NGINXCONF:=epbdpanel.nginx.conf
+NGINXCONF:=visorepbd.nginx.conf
 
 # antes hacer un cd ${REPODIR} && git pull
 update: ${REPODIR}/package.json
