@@ -2,18 +2,15 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-import _ from 'lodash';
-
 import { IChartA, IChartAB } from 'components/IndicatorsChart';
 
 function datalimits(data) {
-  const values = _.values(_.pick(data, ['EPAnren', 'EPAren', 'EPAtotal',
-                                        'EPnren', 'EPren', 'EPtotal']));
-  const maxvalue = _.max(values);
+  const { EPAnren, EPAren, EPAtotal, EPnren, EPren, EPtotal } = data;
+  const values = [EPAnren, EPAren, EPAtotal, EPnren, EPren, EPtotal];
+  const maxvalue = Math.max(...values);
   const step = (Math.abs(maxvalue) > 100) ? 100 : 10;
-  const max = (1 + Math.round(maxvalue / step)) * step;
-  const min = Math.min(0.0, _.min(values));
-  return {min, max};
+  return { min: Math.min(0.0, Math.min(...values)),
+           max: (1 + Math.round(maxvalue / step)) * step };
 }
 
 export default class ChartsContainer extends React.Component {

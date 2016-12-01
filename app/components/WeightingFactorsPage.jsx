@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
 import NavBar from 'components/NavBar';
 import Footer from 'components/Footer';
@@ -123,9 +122,9 @@ class WeightingFactorsPage extends React.Component {
   handleChange(vec, factor, e) {
     const newvalue = parseFloat(e.target.value.replace(/,/g, '.'));
     if (isNaN(newvalue)) return;
-
     const { wfactors, dispatch } = this.props;
-    let [[ vecobj ], otherveclist] = _.partition(wfactors, e => e.vector === vec);
+    const vecobj = wfactors.find(e => e.vector === vec);
+    const otherveclist = wfactors.filter(e => e.vector !== vec);
     vecobj[factor] = newvalue;
     dispatch(editWFactors([...otherveclist, vecobj]));
   }

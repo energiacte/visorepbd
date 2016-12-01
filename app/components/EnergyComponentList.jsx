@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import _ from 'lodash';
 
 import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 
@@ -19,7 +18,7 @@ export default class EnergyComponentList extends React.Component {
 
   render() {
     const { components, selectedkey, area } = this.props;
-    const maxvalue = _.max(components.map(component => _.max(component.values)));
+    const maxvalue = Math.max(...components.map(component => Math.max(...component.values)));
 
     return (
       <table id="components" className="table table-striped table-bordered table-condensed">
@@ -45,7 +44,7 @@ export default class EnergyComponentList extends React.Component {
                  active ? '' : 'inactivecomponent',
                  (ctype === 'CONSUMO') ? 'deliveredstyle' : ''
                ].join(' ');
-               const sumvalues = _.sum(values);
+               const sumvalues = values.reduce((a, b)=> a + b, 0);
                return (
                  <tr key={i}
                      className={ rowstyles }

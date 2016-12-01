@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import d3 from 'd3';
 import dimple from 'dimple';
 import $ from 'jquery';
-import _ from 'lodash';
+
 function buildDataA(values) {
   return [
     { Componente: 'EP_total', 'kWh/m²·año': values.EPAtotal, Order: 1 },

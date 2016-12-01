@@ -5,8 +5,6 @@ import EnergyComponentChart from 'components/EnergyComponentChart';
 import { getValues, CURVENAMES } from '../epbdutils';
 import { VALIDDATA } from '../energycalculations';
 
-import _ from 'lodash';
-
 export default class EnergyComponentEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -16,12 +14,12 @@ export default class EnergyComponentEditor extends React.Component {
   render() {
     const { selectedkey, components } = this.props;
     const { carrier, ctype, originoruse, values, comment } = components[selectedkey];
-    const ctypevalues = _.keys(VALIDDATA);
-    const originorusevalues = _.keys(VALIDDATA[ctype]);
+    const ctypevalues = Object.keys(VALIDDATA);
+    const originorusevalues = Object.keys(VALIDDATA[ctype]);
     const carriervalues = VALIDDATA[ctype][originoruse];
     const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
 
-    const currenttotalenergy = _.sum(values);
+    const currenttotalenergy = values.reduce((a, b) => a + b, 0);
 
     return (
       <div id="energycomponenteditor" className="panel-body bg-info" key={ 'selected' + selectedkey } >
@@ -78,7 +76,7 @@ export default class EnergyComponentEditor extends React.Component {
                   { CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
                 <EnergyComponentChart ctype={ ctype }
-                                      maxvalue={ _.max(values) }
+                                      maxvalue={ Math.max(...values) }
                                       data={ data }
                                       className="form-control"
                                       width="50%" height="34px" />
@@ -166,9 +164,7 @@ export default class EnergyComponentEditor extends React.Component {
       const originorusekey0 = Object.keys(VALIDDATA[value])[0];
       currentcomponent.ctype = value;
       currentcomponent.originoruse = originorusekey0;
-      if (!_.includes(
-        VALIDDATA[value][originorusekey0],
-        currentcomponent.carrier)) {
+      if (!VALIDDATA[value][originorusekey0].includes(currentcomponent.carrier)) {
           currentcomponent.carrier = VALIDDATA[value][originorusekey0][0];
       }
     }
@@ -176,9 +172,7 @@ export default class EnergyComponentEditor extends React.Component {
     if (prop === 'originoruse') {
       const currctype = currentcomponent.ctype;
       currentcomponent.originoruse = value;
-      if (!_.includes(
-        VALIDDATA[currctype][value],
-        currentcomponent.carrier)) {
+      if (!VALIDDATA[currctype][value].includes(currentcomponent.carrier)) {
           currentcomponent.carrier = VALIDDATA[currctype][value][0];
       }
     }
@@ -279,7 +273,7 @@ export default class EnergyComponentEditor extends React.Component {
   // Restore current component to stored state
   handleRestore(event) {
     const { selectedkey, storedcomponent, onEdit } = this.props;
-    const currenttotalenergy = _.sum(storedcomponent.values);
+    const currenttotalenergy = storedcomponent.values.reduce((a, b) => a + b, 0);
 
     this.CurveSelect.value = CURVENAMES[0];
     this.totalEnergyRange.max = Math.max(10, 10 + 2 * Math.round(currenttotalenergy / 100) * 100);
