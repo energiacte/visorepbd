@@ -78,7 +78,7 @@ if (production) { // Production plugins go here
 var config = {
   debug: !production,
   cache: true,
-  devtool: production ? 'source-map': 'cheap-module-eval-source-map',
+  devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
     app: [
       'babel-polyfill',
