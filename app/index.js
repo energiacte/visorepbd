@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import 'img/favicon.ico';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'styles/style.scss'; // CSS
 import store from 'store/store.js';
 import MainPage from 'components/MainPage.jsx';

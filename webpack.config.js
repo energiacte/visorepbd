@@ -82,9 +82,9 @@ var config = {
   entry: {
     app: [
       'babel-polyfill',
-      PATHS.app,
-      'bootstrap-loader'],
-    vendor: ['d3', 'dimple', 'jquery', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
+      PATHS.app
+    ],
+    vendor: ['d3', 'dimple', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   output: {
     path: PATHS.build,
@@ -119,7 +119,7 @@ var config = {
       },
       { // CSS
         test: /\.css$/,
-        include: PATHS.app,
+        include: [PATHS.app, PATHS.node],
         loader: ExtractTextPlugin.extract('style', 'css!postcss')
       },
       { // SASS
