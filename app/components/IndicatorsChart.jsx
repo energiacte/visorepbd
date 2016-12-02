@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import d3 from 'd3';
 import dimple from 'dimple';
-import $ from 'jquery';
 
 function buildDataA(values) {
   return [
