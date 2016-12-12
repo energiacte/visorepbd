@@ -34,7 +34,7 @@ var plugins = [
   new HtmlWebpackPlugin({
     // https://github.com/jaketrent/html-webpack-template
     template: 'app/index.template.html',
-    title: "DB-HE NZEB: implementación de la ISO 52000-1 en el CTE DB-HE",
+    title: "VisorEPBD: implementación de la ISO 52000-1 para el CTE DB-HE",
     inject: false,
     //favicon: 'favicon.ico',
     filename: './index.html', // relativo al output path
