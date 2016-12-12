@@ -9,16 +9,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'styles/style.scss'; // CSS
 import store from 'store/store.js';
 import MainPage from 'components/MainPage.jsx';
-import AboutPage from 'components/AboutPage.jsx';
 import WeightingFactorsPage from 'components/WeightingFactorsPage.jsx';
+import HelpPage from 'components/HelpPage.jsx';
+import AboutPage from 'components/AboutPage.jsx';
 
 // Render
 ReactDOM.render(
   (<Provider store={store} >
    <Router history={hashHistory}>
    <Route path="/" component={MainPage}/>
-   <Route path="/about" component={AboutPage}/>
    <Route path="/weightingfactors" component={WeightingFactorsPage}/>
+   <Route path="/help" component={HelpPage}/>
+   <Route path="/about" component={AboutPage}/>
    </Router>
    </Provider>
   ),

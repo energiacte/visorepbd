@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 export default class NavBar extends React.Component {
 
-  static defaultProps = { projectName: 'DB-HE NZEB' }
+  static defaultProps = { projectName: 'VisorEPBD' }
 
   render() {
     const currpath = this.props.route.path;
@@ -19,15 +19,18 @@ export default class NavBar extends React.Component {
           <div className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
               <li className={ activeIfCurrent('/') } role="presentation">
-                <Link to='/'>Inicio</Link>
+                <Link to='/'><span className="glyphicon glyphicon-home" aria-hidden="true"></span> Inicio</Link>
               </li>
               <li className={ activeIfCurrent('/weightingfactors') } role="presentation">
                 <Link to='/weightingfactors'>Factores de paso</Link>
               </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
+              <li className={ activeIfCurrent('/help') } role="presentation">
+                <Link to='/help'><span className="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Ayuda</Link>
+              </li>
               <li className={ activeIfCurrent('/about') } role="presentation">
-                <Link to='/about'>Créditos</Link>
+                <Link to='/about'><span className="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Créditos</Link>
               </li>
             </ul>
           </div>
