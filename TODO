@@ -1,3 +1,6 @@
+- Factores de paso de emisiones (CO2)
+- Mostrar una gráfica de energía primaria y otra de emisiones
+- Cambiar paso de cálculo mostrado usando radio button
 - Cambiar a mobx desde redux
 - Mostrar otros valores intermedios en agregado anual y en intervalos de cálculo (energía exportada, energía suministrada por vector, etc)
 - Ayuda con ejemplos
