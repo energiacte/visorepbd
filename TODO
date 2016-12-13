@@ -1,6 +1,5 @@
 - Cambiar a mobx desde redux
-- Poner logos
-- Mostrar otros valores intermedios (energía exportada, energía suministrada por vector, etc)
+- Mostrar otros valores intermedios en agregado anual y en intervalos de cálculo (energía exportada, energía suministrada por vector, etc)
 - Ayuda con ejemplos
 - Mejorar svg y comportamiento del subtítulo
 - Cargar RED1 y RED2 desde metadatos
@@ -8,3 +7,5 @@
 - Poner metadatos en estado
 - Mostrar y editar meta.Name
 - Mostrar al final de la lista, los totales de energía y energía por superficie para todos los vectores
+- Unir desplegables de Tipo y Origen/Uso (PRODUCCIÓN INSITU, PRODUCCIÓN COGENERACIÓN, CONSUMO EPB, CONSUMO NEPB)
+- Aprovechar información por subsistemas / servicios
