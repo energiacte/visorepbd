@@ -56,7 +56,7 @@ export class IChartA extends React.Component {
              ', krdel: ' + krdel.toFixed(1));
     // Subsubtitle
     svg.select('text#subsubtitle')
-       .html('RER(A): ' + data.EPArer.toFixed(2));
+       .html('RER: ' + data.EPArer.toFixed(2));
 
     // Draw so geometry properties are available to compute tooltips
     this.chart.data = cData;
@@ -165,7 +165,7 @@ export class IChartAB extends React.Component {
              ', krdel: ' + krdel.toFixed(1));
     // Subsubtitle
     svg.select('text#subsubtitle')
-       .html('RER(A+B): ' + data.EPrer.toFixed(2));
+       .html('RER: ' + data.EPrer.toFixed(2));
 
     // Draw so geometry properties are available to compute tooltips
     this.chart.data = cData;
