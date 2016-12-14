@@ -1,3 +1,4 @@
+- Cambiar EP_total, EP_nren y EP_ren a C_ep,tot, C_ep,nren y C_ep,ren
 - Factores de paso de emisiones (CO2)
 - Mostrar una gráfica de energía primaria y otra de emisiones
 - Cambiar paso de cálculo mostrado usando radio button
