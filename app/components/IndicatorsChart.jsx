@@ -213,7 +213,7 @@ export class IChartAB extends React.Component {
       style={ {overflow: 'visible'} }>
       <text id='title' x='50%' y='15px'
             fill='black' textAnchor='middle' fontSize='15px'>
-        Consumo de energía primaria (Paso A+B)
+        Consumo de energía primaria (Paso B)
       </text>
       <text id='subtitle' x='50%' y='30px'
             fill='black' textAnchor='middle' fontSize='12px' />
