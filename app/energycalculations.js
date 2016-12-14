@@ -704,6 +704,7 @@ export function weighted_energy(balance, fp, k_exp) {
       let exported_wenergy_stepA = exported_weighted_energy_stepA(cr_balance_an, cr_fp);
       let gsavings_stepB = gridsavings_stepB(cr_balance_an, cr_fp, k_exp);
 
+      // XXX: esto es una suma en lugar de una resta. Ver 11.6.2.2. (23)
       let weighted_energy_stepA = { ren: delivered_wenergy_stepA.ren - exported_wenergy_stepA.ren,
                                     nren: delivered_wenergy_stepA.nren - exported_wenergy_stepA.nren };
       let weighted_energy_stepAB = { ren: weighted_energy_stepA.ren - gsavings_stepB.ren,
