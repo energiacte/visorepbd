@@ -22,7 +22,7 @@ class WeightingFactorsPage extends React.Component {
         <div className="container">
           <div className="page-header">
             <h1>Factores de paso</h1>
-            <p>Conversión de energía final a energía primaria renovable y no renovable.</p>
+            <p>Factores de conversión de energía final a energía primaria renovable y no renovable. Estos factores corresponden a los definidos en el Documento reconocido del RITE <a href="http://www.minetad.gob.es/energia/desarrollo/EficienciaEnergetica/RITE/Reconocidos/Reconocidos/Otros%20documentos/Factores_emision_CO2.pdf">Factores de emisión de CO2 y coeficientes de paso a energía primaria de diferentes fuentes de energía final consumidas en el sector de edificios en España</a>, que incluye los factores de paso de energía final a energía primaria y a emisiones.</p>
           </div>
 
           <h3>Factores personalizables</h3>
