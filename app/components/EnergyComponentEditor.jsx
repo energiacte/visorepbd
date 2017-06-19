@@ -25,7 +25,6 @@ export default class EnergyComponentEditor extends React.Component {
       <div id="energycomponenteditor" className="panel-body bg-info" key={ 'selected' + selectedkey } >
         <form className="form-horizontal"
               onSubmit={ e => e.preventDefault() }>
-          <fieldset>
             <div className="form-group">
 
               <label className="col-md-1 control-label"
@@ -129,7 +128,6 @@ export default class EnergyComponentEditor extends React.Component {
               </div>
             </div>
 
-          </fieldset>
         </form>
 
       </div>
