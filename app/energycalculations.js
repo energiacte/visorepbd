@@ -290,15 +290,15 @@ export function readfactors(factorsstring) {
 export function ep2string(EP, area = 1.0) {
   const areafactor = 1.0 / area;
 
-  const eparen = areafactor * EP.EPpasoA.ren,
-        epanren = areafactor * EP.EPpasoA.nren,
-        epatotal = eparen + epanren,
-        eparer = epatotal ? eparen / epatotal : 0.0;
+  const eparen = areafactor * EP.EPpasoA.ren;
+  const epanren = areafactor * EP.EPpasoA.nren;
+  const epatotal = eparen + epanren;
+  const eparer = epatotal ? eparen / epatotal : 0.0;
 
-  const epren = areafactor * EP.EP.ren,
-        epnren = areafactor * EP.EP.nren,
-        eptotal = epren + epnren,
-        eprer = eptotal ? epren / eptotal : 0.0;
+  const epren = areafactor * EP.EP.ren;
+  const epnren = areafactor * EP.EP.nren;
+  const eptotal = epren + epnren;
+  const eprer = eptotal ? epren / eptotal : 0.0;
 
   return 'EP(step A)  , ren =' + eparen.toFixed(1) + ', nren=' + epanren.toFixed(1) + ', '
     + 'tot =' + epatotal.toFixed(1) + ', RER =' + eparer.toFixed(2) + '\n'
@@ -309,14 +309,14 @@ export function ep2string(EP, area = 1.0) {
 // Convert EP object to epdict
 export function ep2dict(EP, area = 1.0) {
   const areafactor = 1.0 / area;
-  const EPAren = areafactor * EP.EPpasoA.ren,
-        EPAnren = areafactor * EP.EPpasoA.nren,
-        EPAtotal = EPAren + EPAnren,
-        EPArer = (EPAtotal === 0) ? 0 : EPAren / EPAtotal;
-  const EPren = areafactor * EP.EP.ren,
-        EPnren = areafactor * EP.EP.nren,
-        EPtotal = EPren + EPnren,
-        EPrer = (EPtotal === 0) ? 0 : EPren / EPtotal;
+  const EPAren = areafactor * EP.EPpasoA.ren;
+  const EPAnren = areafactor * EP.EPpasoA.nren;
+  const EPAtotal = EPAren + EPAnren;
+  const EPArer = (EPAtotal === 0) ? 0 : EPAren / EPAtotal;
+  const EPren = areafactor * EP.EP.ren;
+  const EPnren = areafactor * EP.EP.nren;
+  const EPtotal = EPren + EPnren;
+  const EPrer = (EPtotal === 0) ? 0 : EPren / EPtotal;
   return { EPAren, EPAnren, EPAtotal, EPArer, EPren, EPnren, EPtotal, EPrer };
 }
 
@@ -553,14 +553,14 @@ function exported_weighted_energy_stepA(cr_balance_an, fpA) {
 // This function returns a data structure with keys 'ren' and 'nren' corresponding
 // to the renewable and not renewable share of this weighted energy (step B).
 function gridsavings_stepB(cr_balance_an, fp, k_exp) {
-  let to_nEPB = { ren: 0.0, nren: 0.0 },
-      to_grid = { ren: 0.0, nren: 0.0 };
-  let fpA = fp.filter(fpi => fpi.step === 'A'),
-      fpB = fp.filter(fpi => fpi.step === 'B');
-  let fpAnEPB = fpA.filter(fpi => fpi.uso === 'to_nEPB'),
-      fpAgrid = fpA.filter(fpi => fpi.uso === 'to_grid'),
-      fpBnEPB = fpB.filter(fpi => fpi.uso === 'to_nEPB'),
-      fpBgrid = fpB.filter(fpi => fpi.uso === 'to_grid');
+  let to_nEPB = { ren: 0.0, nren: 0.0 };
+  let to_grid = { ren: 0.0, nren: 0.0 };
+  let fpA = fp.filter(fpi => fpi.step === 'A');
+  let fpB = fp.filter(fpi => fpi.step === 'B');
+  let fpAnEPB = fpA.filter(fpi => fpi.uso === 'to_nEPB');
+  let fpAgrid = fpA.filter(fpi => fpi.uso === 'to_grid');
+  let fpBnEPB = fpB.filter(fpi => fpi.uso === 'to_nEPB');
+  let fpBgrid = fpB.filter(fpi => fpi.uso === 'to_grid');
 
   Object.keys(cr_balance_an).map(
     source => {
