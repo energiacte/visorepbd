@@ -150,14 +150,14 @@ const EMPTYCOMPONENT = { active: true, carrier: 'ELECTRICIDAD', ctype: 'CONSUMO'
 // -----------------------------------------------------------------------------------
 const zip = (...rows) => [...rows[0]].map((_, c) => rows.map(row => row[c]));
 
-// Elementwise minimum min res[i] = min(vec1[i], vec2[i])
-function vecvecmin(vec1, vec2) {
-  return zip(vec1, vec2).map(zarray => Math.min(...zarray));
-}
-
 // Elementwise sum res[i] = vec1[i] + vec2[i] + ... + vecj[i]
 function veclistsum(veclist) {
   return zip(...veclist).map(valsi => valsi.reduce((a, b) => a + b, 0));
+}
+
+// Elementwise minimum min res[i] = min(vec1[i], vec2[i])
+function vecvecmin(vec1, vec2) {
+  return vec1.map((el, ii) => Math.min(el, vec2[ii]));
 }
 
 // Elementwise sum of arrays
@@ -167,12 +167,12 @@ function vecvecsum(vec1, vec2) {
 
 // Elementwise difference res[i] = vec1[i] - vec2[i]
 function vecvecdif(vec1, vec2) {
-  return zip(vec1, vec2).map(([v1, v2]) => v1 - v2);
+  return vec1.map((el, ii) => el - vec2[ii]);
 }
 
 // Elementwise multiplication res[i] = vec1[i] * vec2[i]
 function vecvecmul(vec1, vec2) {
-  return zip(vec1, vec2).map(([v1, v2]) => v1 * v2);
+  return vec1.map((el, ii) => el * vec2[ii]);
 }
 
 // Multiply vector by scalar
