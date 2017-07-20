@@ -54,7 +54,7 @@ configpackages:
 	sudo ln -fs /etc/nginx/sites-available/${NGINXCONF} /etc/nginx/sites-enabled/${NGINXCONF}
 
 builddir:
-	mkdir build
+	mkdir -p build
 
 energycalculations.js: builddir
 	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o build/energycalculations.js app/energycalculations.js
