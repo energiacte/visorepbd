@@ -53,13 +53,16 @@ configpackages:
 	sudo cp ${RESDIR}/${NGINXCONF} /etc/nginx/sites-available/
 	sudo ln -fs /etc/nginx/sites-available/${NGINXCONF} /etc/nginx/sites-enabled/${NGINXCONF}
 
-energycalculations.js:
+builddir:
+	mkdir build
+
+energycalculations.js: builddir
 	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o build/energycalculations.js app/energycalculations.js
 
-test.js:
+test.js: builddir
 	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o build/test.js app/test.js
 
-examples:
+examples: builddir
 	cp -r app/examples build/examples
 
 test: energycalculations.js test.js examples
