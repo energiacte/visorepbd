@@ -191,7 +191,7 @@ module.exports = {
     "linebreak-style": [2, "unix"], // unix linebreaks
     "max-len": [2, 120, 2, {
       "ignoreUrls": true,
-      "ignoreComments": false
+      "ignoreComments": true
     }], // specify the maximum length of a line in your program (off by default)
     "max-nested-callbacks": 0, // specify the maximum depth callbacks can be nested (off by default)
     "new-cap": 0, //[1, {"newIsCap": true, "capIsNew": false}], // require a capital letter for constructors
