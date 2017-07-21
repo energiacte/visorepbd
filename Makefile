@@ -1,6 +1,7 @@
 PRJDIR:=/home/webapps/visorepbd
 RESDIR:=${PRJDIR}/deployresources
 REPODIR:=${PRJDIR}
+BUILDDIR:=build
 NGINXCONF:=visorepbd.nginx.conf
 # usar variable de entorno EPBDURLPREFIX para cambiar prefijos de static y url para ajax
 EPBDURLPREFIX:=/visorepbd/
@@ -53,18 +54,17 @@ configpackages:
 	sudo cp ${RESDIR}/${NGINXCONF} /etc/nginx/sites-available/
 	sudo ln -fs /etc/nginx/sites-available/${NGINXCONF} /etc/nginx/sites-enabled/${NGINXCONF}
 
-builddir:
-	mkdir -p build
+${BUILDDIR}:
+	mkdir -p ${BUILDDIR)
 
-energycalculations.js: builddir
-	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o build/energycalculations.js app/energycalculations.js
+energycalculations.js: ${BUILDDIR}
+	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o ${BUILDDIR}/energycalculations.js app/energycalculations.js
 
-test.js: builddir
-	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o build/test.js app/test.js
+test.js: ${BUILDDIR}
+	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o ${BUILDDIR}/test.js app/test.js
 
-examples: builddir
-	cp -r app/examples build/examples
+build/examples:
+	ln -s ../app/examples ${BUILDDIR}/
 
-test: energycalculations.js test.js examples
+test: energycalculations.js test.js ${BUILDDIR}/examples
 	node build/test.js
-
