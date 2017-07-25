@@ -144,6 +144,21 @@ function epfromdata(datalist, krdel, kexp, fp) {
 }
 
 // Tests ----------------------------------------------------------
+console.log("*** Ejemplos ISO/TR 52000-2:2016 ***");
+
+check('ejemploJ1_base',
+      epfromfile('ejemploJ1_base.csv', TESTKRDEL, TESTKEXP, TESTFP),
+      [50.0, 200.0]);
+
+check('ejemploJ1_basePV',
+      epfromfile('ejemploJ1_basePV.csv', TESTKRDEL, TESTKEXP, TESTFP),
+      [75.0, 100.0]);
+
+check('ejemploJ1_basePVexcess',
+      epfromfile('ejemploJ1_basePVexcess.csv', TESTKRDEL, TESTKEXP, TESTFP),
+      [120, -80.0]);
+
+console.log("*** Ejemplos FprEN 15603:2014 ***");
 
 check('ejemplo1base',
       epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, TESTFP),
