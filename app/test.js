@@ -169,12 +169,12 @@ check('ejemploJ1_base',
       epfromfile('ejemploJ1_base.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 50.0, nren: 200.0 }, EPpasoA: { ren: 50, nren: 200 } });
 
-check('ejemploJ1_basePV',
-      epfromfile('ejemploJ1_basePV.csv', TESTKRDEL, TESTKEXP, TESTFP),
+check('ejemploJ2_basePV',
+      epfromfile('ejemploJ2_basePV.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 75.0, nren: 100.0 }, EPpasoA: { ren: 75, nren: 100 } });
 
-check('ejemploJ1_basePVexcess',
-      epfromfile('ejemploJ1_basePVexcess.csv', TESTKRDEL, TESTKEXP, TESTFP),
+check('ejemploJ3_basePVexcess',
+      epfromfile('ejemploJ3_basePVexcess.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 120, nren: -80.0 }, EPpasoA: { ren: 100, nren: 0 } });
 
 console.log("*** Ejemplos FprEN 15603:2014\n");
