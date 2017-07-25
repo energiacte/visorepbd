@@ -55,16 +55,17 @@ configpackages:
 	sudo ln -fs /etc/nginx/sites-available/${NGINXCONF} /etc/nginx/sites-enabled/${NGINXCONF}
 
 ${BUILDDIR}:
-	mkdir -p ${BUILDDIR)
+	mkdir -p ${BUILDDIR}
 
 energycalculations.js: ${BUILDDIR}
-	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o ${BUILDDIR}/energycalculations.js app/energycalculations.js
+	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/energycalculations.js app/energycalculations.js
 
 test.js: ${BUILDDIR}
-	./node_modules/.bin/babel --plugins lodash --presets es2015,stage-0 -o ${BUILDDIR}/test.js app/test.js
+	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/test.js app/test.js
 
 build/examples:
 	ln -s ../app/examples ${BUILDDIR}/
 
 test: energycalculations.js test.js ${BUILDDIR}/examples
 	node build/test.js
+
