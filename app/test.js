@@ -165,17 +165,34 @@ function epfromdata(datalist, krdel, kexp, fp) {
 // Tests ----------------------------------------------------------
 console.log("*** Ejemplos ISO/TR 52000-2:2016\n");
 
-check('ejemploJ1_base',
+check('J1 Base krdel=1.0, kexp=1.0',
       epfromfile('ejemploJ1_base.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 50.0, nren: 200.0 }, EPpasoA: { ren: 50, nren: 200 } });
 
-check('ejemploJ2_basePV',
+check('J2 Base + PV krdel=1.0, kexp=1.0',
       epfromfile('ejemploJ2_basePV.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 75.0, nren: 100.0 }, EPpasoA: { ren: 75, nren: 100 } });
 
-check('ejemploJ3_basePVexcess',
+check('J3 Base + PV excess krdel=1.0, kexp=1.0',
       epfromfile('ejemploJ3_basePVexcess.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 120, nren: -80.0 }, EPpasoA: { ren: 100, nren: 0 } });
+
+check('J4 Base + PV excess krdel=1.0, kexp=0.0',
+      epfromfile('ejemploJ3_basePVexcess.csv', TESTKRDEL, 0.0, TESTFP),
+      { EP: { ren: 100, nren: 0.0 }, EPpasoA: { ren: 100, nren: 0 } });
+
+check('J5 Gas boiler + PV for auxiliaries krdel=1.0, kexp=1.0',
+      epfromfile('ejemploJ5_gasPV.csv', TESTKRDEL, TESTKEXP, TESTFP),
+      { EP: { ren: 30, nren: 169 }, EPpasoA: { ren: 20, nren: 209 } });
+
+check('J6 Heat pump + PV krdel=1.0, kexp=1.0',
+      epfromfile('ejemploJ6_HPPV.csv', TESTKRDEL, TESTKEXP, TESTFP),
+      { EP: { ren: 181, nren: 38 }, EPpasoA: { ren: 181, nren: 38 } });
+
+check('J7 Co-generator (fuel) + Gas boiler krdel=1.0, kexp=1.0',
+      epfromfile('ejemploJ7_cogenfuelgasboiler.csv', TESTKRDEL, TESTKEXP, TESTFP),
+      { EP: { ren: -14, nren: 229 }, EPpasoA: { ren: 0, nren: 215 } });
+
 
 console.log("*** Ejemplos FprEN 15603:2014\n");
 
