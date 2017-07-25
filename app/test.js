@@ -109,21 +109,21 @@ const myround = (num, ndigits = 2) => Math.round(num * Math.pow(10, ndigits)) / 
 // isok is true if result must match to succeed
 function check(casename, EPB, result, shouldpass = true) {
   const ep = EPB.EP;
-  const reserr = Math.sqrt(Math.pow(ep.ren - result[0], 2)
-                           + Math.pow((ep.nren - result[1]), 2));
-  const gotvalue = myround(result[0] + result[1]);
-  const expectedvalue = myround(ep.ren + ep.nren);
-  let outstr = `${ casename } (${ EPB.path })`;
+  const resB = result.EP;
+  const reserr = Math.sqrt(Math.pow(ep.ren - resB.ren, 2)
+    + Math.pow((ep.nren - resB.nren), 2));
+
+  let outstr;
   if ((shouldpass && reserr > 2.0) || (!shouldpass && !(reserr > 2.0))) {
-    outstr = `ERROR - ${ outstr }\n`
-             + `-- Found: ${ gotvalue.toFixed(1) } = `
-             + `(ren: ${myround(result[0])} + nren: ${myround(result[1])})\n`
-             + `-- Expected: ${ expectedvalue.toFixed(1) }, `
+    outstr = `ERROR - ${casename} (${EPB.path})\n`
+             + `-- Found: ${myround(resB.ren + resB.nren).toFixed(1)} = `
+             + `(ren: ${myround(resB.ren)} + nren: ${myround(resB.nren)})\n`
+             + `-- Expected: ${myround(ep.ren + ep.nren).toFixed(1)}, `
              + `(ren: ${myround(ep.ren)} + nren: ${myround(ep.nren)})\n`
-             + `-- (ren, nren) residual: ${ reserr }\n`
-             + `${ ep2string(EPB) }`;
+             + `-- (ren, nren) residual: ${reserr}\n`
+             + `${ep2string(EPB)}\n${JSON.stringify(EPB, null, 4)}`;
   } else {
-    outstr = `OK - ${ outstr }`;
+    outstr = `OK - ${casename} (${EPB.path})`;
   }
   console.log(outstr);
 }
@@ -148,97 +148,97 @@ console.log("*** Ejemplos ISO/TR 52000-2:2016 ***");
 
 check('ejemploJ1_base',
       epfromfile('ejemploJ1_base.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [50.0, 200.0]);
+      { EP: { ren: 50.0, nren: 200.0 } });
 
 check('ejemploJ1_basePV',
       epfromfile('ejemploJ1_basePV.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [75.0, 100.0]);
+      { EP: { ren: 75.0, nren: 100.0 } });
 
 check('ejemploJ1_basePVexcess',
       epfromfile('ejemploJ1_basePVexcess.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [120, -80.0]);
+      { EP: { ren: 120, nren: -80.0 } });
 
 console.log("*** Ejemplos FprEN 15603:2014 ***");
 
 check('ejemplo1base',
       epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [50.0, 200.0]);
+      { EP: { ren: 50.0, nren: 200.0 } });
 
 check('ejemplo1base_fail',
       epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [53.0, 200.0], false);
+      { EP: { ren: 53.0, nren: 200.0 } }, false);
 
 check('ejemplo1base_normativo',
       epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      [34.1, 208.20]);
+      { EP: { ren: 34.1, nren: 208.20 } });
 
 check('ejemplo1PV',
       epfromfile('ejemplo1PV.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [75.0, 100.0]);
+      { EP: { ren: 75.0, nren: 100.0 } });
 
 check('ejemplo1PV_normativo',
       epfromfile('ejemplo1PV.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      [67.1, 104.1]);
+      { EP: { ren: 67.1, nren: 104.1 } });
 
 check('ejemplo1xPV',
       epfromfile('ejemplo1xPV.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [120.0, -80.0]);
+      { EP: { ren: 120.0, nren: -80.0 } });
 
 check('ejemplo1xPV_normativo',
       epfromfile('ejemplo1xPV.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      [120.0, -80.0]);
+      { EP: { ren: 120.0, nren: -80.0 } });
 
 check('ejemplo1xPVk0',
       epfromfile('ejemplo1xPV.csv', TESTKRDEL, 0.0, TESTFP),
-      [100.0, 0.0]);
+      { EP: { ren: 100.0, nren: 0.0 } });
 
 check('ejemplo1xPVk0_normativo',
       epfromfile('ejemplo1xPV.csv', TESTKRDEL, 0.0, CTEFP),
-      [100.0, 0.0]);
+      { EP: { ren: 100.0, nren: 0.0 } });
 
 check('ejemplo2xPVgas',
       epfromfile('ejemplo2xPVgas.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [30.0, 169.0]);
+      { EP: { ren: 30.0, nren: 169.0 } });
 
 check('ejemplo2xPVgas_normativo',
       epfromfile('ejemplo2xPVgas.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      [30.9, 186.1]);
+      { EP: { ren: 30.9, nren: 186.1 } });
 
 check('ejemplo3PVBdC',
       epfromfile('ejemplo3PVBdC.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [180.0, 38.0]);
+      { EP: { ren: 180.0, nren: 38.0 } });
 
 check('ejemplo3PVBdC_normativo',
       epfromfile('ejemplo3PVBdC.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      [177.5, 39.6]);
+      { EP: { ren: 177.5, nren: 39.6 } });
 
 check('ejemplo4cgnfosil',
       epfromfile('ejemplo4cgnfosil.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [-14.0, 227.0]);
+      { EP: { ren: -14.0, nren: 227.0 } });
 
 check('ejemplo4cgnfosil_normativo',
       epfromfile('ejemplo4cgnfosil.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      [-12.7, 251]);
+      { EP: { ren: -12.7, nren: 251 } });
 
 check('ejemplo5cgnbiogas',
       epfromfile('ejemplo5cgnbiogas.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [159.0, 69.0]);
+      { EP: { ren: 159.0, nren: 69.0 } });
 
 check('ejemplo5cgnbiogas_normativo',
       epfromfile('ejemplo5cgnbiogas.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      [148.9, 76.4]);
+      { EP: { ren: 148.9, nren: 76.4 } });
 
 check('ejemplo6K3',
       epfromfile('ejemplo6K3.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      [1385.5, -662]);
+      { EP: { ren: 1385.5, nren: -662 } });
 
 check('ejemplo6K3_normativo',
       epfromfile('ejemplo6K3.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      [1385.5, -662]);
+      { EP: { ren: 1385.5, nren: -662 } });
 
 check('ejemplo3PVBdC_normativo_from_data',
       epfromdata(ENERGYDATALIST, TESTKRDEL, TESTKEXP, CTEFP),
-      [177.5, 39.6]);
+      { EP: { ren: 177.5, nren: 39.6 } });
 
 // ---------------------------------------------------------------
 
