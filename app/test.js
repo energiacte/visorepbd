@@ -103,17 +103,25 @@ const TESTKEXP = 1.0;
 
 // Utilities ------------------------------------------------------------
 
+const myround = (num, ndigits = 2) => Math.round(num * Math.pow(10, ndigits)) / Math.pow(10, ndigits);
+
 // Check that result is within valid range
 // isok is true if result must match to succeed
 function check(casename, EPB, result, shouldpass = true) {
   const ep = EPB.EP;
-  const reserr = Math.sqrt(Math.pow((ep.ren - result[0]), 2) + Math.pow((ep.nren - result[1]), 2));
-  const gotvalue = result[0] + result[1];
-  const expectedvalue = ep.ren + ep.nren;
+  const reserr = Math.sqrt(Math.pow(ep.ren - result[0], 2)
+                           + Math.pow((ep.nren - result[1]), 2));
+  const gotvalue = myround(result[0] + result[1]);
+  const expectedvalue = myround(ep.ren + ep.nren);
   let outstr = `${ casename } (${ EPB.path })`;
   if ((shouldpass && reserr > 2.0) || (!shouldpass && !(reserr > 2.0))) {
-    outstr = `ERROR - ${ outstr } -- Got: ${ gotvalue.toFixed(1) }, expected: ${ expectedvalue.toFixed(1) }
-${ ep2string(EPB) }`;
+    outstr = `ERROR - ${ outstr }\n`
+             + `-- Found: ${ gotvalue.toFixed(1) } = `
+             + `(ren: ${myround(result[0])} + nren: ${myround(result[1])})\n`
+             + `-- Expected: ${ expectedvalue.toFixed(1) }, `
+             + `(ren: ${myround(ep.ren)} + nren: ${myround(ep.nren)})\n`
+             + `-- (ren, nren) residual: ${ reserr }\n`
+             + `${ ep2string(EPB) }`;
   } else {
     outstr = `OK - ${ outstr }`;
   }
