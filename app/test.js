@@ -112,8 +112,7 @@ const showEP = (ep, step) => `EP(${ step })`
 
 
 // Check that result is within valid range
-// isok is true if result must match to succeed
-function check(casename, EPB, result, shouldfail = false) {
+function check(casename, EPB, result, verbose = false) {
   let errA = false;
   let errB = false;
 
@@ -128,9 +127,7 @@ function check(casename, EPB, result, shouldfail = false) {
   const isError = errA || errB;
 
   let outstr;
-  if (shouldfail && isError) {
-    outstr = `[OK] (Fail) ${casename} (${EPB.path})`;
-  } else if (!shouldfail && isError) {
+  if (isError) {
     outstr = `[ERROR] ${casename} (${EPB.path})`;
     if (errA) {
       outstr += `\n  Found:    ${ showEP(EPB.EPpasoA, 'A') }`
@@ -142,6 +139,10 @@ function check(casename, EPB, result, shouldfail = false) {
     }
   } else {
     outstr = `[OK] ${casename} (${EPB.path})`;
+    if (verbose) {
+      outstr += `\n  ${ showEP(EPB.EPpasoA, 'A') }`
+        + `\n  ${ showEP(EPB.EP, 'B')}`;
+    }
   }
   console.log(outstr);
 }
@@ -162,7 +163,7 @@ function epfromdata(datalist, krdel, kexp, fp) {
 }
 
 // Tests ----------------------------------------------------------
-console.log("*** Ejemplos ISO/TR 52000-2:2016 ***");
+console.log("*** Ejemplos ISO/TR 52000-2:2016\n");
 
 check('ejemploJ1_base',
       epfromfile('ejemploJ1_base.csv', TESTKRDEL, TESTKEXP, TESTFP),
@@ -176,15 +177,11 @@ check('ejemploJ1_basePVexcess',
       epfromfile('ejemploJ1_basePVexcess.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 120, nren: -80.0 }, EPpasoA: { ren: 100, nren: 0 } });
 
-console.log("*** Ejemplos FprEN 15603:2014 ***");
+console.log("*** Ejemplos FprEN 15603:2014\n");
 
 check('ejemplo1base',
       epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 50.0, nren: 200.0 } });
-
-check('ejemplo1base_fail',
-      epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      { EP: { ren: 53.0, nren: 200.0 } }, true);
 
 check('ejemplo1base_normativo',
       epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, CTEFP),
