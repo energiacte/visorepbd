@@ -26,8 +26,7 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
 */
 
 import { compute_balance, weighted_energy,
-         readenergystring, readfactors,
-         ep2string } from './energycalculations.js';
+         readenergystring, readfactors } from './energycalculations.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -104,26 +103,45 @@ const TESTKEXP = 1.0;
 // Utilities ------------------------------------------------------------
 
 const myround = (num, ndigits = 2) => Math.round(num * Math.pow(10, ndigits)) / Math.pow(10, ndigits);
+const reserr = (ep1, ep2) => Math.sqrt(Math.pow(ep1.ren - ep2.ren, 2) + Math.pow(ep1.nren - ep2.nren, 2));
+const showEP = (ep, step) => `EP(${ step })`
+  + `: ren = ${ ep.ren.toFixed(1) }`
+  + `, nren= ${ ep.nren.toFixed(1) }`
+  + `, tot = ${ (ep.ren / (ep.ren + ep.nren)).toFixed(1) }`
+  + `, RER = ${ (ep.ren / (ep.ren + ep.nren)).toFixed(2) }`;
+
 
 // Check that result is within valid range
 // isok is true if result must match to succeed
-function check(casename, EPB, result, shouldpass = true) {
-  const ep = EPB.EP;
-  const resB = result.EP;
-  const reserr = Math.sqrt(Math.pow(ep.ren - resB.ren, 2)
-    + Math.pow((ep.nren - resB.nren), 2));
+function check(casename, EPB, result, shouldfail = false) {
+  let errA = false;
+  let errB = false;
+
+  if (result.hasOwnProperty('EPpasoA')) {
+    errA = reserr(EPB.EPpasoA, result.EPpasoA) > 2.0;
+  }
+
+  if (result.hasOwnProperty('EP')) {
+    errB = reserr(EPB.EP, result.EP) > 2.0;
+  }
+
+  const isError = errA || errB;
 
   let outstr;
-  if ((shouldpass && reserr > 2.0) || (!shouldpass && !(reserr > 2.0))) {
-    outstr = `ERROR - ${casename} (${EPB.path})\n`
-             + `-- Found: ${myround(resB.ren + resB.nren).toFixed(1)} = `
-             + `(ren: ${myround(resB.ren)} + nren: ${myround(resB.nren)})\n`
-             + `-- Expected: ${myround(ep.ren + ep.nren).toFixed(1)}, `
-             + `(ren: ${myround(ep.ren)} + nren: ${myround(ep.nren)})\n`
-             + `-- (ren, nren) residual: ${reserr}\n`
-             + `${ep2string(EPB)}\n${JSON.stringify(EPB, null, 4)}`;
+  if (shouldfail && isError) {
+    outstr = `[OK] (Fail) ${casename} (${EPB.path})`;
+  } else if (!shouldfail && isError) {
+    outstr = `[ERROR] ${casename} (${EPB.path})`;
+    if (errA) {
+      outstr += `\n  Found:    ${ showEP(EPB.EPpasoA, 'A') }`
+        + `\n  Expected: ${ showEP(result.EPpasoA, 'A')}`;
+    }
+    if (errB) {
+      outstr += `\n  Found:    ${ showEP(EPB.EP, 'B') }`
+        + `\n  Expected: ${ showEP(result.EP, 'B')}`;
+    }
   } else {
-    outstr = `OK - ${casename} (${EPB.path})`;
+    outstr = `[OK] ${casename} (${EPB.path})`;
   }
   console.log(outstr);
 }
@@ -148,15 +166,15 @@ console.log("*** Ejemplos ISO/TR 52000-2:2016 ***");
 
 check('ejemploJ1_base',
       epfromfile('ejemploJ1_base.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      { EP: { ren: 50.0, nren: 200.0 } });
+      { EP: { ren: 50.0, nren: 200.0 }, EPpasoA: { ren: 50, nren: 200 } });
 
 check('ejemploJ1_basePV',
       epfromfile('ejemploJ1_basePV.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      { EP: { ren: 75.0, nren: 100.0 } });
+      { EP: { ren: 75.0, nren: 100.0 }, EPpasoA: { ren: 75, nren: 100 } });
 
 check('ejemploJ1_basePVexcess',
       epfromfile('ejemploJ1_basePVexcess.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      { EP: { ren: 120, nren: -80.0 } });
+      { EP: { ren: 120, nren: -80.0 }, EPpasoA: { ren: 100, nren: 0 } });
 
 console.log("*** Ejemplos FprEN 15603:2014 ***");
 
@@ -166,7 +184,7 @@ check('ejemplo1base',
 
 check('ejemplo1base_fail',
       epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, TESTFP),
-      { EP: { ren: 53.0, nren: 200.0 } }, false);
+      { EP: { ren: 53.0, nren: 200.0 } }, true);
 
 check('ejemplo1base_normativo',
       epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, CTEFP),
