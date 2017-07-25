@@ -107,7 +107,7 @@ const reserr = (ep1, ep2) => Math.sqrt(Math.pow(ep1.ren - ep2.ren, 2) + Math.pow
 const showEP = (ep, step) => `EP(${ step })`
   + `: ren = ${ ep.ren.toFixed(1) }`
   + `, nren= ${ ep.nren.toFixed(1) }`
-  + `, tot = ${ (ep.ren / (ep.ren + ep.nren)).toFixed(1) }`
+  + `, tot = ${ (ep.ren + ep.nren).toFixed(1) }`
   + `, RER = ${ (ep.ren / (ep.ren + ep.nren)).toFixed(2) }`;
 
 
