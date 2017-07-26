@@ -141,11 +141,13 @@ function check(casename, EPB, result, verbose = false) {
   let errB = false;
 
   if (result.hasOwnProperty('EPpasoA')) {
-    errA = reserr(EPB.EPpasoA, result.EPpasoA) > 2.0;
+    const err = reserr(EPB.EPpasoA, result.EPpasoA);
+    errA = isNaN(err) || (err > 2.0);
   }
 
   if (result.hasOwnProperty('EP')) {
-    errB = reserr(EPB.EP, result.EP) > 2.0;
+    const err = reserr(EPB.EP, result.EP);
+    errB = isNaN(err) || (err > 2.0);
   }
 
   const isError = errA || errB;
