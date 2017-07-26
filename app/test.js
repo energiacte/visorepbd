@@ -177,19 +177,18 @@ function check(casename, EPB, result, verbose = false) {
   console.log(outstr);
 }
 
+// Compute primary energy (weighted energy) from datalist
+function epfromdata(datalist, krdel, kexp, fp) {
+  const balance = compute_balance(datalist, krdel);
+  return { ...weighted_energy(balance, fp, kexp), path: 'data' };
+}
+
 // Compute primary energy (weighted energy) from data in filename
 function epfromfile(filename, krdel, kexp, fp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
   const datalist = readenergystring(datastring).components;
-  const balance = compute_balance(datalist, krdel);
-  return { ...weighted_energy(balance, fp, kexp), path: filename };
-}
-
-// Compute primary energy (weighted energy) from datalist
-function epfromdata(datalist, krdel, kexp, fp) {
-  const balance = compute_balance(datalist, krdel);
-  return { ...weighted_energy(balance, fp, kexp), path: 'data' };
+  return epfromdata(datalist, krdel, kexp, fp);
 }
 
 // Tests ----------------------------------------------------------
