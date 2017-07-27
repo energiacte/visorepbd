@@ -77,17 +77,17 @@ class WeightingFactorsPage extends React.Component {
               </tr>
             </thead>
             <tbody>
-              { wfactors2.map( entry => {
-                  const { vector, fuente, uso, step, fren, fnren } = entry;
-                  return (<tr key={ `${vector}-${fuente}-${uso}-${step}` }>
-              <td>{ vector }</td>
-              <td>{ fuente }</td>
-              <td>{ uso }</td>
-              <td>{ step }</td>
-              <td>{ fren.toFixed(3) }</td>
-              <td>{ fnren.toFixed(3) }</td>
-                  </tr>); })
-              }
+              { wfactors2.map(
+                ({ vector, source, use, step, fren, fnren }) =>
+                  <tr key={ `${vector}-${source}-${use}-${step}` }>
+                    <td>{ vector }</td>
+                    <td>{ source }</td>
+                    <td>{ use }</td>
+                    <td>{ step }</td>
+                    <td>{ fren.toFixed(3) }</td>
+                    <td>{ fnren.toFixed(3) }</td>
+                  </tr>
+              )}
             </tbody>
           </table>
           <div className="small bg-info">

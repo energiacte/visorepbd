@@ -107,8 +107,8 @@ export const FACTORESDEPASO = [
         ['GLP',                 'grid',         'input',     'A', 0.030, 1.201], // Delivered energy
         ['RED1',                'grid',         'input',     'A', 0.000, 1.300], // User defined!, district heating/cooling carrier
         ['RED2',                'grid',         'input',     'A', 0.000, 1.300]  // User defined!, district heating/cooling carrier
-].map(([vector, fuente, uso, step, fren, fnren]) => {
-  return { vector, fuente, uso, step, fren, fnren };
+].map(([vector, source, use, step, fren, fnren]) => {
+  return { vector, source, use, step, fren, fnren };
 });
 
 // ------------------------------------------------------------------------------------
@@ -279,10 +279,10 @@ export function readfactors(factorsstring) {
       if (fieldslist.length !== 6) {
         throw new UserException('Wrong number of fields in ' + fieldsstring);
       }
-      let [ vector, fuente, uso, step, fren, fnren ] = fieldslist;
+      let [ vector, source, use, step, fren, fnren ] = fieldslist;
       fren = parseFloat(fren);
       fnren = parseFloat(fnren);
-      return { vector, fuente, uso, step, fren, fnren, comment };
+      return { vector, source, use, step, fren, fnren, comment };
     });
 }
 
@@ -493,13 +493,13 @@ function balance_an_forcarrier(balance_t) {
 // This function returns a data structure with keys 'ren' and 'nren' corresponding
 // to the renewable and not renewable share of this weighted energy (step A).
 function delivered_weighted_energy_stepA(cr_balance_an, fp) {
-  let fpA = fp.filter(fpi => fpi.uso === 'input' && fpi.step === 'A');
+  let fpA = fp.filter(fpi => fpi.use === 'input' && fpi.step === 'A');
   let delivered_wenergy_stepA = { ren: 0.0, nren: 0.0 };
   Object.keys(cr_balance_an).map(
     source => {
       let origins = cr_balance_an[source];
       if (origins.hasOwnProperty('input')) {
-        let factor_paso_A = fpA.find(fpi => fpi.fuente === source);
+        let factor_paso_A = fpA.find(fpi => fpi.source === source);
         delivered_wenergy_stepA = { ren: delivered_wenergy_stepA.ren + factor_paso_A.fren * origins.input,
                                     nren: delivered_wenergy_stepA.nren + factor_paso_A.fnren * origins.input };
       }
@@ -517,19 +517,19 @@ function delivered_weighted_energy_stepA(cr_balance_an, fp) {
 function exported_weighted_energy_stepA(cr_balance_an, fpA) {
   let to_nEPB = { ren: 0.0, nren: 0.0 };
   let to_grid = { ren: 0.0, nren: 0.0 };
-  let fpAnEPB = fpA.filter(fpi => fpi.uso === 'to_nEPB');
-  let fpAgrid = fpA.filter(fpi => fpi.uso === 'to_grid');
+  let fpAnEPB = fpA.filter(fpi => fpi.use === 'to_nEPB');
+  let fpAgrid = fpA.filter(fpi => fpi.use === 'to_grid');
   Object.keys(cr_balance_an).map(
     source => {
       let destinations = cr_balance_an[source];
       if (destinations.hasOwnProperty('to_nEPB')) {
-        let fp_tmp = fpAnEPB.find(fpi => fpi.fuente === source) || 0.0;
+        let fp_tmp = fpAnEPB.find(fpi => fpi.source === source) || 0.0;
         to_nEPB = { ren: to_nEPB.ren + fp_tmp.fren * destinations.to_nEPB,
                     nren: to_nEPB.nren + fp_tmp.fnren * destinations.to_nEPB };
       }
 
       if (destinations.hasOwnProperty('to_grid')) {
-        let fp_tmp = fpAgrid.find(fpi => fpi.fuente === source) || 0.0;
+        let fp_tmp = fpAgrid.find(fpi => fpi.source === source) || 0.0;
         to_grid = { ren: to_grid.ren + fp_tmp.fren * destinations.to_grid,
                     nren: to_grid.nren + fp_tmp.fnren * destinations.to_grid };
       }
@@ -552,23 +552,23 @@ function gridsavings_stepB(cr_balance_an, fp, k_exp) {
   let to_grid = { ren: 0.0, nren: 0.0 };
   let fpA = fp.filter(fpi => fpi.step === 'A');
   let fpB = fp.filter(fpi => fpi.step === 'B');
-  let fpAnEPB = fpA.filter(fpi => fpi.uso === 'to_nEPB');
-  let fpAgrid = fpA.filter(fpi => fpi.uso === 'to_grid');
-  let fpBnEPB = fpB.filter(fpi => fpi.uso === 'to_nEPB');
-  let fpBgrid = fpB.filter(fpi => fpi.uso === 'to_grid');
+  let fpAnEPB = fpA.filter(fpi => fpi.use === 'to_nEPB');
+  let fpAgrid = fpA.filter(fpi => fpi.use === 'to_grid');
+  let fpBnEPB = fpB.filter(fpi => fpi.use === 'to_nEPB');
+  let fpBgrid = fpB.filter(fpi => fpi.use === 'to_grid');
 
   Object.keys(cr_balance_an).map(
     source => {
       let destinations = cr_balance_an[source];
       if (destinations.hasOwnProperty('to_nEPB')) {
-        let fpA_tmp = fpAnEPB.find(fpi => fpi.fuente === source) || 0.0;
-        let fpB_tmp = fpBnEPB.find(fpi => fpi.fuente === source) || 0.0;
+        let fpA_tmp = fpAnEPB.find(fpi => fpi.source === source) || 0.0;
+        let fpB_tmp = fpBnEPB.find(fpi => fpi.source === source) || 0.0;
         to_nEPB = { ren: to_nEPB.ren + (fpB_tmp.fren - fpA_tmp.fren) * destinations.to_nEPB,
                     nren: to_nEPB.nren + (fpB_tmp.fnren - fpA_tmp.fnren) * destinations.to_nEPB };
       }
       if (destinations.hasOwnProperty('to_grid')) {
-        let fpA_tmp = fpAgrid.find(fpi => fpi.fuente === source) || 0.0;
-        let fpB_tmp = fpBgrid.find(fpi => fpi.fuente === source) || 0.0;
+        let fpA_tmp = fpAgrid.find(fpi => fpi.source === source) || 0.0;
+        let fpB_tmp = fpBgrid.find(fpi => fpi.source === source) || 0.0;
         to_grid = { ren: to_grid.ren + (fpB_tmp.fren - fpA_tmp.fren) * destinations.to_grid,
                     nren: to_grid.nren + (fpB_tmp.fnren - fpA_tmp.fnren) * destinations.to_grid };
       }
