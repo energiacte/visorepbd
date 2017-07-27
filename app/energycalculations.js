@@ -374,88 +374,90 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
   const E_exp_cr_t = vecvecdif(E_pr_cr_t, E_pr_cr_used_EPus_t);
 
   // Exported energy by production origin for each time step, weigthing done by produced energy
-  const F_exp_t = E_pr_cr_t.map((E_pr_cr_ti, ii) => E_pr_cr_ti === 0 ? 0 : E_exp_cr_t[ii] / E_pr_cr_ti);
+  const F_exp_cr_t = E_pr_cr_t.map((E_pr_cr_ti, ii) => E_pr_cr_ti === 0 ? 0 : E_exp_cr_t[ii] / E_pr_cr_ti);
   const E_exp_cr_t_byorigin = VALIDORIGINS
     .reduce((obj, origin) => {
-      obj[origin] = vecvecmul(E_pr_cr_t_byorigin[origin], F_exp_t);
+      obj[origin] = vecvecmul(E_pr_cr_t_byorigin[origin], F_exp_cr_t);
       return obj;
     }, {});
 
   // Exported (electric) energy used for non-EPB uses for each time step (formula 26)
   const E_exp_cr_used_nEPus_t = vecvecmin(E_exp_cr_t, E_nEPus_cr_t);
   // Exported energy used for non-EPB services for each time step, by origin, weighting done by exported energy
-  const F_exp_used_nEPus_t = E_exp_cr_t.map(
+  const F_exp_cr_used_nEPus_t = E_exp_cr_t.map(
     (E_exp_cr_ti, i) => { return E_exp_cr_ti === 0 ? 0 : E_exp_cr_used_nEPus_t[i] / E_exp_cr_ti; }
   );
   const E_exp_cr_used_nEPus_t_byorigin = VALIDORIGINS
     .reduce((obj, origin) => {
-      obj[origin] = vecvecmul(E_exp_cr_t_byorigin[origin], F_exp_used_nEPus_t);
+      obj[origin] = vecvecmul(E_exp_cr_t_byorigin[origin], F_exp_cr_used_nEPus_t);
       return obj;
     }, {});
 
   // Exported energy not used for any service for each time step (formula 27)
   // Note: this is later affected by k_rdel for redelivery and k_exp for exporting
-  const E_exp_nused_t = vecvecdif(E_exp_cr_t, E_exp_cr_used_nEPus_t);
+  const E_exp_cr_nused_t = vecvecdif(E_exp_cr_t, E_exp_cr_used_nEPus_t);
   // Exported energy not used for any service for each time step, by origin, weighting done by exported energy
-  const F_exp_nused_t = E_exp_cr_t.map((E_exp_cr_ti, i) => { return E_exp_cr_ti === 0 ? 0 : E_exp_nused_t[i] / E_exp_cr_ti; });
-  const E_exp_nused_t_byorigin = VALIDORIGINS
+  const F_exp_cr_nused_t = E_exp_cr_t.map(
+    (E_exp_cr_ti, i) => { return E_exp_cr_ti === 0 ? 0 : E_exp_cr_nused_t[i] / E_exp_cr_ti; }
+  );
+  const E_exp_cr_nused_t_byorigin = VALIDORIGINS
     .reduce((obj, origin) => {
-      obj[origin] = vecvecmul(E_exp_cr_t_byorigin[origin], F_exp_nused_t);
+      obj[origin] = vecvecmul(E_exp_cr_t_byorigin[origin], F_exp_cr_nused_t);
       return obj;
     }, {});
 
   // Annual exported energy not used for any service (formula 28)
-  const E_exp_nused_an = E_exp_nused_t.reduce((a, b) => a + b, 0);
+  const E_exp_cr_nused_an = E_exp_cr_nused_t.reduce((a, b) => a + b, 0);
 
   // Delivered (electric) energy for each time step (formula 29)
-  const E_del_t = vecvecdif(E_EPus_cr_t, E_pr_cr_used_EPus_t);
+  const E_del_cr_t = vecvecdif(E_EPus_cr_t, E_pr_cr_used_EPus_t);
   // Annual delivered (electric) energy for EPB uses (formula 30)
-  const E_del_an = E_del_t.reduce((a, b) => a + b, 0);
+  const E_del_cr_an = E_del_cr_t.reduce((a, b) => a + b, 0);
 
   // Annual temporary exported (electric) energy (formula 31)
-  const E_exp_cr_tmp_an = Math.min(E_exp_nused_an, E_del_an);
+  const E_exp_cr_tmp_an = Math.min(E_exp_cr_nused_an, E_del_cr_an);
 
   // Temporary exported energy for each time step (formula 32)
-  // E_exp_cr_tmp_t = np.zeros(numsteps) if (E_exp_nused_an == 0) else E_exp_cr_tmp_an * E_exp_nused_t / E_exp_nused_an // not used
+  // E_exp_cr_tmp_t = np.zeros(numsteps) if (E_exp_cr_nused_an == 0) else E_exp_cr_tmp_an * E_exp_cr_nused_t / E_exp_cr_nused_an // not used
 
   // Redelivered energy for each time step (formula 33)
-  const E_del_rdel_t = E_del_t.map(E_del_ti => E_del_an === 0 ? 0 : E_exp_cr_tmp_an * E_del_ti / E_del_an);
+  const E_del_rdel_t = E_del_cr_t.map(E_del_cr_ti => E_del_cr_an === 0 ? 0 : E_exp_cr_tmp_an * E_del_cr_ti / E_del_cr_an);
 
   // Annual redelivered energy
   // E_del_rdel_an = E_del_rdel_t.reduce((a, b) => a + b, 0) // not used
 
   // Exported (electric) energy to the grid for each time step (formula 34)
-  // E_exp_grid_t = vecdif(E_exp_nused_t, E_exp_cr_tmp_t) // not used
+  // E_exp_grid_t = vecdif(E_exp_cr_nused_t, E_exp_cr_tmp_t) // not used
 
   // Annual exported (electric) energy to the grid (formula 35)
-  const E_exp_grid_an = E_exp_nused_an - E_exp_cr_tmp_an;
+  const E_exp_cr_grid_an = E_exp_cr_nused_an - E_exp_cr_tmp_an;
   // Energy exported to grid, by origin, weighting done by exported and not used energy
-  const F_exp_grid_an = E_exp_nused_an === 0 ? 0 : E_exp_grid_an / E_exp_nused_an;
-  const E_exp_grid_t_byorigin = VALIDORIGINS
+  const F_exp_cr_grid_an = E_exp_cr_nused_an === 0 ? 0 : E_exp_cr_grid_an / E_exp_cr_nused_an;
+  const E_exp_cr_grid_t_byorigin = VALIDORIGINS
     .reduce((obj, origin) => {
-      obj[origin] = veckmul(E_exp_nused_t_byorigin[origin], F_exp_grid_an);
+      obj[origin] = veckmul(E_exp_cr_nused_t_byorigin[origin], F_exp_cr_grid_an);
       return obj;
     }, {});
 
   // (Electric) energy delivered by the grid for each time step (formula 36)
-  // E_del_grid_t = vecdif(E_del_t, E_del_rdel_t)  // not used
+  // E_del_grid_t = vecdif(E_del_cr_t, E_del_rdel_t)  // not used
 
   // Annual (electric) energy delivered by the grid (formula 37)
-  // E_del_grid_an = E_del_an - E_del_rdel_an // not used
+  // E_del_grid_an = E_del_cr_an - E_del_rdel_an // not used
 
   // Corrected delivered energy for each time step (formula 38)
-  const E_del_t_corr = E_del_t.map((E_del_ti, i) => { return E_del_ti - k_rdel * E_del_rdel_t[i]; });
+  const E_del_cr_t_corr = E_del_cr_t.map((E_del_cr_ti, i) => { return E_del_cr_ti - k_rdel * E_del_rdel_t[i]; });
 
   // Corrected temporary exported energy (formula 39)
   // E_exp_cr_tmp_t_corr = [E_exp_cr_tmp_ti * (1 - k_rdel) for E_exp_cr_tmp_ti in E_exp_cr_tmp_t] // not used
 
-  let balance_t = { grid: { input: E_del_t_corr } };
+  let balance_t = { grid: { input: E_del_cr_t_corr } };
 
   VALIDORIGINS.map(origin => {
     balance_t[origin] = {
       input: E_pr_cr_t_byorigin[origin],
       to_nEPB: E_exp_cr_used_nEPus_t_byorigin[origin],
-      to_grid: E_exp_grid_t_byorigin[origin]
+      to_grid: E_exp_cr_grid_t_byorigin[origin]
     };
   });
 
