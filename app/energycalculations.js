@@ -344,7 +344,7 @@ const VALIDORIGINS = ['INSITU', 'COGENERACION'];
 //    Returns:
 //
 //    balance = { 'grid':
-//                   { 'input': value },
+//                   { 'input': [ v1, ..., vn ] },
 //                'INSITU':
 //                    { 'input': [ va1, ..., van ],
 //                      'to_nEPB': [ vb1, ..., vbn ],
@@ -456,7 +456,7 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
   return balance_t;
 }
 
-// Calculate annual energy balance for carrier from timestep balance
+// Calculate annual energy balance for a carrier from its timestep balance
 //
 //    Returns:
 //
@@ -474,7 +474,7 @@ function balance_an_forcarrier(balance_t) {
         use => {
           let sumforuse = balance_t_byorigin[use].reduce((a, b) => a + b, 0);
           if (!balance_an.hasOwnProperty(origin)) { balance_an[origin] = {}; }
-          if (Math.abs(sumforuse) > 0.01) { // exclude smallish values
+          if (Math.abs(sumforuse) > 0.001) { // exclude smallish values
             balance_an[origin][use] = sumforuse;
           }
         }
@@ -499,7 +499,7 @@ function delivered_weighted_energy_stepA(cr_balance_an, fp) {
     source => {
       let origins = cr_balance_an[source];
       if (origins.hasOwnProperty('input')) {
-        let factor_paso_A = fpA.filter(fpi => fpi.fuente === source)[0];
+        let factor_paso_A = fpA.find(fpi => fpi.fuente === source);
         delivered_wenergy_stepA = { ren: delivered_wenergy_stepA.ren + factor_paso_A.fren * origins.input,
                                     nren: delivered_wenergy_stepA.nren + factor_paso_A.fnren * origins.input };
       }
@@ -515,21 +515,21 @@ function delivered_weighted_energy_stepA(cr_balance_an, fp) {
 // This function returns a data structure with keys 'ren' and 'nren' corresponding
 // to the renewable and not renewable share of this weighted energy (step A).
 function exported_weighted_energy_stepA(cr_balance_an, fpA) {
-  let to_nEPB = { ren: 0.0, nren: 0.0 },
-      to_grid = { ren: 0.0, nren: 0.0 };
-  let fpAnEPB = fpA.filter(fpi => fpi.uso === 'to_nEPB'),
-      fpAgrid = fpA.filter(fpi => fpi.uso === 'to_grid');
+  let to_nEPB = { ren: 0.0, nren: 0.0 };
+  let to_grid = { ren: 0.0, nren: 0.0 };
+  let fpAnEPB = fpA.filter(fpi => fpi.uso === 'to_nEPB');
+  let fpAgrid = fpA.filter(fpi => fpi.uso === 'to_grid');
   Object.keys(cr_balance_an).map(
     source => {
       let destinations = cr_balance_an[source];
       if (destinations.hasOwnProperty('to_nEPB')) {
-        let fp_tmp = fpAnEPB.filter(fpi => fpi.fuente === source)[0] || 0.0;
+        let fp_tmp = fpAnEPB.find(fpi => fpi.fuente === source) || 0.0;
         to_nEPB = { ren: to_nEPB.ren + fp_tmp.fren * destinations.to_nEPB,
                     nren: to_nEPB.nren + fp_tmp.fnren * destinations.to_nEPB };
       }
 
       if (destinations.hasOwnProperty('to_grid')) {
-        let fp_tmp = fpAgrid.filter(fpi => fpi.fuente === source)[0] || 0.0;
+        let fp_tmp = fpAgrid.find(fpi => fpi.fuente === source) || 0.0;
         to_grid = { ren: to_grid.ren + fp_tmp.fren * destinations.to_grid,
                     nren: to_grid.nren + fp_tmp.fnren * destinations.to_grid };
       }
@@ -561,14 +561,14 @@ function gridsavings_stepB(cr_balance_an, fp, k_exp) {
     source => {
       let destinations = cr_balance_an[source];
       if (destinations.hasOwnProperty('to_nEPB')) {
-        let fpA_tmp = fpAnEPB.filter(fpi => fpi.fuente === source)[0] || 0.0,
-            fpB_tmp = fpBnEPB.filter(fpi => fpi.fuente === source)[0] || 0.0;
+        let fpA_tmp = fpAnEPB.find(fpi => fpi.fuente === source) || 0.0;
+        let fpB_tmp = fpBnEPB.find(fpi => fpi.fuente === source) || 0.0;
         to_nEPB = { ren: to_nEPB.ren + (fpB_tmp.fren - fpA_tmp.fren) * destinations.to_nEPB,
                     nren: to_nEPB.nren + (fpB_tmp.fnren - fpA_tmp.fnren) * destinations.to_nEPB };
       }
       if (destinations.hasOwnProperty('to_grid')) {
-        let fpA_tmp = fpAgrid.filter(fpi => fpi.fuente === source)[0] || 0.0,
-            fpB_tmp = fpBgrid.filter(fpi => fpi.fuente === source)[0] || 0.0;
+        let fpA_tmp = fpAgrid.find(fpi => fpi.fuente === source) || 0.0;
+        let fpB_tmp = fpBgrid.find(fpi => fpi.fuente === source) || 0.0;
         to_grid = { ren: to_grid.ren + (fpB_tmp.fren - fpA_tmp.fren) * destinations.to_grid,
                     nren: to_grid.nren + (fpB_tmp.fnren - fpA_tmp.fnren) * destinations.to_grid };
       }
@@ -601,7 +601,7 @@ function gridsavings_stepB(cr_balance_an, fp, k_exp) {
 //
 // Returns:
 //
-//        balance[carrier] = { 'timestep': { 'grid': { 'input': value },
+//        balance[carrier] = { 'timestep': { 'grid': { 'input': [ v1, ..., vn ] },
 //                                           'INSITU': { 'input': [ va1, ..., van ],
 //                                                       'to_nEPB': [ vb1, ..., vbn ],
 //                                                       'to_grid': [ vc1, ..., vcn ]
@@ -649,8 +649,8 @@ export function compute_balance(carrierlist, k_rdel) {
   let balance = {};
   Object.keys(data).map(carrier => {
     let bal_t = balance_t_forcarrier(data[carrier], k_rdel);
-    balance[carrier] = { timestep: bal_t,
-                         annual: balance_an_forcarrier(bal_t) };
+    let bal_an = balance_an_forcarrier(bal_t);
+    balance[carrier] = { timestep: bal_t, annual: bal_an };
   });
   return balance;
 }
