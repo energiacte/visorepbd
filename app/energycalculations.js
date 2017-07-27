@@ -445,7 +445,7 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
   // Corrected temporary exported energy (formula 39)
   // E_exp_tmp_t_corr = [E_exp_tmp_ti * (1 - k_rdel) for E_exp_tmp_ti in E_exp_tmp_t] // not used
 
-  let balance_t = { grid: { input: E_del_t_corr.reduce((a, b) => a + b, 0) } }; // Scalar
+  let balance_t = { grid: { input: E_del_t_corr } };
 
   VALIDORIGINS.map(origin => {
     balance_t[origin] = { input: E_pr_t_byorigin[origin],
@@ -472,12 +472,7 @@ function balance_an_forcarrier(balance_t) {
       let balance_t_byorigin = balance_t[origin];
       Object.keys(balance_t_byorigin).map(
         use => {
-          let sumforuse = 0.0;
-          if (origin === 'grid' && use === 'input') { // we have a scalar
-            sumforuse = balance_t_byorigin[use];
-          } else { // we have a list
-            sumforuse = balance_t_byorigin[use].reduce((a, b) => a + b, 0);
-          }
+          let sumforuse = balance_t_byorigin[use].reduce((a, b) => a + b, 0);
           if (!balance_an.hasOwnProperty(origin)) { balance_an[origin] = {}; }
           if (Math.abs(sumforuse) > 0.01) { // exclude smallish values
             balance_an[origin][use] = sumforuse;
