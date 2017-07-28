@@ -32,6 +32,7 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
 // building code regulations (Código Técnico de la Edificación CTE).
 //
 // Weighting factors are based on primary energy use.
+// Weighting factors are considered constant through timesteps
 // ---------------------------------------------------------------------------------------------------------
 
 export const K_EXP = 0.0;
@@ -179,6 +180,9 @@ function vecvecmul(vec1, vec2) {
 function veckmul(vec1, k) {
   return vec1.map(v => v * k);
 }
+
+// Sum all elements in a vector
+const vecsum = vec => vec.reduce((a, b) => a + b, 0);
 
 
 // -----------------------------------------------------------------------------------
@@ -407,12 +411,12 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
     }, {});
 
   // Annual exported energy not used for any service (formula 28)
-  const E_exp_cr_nused_an = E_exp_cr_nused_t.reduce((a, b) => a + b, 0);
+  const E_exp_cr_nused_an = vecsum(E_exp_cr_nused_t);
 
   // Delivered (electric) energy for each time step (formula 29)
   const E_del_cr_t = vecvecdif(E_EPus_cr_t, E_pr_cr_used_EPus_t);
   // Annual delivered (electric) energy for EPB uses (formula 30)
-  const E_del_cr_an = E_del_cr_t.reduce((a, b) => a + b, 0);
+  const E_del_cr_an = vecsum(E_del_cr_t);
 
   // Annual temporary exported (electric) energy (formula 31)
   const E_exp_cr_tmp_an = Math.min(E_exp_cr_nused_an, E_del_cr_an);
@@ -480,7 +484,7 @@ function balance_an_forcarrier(balance_t) {
       let balance_t_byorigin = balance_t[origin];
       Object.keys(balance_t_byorigin).map(
         use => {
-          let sumforuse = balance_t_byorigin[use].reduce((a, b) => a + b, 0);
+          let sumforuse = vecsum(balance_t_byorigin[use]);
           if (!balance_an.hasOwnProperty(origin)) { balance_an[origin] = {}; }
           if (Math.abs(sumforuse) > 0.001) { // exclude smallish values
             balance_an[origin][use] = sumforuse;
