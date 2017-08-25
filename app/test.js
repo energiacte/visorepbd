@@ -37,7 +37,9 @@ ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
 GASNATURAL, grid, input,A, 0.0, 1.1
 BIOCARBURANTE, grid, input, A, 1.1, 0.1
-MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0`);
+MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
+MEDIOAMBIENTE, grid, input,  A, 1.0, 0.0
+`);
 
 const TESTFPJ7 = readfactors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, grid, input, A, 0.5, 2.0
@@ -77,6 +79,7 @@ GASNATURAL, grid, input,A, 0.0, 1.1
 BIOCARBURANTE, grid, input, A, 1.1, 0.1
 
 MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
+MEDIOAMBIENTE, grid, input,  A, 1.0, 0.0
 
 ELECTRICIDAD, COGENERACION, input,   A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 0.0, 2.5
@@ -110,6 +113,7 @@ CARBON, grid, input, A, 0.002, 1.082
 BIOCARBURANTE, grid, input, A, 1.028, 0.085 #BIOMASA DENSIFICADA (PELLETS)
 
 MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
+MEDIOAMBIENTE, grid, input,  A, 1.0, 0.0
 
 ELECTRICIDAD, COGENERACION, input,   A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 1.0, 0.0
