@@ -304,6 +304,11 @@ check('3 PV BdC_normativo_from_data',
       epfromdata(ENERGYDATALIST, TESTKRDEL, TESTKEXP, CTEFP),
       { EP: { ren: 177.5, nren: 39.6 } });
 
+check('J9 electricity monthly krdel=0.0, kexp=1.0',
+      epfromfile('ejemploJ9_electr.csv', 0, 1, TESTFPJ9),
+      { EP: { ren: 1386.0, nren: -662.0 }, EPpasoA: { ren: 1010, nren: 842 } }, true);
+
+// TODO: Sin ejemplos de factor de coincidencia de cargas f_match
 // ---------------------------------------------------------------
 
 // console.log(TESTFP);
