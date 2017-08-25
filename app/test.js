@@ -309,10 +309,6 @@ check('6 K3',
       epfromfile('ejemplo6K3.csv', TESTKRDEL, TESTKEXP, TESTFP),
       { EP: { ren: 1385.5, nren: -662 } });
 
-check('6 K3_normativo',
-      epfromfile('ejemplo6K3.csv', TESTKRDEL, TESTKEXP, CTEFP),
-      { EP: { ren: 1385.5, nren: -662 } });
-
 check('3 PV BdC_normativo_from_data',
       epfromdata(ENERGYDATALIST, TESTKRDEL, TESTKEXP, CTEFP),
       { EP: { ren: 177.5, nren: 39.6 } });
