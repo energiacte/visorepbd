@@ -54,6 +54,14 @@ ELECTRICIDAD, COGENERACION, input, A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 2.27, 0.23
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0`);
 
+const TESTFPJ9 = readfactors(`vector, fuente, uso, step, ren, nren
+ELECTRICIDAD, grid, input, A, 0.5, 2.0
+ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
+ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
+ELECTRICIDAD, INSITU, to_nEPB, A, 1.0, 0.0
+ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
+ELECTRICIDAD, INSITU, to_nEPB, B, 0.5, 2.0`);
+
 const TESTFP = readfactors(`vector, fuente, uso, step, ren, nren
 
 ELECTRICIDAD, grid, input, A, 0.5, 2.0
