@@ -15,7 +15,6 @@ const initialState = {
   },
   selectedkey: 0, // Currently selected component
   kexp: 0.0,
-  krdel: 0.0,
   area: 1,
   wfactors: FACTORESDEPASO,
   components: [ // Energy components array (ejemplo3PVBdC.csv)

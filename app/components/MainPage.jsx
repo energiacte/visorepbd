@@ -11,7 +11,6 @@ import Footer from 'components/Footer';
 import { saveenergystring } from '../energycalculations.js';
 
 import { changeKexp,
-         changeKrdel,
          changeArea,
          addEnergyComponent,
          removeEnergyComponent,
@@ -28,15 +27,15 @@ class MainPage extends React.Component {
 
   // Carga datos desde API al cambiar las propiedades (y antes de renderizar hijos)
   componentWillReceiveProps(nextProps) {
-    const { kexp, krdel, area, components } = this.props;
+    const { kexp, area, components } = this.props;
     const np = nextProps;
-    if ((kexp !== np.kexp) || (krdel !== np.krdel) || (area !== np.area) || (components !== np.components)) {
+    if ((kexp !== np.kexp) || (area !== np.area) || (components !== np.components)) {
       this.props.dispatch(computeEnergy());
     }
   }
 
   render() {
-    const { kexp, krdel, area, selectedkey, components, storedcomponent,
+    const { kexp, area, selectedkey, components, storedcomponent,
             data, dispatch } = this.props;
     return (
       <div>
@@ -45,15 +44,12 @@ class MainPage extends React.Component {
           <ChartsContainer
               width="100%" height="200px"
               kexp={ kexp }
-              krdel={ krdel }
               data={ data }
           />
           <GlobalVarsControl
               kexp={ kexp }
-              krdel={ krdel }
               area={ area }
               onChangeKexp={ value => dispatch(changeKexp(value)) }
-              onChangeKrdel={ value => dispatch(changeKrdel(value)) }
               onChangeArea={ value => dispatch(changeArea(value)) } />
           <EnergyComponentEditor
               selectedkey = { selectedkey }
@@ -66,7 +62,6 @@ class MainPage extends React.Component {
                   dispatch(loadEnergyComponents(components));
                   dispatch(changeArea(meta.Area_ref || 1.0));
                   dispatch(changeKexp(meta.kexp || kexp));
-                  dispatch(changeKrdel(meta.krdel || krdel));
                 }
                      }
               onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
@@ -86,8 +81,8 @@ class MainPage extends React.Component {
   }
 
   getEnergyString() {
-    const { kexp, krdel, area, components, wfactors } = this.props;
-    const meta = { area , kexp, krdel };
+    const { kexp, area, components, wfactors } = this.props;
+    const meta = { area, kexp };
     const energystring = saveenergystring(components, meta);
     return energystring;
   }
@@ -96,7 +91,6 @@ class MainPage extends React.Component {
 export default MainPage = connect(state => {
   return {
     kexp: state.kexp,
-    krdel: state.krdel,
     area: state.area,
     data: state.data,
     storedcomponent: state.storedcomponent,

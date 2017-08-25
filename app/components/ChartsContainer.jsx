@@ -18,17 +18,15 @@ export default class ChartsContainer extends React.Component {
   static defaultProps = { width: '50%', height: '200px' }
 
   render() {
-    const { width, height, kexp, krdel, data } = this.props;
+    const { width, height, kexp, data } = this.props;
     const { min, max } = datalimits(data);
     return (
       <div style={ { width: width,
                      height: height } }>
         <IChartA kexp={ kexp }
-                 krdel={ krdel }
                  data={ data }
                  max={ max } min={ min } />
         <IChartAB kexp={ kexp }
-                  krdel={ krdel }
                   data={ data }
                   max={ max } min={ min } />
       </div>);

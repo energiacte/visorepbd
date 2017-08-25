@@ -316,8 +316,7 @@ export function saveenergystring(carrierdata, meta) {
     `#CTE_Name: EPBDpanel`,
     `#CTE_Datetime: ${ new Date().toLocaleString() }`,
     `#CTE_Area_ref: ${ meta.area.toFixed(1) }`,
-    `#CTE_kexp: ${ meta.kexp.toFixed(2) }`,
-    `#CTE_krdel: ${ meta.krdel.toFixed(2) }`
+    `#CTE_kexp: ${ meta.kexp.toFixed(2) }`
   ];
   const carrierlines = carrierdata
         .filter(cc => cc.active)

@@ -10,7 +10,6 @@ export const REMOVE_ENERGY_COMPONENT = 'REMOVE_ENERGY_COMPONENT';
 export const EDIT_ENERGY_COMPONENT = 'EDIT_ENERGY_COMPONENT';
 export const LOAD_ENERGY_COMPONENTS = 'LOAD_ENERGY_COMPONENTS';
 export const CHANGE_KEXP = 'CHANGE_KEXP';
-export const CHANGE_KRDEL = 'CHANGE_KRDEL';
 export const CHANGE_AREA = 'CHANGE_AREA';
 export const CHANGE_CURRENTFILENAME = 'CHANGE_CURRENTFILENAME';
 export const EDIT_WFACTORS = 'EDIT_WFACTORS';
@@ -44,10 +43,6 @@ export function changeKexp(value) {
   return { type: CHANGE_KEXP, value };
 }
 
-export function changeKrdel(value) {
-  return { type: CHANGE_KRDEL, value };
-}
-
 export function changeArea(value) {
   return { type: CHANGE_AREA, value };
 }
@@ -69,7 +64,7 @@ export function deliverEnergy(newdata) {
 export function computeEnergy() {
   // this async action also reads state
   return (dispatch, getState) => {
-    const { kexp, krdel, area, components, wfactors } = getState();
+    const { kexp, area, components, wfactors } = getState();
     const activecomponents = components.filter(component => component.active);
     const data = parse_carrier_list(activecomponents);
     const res = ep2dict(energy_performance(data, wfactors, kexp),

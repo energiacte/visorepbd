@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 export default class GlobalVarsControl extends React.Component {
 
   render() {
-    const { kexp, krdel, area, onChangeKexp, onChangeKrdel, onChangeArea } = this.props;
+    const { kexp, area, onChangeKexp, onChangeArea } = this.props;
 
     return (
       <div id="globalvarscontrol" className="form-horizontal bg-primary col-md-12">
@@ -17,16 +17,6 @@ export default class GlobalVarsControl extends React.Component {
                  onChange={ e => onChangeKexp(e.target.value) } />
           <input type="text" readOnly maxLength="3" size="3"
                  value={ kexp.toFixed(1) } />
-        </div>
-        <div id="krdel" className="form-group col-md-3">
-          <label className="control-label" htmlFor="krdelrange">k<sub>rdel</sub> </label>
-          <input type="range" min="0" max="1" step="0.1"
-                 name="krdelrange"
-                 className="form-control"
-                 defaultValue={ krdel }
-                 onChange={ e => onChangeKrdel(e.target.value) } />
-          <input type="text" readOnly maxLength="3" size="3"
-                 value={ krdel.toFixed(1) } />
         </div>
         <div className="form-group col-md-3" />
         <div id="area" className="form-group col-md-3">

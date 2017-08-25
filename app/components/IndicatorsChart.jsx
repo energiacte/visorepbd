@@ -38,7 +38,7 @@ export class IChartA extends React.Component {
   }
 
   drawChart(props) {
-    const { kexp, krdel, data } = props;
+    const { kexp, data } = props;
 
     const cData = buildDataA(data);
 
@@ -52,8 +52,7 @@ export class IChartA extends React.Component {
 
     // Subtitle
     svg.select('text#subtitle')
-       .text('kexp: ' + kexp.toFixed(1) +
-             ', krdel: ' + krdel.toFixed(1));
+       .text('kexp: ' + kexp.toFixed(1));
     // Subsubtitle
     svg.select('text#subsubtitle')
        .html('RER: ' + data.EPArer.toFixed(2));
@@ -147,7 +146,7 @@ export class IChartAB extends React.Component {
   }
 
   drawChart(props) {
-    const { kexp, krdel, data } = props;
+    const { kexp, data } = props;
 
     const cData = buildDataAB(data);
 
@@ -161,8 +160,7 @@ export class IChartAB extends React.Component {
 
     // Subtitle
     svg.select('text#subtitle')
-       .text('kexp: ' + kexp.toFixed(1) +
-             ', krdel: ' + krdel.toFixed(1));
+       .text('kexp: ' + kexp.toFixed(1));
     // Subsubtitle
     svg.select('text#subsubtitle')
        .html('RER: ' + data.EPrer.toFixed(2));
@@ -174,7 +172,7 @@ export class IChartAB extends React.Component {
     // Tooltips
     svg.selectAll('text.ylabel').remove();
     const s = chart.series[0];
-    s.shapes.each(function(d) {
+    s.shapes.each(function (d) {
       const rect = this; // Get the shape as a d3 selection
       const rx = parseFloat(rect.x.animVal.value);
       const rwidth = parseFloat(rect.width.animVal.value);

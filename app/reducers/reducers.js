@@ -5,7 +5,6 @@ import { SELECT_ENERGY_COMPONENT,
          EDIT_ENERGY_COMPONENT,
          LOAD_ENERGY_COMPONENTS,
          CHANGE_KEXP,
-         CHANGE_KRDEL,
          CHANGE_AREA,
          EDIT_WFACTORS,
          RECEIVE_ENERGYDATA,
@@ -39,15 +38,6 @@ function selectedkey(state = null, action) {
 function kexp(state = 1, action) {
   switch (action.type) {
   case CHANGE_KEXP:
-    return Number(action.value);
-  default:
-    return state;
-  }
-}
-
-function krdel(state = 1, action) {
-  switch (action.type) {
-  case CHANGE_KRDEL:
     return Number(action.value);
   default:
     return state;
@@ -128,7 +118,6 @@ function data(state = {}, action) {
 //     storedcomponent: storedcomponent(state.storedcomponent, action),
 //     selectedkey: selectedkey(state.selectedkey, action),
 //     kexp: kexp(state.kexp, action),
-//     krdel: krdel(state.krdel, action),
 //     components: components(state.components, action),
 //     data: data(state, action)
 //   };
@@ -140,7 +129,6 @@ export default combineReducers({
   storedcomponent,
   selectedkey,
   kexp,
-  krdel,
   area,
   wfactors,
   components,
