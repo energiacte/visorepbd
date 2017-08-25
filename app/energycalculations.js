@@ -687,7 +687,7 @@ export function parse_carrier_list(carrierlist) {
 //    }
 //    where timestep and annual are the timestep and annual
 //    balanced values for carrier.
-export function weighted_energy(data, fp, k_exp, k_rdel) {
+export function energy_performance(data, fp, k_exp, k_rdel) {
   let EPA = { ren: 0.0, nren: 0.0 };
   let EPB = { ren: 0.0, nren: 0.0 };
 
@@ -704,7 +704,7 @@ export function weighted_energy(data, fp, k_exp, k_rdel) {
       let exported_wenergy_stepA = exported_weighted_energy_stepA(cr_balance_an, fp_cr);
       let gsavings_stepB = gridsavings_stepB(cr_balance_an, fp_cr, k_exp);
 
-      // XXX: esto es una suma en lugar de una resta. Ver 11.6.2.2. (23)
+      // XXX: esto no parece correcto. Ver 11.6.2.2. (23)
       let weighted_energy_stepA = { ren: delivered_wenergy_stepA.ren - exported_wenergy_stepA.ren,
                                     nren: delivered_wenergy_stepA.nren - exported_wenergy_stepA.nren };
       let weighted_energy_stepAB = { ren: weighted_energy_stepA.ren - gsavings_stepB.ren,
