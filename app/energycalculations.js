@@ -246,6 +246,52 @@ export function readenergystring(datastring) {
   return { components, meta };
 }
 
+// Parse carrier data list and generate data object from it
+// Add all values of vectors with the same carrier ctype and originoruse
+// datadict[carrier][ctype][originoruse] -> values as np.array with length=numsteps
+//
+// carrierlist: list of energy carrier data
+//
+//        [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
+//          {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
+//          ... ]
+//
+//        where:
+//
+//            * carrier is an energy carrier
+//            * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
+//            * originoruse defines:
+//              - the energy origin for produced energy (INSITU or COGENERACION)
+//              - the energy end use (EPB or NEPB) for delivered energy
+//            * values is a list of energy values, one for each timestep
+//            * comment is a comment string for the vector
+export function parse_carrier_list(carrierlist) {
+  const numsteps = Math.max(...carrierlist.map(datum => datum.values.length));
+
+  let data = {};
+  carrierlist.forEach(
+    (datum, ii) => {
+      const { carrier, ctype, originoruse } = datum;
+      const values = datum.values.map(value => parseFloat(value));
+
+      if (values.length !== numsteps) {
+        throw new UserException(`All input must have the same number of timesteps.
+                                Problem found in line ${ ii + 1 }: \t${ datum }`);
+      }
+      if (!data.hasOwnProperty(carrier)) {
+        data[carrier] = { CONSUMO: { EPB: new Array(numsteps).fill(0.0),
+                                     NEPB: new Array(numsteps).fill(0.0) },
+                          PRODUCCION: { INSITU: new Array(numsteps).fill(0.0),
+                                        COGENERACION: new Array(numsteps).fill(0.0) }
+                         };
+      }
+      data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
+    }
+  );
+  return data;
+}
+
+
 // Save energy data and metadata to string
 export function saveenergystring(carrierdata, meta) {
   const metalines = [
@@ -329,9 +375,6 @@ export function ep2dict(EP, area = 1.0) {
 // Origin for produced energy must be either 'INSITU' or 'COGENERACION'
 const VALIDORIGINS = ['INSITU', 'COGENERACION'];
 
-// ///////////// ByCarrier timestep and annual computations ////////////
-
-// Calculate timestep energy balance for carrier
 // Calculate timestep and annual energy balance for carrier
 //
 //
@@ -585,52 +628,6 @@ function gridsavings_stepB(cr_balance_an, fp, k_exp) {
     }
   );
   return { ren: k_exp * (to_nEPB.ren + to_grid.ren), nren: k_exp * (to_nEPB.nren + to_grid.nren) };
-}
-
-//////////////////// Global functions ///////////////////////
-
-// Add all values of vectors with the same carrier ctype and originoruse
-// datadict[carrier][ctype][originoruse] -> values as np.array with length=numsteps
-//
-// carrierlist: list of energy carrier data
-//
-//        [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
-//          {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
-//          ... ]
-//
-//        where:
-//
-//            * carrier is an energy carrier
-//            * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
-//            * originoruse defines:
-//              - the energy origin for produced energy (INSITU or COGENERACION)
-//              - the energy end use (EPB or NEPB) for delivered energy
-//            * values is a list of energy values, one for each timestep
-//            * comment is a comment string for the vector
-export function parse_carrier_list(carrierlist) {
-  const numsteps = Math.max(...carrierlist.map(datum => datum.values.length));
-
-  let data = {};
-  carrierlist.forEach(
-    (datum, ii) => {
-      const { carrier, ctype, originoruse } = datum;
-      const values = datum.values.map(value => parseFloat(value));
-
-      if (values.length !== numsteps) {
-        throw new UserException(`All input must have the same number of timesteps.
-                                Problem found in line ${ ii + 1 }: \t${ datum }`);
-      }
-      if (!data.hasOwnProperty(carrier)) {
-        data[carrier] = { CONSUMO: { EPB: new Array(numsteps).fill(0.0),
-                                     NEPB: new Array(numsteps).fill(0.0) },
-                          PRODUCCION: { INSITU: new Array(numsteps).fill(0.0),
-                                        COGENERACION: new Array(numsteps).fill(0.0) }
-                         };
-      }
-      data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
-    }
-  );
-  return data;
 }
 
 // Total weighted energy (step A + B) = used energy (step A) - saved energy (step B)
