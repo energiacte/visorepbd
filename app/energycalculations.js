@@ -332,6 +332,7 @@ const VALIDORIGINS = ['INSITU', 'COGENERACION'];
 // ///////////// ByCarrier timestep and annual computations ////////////
 
 // Calculate timestep energy balance for carrier
+// Calculate timestep and annual energy balance for carrier
 //
 //
 //    carrierdata: { 'CONSUMO': { 'EPB': [vi1, ..., vin],
@@ -347,29 +348,32 @@ const VALIDORIGINS = ['INSITU', 'COGENERACION'];
 //
 //    Returns:
 //
-//    balance = { 'grid':
-//                   { 'input': [ v1, ..., vn ] },
-//                'INSITU':
-//                    { 'input': [ va1, ..., van ],
-//                      'to_nEPB': [ vb1, ..., vbn ],
-//                      'to_grid': [ vc1, ..., vcn ] },
-//                'COGENERACION':
-//                    { 'input': [ va1, ..., van ],
-//                      'to_nEPB': [ vb1, ..., vbn ],
-//                      'to_grid': [ vc1, ..., vcn ] },
-//              }
+//    balance = { 'timestep': { 'grid': { 'input': [ v1, ..., vn ] },
+//                                           'INSITU': { 'input': [ va1, ..., van ],
+//                                                       'to_nEPB': [ vb1, ..., vbn ],
+//                                                       'to_grid': [ vc1, ..., vcn ]
+//                                                     },
+//                                           'COGENERACION': { 'input': [ va1, ..., van ],
+//                                                             'to_nEPB': [ vb1, ..., vbn ],
+//                                                             'to_grid': [ vc1, ..., vcn ]
+//                                                     },
+//                             }
+//                 'annual': { 'grid': valuea1,
+//                             'INSITU': valuea2,
+//                             'COGENERACION': valuea3
+//                           }
+//    }
 //
-function balance_t_forcarrier(carrierdata, k_rdel) {
+function balance_cr(carrierdata, k_rdel) {
   // Energy used by technical systems for EPB services, for each time step
   const E_EPus_cr_t = carrierdata.CONSUMO.EPB;
   // Energy used by technical systems for non-EPB services, for each time step
   const E_nEPus_cr_t = carrierdata.CONSUMO.NEPB;
-
   // (Electricity) produced on-site and inside the assessment boundary, by origin
-  const E_pr_cr_t_byorigin = carrierdata.PRODUCCION;
+  const E_pr_cr_pr_i_t = carrierdata.PRODUCCION;
 
   // (Electric) energy produced on-site and inside the assessment boundary, for each time step (formula 23)
-  const E_pr_cr_t = veclistsum(VALIDORIGINS.map(origin => E_pr_cr_t_byorigin[origin]));
+  const E_pr_cr_t = veclistsum(VALIDORIGINS.map(origin => E_pr_cr_pr_i_t[origin]));
 
   // Produced energy from all origins for EPB services for each time step (formula 24)
   const E_pr_cr_used_EPus_t = vecvecmin(E_EPus_cr_t, E_pr_cr_t);
@@ -381,7 +385,7 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
   const F_exp_cr_t = E_pr_cr_t.map((E_pr_cr_ti, ii) => E_pr_cr_ti === 0 ? 0 : E_exp_cr_t[ii] / E_pr_cr_ti);
   const E_exp_cr_t_byorigin = VALIDORIGINS
     .reduce((obj, origin) => {
-      obj[origin] = vecvecmul(E_pr_cr_t_byorigin[origin], F_exp_cr_t);
+      obj[origin] = vecvecmul(E_pr_cr_pr_i_t[origin], F_exp_cr_t);
       return obj;
     }, {});
 
@@ -459,25 +463,18 @@ function balance_t_forcarrier(carrierdata, k_rdel) {
 
   VALIDORIGINS.map(origin => {
     balance_t[origin] = {
-      input: E_pr_cr_t_byorigin[origin],
+      input: E_pr_cr_pr_i_t[origin],
       to_nEPB: E_exp_cr_used_nEPus_t_byorigin[origin],
       to_grid: E_exp_cr_grid_t_byorigin[origin]
     };
   });
 
-  return balance_t;
-}
-
-// Calculate annual energy balance for a carrier from its timestep balance
-//
-//    Returns:
-//
-//        { 'grid': value1,
-//          'INSITU': value2,
-//          'COGENERACION': value3
-//        }
-//
-function balance_an_forcarrier(balance_t) {
+  // Calculate annual energy balance for a carrier from its timestep balance
+  //
+  //        { 'grid': value1,
+  //          'INSITU': value2,
+  //          'COGENERACION': value3
+  //        }
   let balance_an = {};
   Object.keys(balance_t).map(
     origin => {
@@ -493,7 +490,8 @@ function balance_an_forcarrier(balance_t) {
       );
     }
   );
-  return balance_an;
+
+  return { timestep: balance_t, annual: balance_an };
 }
 
 // ////////////////// Step A and B partial computations ////////////////////
@@ -591,6 +589,51 @@ function gridsavings_stepB(cr_balance_an, fp, k_exp) {
 
 //////////////////// Global functions ///////////////////////
 
+// Add all values of vectors with the same carrier ctype and originoruse
+// datadict[carrier][ctype][originoruse] -> values as np.array with length=numsteps
+//
+// carrierlist: list of energy carrier data
+//
+//        [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
+//          {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
+//          ... ]
+//
+//        where:
+//
+//            * carrier is an energy carrier
+//            * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
+//            * originoruse defines:
+//              - the energy origin for produced energy (INSITU or COGENERACION)
+//              - the energy end use (EPB or NEPB) for delivered energy
+//            * values is a list of energy values, one for each timestep
+//            * comment is a comment string for the vector
+export function parse_carrier_list(carrierlist) {
+  const numsteps = Math.max(...carrierlist.map(datum => datum.values.length));
+
+  let data = {};
+  carrierlist.forEach(
+    (datum, ii) => {
+      const { carrier, ctype, originoruse } = datum;
+      const values = datum.values.map(value => parseFloat(value));
+
+      if (values.length !== numsteps) {
+        throw new UserException(`All input must have the same number of timesteps.
+                                Problem found in line ${ ii + 1 }: \t${ datum }`);
+      }
+      if (!data.hasOwnProperty(carrier)) {
+        data[carrier] = { CONSUMO: { EPB: new Array(numsteps).fill(0.0),
+                                     NEPB: new Array(numsteps).fill(0.0) },
+                          PRODUCCION: { INSITU: new Array(numsteps).fill(0.0),
+                                        COGENERACION: new Array(numsteps).fill(0.0) }
+                         };
+      }
+      data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
+    }
+  );
+  return data;
+}
+
+
 // Calculate timestep and annual energy balance by carrier
 //
 // carrierlist: list of energy carrier data
@@ -632,38 +675,10 @@ function gridsavings_stepB(cr_balance_an, fp, k_exp) {
 //      where timestep and annual are the timestep and annual
 //      balanced values for carrier.
 export function compute_balance(carrierlist, k_rdel) {
-  // Add all values of vectors with the same carrier ctype and originoruse
-  // datadict[carrier][ctype][originoruse] -> values as np.array with length=numsteps
-  const numsteps = Math.max(...carrierlist.map(datum => datum.values.length));
-
-  let data = {};
-  carrierlist.forEach(
-    (datum, ii) => {
-      const { carrier, ctype, originoruse } = datum;
-      const values = datum.values.map(value => parseFloat(value));
-
-      if (values.length !== numsteps) {
-        throw new UserException(`All input must have the same number of timesteps.
-                                Problem found in line ${ ii + 1 }: \t${ datum }`);
-      }
-      if (!data.hasOwnProperty(carrier)) {
-        data[carrier] = { CONSUMO: { EPB: new Array(numsteps).fill(0.0),
-                                     NEPB: new Array(numsteps).fill(0.0) },
-                          PRODUCCION: { INSITU: new Array(numsteps).fill(0.0),
-                                        COGENERACION: new Array(numsteps).fill(0.0) }
-                         };
-      }
-      data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
-    }
-  );
-
-  // Compute timestep and annual balance
+  const data = parse_carrier_list(carrierlist);
+  // Compute balance
   let balance = {};
-  Object.keys(data).map(carrier => {
-    let bal_t = balance_t_forcarrier(data[carrier], k_rdel);
-    let bal_an = balance_an_forcarrier(bal_t);
-    balance[carrier] = { timestep: bal_t, annual: bal_an };
-  });
+  Object.keys(data).map(carrier => { balance[carrier] = balance_cr(data[carrier], k_rdel); });
   return balance;
 }
 
@@ -704,12 +719,12 @@ export function weighted_energy(balance, fp, k_exp) {
 
   Object.keys(balance).map(
     carrier => {
-      let cr_fp = fp.filter(elem => elem.vector === carrier);
+      let fp_cr = fp.filter(elem => elem.vector === carrier);
       let cr_balance_an = balance[carrier].annual;
 
-      let delivered_wenergy_stepA = delivered_weighted_energy_stepA(cr_balance_an, cr_fp);
-      let exported_wenergy_stepA = exported_weighted_energy_stepA(cr_balance_an, cr_fp);
-      let gsavings_stepB = gridsavings_stepB(cr_balance_an, cr_fp, k_exp);
+      let delivered_wenergy_stepA = delivered_weighted_energy_stepA(cr_balance_an, fp_cr);
+      let exported_wenergy_stepA = exported_weighted_energy_stepA(cr_balance_an, fp_cr);
+      let gsavings_stepB = gridsavings_stepB(cr_balance_an, fp_cr, k_exp);
 
       // XXX: esto es una suma en lugar de una resta. Ver 11.6.2.2. (23)
       let weighted_energy_stepA = { ren: delivered_wenergy_stepA.ren - exported_wenergy_stepA.ren,
