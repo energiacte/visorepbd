@@ -127,7 +127,10 @@ const TESTKEXP = 1.0;
 // Utilities ------------------------------------------------------------
 
 const myround = (num, ndigits = 2) => Math.round(num * Math.pow(10, ndigits)) / Math.pow(10, ndigits);
-const reserr = (ep1, ep2) => Math.sqrt(Math.pow(ep1.ren - ep2.ren, 2) + Math.pow(ep1.nren - ep2.nren, 2));
+const reserr = (ep1, ep2) => {
+  const res = Math.sqrt(Math.pow(ep1.ren - ep2.ren, 2) + Math.pow(ep1.nren - ep2.nren, 2));
+  return isNaN(res) || (res > 2.0);
+};
 const showEP = (ep, step) => `EP(${ step })`
   + `: ren = ${ ep.ren.toFixed(1) }`
   + `, nren= ${ ep.nren.toFixed(1) }`
@@ -135,19 +138,17 @@ const showEP = (ep, step) => `EP(${ step })`
   + `, RER = ${ (ep.ren / (ep.ren + ep.nren)).toFixed(2) }`;
 
 
-// Check that result is within valid range
-function check(casename, EPB, result, verbose = false) {
+// Check that the computed value is within a valid range of precomputed result
+function check(casename, computed, result, verbose = false) {
   let errA = false;
   let errB = false;
 
   if (result.hasOwnProperty('EPpasoA')) {
-    const err = reserr(EPB.EPpasoA, result.EPpasoA);
-    errA = isNaN(err) || (err > 2.0);
+    errA = reserr(computed.EP.A, result.EPpasoA);
   }
 
   if (result.hasOwnProperty('EP')) {
-    const err = reserr(EPB.EP, result.EP);
-    errB = isNaN(err) || (err > 2.0);
+    errB = reserr(computed.EP.B, result.EP);
   }
 
   const isError = errA || errB;
