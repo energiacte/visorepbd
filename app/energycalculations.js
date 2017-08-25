@@ -340,13 +340,13 @@ export function readfactors(factorsstring) {
 export function ep2string(EP, area = 1.0) {
   const areafactor = 1.0 / area;
 
-  const eparen = areafactor * EP.EPpasoA.ren;
-  const epanren = areafactor * EP.EPpasoA.nren;
+  const eparen = areafactor * EP.EP.A.ren;
+  const epanren = areafactor * EP.EP.A.nren;
   const epatotal = eparen + epanren;
   const eparer = epatotal ? eparen / epatotal : 0.0;
 
-  const epren = areafactor * EP.EP.ren;
-  const epnren = areafactor * EP.EP.nren;
+  const epren = areafactor * EP.EP.B.ren;
+  const epnren = areafactor * EP.EP.B.nren;
   const eptotal = epren + epnren;
   const eprer = eptotal ? epren / eptotal : 0.0;
 
@@ -359,12 +359,12 @@ export function ep2string(EP, area = 1.0) {
 // Convert EP object to epdict
 export function ep2dict(EP, area = 1.0) {
   const areafactor = 1.0 / area;
-  const EPAren = areafactor * EP.EPpasoA.ren;
-  const EPAnren = areafactor * EP.EPpasoA.nren;
+  const EPAren = areafactor * EP.EP.A.ren;
+  const EPAnren = areafactor * EP.EP.A.nren;
   const EPAtotal = EPAren + EPAnren;
   const EPArer = (EPAtotal === 0) ? 0 : EPAren / EPAtotal;
-  const EPren = areafactor * EP.EP.ren;
-  const EPnren = areafactor * EP.EP.nren;
+  const EPren = areafactor * EP.EP.B.ren;
+  const EPnren = areafactor * EP.EP.B.nren;
   const EPtotal = EPren + EPnren;
   const EPrer = (EPtotal === 0) ? 0 : EPren / EPtotal;
   return { EPAren, EPAnren, EPAtotal, EPArer, EPren, EPnren, EPtotal, EPrer };
@@ -407,7 +407,7 @@ const VALIDORIGINS = ['INSITU', 'COGENERACION'];
 //                           }
 //    }
 //
-function balance_cr(carrierdata, k_rdel) {
+function balance_for_carrier(carrierdata, k_rdel) {
   // Energy used by technical systems for EPB services, for each time step
   const E_EPus_cr_t = carrierdata.CONSUMO.EPB;
   // Energy used by technical systems for non-EPB services, for each time step
@@ -684,13 +684,13 @@ function gridsavings_stepB(cr_balance_an, fp, k_exp) {
 //    }
 //    where timestep and annual are the timestep and annual
 //    balanced values for carrier.
-export function energy_performance(data, fp, k_exp, k_rdel) {
+export function energy_performance_old(data, fp, k_exp, k_rdel) {
   let EPA = { ren: 0.0, nren: 0.0 };
   let EPB = { ren: 0.0, nren: 0.0 };
 
   // Compute balance
   let balance = {};
-  Object.keys(data).map(carrier => { balance[carrier] = balance_cr(data[carrier], k_rdel); });
+  Object.keys(data).map(carrier => { balance[carrier] = balance_for_carrier(data[carrier], k_rdel); });
 
   Object.keys(balance).map(
     carrier => {
@@ -711,5 +711,5 @@ export function energy_performance(data, fp, k_exp, k_rdel) {
       EPB = { ren: EPB.ren + weighted_energy_stepAB.ren, nren: EPB.nren + weighted_energy_stepAB.nren };
     }
   );
-  return { EP: EPB, EPpasoA: EPA, balance };
+  return { EP: { B: EPB, A: EPA }, balance };
 }

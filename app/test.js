@@ -167,24 +167,27 @@ function check(casename, computed, result, verbose = false) {
 
   let outstr;
   if (isError) {
-    outstr = `[ERROR] ${casename} (${EPB.path})`;
+    outstr = `[ERROR] ${casename} (${computed.path})`;
     if (errA) {
-      outstr += `\n  Found:    ${ showEP(EPB.EPpasoA, 'A') }`
+      outstr += `\n  Found:    ${ showEP(computed.EP.A, 'A') }`
         + `\n  Expected: ${ showEP(result.EPpasoA, 'A')}`;
     } else if (verbose) {
-      outstr += `\n  ${ showEP(EPB.EPpasoA, 'A') }`;
+      outstr += `\n  ${ showEP(computed.EPpasoA, 'A') }`;
     }
     if (errB) {
-      outstr += `\n  Found:    ${ showEP(EPB.EP, 'B') }`
+      outstr += `\n  Found:    ${ showEP(computed.EP.B, 'B') }`
         + `\n  Expected: ${ showEP(result.EP, 'B')}`;
     } else if (verbose) {
-      outstr += `\n  ${ showEP(EPB.EP, 'B') }`;
+      outstr += `\n  ${ showEP(computed.EP, 'B') }`;
+    }
+    if (verbose) {
+      outstr += `\n\n**** Balance ****\n\n${ JSON.stringify(computed, null, 4) }`;
     }
   } else {
-    outstr = `[OK] ${casename} (${EPB.path})`;
+    outstr = `[OK] ${casename} (${computed.path})`;
     if (verbose) {
-      outstr += `\n  ${ showEP(EPB.EPpasoA, 'A') }`
-        + `\n  ${ showEP(EPB.EP, 'B')}`;
+      outstr += `\n  ${ showEP(computed.EP.A, 'A') }`
+        + `\n  ${ showEP(computed.EP.B, 'B')}`;
     }
   }
   console.log(outstr);
