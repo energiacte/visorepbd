@@ -1,4 +1,4 @@
-import { compute_balance, weighted_energy, ep2dict } from 'energycalculations';
+import { parse_carrier_list, weighted_energy, ep2dict } from 'energycalculations';
 
 /*
  * action types
@@ -71,8 +71,8 @@ export function computeEnergy() {
   return (dispatch, getState) => {
     const { kexp, krdel, area, components, wfactors } = getState();
     const activecomponents = components.filter(component => component.active);
-    const balance = compute_balance(activecomponents, krdel);
-    const res = ep2dict(weighted_energy(balance, wfactors, kexp),
+    const data = parse_carrier_list(activecomponents);
+    const res = ep2dict(weighted_energy(data, wfactors, kexp, krdel),
                         area);
     dispatch(deliverEnergy(res));
   };

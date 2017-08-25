@@ -633,55 +633,6 @@ export function parse_carrier_list(carrierlist) {
   return data;
 }
 
-
-// Calculate timestep and annual energy balance by carrier
-//
-// carrierlist: list of energy carrier data
-//
-//        [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
-//          {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
-//          ... ]
-//
-//        where:
-//
-//            * carrier is an energy carrier
-//            * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
-//            * originoruse defines:
-//              - the energy origin for produced energy (INSITU or COGENERACION)
-//              - the energy end use (EPB or NEPB) for delivered energy
-//            * values is a list of energy values, one for each timestep
-//            * comment is a comment string for the vector
-//
-// k_rdel: redelivery factor [0, 1]
-//
-// Returns:
-//
-//        balance[carrier] = { 'timestep': { 'grid': { 'input': [ v1, ..., vn ] },
-//                                           'INSITU': { 'input': [ va1, ..., van ],
-//                                                       'to_nEPB': [ vb1, ..., vbn ],
-//                                                       'to_grid': [ vc1, ..., vcn ]
-//                                                     },
-//                                           'COGENERACION': { 'input': [ va1, ..., van ],
-//                                                             'to_nEPB': [ vb1, ..., vbn ],
-//                                                             'to_grid': [ vc1, ..., vcn ]
-//                                                     },
-//                                         }
-//                             'annual': { 'grid': valuea1,
-//                                         'INSITU': valuea2,
-//                                         'COGENERACION': valuea3
-//                                       }
-//        }
-//
-//      where timestep and annual are the timestep and annual
-//      balanced values for carrier.
-export function compute_balance(carrierlist, k_rdel) {
-  const data = parse_carrier_list(carrierlist);
-  // Compute balance
-  let balance = {};
-  Object.keys(data).map(carrier => { balance[carrier] = balance_cr(data[carrier], k_rdel); });
-  return balance;
-}
-
 // Total weighted energy (step A + B) = used energy (step A) - saved energy (step B)
 //
 // The energy saved to the grid due to exportation (step B) is substracted
@@ -711,11 +662,38 @@ export function compute_balance(carrierlist, k_rdel) {
 // * values is a list of energy values for each timestep
 //
 // fp is a list of lists of weighting factors
-// k_rdel is the redelivery energy factor [0, 1]
 // k_exp is the exported energy factor [0, 1]
-export function weighted_energy(balance, fp, k_exp) {
+// k_rdel is the redelivery energy factor [0, 1]
+//
+// Returns:
+//    {
+//      EP: { ren: ..., nren: ... } // Weighted energy performance stepB
+//      EPpasoA: { ren: ..., nren: ... } // Weighted energy performance stepA
+//      balance[carrier] = { 'timestep': { 'grid': { 'input': [ v1, ..., vn ] },
+//                                         'INSITU': { 'input': [ va1, ..., van ],
+//                                                     'to_nEPB': [ vb1, ..., vbn ],
+//                                                     'to_grid': [ vc1, ..., vcn ]
+//                                                   },
+//                                         'COGENERACION': { 'input': [ va1, ..., van ],
+//                                                           'to_nEPB': [ vb1, ..., vbn ],
+//                                                           'to_grid': [ vc1, ..., vcn ]
+//                                                   },
+//                                       }
+//                           'annual': { 'grid': valuea1,
+//                                       'INSITU': valuea2,
+//                                       'COGENERACION': valuea3
+//                                     }
+//      }
+//    }
+//    where timestep and annual are the timestep and annual
+//    balanced values for carrier.
+export function weighted_energy(data, fp, k_exp, k_rdel) {
   let EPA = { ren: 0.0, nren: 0.0 };
   let EPB = { ren: 0.0, nren: 0.0 };
+
+  // Compute balance
+  let balance = {};
+  Object.keys(data).map(carrier => { balance[carrier] = balance_cr(data[carrier], k_rdel); });
 
   Object.keys(balance).map(
     carrier => {
@@ -736,5 +714,5 @@ export function weighted_energy(balance, fp, k_exp) {
       EPB = { ren: EPB.ren + weighted_energy_stepAB.ren, nren: EPB.nren + weighted_energy_stepAB.nren };
     }
   );
-  return { EP: EPB, EPpasoA: EPA };
+  return { EP: EPB, EPpasoA: EPA, balance };
 }
