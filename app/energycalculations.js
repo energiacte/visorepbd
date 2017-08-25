@@ -25,6 +25,22 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
            Daniel Jiménez González <dani@ietcc.csic.es>
 */
 
+/* ENERGYCALCULATIONS - Implementation of the ISO EN 52000-1 standard
+
+  Energy performance of buildings - Overarching EPB assessment - General framework and procedures
+
+  This implementation has used the following assumptions:
+  - weighting factors are constant for all timesteps
+  - no priority is set for energy production (average step A weighting factor f_we_el_stepA)
+  - all on-site produced energy from non cogeneration sources is considered as delivered
+  - the load matching factor is constant and equal to 1.0
+
+  TODO:
+  - allow other values of load matching factor (or functions) (formula 32, B.32)
+  - get results by use items (service), maybe using the reverse method E.3 (E.3.6, E.3.7)
+  - make the input sanitizer (weighting factors) smarter
+*/
+
 // ---------------------------------------------------------------------------------------------------------
 // Default values for energy efficiency calculation
 //
@@ -189,6 +205,8 @@ const vecsum = vec => vec.reduce((a, b) => a + b, 0);
 // Input/Output functions
 // -----------------------------------------------------------------------------------
 
+// Input parsing functions -----------------------------------------------------------
+
 // Read energy input data from string and return a carrier data list
 //
 // The carrier data list has the following structure:
@@ -291,8 +309,8 @@ export function parse_carrier_list(carrierlist) {
   return data;
 }
 
-
 // Save energy data and metadata to string
+// TODO: revisar con últimos cambios en formato de salida
 export function saveenergystring(carrierdata, meta) {
   const metalines = [
     `#CTE_Name: EPBDpanel`,
@@ -336,6 +354,13 @@ export function readfactors(factorsstring) {
     });
 }
 
+// TODO: const fP = sanitize_weighting_factors(fp);
+// TODO: Podría avisar si no existe un factor: ['MEDIOAMBIENTE', 'grid', 'input', 'A', 1.000, 0.000]
+// TODO: podría considerar que to_nEPB es igual a to_grid si no se define
+// TODO: podría considerar que to_grid es igual a input si no se define
+
+// Utility output functions ---------------------------------------------------
+
 // Format energy efficiency indicators as string from primary energy data
 export function ep2string(EP, area = 1.0) {
   const areafactor = 1.0 / area;
@@ -370,346 +395,357 @@ export function ep2dict(EP, area = 1.0) {
   return { EPAren, EPAnren, EPAtotal, EPArer, EPren, EPnren, EPtotal, EPrer };
 }
 
-// Energy calculation functions ---------------------------------------
+// --------------------------------------------------------------------
+// Energy calculation functions
+// --------------------------------------------------------------------
 
-// Origin for produced energy must be either 'INSITU' or 'COGENERACION'
-const VALIDORIGINS = ['INSITU', 'COGENERACION'];
+// ///////////// ByCarrier timestep and annual computations ////////////
 
-// Calculate timestep and annual energy balance for carrier
+// Calculate energy balance for carrier
 //
 //
 //    carrierdata: { 'CONSUMO': { 'EPB': [vi1, ..., vin],
 //                                'NEPB': [vj1, ..., vjn] },
-//                'PRODUCCION': { 'INSITU': [vk1, ..., vkn]},
-//                                'COGENERACION' : [vl1, ..., vln] }
+//                   'PRODUCCION': { 'INSITU': [vk1, ..., vkn]},
+//                                   'COGENERACION' : [vl1, ..., vln] }
 //                  } // n: number of timesteps
 //
-//    k_rdel: redelivery factor [0, 1]
+//    k_exp: exported energy factor [0, 1]
 //
-//    This follows the EN15603 procedure for calculation of delivered and
-//    exported energy balance.
+//    fp_cr: weighting factors for carrier
 //
-//    Returns:
+//    This follows the ISO EN 52000-1 procedure for calculation of delivered,
+//    exported and weighted energy balance.
 //
-//    balance = { 'timestep': { 'grid': { 'input': [ v1, ..., vn ] },
-//                                           'INSITU': { 'input': [ va1, ..., van ],
-//                                                       'to_nEPB': [ vb1, ..., vbn ],
-//                                                       'to_grid': [ vc1, ..., vcn ]
-//                                                     },
-//                                           'COGENERACION': { 'input': [ va1, ..., van ],
-//                                                             'to_nEPB': [ vb1, ..., vbn ],
-//                                                             'to_grid': [ vc1, ..., vcn ]
-//                                                     },
-//                             }
-//                 'annual': { 'grid': valuea1,
-//                             'INSITU': valuea2,
-//                             'COGENERACION': valuea3
-//                           }
-//    }
-//
-function balance_for_carrier(carrierdata, k_rdel) {
-  // Energy used by technical systems for EPB services, for each time step
+function balance_cr(carrierdata, k_exp, fp_cr) {
+  // ------------ Delivered and exported energy
+
+  // * Energy used by technical systems for EPB services, for each time step
   const E_EPus_cr_t = carrierdata.CONSUMO.EPB;
-  // Energy used by technical systems for non-EPB services, for each time step
+  // * Energy used by technical systems for non-EPB services, for each time step
   const E_nEPus_cr_t = carrierdata.CONSUMO.NEPB;
-  // (Electricity) produced on-site and inside the assessment boundary, by origin
+  // * Produced on-site energy and inside the assessment boundary, by generator i (origin i)
   const E_pr_cr_pr_i_t = carrierdata.PRODUCCION;
+  // Annually produced on-site energy from generator i (origin i)
+  const E_pr_cr_pr_i_an = Object.keys(E_pr_cr_pr_i_t).reduce((obj, gen) =>
+  ({ ...obj, [gen]: vecsum(E_pr_cr_pr_i_t[gen]) }),
+  {});
 
-  // (Electric) energy produced on-site and inside the assessment boundary, for each time step (formula 23)
-  const E_pr_cr_t = veclistsum(VALIDORIGINS.map(origin => E_pr_cr_pr_i_t[origin]));
+  // PRODUCED ENERGY GENERATORS (ORIGINS)
+  const pr_generators = Object.keys(E_pr_cr_pr_i_t); // INSITU + COGENERACION
 
-  // Produced energy from all origins for EPB services for each time step (formula 24)
-  const E_pr_cr_used_EPus_t = vecvecmin(E_EPus_cr_t, E_pr_cr_t);
+  // * Energy produced on-site and inside the assessment boundary (formula 30)
+  const E_pr_cr_t = veclistsum(pr_generators.map(gen => E_pr_cr_pr_i_t[gen]));
+  const E_pr_cr_an = vecsum(E_pr_cr_t);
 
-  // Exported energy for each time step (produced energy not consumed in EPB uses) (formula 25)
+  // * Produced energy from all origins for EPB services for each time step (formula 31)
+  // TODO: f_match_t constante para electricidad (formula 32)
+  // let f_match_t = fmatch(E_pr_cr_t / E_EPus_cr_t)
+  const f_match_t = E_EPus_cr_t.map(x => 1.0);
+
+  const E_pr_cr_used_EPus_t = vecvecmul(f_match_t, vecvecmin(E_EPus_cr_t, E_pr_cr_t));
+
+  // * Exported energy for each time step (produced energy not consumed in EPB uses) (formula 33)
+  // E_pr_cr_t = E_pr_cr_used_EPus_t + E_exp_cr_used_nEPus_t + E_exp_cr_grid_t
+  // E_exp_cr_t = E_exp_cr_used_nEPus_t + E_exp_cr_grid_t
   const E_exp_cr_t = vecvecdif(E_pr_cr_t, E_pr_cr_used_EPus_t);
 
-  // Exported energy by production origin for each time step, weigthing done by produced energy
-  const F_exp_cr_t = E_pr_cr_t.map((E_pr_cr_ti, ii) => E_pr_cr_ti === 0 ? 0 : E_exp_cr_t[ii] / E_pr_cr_ti);
-  const E_exp_cr_t_byorigin = VALIDORIGINS
-    .reduce((obj, origin) => {
-      obj[origin] = vecvecmul(E_pr_cr_pr_i_t[origin], F_exp_cr_t);
-      return obj;
-    }, {});
-
-  // Exported (electric) energy used for non-EPB uses for each time step (formula 26)
+  // * Exported energy used for non-EPB uses for each time step (formula 34)
   const E_exp_cr_used_nEPus_t = vecvecmin(E_exp_cr_t, E_nEPus_cr_t);
-  // Exported energy used for non-EPB services for each time step, by origin, weighting done by exported energy
-  const F_exp_cr_used_nEPus_t = E_exp_cr_t.map(
-    (E_exp_cr_ti, i) => { return E_exp_cr_ti === 0 ? 0 : E_exp_cr_used_nEPus_t[i] / E_exp_cr_ti; }
-  );
-  const E_exp_cr_used_nEPus_t_byorigin = VALIDORIGINS
-    .reduce((obj, origin) => {
-      obj[origin] = vecvecmul(E_exp_cr_t_byorigin[origin], F_exp_cr_used_nEPus_t);
-      return obj;
-    }, {});
 
-  // Exported energy not used for any service for each time step (formula 27)
-  // Note: this is later affected by k_rdel for redelivery and k_exp for exporting
-  const E_exp_cr_nused_t = vecvecdif(E_exp_cr_t, E_exp_cr_used_nEPus_t);
-  // Exported energy not used for any service for each time step, by origin, weighting done by exported energy
-  const F_exp_cr_nused_t = E_exp_cr_t.map(
-    (E_exp_cr_ti, i) => { return E_exp_cr_ti === 0 ? 0 : E_exp_cr_nused_t[i] / E_exp_cr_ti; }
-  );
-  const E_exp_cr_nused_t_byorigin = VALIDORIGINS
-    .reduce((obj, origin) => {
-      obj[origin] = vecvecmul(E_exp_cr_t_byorigin[origin], F_exp_cr_nused_t);
-      return obj;
-    }, {});
+  // * Annualy exported energy used for non-EPB uses for carrier
+  const E_exp_cr_used_nEPus_an = vecsum(E_exp_cr_used_nEPus_t);
 
-  // Annual exported energy not used for any service (formula 28)
-  const E_exp_cr_nused_an = vecsum(E_exp_cr_nused_t);
+  // * Energy exported to the grid for each interval (formula 35)
+  const E_exp_cr_grid_t = vecvecdif(E_exp_cr_t, E_exp_cr_used_nEPus_t);
 
-  // Delivered (electric) energy for each time step (formula 29)
+  // * Annualy exported energy to the grid for carrier (formula 36)
+  const E_exp_cr_grid_an = vecsum(E_exp_cr_grid_t);
+
+  // * Delivered energy (by the grid) for EP uses for each interval (formula 37)
   const E_del_cr_t = vecvecdif(E_EPus_cr_t, E_pr_cr_used_EPus_t);
-  // Annual delivered (electric) energy for EPB uses (formula 30)
+
+  // * Annualy delivered energy (by the grid) for EP uses for carrier (formula 38)
   const E_del_cr_an = vecsum(E_del_cr_t);
 
-  // Annual temporary exported (electric) energy (formula 31)
-  const E_exp_cr_tmp_an = Math.min(E_exp_cr_nused_an, E_del_cr_an);
+  // ** Weighting depending on energy generator **
 
-  // Temporary exported energy for each time step (formula 32)
-  // E_exp_cr_tmp_t = np.zeros(numsteps) if (E_exp_cr_nused_an == 0) else E_exp_cr_tmp_an * E_exp_cr_nused_t / E_exp_cr_nused_an // not used
+  // Exported energy by generator i i (origin) (9.6.6.2)
+  // Implementation WITHOUT priorities on energy use
 
-  // Redelivered energy for each time step (formula 33)
-  const E_del_rdel_t = E_del_cr_t.map(E_del_cr_ti => E_del_cr_an === 0 ? 0 : E_exp_cr_tmp_an * E_del_cr_ti / E_del_cr_an);
+  // * Fraction of produced energy tipe i (origin from generator i) (formula 14)
+  const f_pr_cr_i = pr_generators.reduce((obj, gen) =>
+    ({ ...obj, [gen]: (E_pr_cr_an < 1e-3) ? 0 : E_pr_cr_pr_i_an[gen] / E_pr_cr_an }),
+    {});
 
-  // Annual redelivered energy
-  // E_del_rdel_an = E_del_rdel_t.reduce((a, b) => a + b, 0) // not used
+  // * Energy used for produced carrier energy type i (origin from generator i) (formula 15)
+  const E_pr_cr_i_used_EPus_t = pr_generators.reduce((obj, gen) =>
+    ({ ...obj, [gen]: veckmul(E_pr_cr_used_EPus_t, f_pr_cr_i[gen]) }),
+    {});
 
-  // Exported (electric) energy to the grid for each time step (formula 34)
-  // E_exp_grid_t = vecdif(E_exp_cr_nused_t, E_exp_cr_tmp_t) // not used
+  // * Exported energy from generator i (origin i) (formula 16)
+  const E_exp_cr_pr_i_t = pr_generators.reduce((obj, gen) =>
+    ({ ...obj, [gen]: vecvecdif(E_pr_cr_pr_i_t[gen], E_pr_cr_i_used_EPus_t[gen]) }),
+    {});
 
-  // Annual exported (electric) energy to the grid (formula 35)
-  const E_exp_cr_grid_an = E_exp_cr_nused_an - E_exp_cr_tmp_an;
-  // Energy exported to grid, by origin, weighting done by exported and not used energy
-  const F_exp_cr_grid_an = E_exp_cr_nused_an === 0 ? 0 : E_exp_cr_grid_an / E_exp_cr_nused_an;
-  const E_exp_cr_grid_t_byorigin = VALIDORIGINS
-    .reduce((obj, origin) => {
-      obj[origin] = veckmul(E_exp_cr_nused_t_byorigin[origin], F_exp_cr_grid_an);
-      return obj;
-    }, {});
+  // * Annually exported energy from generator i (origin i)
+  const E_exp_cr_pr_i_an = Object.keys(E_exp_cr_pr_i_t).reduce((obj, gen) =>
+    ({ ...obj, [gen]: vecsum(E_exp_cr_pr_i_t[gen]) }),
+    {});
 
-  // (Electric) energy delivered by the grid for each time step (formula 36)
-  // E_del_grid_t = vecdif(E_del_cr_t, E_del_rdel_t)  // not used
 
-  // Annual (electric) energy delivered by the grid (formula 37)
-  // E_del_grid_an = E_del_cr_an - E_del_rdel_an // not used
+  // -------- Weighted delivered and exported energy (11.6.2.1, 11.6.2.2, 11.6.2.3 + eq 2, 3)
+  // NOTE: All weighting factors have been considered constant through all timesteps
+  // NOTE: This allows using annual quantities and not timestep expressions
 
-  // Corrected delivered energy for each time step (formula 38)
-  const E_del_cr_t_corr = E_del_cr_t.map((E_del_cr_ti, i) => { return E_del_cr_ti - k_rdel * E_del_rdel_t[i]; });
+  // * Weighted energy for delivered energy: the cost of producing that energy
 
-  // Corrected temporary exported energy (formula 39)
-  // E_exp_cr_tmp_t_corr = [E_exp_cr_tmp_ti * (1 - k_rdel) for E_exp_cr_tmp_ti in E_exp_cr_tmp_t] // not used
+  // 1) Delivered energy from the grid
+  // NOTE: grid delivered energy is energy which is used but not produced (on-site or nearby)
+  const fpA_grid = fp_cr.find(fp =>
+    fp.use === 'input'
+    && fp.step === 'A'
+    && fp.source === 'grid'
+  );
+  const E_we_del_cr_grid_an = {
+    ren: E_del_cr_an * fpA_grid.fren,
+    nren: E_del_cr_an * fpA_grid.fnren
+  }; // formula 19, 39
 
-  let balance_t = { grid: { input: E_del_cr_t_corr } };
+  // 2) Delivered energy from non cogeneration sources
+  const delivery_sources = Object.keys(E_pr_cr_pr_i_an).filter(s => s !== 'grid' && s !== 'COGENERACION');
+  const E_we_del_cr_pr_an = delivery_sources.reduce(
+    (obj, gen) => {
+      const fpA_pr_i = fp_cr.find(fp => fp.use === 'input' && fp.step === 'A' && fp.source === gen);
+      const E_pr_i = E_pr_cr_pr_i_an[gen];
+      if (E_pr_i === 0) { return obj; }
+      return {
+        ren: obj.ren + E_pr_i * fpA_pr_i.fren,
+        nren: obj.nren + E_pr_i * fpA_pr_i.fnren
+      };
+    },
+    { ren: 0, nren: 0 }
+  );
 
-  VALIDORIGINS.map(origin => {
-    balance_t[origin] = {
-      input: E_pr_cr_pr_i_t[origin],
-      to_nEPB: E_exp_cr_used_nEPus_t_byorigin[origin],
-      to_grid: E_exp_cr_grid_t_byorigin[origin]
+  // 3) Total delivered energy: grid + all non cogeneration
+  const E_we_del_cr_an = {
+    ren: E_we_del_cr_grid_an.ren + E_we_del_cr_pr_an.ren,
+    nren: E_we_del_cr_grid_an.nren + E_we_del_cr_pr_an.nren
+  }; // formula 19, 39
+
+
+  // * Weighted energy for exported energy: depends on step A or B
+
+  let E_we_exp_cr_an_A;
+  let E_we_exp_cr_an_AB;
+  let E_we_exp_cr_an;
+  let E_we_exp_cr_used_nEPus_an_AB;
+  let E_we_exp_cr_grid_an_AB;
+
+  const E_exp_cr_an = E_exp_cr_used_nEPus_an + E_exp_cr_grid_an;
+  if (E_exp_cr_an === 0) {
+    // There's no exportation, either because the carrier cannot be exported
+    // or there's no effective exportation
+    E_we_exp_cr_an_A = { ren: 0.0, nren: 0.0 };
+    E_we_exp_cr_an_AB = { ren: 0.0, nren: 0.0 };
+    E_we_exp_cr_an = { ren: 0.0, nren: 0.0 };
+    E_we_exp_cr_used_nEPus_an_AB = { ren: 0.0, nren: 0.0 };
+    E_we_exp_cr_grid_an_AB = { ren: 0.0, nren: 0.0 };
+  } else {
+    // * Step A: weighting depends on exported energy generation (origin generator)
+    // Factors are averaged weighting by production for each origin (no priority, 9.6.6.2.4)
+
+     // * Fraction of produced energy tipe i (origin from generator i) that is exported (formula 14)
+    // NOTE: simplified for annual computations (not valid for timestep calculation)
+    const F_pr_i = pr_generators.reduce((obj, gen) => {
+      if (E_exp_cr_pr_i_an[gen] === 0) { return obj; } // Don't store generators without generation
+      return { ...obj, [gen]: vecsum(E_exp_cr_pr_i_t[gen]) / E_exp_cr_pr_i_an[gen] };
+    },
+    {});
+    const exp_generators = Object.keys(F_pr_i);
+
+    // Weighting factors for energy exported to nEP uses (step A) (~formula 24)
+    let f_we_exp_cr_stepA_nEPus;
+    if (E_exp_cr_used_nEPus_an === 0) { // No energy exported to nEP uses
+      f_we_exp_cr_stepA_nEPus = { ren: 0, nren: 0 };
+    } else {
+      const fpA_nEPus_i = fp_cr.filter(fp => fp.use === 'to_nEPB' && fp.step === 'A');
+      f_we_exp_cr_stepA_nEPus = exp_generators
+        .reduce((acc, gen) => {
+          const F_g = F_pr_i[gen];
+          const fpA_g = fpA_nEPus_i.find(fp => fp.source === gen);
+          return { ren: acc.ren + F_g * fpA_g.fren, nren: acc.nren + F_g * fpA_g.fnren };
+        },
+        { ren: 0.0, nren: 0.0 }
+      ); // suma de todos los i: fpA_nEPus_i * F_pr_i[gen]
+    }
+
+    // Weighting factors for energy exported to the grid (step A) (~formula 25)
+    let f_we_exp_cr_stepA_grid;
+    if (E_exp_cr_grid_an === 0) { // No energy exported to grid
+      f_we_exp_cr_stepA_grid = { ren: 0, nren: 0 };
+    } else {
+      const fpA_grid_i = fp_cr.filter(fp => fp.use === 'to_grid' && fp.step === 'A');
+      f_we_exp_cr_stepA_grid = exp_generators
+        .reduce((acc, gen) => {
+          const F_g = F_pr_i[gen];
+          const fpA_g = fpA_grid_i.find(fp => fp.source === gen);
+          return { ren: acc.ren + F_g * fpA_g.fren, nren: acc.nren + F_g * fpA_g.fnren };
+        },
+        { ren: 0.0, nren: 0.0 }
+      ); // suma de todos los i: fpA_grid_i * F_pr_i[gen];
+    }
+
+    // Weighted exported energy according to resources used to generate that energy (formula 23)
+    E_we_exp_cr_an_A = {
+      ren: E_exp_cr_used_nEPus_an * f_we_exp_cr_stepA_nEPus.ren // formula 24
+           + E_exp_cr_grid_an * f_we_exp_cr_stepA_grid.ren, // formula 25
+      nren: E_exp_cr_used_nEPus_an * f_we_exp_cr_stepA_nEPus.nren // formula 24
+            + E_exp_cr_grid_an * f_we_exp_cr_stepA_grid.nren // formula 25
     };
+
+    // * Step B: weighting depends on exported energy generation and avoided resources on the grid
+
+    // Factors of contribution for energy exported to nEP uses (step B)
+    let f_we_exp_cr_used_nEPus;
+    if (E_exp_cr_used_nEPus_an === 0) { // No energy exported to nEP uses
+      f_we_exp_cr_used_nEPus = { ren: 0, nren: 0 };
+    } else {
+      const fpB_nEPus_i = fp_cr.filter(fp => fp.use === 'to_nEPB' && fp.step === 'B');
+      f_we_exp_cr_used_nEPus = exp_generators
+        .reduce((acc, gen) => {
+          const F_g = F_pr_i[gen];
+          const fpB_g = fpB_nEPus_i.find(fp => fp.source === gen);
+          return { ren: acc.ren + F_g * fpB_g.fren, nren: acc.nren + F_g * fpB_g.fnren };
+        },
+        { ren: 0.0, nren: 0.0 }
+      ); // suma de todos los i: fpB_nEPus_i * F_pr_i[gen]
+    }
+
+    // Weighting factors for energy exported to the grid (step B)
+    let f_we_exp_cr_grid;
+    if (E_exp_cr_grid_an === 0) { // No energy exported to grid
+      f_we_exp_cr_grid = { ren: 0, nren: 0 };
+    } else {
+      const fpB_grid_i = fp_cr.filter(fp => fp.use === 'to_grid' && fp.step === 'B');
+      f_we_exp_cr_grid = exp_generators
+        .reduce((acc, gen) => {
+          const F_g = F_pr_i[gen];
+          const fpB_g = fpB_grid_i.find(fp => fp.source === gen);
+          return { ren: acc.ren + F_g * fpB_g.fren, nren: acc.nren + F_g * fpB_g.fnren };
+        },
+        { ren: 0.0, nren: 0.0 }
+      ); // suma de todos los i: fpB_grid_i * F_pr_i[gen];
+    }
+
+    // Effect of exported energy on weighted energy performance (step B) (formula 26)
+
+    E_we_exp_cr_used_nEPus_an_AB = {
+      ren: E_exp_cr_used_nEPus_an * (f_we_exp_cr_used_nEPus.ren - f_we_exp_cr_stepA_nEPus.ren),
+      nren: E_exp_cr_used_nEPus_an * (f_we_exp_cr_used_nEPus.nren - f_we_exp_cr_stepA_nEPus.nren)
+    };
+
+    E_we_exp_cr_grid_an_AB = {
+      ren: E_exp_cr_grid_an * (f_we_exp_cr_grid.ren - f_we_exp_cr_stepA_grid.ren),
+      nren: E_exp_cr_grid_an * (f_we_exp_cr_grid.nren - f_we_exp_cr_stepA_grid.nren)
+    };
+
+    E_we_exp_cr_an_AB = {
+      ren: E_we_exp_cr_used_nEPus_an_AB.ren + E_we_exp_cr_grid_an_AB.ren,
+      nren: E_we_exp_cr_used_nEPus_an_AB.nren + E_we_exp_cr_grid_an_AB.nren
+    };
+
+    // Contribution of exported energy to the annual weighted energy performance
+    // 11.6.2.1, 11.6.2.2, 11.6.2.3
+    E_we_exp_cr_an = {
+      ren: E_we_exp_cr_an_A.ren + k_exp * E_we_exp_cr_an_AB.ren,
+      nren: E_we_exp_cr_an_A.nren + k_exp * E_we_exp_cr_an_AB.nren
+    }; // (formula 20)
+  }
+
+  // * Total result for step A
+  const E_we_cr_an_A = {
+    ren: E_we_del_cr_an.ren - E_we_exp_cr_an_A.ren,
+    nren: E_we_del_cr_an.nren - E_we_exp_cr_an_A.nren
+  }; // Partial result for carrier (formula 2)
+
+  // * Total result for step B
+  const E_we_cr_an = {
+    ren: E_we_del_cr_an.ren - E_we_exp_cr_an.ren,
+    nren: E_we_del_cr_an.nren - E_we_exp_cr_an.nren
+  }; // Partial result for carrier (formula 2)
+
+  const balance = {
+    used_EPB: carrierdata.CONSUMO.EPB,
+    used_nEPB: carrierdata.CONSUMO.NEPB,
+    produced_bygen: carrierdata.PRODUCCION,
+    produced_bygen_an: E_pr_cr_pr_i_an,
+    produced: E_pr_cr_t,
+    produced_an: E_pr_cr_an,
+    f_match: f_match_t, // load matching factor
+    exported: E_exp_cr_t, // exp_used_nEPus + exp_grid
+    exported_an: E_exp_cr_an,
+    exported_byorigin: E_exp_cr_pr_i_t,
+    exported_byorigin_an: E_exp_cr_pr_i_an,
+    exported_grid: E_exp_cr_grid_t,
+    exported_grid_an: E_exp_cr_grid_an,
+    exported_nEPB: E_exp_cr_used_nEPus_t,
+    exported_nEPB_an: E_exp_cr_used_nEPus_an,
+    delivered_grid: E_del_cr_t,
+    delivered_grid_an: E_del_cr_an,
+    // Weighted energy: { ren, nren }
+    we_delivered_grid_an: E_we_del_cr_grid_an,
+    we_delivered_prod_an: E_we_del_cr_pr_an,
+    we_delivered_an: E_we_del_cr_an,
+    we_exported_an_A: E_we_exp_cr_an_A,
+    we_exported_nEPB_an_AB: E_we_exp_cr_used_nEPus_an_AB,
+    we_exported_grid_and_AB: E_we_exp_cr_grid_an_AB,
+    we_exported_an_AB: E_we_exp_cr_an_AB,
+    we_exported_an: E_we_exp_cr_an,
+    we_an_A: E_we_cr_an_A,
+    we_an: E_we_cr_an
+  };
+
+  return balance;
+}
+
+// Compute overall energy performance aggregating results for all energy carriers
+//
+//
+export function energy_performance(carrierdata, fp, k_exp) {
+  // Compute balance
+  let balance_cr_i = {};
+  Object.keys(carrierdata).map(carrier => {
+    let fp_cr = fp.filter(e => e.vector === carrier);
+    balance_cr_i[carrier] = balance_cr(carrierdata[carrier], k_exp, fp_cr);
   });
 
-  // Calculate annual energy balance for a carrier from its timestep balance
-  //
-  //        { 'grid': value1,
-  //          'INSITU': value2,
-  //          'COGENERACION': value3
-  //        }
-  let balance_an = {};
-  Object.keys(balance_t).map(
-    origin => {
-      let balance_t_byorigin = balance_t[origin];
-      Object.keys(balance_t_byorigin).map(
-        use => {
-          let sumforuse = vecsum(balance_t_byorigin[use]);
-          if (!balance_an.hasOwnProperty(origin)) { balance_an[origin] = {}; }
-          if (Math.abs(sumforuse) > 0.001) { // exclude smallish values
-            balance_an[origin][use] = sumforuse;
-          }
-        }
-      );
-    }
-  );
+  const EP = Object.keys(balance_cr_i)
+    .reduce(
+      (acc, cr) => ({
+        // E_we_an =  E_we_del_an - E_we_exp_an; // formula 2 step A
+        A: { ren: acc.A.ren + balance_cr_i[cr].we_an_A.ren,
+             nren: acc.A.nren + balance_cr_i[cr].we_an_A.nren },
+        // E_we_an =  E_we_del_an - E_we_exp_an; // formula 2 step B
+        B: { ren: acc.B.ren + balance_cr_i[cr].we_an.ren,
+             nren: acc.B.nren + balance_cr_i[cr].we_an.nren },
+        // Weighted energy partials
+        we_del: { ren: acc.we_del.ren + balance_cr_i[cr].we_delivered_an.ren,
+                  nren: acc.we_del.nren + balance_cr_i[cr].we_delivered_an.nren },
+        we_exp_A: { ren: acc.we_exp_A.ren + balance_cr_i[cr].we_exported_an_A.ren,
+                    nren: acc.we_exp_A.nren + balance_cr_i[cr].we_exported_an_A.nren },
+        we_exp: { ren: acc.we_exp.ren + balance_cr_i[cr].we_exported_an.ren,
+                  nren: acc.we_exp.nren + balance_cr_i[cr].we_exported_an.nren }
+      }),
+    { A: { ren: 0, nren: 0 }, B: { ren: 0, nren: 0 },
+      we_del: { ren: 0, nren: 0 }, we_exp_A: { ren: 0, nren: 0 }, we_exp: { ren: 0, nren: 0 } }
+    );
 
-  return { timestep: balance_t, annual: balance_an };
-}
-
-// ////////////////// Step A and B partial computations ////////////////////
-
-// Total delivered (or produced) weighted energy entering the assessment boundary in step A
-//
-// Energy is weighted depending on its origin (by source or grid).
-//
-// This function returns a data structure with keys 'ren' and 'nren' corresponding
-// to the renewable and not renewable share of this weighted energy (step A).
-function delivered_weighted_energy_stepA(cr_balance_an, fp) {
-  let fpA = fp.filter(fpi => fpi.use === 'input' && fpi.step === 'A');
-  let delivered_wenergy_stepA = { ren: 0.0, nren: 0.0 };
-  Object.keys(cr_balance_an).map(
-    source => {
-      let origins = cr_balance_an[source];
-      if (origins.hasOwnProperty('input')) {
-        let factor_paso_A = fpA.find(fpi => fpi.source === source);
-        delivered_wenergy_stepA = { ren: delivered_wenergy_stepA.ren + factor_paso_A.fren * origins.input,
-                                    nren: delivered_wenergy_stepA.nren + factor_paso_A.fnren * origins.input };
-      }
-    }
-  );
-  return delivered_wenergy_stepA;
-}
-
-// Total exported weighted energy going outside the assessment boundary in step A
-//
-// Energy is weighted depending on its destination (non-EPB uses or grid).
-//
-// This function returns a data structure with keys 'ren' and 'nren' corresponding
-// to the renewable and not renewable share of this weighted energy (step A).
-function exported_weighted_energy_stepA(cr_balance_an, fpA) {
-  let to_nEPB = { ren: 0.0, nren: 0.0 };
-  let to_grid = { ren: 0.0, nren: 0.0 };
-  let fpAnEPB = fpA.filter(fpi => fpi.use === 'to_nEPB');
-  let fpAgrid = fpA.filter(fpi => fpi.use === 'to_grid');
-  Object.keys(cr_balance_an).map(
-    source => {
-      let destinations = cr_balance_an[source];
-      if (destinations.hasOwnProperty('to_nEPB')) {
-        let fp_tmp = fpAnEPB.find(fpi => fpi.source === source) || 0.0;
-        to_nEPB = { ren: to_nEPB.ren + fp_tmp.fren * destinations.to_nEPB,
-                    nren: to_nEPB.nren + fp_tmp.fnren * destinations.to_nEPB };
-      }
-
-      if (destinations.hasOwnProperty('to_grid')) {
-        let fp_tmp = fpAgrid.find(fpi => fpi.source === source) || 0.0;
-        to_grid = { ren: to_grid.ren + fp_tmp.fren * destinations.to_grid,
-                    nren: to_grid.nren + fp_tmp.fnren * destinations.to_grid };
-      }
-    }
-  );
-  return { ren: to_nEPB.ren + to_grid.ren,
-           nren: to_nEPB.nren + to_grid.nren };
-}
-
-// Weighted energy resources avoided by the grid due to exported electricity
-//
-// The computation is done for a single energy carrier, considering the
-// exported energy used for non-EPB uses (to_nEPB) and the energy exported
-// to the grid (to_grid), each with its own weigting factors and k_exp.
-//
-// This function returns a data structure with keys 'ren' and 'nren' corresponding
-// to the renewable and not renewable share of this weighted energy (step B).
-function gridsavings_stepB(cr_balance_an, fp, k_exp) {
-  let to_nEPB = { ren: 0.0, nren: 0.0 };
-  let to_grid = { ren: 0.0, nren: 0.0 };
-  let fpA = fp.filter(fpi => fpi.step === 'A');
-  let fpB = fp.filter(fpi => fpi.step === 'B');
-  let fpAnEPB = fpA.filter(fpi => fpi.use === 'to_nEPB');
-  let fpAgrid = fpA.filter(fpi => fpi.use === 'to_grid');
-  let fpBnEPB = fpB.filter(fpi => fpi.use === 'to_nEPB');
-  let fpBgrid = fpB.filter(fpi => fpi.use === 'to_grid');
-
-  Object.keys(cr_balance_an).map(
-    source => {
-      let destinations = cr_balance_an[source];
-      if (destinations.hasOwnProperty('to_nEPB')) {
-        let fpA_tmp = fpAnEPB.find(fpi => fpi.source === source) || 0.0;
-        let fpB_tmp = fpBnEPB.find(fpi => fpi.source === source) || 0.0;
-        to_nEPB = { ren: to_nEPB.ren + (fpB_tmp.fren - fpA_tmp.fren) * destinations.to_nEPB,
-                    nren: to_nEPB.nren + (fpB_tmp.fnren - fpA_tmp.fnren) * destinations.to_nEPB };
-      }
-      if (destinations.hasOwnProperty('to_grid')) {
-        let fpA_tmp = fpAgrid.find(fpi => fpi.source === source) || 0.0;
-        let fpB_tmp = fpBgrid.find(fpi => fpi.source === source) || 0.0;
-        to_grid = { ren: to_grid.ren + (fpB_tmp.fren - fpA_tmp.fren) * destinations.to_grid,
-                    nren: to_grid.nren + (fpB_tmp.fnren - fpA_tmp.fnren) * destinations.to_grid };
-      }
-    }
-  );
-  return { ren: k_exp * (to_nEPB.ren + to_grid.ren), nren: k_exp * (to_nEPB.nren + to_grid.nren) };
-}
-
-// Total weighted energy (step A + B) = used energy (step A) - saved energy (step B)
-//
-// The energy saved to the grid due to exportation (step B) is substracted
-// from the the energy balance in the asessment boundary AB (step A).
-// This is  computed for all energy carrier and all energy sources.
-//
-// This function returns a data structure with keys 'ren' and 'nren'
-// corresponding to the renewable and not renewable parts of the balance.
-//
-// In the context of the CTE regulation weighted energy corresponds to
-// primary energy.
-//
-// Reads energy input data from list and returns a data structure
-//
-// carrierlist has the following structure:
-//
-// [ {carrier: carrier1, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
-//   {carrier: carrier2, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
-//   ...
-// ]
-//
-// * carrier is an energy carrier
-// * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
-// * originoruse defines:
-//   - the energy origin for produced energy (INSITU or COGENERACION)
-//   - the energy end use (EPB or NEPB) for delivered energy
-// * values is a list of energy values for each timestep
-//
-// fp is a list of lists of weighting factors
-// k_exp is the exported energy factor [0, 1]
-// k_rdel is the redelivery energy factor [0, 1]
-//
-// Returns:
-//    {
-//      EP: { ren: ..., nren: ... } // Weighted energy performance stepB
-//      EPpasoA: { ren: ..., nren: ... } // Weighted energy performance stepA
-//      balance[carrier] = { 'timestep': { 'grid': { 'input': [ v1, ..., vn ] },
-//                                         'INSITU': { 'input': [ va1, ..., van ],
-//                                                     'to_nEPB': [ vb1, ..., vbn ],
-//                                                     'to_grid': [ vc1, ..., vcn ]
-//                                                   },
-//                                         'COGENERACION': { 'input': [ va1, ..., van ],
-//                                                           'to_nEPB': [ vb1, ..., vbn ],
-//                                                           'to_grid': [ vc1, ..., vcn ]
-//                                                   },
-//                                       }
-//                           'annual': { 'grid': valuea1,
-//                                       'INSITU': valuea2,
-//                                       'COGENERACION': valuea3
-//                                     }
-//      }
-//    }
-//    where timestep and annual are the timestep and annual
-//    balanced values for carrier.
-export function energy_performance_old(data, fp, k_exp, k_rdel) {
-  let EPA = { ren: 0.0, nren: 0.0 };
-  let EPB = { ren: 0.0, nren: 0.0 };
-
-  // Compute balance
-  let balance = {};
-  Object.keys(data).map(carrier => { balance[carrier] = balance_for_carrier(data[carrier], k_rdel); });
-
-  Object.keys(balance).map(
-    carrier => {
-      let fp_cr = fp.filter(elem => elem.vector === carrier);
-      let cr_balance_an = balance[carrier].annual;
-
-      let delivered_wenergy_stepA = delivered_weighted_energy_stepA(cr_balance_an, fp_cr);
-      let exported_wenergy_stepA = exported_weighted_energy_stepA(cr_balance_an, fp_cr);
-      let gsavings_stepB = gridsavings_stepB(cr_balance_an, fp_cr, k_exp);
-
-      // XXX: esto no parece correcto. Ver 11.6.2.2. (23)
-      let weighted_energy_stepA = { ren: delivered_wenergy_stepA.ren - exported_wenergy_stepA.ren,
-                                    nren: delivered_wenergy_stepA.nren - exported_wenergy_stepA.nren };
-      let weighted_energy_stepAB = { ren: weighted_energy_stepA.ren - gsavings_stepB.ren,
-                                     nren: weighted_energy_stepA.nren - gsavings_stepB.nren };
-
-      EPA = { ren: EPA.ren + weighted_energy_stepA.ren, nren: EPA.nren + weighted_energy_stepA.nren };
-      EPB = { ren: EPB.ren + weighted_energy_stepAB.ren, nren: EPB.nren + weighted_energy_stepAB.nren };
-    }
-  );
-  return { EP: { B: EPB, A: EPA }, balance };
+  return {
+    carrierdata,
+    k_exp,
+    fp,
+    balance_cr_i,
+    EP
+  };
 }
