@@ -417,7 +417,7 @@ export function ep2dict(EP, area = 1.0) {
 //    This follows the ISO EN 52000-1 procedure for calculation of delivered,
 //    exported and weighted energy balance.
 //
-function balance_cr(carrierdata, k_exp, fp_cr) {
+function balance_cr(carrierdata, fp_cr, k_exp) {
   // ------------ Delivered and exported energy
 
   // * Energy used by technical systems for EPB services, for each time step
@@ -717,7 +717,7 @@ export function energy_performance(carrierdata, fp, k_exp) {
   let balance_cr_i = {};
   Object.keys(carrierdata).map(carrier => {
     let fp_cr = fp.filter(e => e.vector === carrier);
-    balance_cr_i[carrier] = balance_cr(carrierdata[carrier], k_exp, fp_cr);
+    balance_cr_i[carrier] = balance_cr(carrierdata[carrier], fp_cr, k_exp);
   });
 
   const EP = Object.keys(balance_cr_i)
