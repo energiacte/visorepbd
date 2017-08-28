@@ -153,12 +153,12 @@ function check(casename, computed, result, verbose = false) {
   let errA = false;
   let errB = false;
 
-  if (result.hasOwnProperty('EPpasoA')) {
-    errA = reserr(computed.EP.A, result.EPpasoA);
+  if (result.EP.hasOwnProperty('A')) {
+    errA = reserr(computed.EP.A, result.EP.A);
   }
 
-  if (result.hasOwnProperty('EP')) {
-    errB = reserr(computed.EP.B, result.EP);
+  if (result.EP.hasOwnProperty('B')) {
+    errB = reserr(computed.EP.B, result.EP.B);
   }
 
   const isError = errA || errB;
@@ -168,13 +168,13 @@ function check(casename, computed, result, verbose = false) {
     outstr = `[ERROR] ${casename} (${computed.path})`;
     if (errA) {
       outstr += `\n  Found:    ${ showEP(computed.EP.A, 'A') }`
-        + `\n  Expected: ${ showEP(result.EPpasoA, 'A')}`;
+        + `\n  Expected: ${ showEP(result.EP.A, 'A')}`;
     } else if (verbose) {
-      outstr += `\n  ${ showEP(computed.EPpasoA, 'A') }`;
+      outstr += `\n  ${ showEP(computed.EP.A, 'A') }`;
     }
     if (errB) {
       outstr += `\n  Found:    ${ showEP(computed.EP.B, 'B') }`
-        + `\n  Expected: ${ showEP(result.EP, 'B')}`;
+        + `\n  Expected: ${ showEP(result.EP.B, 'B')}`;
     } else if (verbose) {
       outstr += `\n  ${ showEP(computed.EP.B, 'B') }`;
     }
@@ -211,75 +211,75 @@ console.log("*** Ejemplos FprEN 15603:2014\n");
 
 check('1 base',
       epfromfile('ejemplo1base.csv', TESTFP, TESTKEXP),
-      { EP: { ren: 50.0, nren: 200.0 } });
+      { EP: { B: { ren: 50.0, nren: 200.0 } } });
 
 check('1 base_normativo',
       epfromfile('ejemplo1base.csv', CTEFP, TESTKEXP),
-      { EP: { ren: 34.1, nren: 208.20 } });
+      { EP: { B: { ren: 34.1, nren: 208.20 } } });
 
 check('1 PV',
       epfromfile('ejemplo1PV.csv', TESTFP, TESTKEXP),
-      { EP: { ren: 75.0, nren: 100.0 } });
+      { EP: { B: { ren: 75.0, nren: 100.0 } } });
 
 check('1 PV_normativo',
       epfromfile('ejemplo1PV.csv', CTEFP, TESTKEXP),
-      { EP: { ren: 67.1, nren: 104.1 } });
+      { EP: { B: { ren: 67.1, nren: 104.1 } } });
 
 check('1 xPV',
       epfromfile('ejemplo1xPV.csv', TESTFP, TESTKEXP),
-      { EP: { ren: 120.0, nren: -80.0 } });
+      { EP: { B: { ren: 120.0, nren: -80.0 } } });
 
 check('1 xPV_normativo',
       epfromfile('ejemplo1xPV.csv', CTEFP, TESTKEXP),
-      { EP: { ren: 120.0, nren: -80.0 } });
+      { EP: { B: { ren: 120.0, nren: -80.0 } } });
 
 check('1 xPVk0',
       epfromfile('ejemplo1xPV.csv', TESTFP, 0.0),
-      { EP: { ren: 100.0, nren: 0.0 } });
+      { EP: { B: { ren: 100.0, nren: 0.0 } } });
 
 check('1 xPVk0_normativo',
       epfromfile('ejemplo1xPV.csv', CTEFP, 0.0),
-      { EP: { ren: 100.0, nren: 0.0 } });
+      { EP: { B: { ren: 100.0, nren: 0.0 } } });
 
 check('2 xPV gas',
       epfromfile('ejemplo2xPVgas.csv', TESTFP, TESTKEXP),
-      { EP: { ren: 30.0, nren: 169.0 } });
+      { EP: { B: { ren: 30.0, nren: 169.0 } } });
 
 check('2 xPV gas_normativo',
       epfromfile('ejemplo2xPVgas.csv', CTEFP, TESTKEXP),
-      { EP: { ren: 30.9, nren: 186.1 } });
+      { EP: { B: { ren: 30.9, nren: 186.1 } } });
 
 check('3 PV BdC',
       epfromfile('ejemplo3PVBdC.csv', TESTFP, TESTKEXP),
-      { EP: { ren: 180.0, nren: 38.0 } });
+      { EP: { B: { ren: 180.0, nren: 38.0 } } });
 
 check('3 PV BdC_normativo',
       epfromfile('ejemplo3PVBdC.csv', CTEFP, TESTKEXP),
-      { EP: { ren: 177.5, nren: 39.6 } });
+      { EP: { B: { ren: 177.5, nren: 39.6 } } });
 
 check('4 cgn fosil',
       epfromfile('ejemplo4cgnfosil.csv', TESTFP, TESTKEXP),
-      { EP: { ren: -14.0, nren: 227.0 } });
+      { EP: { B: { ren: -14.0, nren: 227.0 } } });
 
 check('4 cgn fosil_normativo',
       epfromfile('ejemplo4cgnfosil.csv', CTEFP, TESTKEXP),
-      { EP: { ren: -12.7, nren: 251 } });
+      { EP: { B: { ren: -12.7, nren: 251 } } });
 
 check('5 cgn biogas',
       epfromfile('ejemplo5cgnbiogas.csv', TESTFP, TESTKEXP),
-      { EP: { ren: 159.0, nren: 69.0 } });
+      { EP: { B: { ren: 159.0, nren: 69.0 } } });
 
 check('5 cgn biogas_normativo',
       epfromfile('ejemplo5cgnbiogas.csv', CTEFP, TESTKEXP),
-      { EP: { ren: 148.9, nren: 76.4 } });
+      { EP: { B: { ren: 148.9, nren: 76.4 } } });
 
 check('6 K3',
       epfromfile('ejemplo6K3.csv', TESTFP, TESTKEXP),
-      { EP: { ren: 1385.5, nren: -662 } });
+      { EP: { B: { ren: 1385.5, nren: -662 } } });
 
 check('3 PV BdC_normativo_from_data',
       epfromdata(ENERGYDATALIST, CTEFP, TESTKEXP),
-      { EP: { ren: 177.5, nren: 39.6 } });
+      { EP: { B: { ren: 177.5, nren: 39.6 } } });
 
 // -----------------------------------------------------------
 
@@ -287,39 +287,39 @@ console.log("*** Ejemplos ISO/TR 52000-2:2016\n");
 
 check('J1 Base kexp=1.0',
       epfromfile('ejemploJ1_base.csv', TESTFPJ, TESTKEXP),
-      { EP: { ren: 50.0, nren: 200.0 }, EPpasoA: { ren: 50, nren: 200 } });
+      { EP: { B: { ren: 50.0, nren: 200.0 }, A: { ren: 50, nren: 200 } } });
 
 check('J2 Base + PV kexp=1.0',
       epfromfile('ejemploJ2_basePV.csv', TESTFPJ, TESTKEXP),
-      { EP: { ren: 75.0, nren: 100.0 }, EPpasoA: { ren: 75, nren: 100 } });
+      { EP: { B: { ren: 75.0, nren: 100.0 }, A: { ren: 75, nren: 100 } } });
 
 check('J3 Base + PV excess kexp=1.0',
       epfromfile('ejemploJ3_basePVexcess.csv', TESTFPJ, TESTKEXP),
-      { EP: { ren: 120, nren: -80.0 }, EPpasoA: { ren: 100, nren: 0 } });
+      { EP: { B: { ren: 120, nren: -80.0 }, A: { ren: 100, nren: 0 } } });
 
 check('J4 Base + PV excess kexp=0.0',
       epfromfile('ejemploJ3_basePVexcess.csv', TESTFPJ, 0.0),
-      { EP: { ren: 100, nren: 0.0 }, EPpasoA: { ren: 100, nren: 0 } });
+      { EP: { B: { ren: 100, nren: 0.0 }, A: { ren: 100, nren: 0 } } });
 
 check('J5 Gas boiler + PV for auxiliaries kexp=1.0',
       epfromfile('ejemploJ5_gasPV.csv', TESTFPJ, TESTKEXP),
-      { EP: { ren: 30, nren: 169 }, EPpasoA: { ren: 20, nren: 209 } });
+      { EP: { B: { ren: 30, nren: 169 }, A: { ren: 20, nren: 209 } } });
 
 check('J6 Heat pump + PV kexp=1.0',
       epfromfile('ejemploJ6_HPPV.csv', TESTFPJ, TESTKEXP),
-      { EP: { ren: 181, nren: 38 }, EPpasoA: { ren: 181, nren: 38 } });
+      { EP: { B: { ren: 181, nren: 38 }, A: { ren: 181, nren: 38 } } });
 
 check('J7 Co-generator (gas) + Gas boiler kexp=1.0',
       epfromfile('ejemploJ7_cogenfuelgasboiler.csv', TESTFPJ7, TESTKEXP),
-      { EP: { ren: -14, nren: 229 }, EPpasoA: { ren: 0, nren: 215 } });
+      { EP: { B: { ren: -14, nren: 229 }, A: { ren: 0, nren: 215 } } });
 
 check('J8 Co-generator (biogas) + Gas boiler kexp=1.0',
       epfromfile('ejemploJ8_cogenbiogasboiler.csv', TESTFPJ8, TESTKEXP),
-      { EP: { ren: 144, nren: 71 }, EPpasoA: { ren: 96, nren: 120 } });
+      { EP: { B: { ren: 144, nren: 71 }, A: { ren: 96, nren: 120 } } });
 
 check('J9 electricity monthly kexp=1.0',
       epfromfile('ejemploJ9_electr.csv', TESTFPJ9, TESTKEXP),
-      { EP: { ren: 1386.0, nren: -662.0 }, EPpasoA: { ren: 1010, nren: 842 } }, true);
+      { EP: { B: { ren: 1386.0, nren: -662.0 }, A: { ren: 1010, nren: 842 } } }, true);
 
 // TODO: Sin ejemplos de factor de coincidencia de cargas f_match
 
