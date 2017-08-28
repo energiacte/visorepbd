@@ -258,7 +258,8 @@ export function readenergystring(datastring) {
     .map(line => {
       let [key, value] = line.split(':').map(l => l.trim());
       // TODO: allow here lists of numbers too
-      value = value.match(/^-?\d*[\.|,]?\d+$/) ? parseFloat(value) : value;
+      const floatRegex = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
+      value = value.match(floatRegex) ? parseFloat(value) : value;
       meta[key] = value;
     });
   return { components, meta };
