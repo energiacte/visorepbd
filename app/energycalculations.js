@@ -238,11 +238,11 @@ export function readenergystring(datastring) {
       .map(([fieldsstring, comment]) => {
         const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
         let [ carrier, ctype, originoruse, ...values ] = fieldslist;
-        // Minimal consistency checks
+        // TODO: Move out minimal consistency checks to explicit check function?
         if (fieldslist.length > 3
-            && Object.keys(VALIDDATA).indexOf(ctype) > -1
-            && Object.keys(VALIDDATA[ctype]).indexOf(originoruse) > -1
-            && VALIDDATA[ctype][originoruse].indexOf(carrier) > -1) {
+            && Object.keys(VALIDDATA).includes(ctype)
+            && Object.keys(VALIDDATA[ctype]).includes(originoruse)
+            && VALIDDATA[ctype][originoruse].includes(carrier)) {
           values = values.map(Number);
           return { carrier, ctype, originoruse, values, comment };
         }
@@ -265,7 +265,7 @@ export function readenergystring(datastring) {
   return { components, meta };
 }
 
-// Parse carrier data list and generate data object from it
+// Parse carrier data list and generate a carrier data object from it
 // Add all values of vectors with the same carrier ctype and originoruse
 // datadict[carrier][ctype][originoruse] -> values as np.array with length=numsteps
 //
