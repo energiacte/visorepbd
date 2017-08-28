@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { readenergystring } from '../energycalculations.js';
+import { string_to_carrier_list } from '../energycalculations.js';
 
 export default class ActionsPanel extends React.Component {
 
@@ -13,13 +13,13 @@ export default class ActionsPanel extends React.Component {
     }
 
     let getData = str => {
-      let { components, meta } = readenergystring(str);
-      components = components.map(dd => { return {...dd, active: true }; });
+      let { components, meta } = string_to_carrier_list(str);
+      components = components.map(dd => { return { ...dd, active: true }; });
       return { components, meta };
     };
 
     const reader = new FileReader();
-    reader.onload = e => onLoadHandler(getData(e.target.result));
+    reader.onload = el => onLoadHandler(getData(el.target.result));
     reader.readAsText(file);
     this.props.onChangeCurrentFileName(file.name);
   }
@@ -43,28 +43,28 @@ export default class ActionsPanel extends React.Component {
       <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
         <button className="btn" id="add" type="button"
                 onClick={this.props.onAdd}>
-          <span className="glyphicon glyphicon-plus"></span> Añadir
+          <span className="glyphicon glyphicon-plus"/> Añadir
         </button>
         <button className="btn" id="remove" type="button"
                 onClick={this.props.onRemove}>
-          <span className="glyphicon glyphicon-minus"></span> Borrar
+          <span className="glyphicon glyphicon-minus"/> Borrar
         </button>
         <button className="btn" id="modify" type="button"
                 onClick={this.props.onRestore}>
-          <span className="glyphicon glyphicon-repeat"></span> Restaurar
+          <span className="glyphicon glyphicon-repeat"/> Restaurar
         </button>
         <input ref="fileInput" type="file"
                onChange={ e => this.handleFiles(e, this.props.onLoad) }
-               style={{visibility:'hidden', position:'absolute', top:'-50px', left:'-50px'}} />
+               style={{ visibility: 'hidden', position: 'absolute', top: '-50px', left: '-50px' }} />
         <button className="btn bg-primary" id="modify" type="button"
-                onClick={ e => this.refs.fileInput.click() }>
-          <span className="glyphicon glyphicon-upload"></span> Cargar datos
+                onClick={ () => this.refs.fileInput.click() }>
+          <span className="glyphicon glyphicon-upload"/> Cargar datos
         </button>
         <button className="btn bg-primary" id="save" type="button"
                 onClick={ e => this.downloadFile(e, this.props.getEnergyString) }>
-          <span className="glyphicon glyphicon-download"></span> Guardar datos
+          <span className="glyphicon glyphicon-download"/> Guardar datos
         </button>
       </div>
     );
   }
-};
+}

@@ -25,7 +25,7 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
            Daniel Jiménez González <dani@ietcc.csic.es>
 */
 
-import { readenergystring, readfactors, parse_carrier_list, energy_performance } from './energycalculations.js';
+import { string_to_carrier_list, readfactors, parse_carrier_list, energy_performance } from './energycalculations.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -202,7 +202,7 @@ function epfromdata(datalist, fp, kexp) {
 function epfromfile(filename, fp, kexp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const datalist = readenergystring(datastring).components;
+  const datalist = string_to_carrier_list(datastring).components;
   return epfromdata(datalist, fp, kexp);
 }
 

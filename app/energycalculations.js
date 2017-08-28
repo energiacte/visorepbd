@@ -223,7 +223,7 @@ const vecsum = vec => vec.reduce((a, b) => a + b, 0);
 //   - the energy end use (EPB or NEPB) for delivered energy
 // * values is a list of energy values, one for each timestep
 // * comment is a comment string for the vector
-export function readenergystring(datastring) {
+export function string_to_carrier_list(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
         .map(line => line.trim())
         .filter(line => !(line === '' || line.startsWith('vector')));
