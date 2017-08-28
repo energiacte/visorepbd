@@ -270,6 +270,17 @@ export function string_to_carrier_list(datastring) {
       value = value.match(floatRegex) ? parseFloat(value) : value;
       meta[key] = value;
     });
+
+  // Check: same number of timesteps for all carriers
+  const lengths = components.map(datum => datum.values.length);
+  const numSteps = Math.max(...lengths);
+  const errLengths = lengths.filter(v => v < numSteps);
+
+  if (errLengths.length !== 0) {
+    throw new UserException(`All input must have the same number of timesteps.
+                            Problem found in lines ${ errLengths }`);
+  }
+
   return { components, meta };
 }
 
@@ -293,17 +304,7 @@ export function string_to_carrier_list(datastring) {
 //            * values is a list of energy values, one for each timestep
 //            * comment is a comment string for the vector
 export function parse_carrier_list(carrierlist) {
-  const lengths = carrierlist.map(datum => datum.values.length);
-  const numSteps = Math.max(...lengths);
-  const errLengths = lengths.filter(v => v < numSteps);
-
-  if (errLengths.length !== 0) {
-    throw new UserException(`All input must have the same number of timesteps.
-                            Problem found in lines ${ errLengths }`);
-  }
-  const EMPTYVALUES = Array(numSteps).fill(0.0);
-
-  // TODO: convert to reduce
+  const EMPTYVALUES = Array(carrierlist[0].values.length).fill(0.0);
   let data = {};
   carrierlist.map(
     datum => {
