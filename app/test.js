@@ -176,7 +176,7 @@ function check(casename, computed, result, verbose = false) {
       outstr += `\n  Found:    ${ showEP(computed.EP.B, 'B') }`
         + `\n  Expected: ${ showEP(result.EP, 'B')}`;
     } else if (verbose) {
-      outstr += `\n  ${ showEP(computed.EP, 'B') }`;
+      outstr += `\n  ${ showEP(computed.EP.B, 'B') }`;
     }
     if (verbose) {
       outstr += `\n\n**** Balance ****\n\n${ JSON.stringify(computed, null, 4) }`;
