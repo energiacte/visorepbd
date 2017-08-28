@@ -160,8 +160,6 @@ function UserException(message) {
   this.name = 'UserException';
 }
 
-const EMPTYCOMPONENT = { active: true, carrier: 'ELECTRICIDAD', ctype: 'CONSUMO', originoruse: 'EPB', values: [0.0] };
-
 // -----------------------------------------------------------------------------------
 // Vector utilities
 // -----------------------------------------------------------------------------------
@@ -249,8 +247,19 @@ export function string_to_carrier_list(datastring) {
         return null;
       })
       .filter(v => v !== null);
-  if (components.length === 0) components.push(EMPTYCOMPONENT);
+  if (components.length === 0) {
+    const EMPTYCOMPONENT = {
+      active: true,
+      carrier: 'ELECTRICIDAD',
+      ctype: 'CONSUMO',
+      originoruse: 'EPB',
+      values: [0.0],
+      comment: ''
+    };
+    components.push(EMPTYCOMPONENT);
+  }
 
+  const floatRegex = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
   const meta = {};
   commentlines
     .filter(line => line.startsWith('#CTE_'))
@@ -258,7 +267,6 @@ export function string_to_carrier_list(datastring) {
     .map(line => {
       let [key, value] = line.split(':').map(l => l.trim());
       // TODO: allow here lists of numbers too
-      const floatRegex = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
       value = value.match(floatRegex) ? parseFloat(value) : value;
       meta[key] = value;
     });
@@ -285,23 +293,26 @@ export function string_to_carrier_list(datastring) {
 //            * values is a list of energy values, one for each timestep
 //            * comment is a comment string for the vector
 export function parse_carrier_list(carrierlist) {
-  const numsteps = Math.max(...carrierlist.map(datum => datum.values.length));
+  const lengths = carrierlist.map(datum => datum.values.length);
+  const numSteps = Math.max(...lengths);
+  const errLengths = lengths.filter(v => v < numSteps);
 
+  if (errLengths.length !== 0) {
+    throw new UserException(`All input must have the same number of timesteps.
+                            Problem found in lines ${ errLengths }`);
+  }
+  const EMPTYVALUES = Array(numSteps).fill(0.0);
+
+  // TODO: convert to reduce
   let data = {};
-  carrierlist.forEach(
-    (datum, ii) => {
-      const { carrier, ctype, originoruse } = datum;
-      const values = datum.values.map(value => parseFloat(value));
-
-      if (values.length !== numsteps) {
-        throw new UserException(`All input must have the same number of timesteps.
-                                Problem found in line ${ ii + 1 }: \t${ datum }`);
-      }
+  carrierlist.map(
+    datum => {
+      const { carrier, ctype, originoruse, values } = datum;
       if (!data.hasOwnProperty(carrier)) {
-        data[carrier] = { CONSUMO: { EPB: new Array(numsteps).fill(0.0),
-                                     NEPB: new Array(numsteps).fill(0.0) },
-                          PRODUCCION: { INSITU: new Array(numsteps).fill(0.0),
-                                        COGENERACION: new Array(numsteps).fill(0.0) }
+        data[carrier] = { CONSUMO: { EPB: [ ...EMPTYVALUES ],
+                                     NEPB: [ ...EMPTYVALUES ] },
+                          PRODUCCION: { INSITU: [ ...EMPTYVALUES ],
+                                        COGENERACION: [ ...EMPTYVALUES ] }
                          };
       }
       data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
@@ -717,7 +728,9 @@ export function energy_performance(carrierdata, fp, k_exp) {
   let balance_cr_i = {};
   Object.keys(carrierdata).map(carrier => {
     let fp_cr = fp.filter(e => e.vector === carrier);
-    balance_cr_i[carrier] = balance_cr(carrierdata[carrier], fp_cr, k_exp);
+    // TODO: Hacer aquí la suma de valores para cada vector y no en parse_carrier_list
+    const data_cr_i = carrierdata[carrier];
+    balance_cr_i[carrier] = balance_cr(data_cr_i, fp_cr, k_exp);
   });
 
   const EP = Object.keys(balance_cr_i)
