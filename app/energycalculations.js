@@ -378,12 +378,11 @@ export function ep2dict(EP, area = 1.0) {
 
 // Calculate energy balance for carrier
 //
-//
-//    carrierdata: { 'CONSUMO': { 'EPB': [vi1, ..., vin],
-//                                'NEPB': [vj1, ..., vjn] },
-//                   'PRODUCCION': { 'INSITU': [vk1, ..., vkn]},
-//                                   'COGENERACION' : [vl1, ..., vln] }
-//                  } // n: number of timesteps
+//    cr_i_list: list of components for carrier_i
+//     [ {carrier: carrier_i, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
+//       {carrier: carrier_i, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
+//       ...
+//     ]
 //
 //    k_exp: exported energy factor [0, 1]
 //
@@ -392,25 +391,51 @@ export function ep2dict(EP, area = 1.0) {
 //    This follows the ISO EN 52000-1 procedure for calculation of delivered,
 //    exported and weighted energy balance.
 //
-function balance_cr(carrierdata, fp_cr, k_exp) {
+function balance_cr(cr_i_list, fp_cr, k_exp) {
   // ------------ Delivered and exported energy
+  const numSteps = cr_i_list[0].values.length;
+  const EMPTYVALUES = Array(numSteps).fill(0.0);
 
   // * Energy used by technical systems for EPB services, for each time step
-  const E_EPus_cr_t = carrierdata.CONSUMO.EPB;
+  const E_EPus_cr_t = cr_i_list
+    .filter(e => e.ctype === 'CONSUMO')
+    .filter(e => e.originoruse === 'EPB')
+    .reduce(
+      (acc, e) => vecvecsum(acc, e.values),
+      [ ...EMPTYVALUES ]
+    );
+
   // * Energy used by technical systems for non-EPB services, for each time step
-  const E_nEPus_cr_t = carrierdata.CONSUMO.NEPB;
+  const E_nEPus_cr_t = cr_i_list
+    .filter(e => e.ctype === 'CONSUMO')
+    .filter(e => e.originoruse === 'NEPB')
+    .reduce(
+      (acc, e) => vecvecsum(acc, e.values),
+      [ ...EMPTYVALUES ]
+    );
+
   // * Produced on-site energy and inside the assessment boundary, by generator i (origin i)
-  const E_pr_cr_pr_i_t = carrierdata.PRODUCCION;
+  const E_pr_cr_pr_i_t = cr_i_list
+  .filter(e => e.ctype === 'PRODUCCION')
+  .reduce(
+    (acc, e) => ({
+      ...acc,
+      [e.originoruse]: vecvecsum(acc[e.originoruse] || [ ...EMPTYVALUES ], e.values)
+    }),
+    {}
+  );
+
   // Annually produced on-site energy from generator i (origin i)
   const E_pr_cr_pr_i_an = Object.keys(E_pr_cr_pr_i_t).reduce((obj, gen) =>
   ({ ...obj, [gen]: vecsum(E_pr_cr_pr_i_t[gen]) }),
   {});
 
   // PRODUCED ENERGY GENERATORS (ORIGINS)
-  const pr_generators = Object.keys(E_pr_cr_pr_i_t); // INSITU + COGENERACION
+  const pr_generators = Object.keys(E_pr_cr_pr_i_t); // INSITU, COGENERACION
 
   // * Energy produced on-site and inside the assessment boundary (formula 30)
-  const E_pr_cr_t = veclistsum(pr_generators.map(gen => E_pr_cr_pr_i_t[gen]));
+  const E_pr_cr_t = (pr_generators.length ?
+    veclistsum(pr_generators.map(gen => E_pr_cr_pr_i_t[gen])) : [ ...EMPTYVALUES ]);
   const E_pr_cr_an = vecsum(E_pr_cr_t);
 
   // * Produced energy from all origins for EPB services for each time step (formula 31)
@@ -651,9 +676,9 @@ function balance_cr(carrierdata, fp_cr, k_exp) {
   }; // Partial result for carrier (formula 2)
 
   const balance = {
-    used_EPB: carrierdata.CONSUMO.EPB,
-    used_nEPB: carrierdata.CONSUMO.NEPB,
-    produced_bygen: carrierdata.PRODUCCION,
+    used_EPB: E_EPus_cr_t,
+    used_nEPB: E_nEPus_cr_t,
+    produced_bygen: E_pr_cr_pr_i_t,
     produced_bygen_an: E_pr_cr_pr_i_an,
     produced: E_pr_cr_t,
     produced_an: E_pr_cr_an,
@@ -688,32 +713,14 @@ function balance_cr(carrierdata, fp_cr, k_exp) {
 //
 //
 export function energy_performance(carrierlist, fp, k_exp) {
-
-  // Add all values of vectors with the same carrier ctype and originoruse
-  // data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
-  const EMPTYVALUES = Array(carrierlist[0].values.length).fill(0.0);
-  let data = {};
-  carrierlist.map(
-    datum => {
-      const { carrier, ctype, originoruse, values } = datum;
-      if (!data.hasOwnProperty(carrier)) {
-        data[carrier] = { CONSUMO: { EPB: [ ...EMPTYVALUES ],
-                                     NEPB: [ ...EMPTYVALUES ] },
-                          PRODUCCION: { INSITU: [ ...EMPTYVALUES ],
-                                        COGENERACION: [ ...EMPTYVALUES ] }
-                         };
-      }
-      data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
-    }
-  );
-  const carrierdata = data;
+  const CARRIERS = [...new Set(carrierlist.map(e => e.carrier))];
 
   // Compute balance
   let balance_cr_i = {};
-  Object.keys(carrierdata).map(carrier => {
-    let fp_cr = fp.filter(e => e.vector === carrier);
-    const data_cr_i = carrierdata[carrier];
-    balance_cr_i[carrier] = balance_cr(data_cr_i, fp_cr, k_exp);
+  CARRIERS.map(carrier => {
+    const fp_cr = fp.filter(e => e.vector === carrier);
+    const cr_i_list = carrierlist.filter(e => e.carrier === carrier);
+    balance_cr_i[carrier] = balance_cr(cr_i_list, fp_cr, k_exp);
   });
 
   const EP = Object.keys(balance_cr_i)
@@ -738,7 +745,7 @@ export function energy_performance(carrierlist, fp, k_exp) {
     );
 
   return {
-    carrierdata,
+    carrierlist,
     k_exp,
     fp,
     balance_cr_i,
