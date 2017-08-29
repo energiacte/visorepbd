@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import NavBar from 'components/NavBar';
 import Footer from 'components/Footer';
-import mfomlogo from 'img/logomfom.png';
-import ietcclogo from 'img/logoietcccsic.png';
 
 import { editWFactors } from 'actions/actions.js';
 
