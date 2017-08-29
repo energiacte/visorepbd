@@ -284,43 +284,6 @@ export function string_to_carrier_list(datastring) {
   return { components, meta };
 }
 
-// Parse carrier data list and generate a carrier data object from it
-// Add all values of vectors with the same carrier ctype and originoruse
-// datadict[carrier][ctype][originoruse] -> values as np.array with length=numsteps
-//
-// carrierlist: list of energy carrier data
-//
-//        [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
-//          {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
-//          ... ]
-//
-//        where:
-//
-//            * carrier is an energy carrier
-//            * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
-//            * originoruse defines:
-//              - the energy origin for produced energy (INSITU or COGENERACION)
-//              - the energy end use (EPB or NEPB) for delivered energy
-//            * values is a list of energy values, one for each timestep
-//            * comment is a comment string for the vector
-export function parse_carrier_list(carrierlist) {
-  const EMPTYVALUES = Array(carrierlist[0].values.length).fill(0.0);
-  let data = {};
-  carrierlist.map(
-    datum => {
-      const { carrier, ctype, originoruse, values } = datum;
-      if (!data.hasOwnProperty(carrier)) {
-        data[carrier] = { CONSUMO: { EPB: [ ...EMPTYVALUES ],
-                                     NEPB: [ ...EMPTYVALUES ] },
-                          PRODUCCION: { INSITU: [ ...EMPTYVALUES ],
-                                        COGENERACION: [ ...EMPTYVALUES ] }
-                         };
-      }
-      data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
-    }
-  );
-  return data;
-}
 
 // Save energy data and metadata to string
 // TODO: revisar con últimos cambios en formato de salida
@@ -724,12 +687,31 @@ function balance_cr(carrierdata, fp_cr, k_exp) {
 // Compute overall energy performance aggregating results for all energy carriers
 //
 //
-export function energy_performance(carrierdata, fp, k_exp) {
+export function energy_performance(carrierlist, fp, k_exp) {
+
+  // Add all values of vectors with the same carrier ctype and originoruse
+  // data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
+  const EMPTYVALUES = Array(carrierlist[0].values.length).fill(0.0);
+  let data = {};
+  carrierlist.map(
+    datum => {
+      const { carrier, ctype, originoruse, values } = datum;
+      if (!data.hasOwnProperty(carrier)) {
+        data[carrier] = { CONSUMO: { EPB: [ ...EMPTYVALUES ],
+                                     NEPB: [ ...EMPTYVALUES ] },
+                          PRODUCCION: { INSITU: [ ...EMPTYVALUES ],
+                                        COGENERACION: [ ...EMPTYVALUES ] }
+                         };
+      }
+      data[carrier][ctype][originoruse] = vecvecsum(data[carrier][ctype][originoruse], values);
+    }
+  );
+  const carrierdata = data;
+
   // Compute balance
   let balance_cr_i = {};
   Object.keys(carrierdata).map(carrier => {
     let fp_cr = fp.filter(e => e.vector === carrier);
-    // TODO: Hacer aquí la suma de valores para cada vector y no en parse_carrier_list
     const data_cr_i = carrierdata[carrier];
     balance_cr_i[carrier] = balance_cr(data_cr_i, fp_cr, k_exp);
   });

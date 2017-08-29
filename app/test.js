@@ -25,7 +25,7 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
            Daniel Jiménez González <dani@ietcc.csic.es>
 */
 
-import { string_to_carrier_list, readfactors, parse_carrier_list, energy_performance } from './energycalculations.js';
+import { string_to_carrier_list, readfactors, energy_performance } from './energycalculations.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -193,8 +193,7 @@ function check(casename, computed, result, verbose = false) {
 
 // Compute primary energy (weighted energy) from datalist
 function epfromdata(datalist, fp, kexp) {
-  const data = parse_carrier_list(datalist);
-  const balance = energy_performance(data, fp, kexp);
+  const balance = energy_performance(datalist, fp, kexp);
   return { ...balance, path: 'data' };
 }
 
