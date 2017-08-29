@@ -32,7 +32,7 @@ class WeightingFactorsPage extends React.Component {
             </thead>
             <tbody>
               <tr>
-                <td>RED1</td><td>grid</td><td>input</td><td>A</td>
+                <td>RED1</td><td>RED</td><td>input</td><td>A</td>
                 <td>
                   <input type="text" ref="red1ren"
                          defaultValue={ red1.ren.toFixed(3) }
@@ -47,7 +47,7 @@ class WeightingFactorsPage extends React.Component {
                 </td>
               </tr>
               <tr>
-                <td>RED2</td><td>grid</td><td>input</td><td>A</td>
+                <td>RED2</td><td>RED</td><td>input</td><td>A</td>
                 <td>
                   <input type="text" ref="red2ren"
                          defaultValue={ red2.ren.toFixed(3) }
@@ -98,11 +98,10 @@ class WeightingFactorsPage extends React.Component {
             </ul>
             <p>Origen:</p>
             <ul>
-              <li><tt>grid</tt>: red</li>
+              <li><tt>RED</tt>: red de distribución</li>
               <li><tt>INSITU</tt>: producción 'in situ'</li>
-              <li><tt>COGENERACION</tt>: energía procedente de la cogeneración
-              (debe aplicarse únicamente a la energía eléctrica producida,
-              considerando la energía térmica dentro de la frontera de evaluación)</li>
+              <li><tt>COGENERACION</tt>: cogeneración
+              (energía producida usando otra energía importada dentro de la frontera de evaluación)</li>
             </ul>
             <p>Uso:</p>
             <ul>

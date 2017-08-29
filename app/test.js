@@ -33,33 +33,33 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const TESTFPJ = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
-ELECTRICIDAD, grid, input, A, 0.5, 2.0
+ELECTRICIDAD, RED, input, A, 0.5, 2.0
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
-GASNATURAL, grid, input,A, 0.0, 1.1
-BIOCARBURANTE, grid, input, A, 1.1, 0.1
+GASNATURAL, RED, input,A, 0.0, 1.1
+BIOCARBURANTE, RED, input, A, 1.1, 0.1
 MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
-MEDIOAMBIENTE, grid, input,  A, 1.0, 0.0
+MEDIOAMBIENTE, RED, input,  A, 1.0, 0.0
 `);
 
 const TESTFPJ7 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
-ELECTRICIDAD, grid, input, A, 0.5, 2.0
-GASNATURAL, grid, input,A, 0.0, 1.1
+ELECTRICIDAD, RED, input, A, 0.5, 2.0
+GASNATURAL, RED, input,A, 0.0, 1.1
 ELECTRICIDAD, COGENERACION, input, A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 0.0, 2.5
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0`);
 
 const TESTFPJ8 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
-ELECTRICIDAD, grid, input, A, 0.5, 2.0
-GASNATURAL, grid, input,A, 0.0, 1.1
-BIOCARBURANTE, grid, input, A, 1.0, 0.1
+ELECTRICIDAD, RED, input, A, 0.5, 2.0
+GASNATURAL, RED, input,A, 0.0, 1.1
+BIOCARBURANTE, RED, input, A, 1.0, 0.1
 ELECTRICIDAD, COGENERACION, input, A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 2.27, 0.23
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0`);
 
 const TESTFPJ9 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
-ELECTRICIDAD, grid, input, A, 0.5, 2.0
+ELECTRICIDAD, RED, input, A, 0.5, 2.0
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_nEPB, A, 1.0, 0.0
@@ -68,7 +68,7 @@ ELECTRICIDAD, INSITU, to_nEPB, B, 0.5, 2.0`);
 
 const TESTFP = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
 
-ELECTRICIDAD, grid, input, A, 0.5, 2.0
+ELECTRICIDAD, RED, input, A, 0.5, 2.0
 
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
@@ -76,12 +76,12 @@ ELECTRICIDAD, INSITU, to_nEPB, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
 ELECTRICIDAD, INSITU, to_nEPB, B, 0.5, 2.0
 
-GASNATURAL, grid, input,A, 0.0, 1.1
+GASNATURAL, RED, input,A, 0.0, 1.1
 
-BIOCARBURANTE, grid, input, A, 1.1, 0.1
+BIOCARBURANTE, RED, input, A, 1.1, 0.1
 
 MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
-MEDIOAMBIENTE, grid, input,  A, 1.0, 0.0
+MEDIOAMBIENTE, RED, input,  A, 1.0, 0.0
 
 ELECTRICIDAD, COGENERACION, input,   A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 0.0, 2.5
@@ -92,11 +92,11 @@ ELECTRICIDAD, COGENERACION, to_nEPB, B, 0.5, 2.0`);
 const CTEFP = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
 #valores de la propuesta del documento reconocido del IDAE de 03/02/2014, página 14
 
-ELECTRICIDAD, grid, input, A, 0.341, 2.082
+ELECTRICIDAD, RED, input, A, 0.341, 2.082
 
-ELECTRICIDADBALEARES, grid, input, A, 0.094, 3.060
-ELECTRICIDADCANARIAS, grid, input, A, 0.059, 3.058
-ELECTRICIDADCEUTAMELILLA, grid, input, A, 0.066, 2.759
+ELECTRICIDADBALEARES, RED, input, A, 0.094, 3.060
+ELECTRICIDADCANARIAS, RED, input, A, 0.059, 3.058
+ELECTRICIDADCEUTAMELILLA, RED, input, A, 0.066, 2.759
 
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
@@ -104,18 +104,18 @@ ELECTRICIDAD, INSITU, to_nEPB, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
 ELECTRICIDAD, INSITU, to_nEPB, B, 0.5, 2.0
 
-GASOLEO, grid, input, A, 0.003, 1.179
+GASOLEO, RED, input, A, 0.003, 1.179
 
-GLP, grid, input, A, 0.03, 1.201
+GLP, RED, input, A, 0.03, 1.201
 
-GASNATURAL, grid, input,A, 0.005, 1.190
+GASNATURAL, RED, input,A, 0.005, 1.190
 
-CARBON, grid, input, A, 0.002, 1.082
+CARBON, RED, input, A, 0.002, 1.082
 
-BIOCARBURANTE, grid, input, A, 1.028, 0.085 #BIOMASA DENSIFICADA (PELLETS)
+BIOCARBURANTE, RED, input, A, 1.028, 0.085 #BIOMASA DENSIFICADA (PELLETS)
 
 MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
-MEDIOAMBIENTE, grid, input,  A, 1.0, 0.0
+MEDIOAMBIENTE, RED, input,  A, 1.0, 0.0
 
 ELECTRICIDAD, COGENERACION, input,   A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 1.0, 0.0
@@ -323,9 +323,4 @@ check('J9 electricity monthly kexp=1.0',
       epfromfile('ejemploJ9_electr.csv', TESTFPJ9, TESTKEXP),
       { EP: { B: { ren: 1386.0, nren: -662.0 }, A: { ren: 1010, nren: 842 } } }, true);
 
-// TODO: Sin ejemplos de factor de coincidencia de cargas f_match
-
 // ---------------------------------------------------------------
-
-// console.log(TESTFP);
-// console.log(CTEFP);

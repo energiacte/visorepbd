@@ -1,6 +1,6 @@
 vector, fuente, uso, step, ren, nren
 
-ELECTRICIDAD, grid, input, A, 0.5, 2.0
+ELECTRICIDAD, RED, input, A, 0.5, 2.0
 
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
@@ -8,9 +8,9 @@ ELECTRICIDAD, INSITU, to_nEPB, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
 ELECTRICIDAD, INSITU, to_nEPB, B, 0.5, 2.0
 
-GASNATURAL, grid, input,A, 0.0, 1.1
+GASNATURAL, RED, input,A, 0.0, 1.1
 
-BIOCARBURANTE, grid, input, A, 1.1, 0.1
+BIOCARBURANTE, RED, input, A, 1.1, 0.1
 
 MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
 

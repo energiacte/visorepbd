@@ -191,7 +191,7 @@ export function string_to_weighting_factors(factorsstring) {
 }
 
 // TODO: const fP = sanitize_weighting_factors(fp);
-// TODO: Podría avisar si no existe un factor: ['MEDIOAMBIENTE', 'grid', 'input', 'A', 1.000, 0.000]
+// TODO: Podría avisar si no existe un factor: ['MEDIOAMBIENTE', 'RED', 'input', 'A', 1.000, 0.000]
 // TODO: podría considerar que to_nEPB es igual a to_grid si no se define
 // TODO: podría considerar que to_grid es igual a input si no se define
 
@@ -366,7 +366,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
   const fpA_grid = fp_cr.find(fp =>
     fp.use === 'input'
     && fp.step === 'A'
-    && fp.source === 'grid'
+    && fp.source === 'RED'
   );
   const E_we_del_cr_grid_an = {
     ren: E_del_cr_an * fpA_grid.ren,
@@ -374,7 +374,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
   }; // formula 19, 39
 
   // 2) Delivered energy from non cogeneration sources
-  const delivery_sources = Object.keys(E_pr_cr_pr_i_an).filter(s => s !== 'grid' && s !== 'COGENERACION');
+  const delivery_sources = Object.keys(E_pr_cr_pr_i_an).filter(s => s !== 'RED' && s !== 'COGENERACION');
   const E_we_del_cr_pr_an = delivery_sources.reduce(
     (obj, gen) => {
       const fpA_pr_i = fp_cr.find(fp => fp.use === 'input' && fp.step === 'A' && fp.source === gen);

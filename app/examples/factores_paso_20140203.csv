@@ -1,11 +1,11 @@
 vector, fuente, uso, step, ren,nren
 #valores de la propuesta del documento reconocido del IDAE de 03/02/2014, página 14
 
-ELECTRICIDAD, grid, input, A, 0.341, 2.082
+ELECTRICIDAD, RED, input, A, 0.341, 2.082
 
-ELECTRICIDADBALEARES, grid, input, A, 0.094, 3.060
-ELECTRICIDADCANARIAS, grid, input, A, 0.059, 3.058
-ELECTRICIDADCEUTAMELILLA, grid, input, A, 0.066, 2.759
+ELECTRICIDADBALEARES, RED, input, A, 0.094, 3.060
+ELECTRICIDADCANARIAS, RED, input, A, 0.059, 3.058
+ELECTRICIDADCEUTAMELILLA, RED, input, A, 0.066, 2.759
 
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
@@ -13,15 +13,15 @@ ELECTRICIDAD, INSITU, to_nEPB, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
 ELECTRICIDAD, INSITU, to_nEPB, B, 0.5, 2.0
 
-GASOLEO, grid, input, A, 0.003, 1.179
+GASOLEO, RED, input, A, 0.003, 1.179
 
-GLP, grid, input, A, 0.03, 1.201
+GLP, RED, input, A, 0.03, 1.201
 
-GASNATURAL, grid, input,A, 0.005, 1.190
+GASNATURAL, RED, input,A, 0.005, 1.190
 
-CARBON, grid, input, A, 0.002, 1.082
+CARBON, RED, input, A, 0.002, 1.082
 
-BIOCARBURANTE, grid, input, A, 1.028, 0.085 #BIOMASA DENSIFICADA (PELLETS)
+BIOCARBURANTE, RED, input, A, 1.028, 0.085 #BIOMASA DENSIFICADA (PELLETS)
 
 MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
 

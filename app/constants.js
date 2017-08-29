@@ -40,7 +40,7 @@ export const FACTORESDEPASO = [
         // FpA - weighting factors accounting for the resources used to produce this energy
         // FpB - weighting factors accounting for the resources avoided by the external grid due to the export
         //  Energy carrier         origin          use         step Fpren  Fpnren
-        ['ELECTRICIDAD',        'grid',         'input',     'A', 0.414, 1.954], // Delivered energy
+        ['ELECTRICIDAD',        'RED',          'input',     'A', 0.414, 1.954], // Delivered energy
         ['ELECTRICIDAD',        'INSITU',       'input',     'A', 1.000, 0.000], // Produced energy
         ['ELECTRICIDAD',        'INSITU',       'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
         ['ELECTRICIDAD',        'INSITU',       'to_nEPB',   'A', 1.000, 0.000], // Produced and exported to nEPB uses
@@ -52,7 +52,7 @@ export const FACTORESDEPASO = [
         ['ELECTRICIDAD',        'COGENERACION', 'to_grid',   'B', 0.414, 1.954], // Savings to the grid when exporting to the grid
         ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',   'B', 0.414, 1.954], // Savings to the grid when exporting to nEPB uses
 
-        ['ELECTRICIDADBALEARES','grid',         'input',     'A', 0.082, 2.968], // Delivered energy
+        ['ELECTRICIDADBALEARES','RED',          'input',     'A', 0.082, 2.968], // Delivered energy
         ['ELECTRICIDADBALEARES','INSITU',       'input',     'A', 1.000, 0.000], // Produced energy
         ['ELECTRICIDADBALEARES','INSITU',       'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
         ['ELECTRICIDADBALEARES','INSITU',       'to_nEPB',   'A', 1.000, 0.000], // Produced and exported to nEPB uses
@@ -64,7 +64,7 @@ export const FACTORESDEPASO = [
         ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',   'B', 0.082, 2.968], // Savings to the grid when exporting to the grid
         ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',   'B', 0.082, 2.968], // Savings to the grid when exporting to nEPB uses
 
-        ['ELECTRICIDADCANARIAS','grid',         'input',     'A', 0.070, 2.924], // Delivered energy
+        ['ELECTRICIDADCANARIAS','RED',          'input',     'A', 0.070, 2.924], // Delivered energy
         ['ELECTRICIDADCANARIAS','INSITU',       'input',     'A', 1.000, 0.000], // Produced energy
         ['ELECTRICIDADCANARIAS','INSITU',       'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
         ['ELECTRICIDADCANARIAS','INSITU',       'to_nEPB',   'A', 1.000, 0.000], // Produced and exported to nEPB uses
@@ -76,7 +76,7 @@ export const FACTORESDEPASO = [
         ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',   'B', 0.070, 2.924], // Savings to the grid when exporting to the grid
         ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',   'B', 0.070, 2.924], // Savings to the grid when exporting to nEPB uses
 
-        ['ELECTRICIDADCEUTAMELILLA','grid',     'input',     'A', 0.072, 2.718], // Delivered energy
+        ['ELECTRICIDADCEUTAMELILLA','RED',      'input',     'A', 0.072, 2.718], // Delivered energy
         ['ELECTRICIDADCEUTAMELILLA','INSITU',   'input',     'A', 1.000, 0.000], // Produced energy
         ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
         ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_nEPB',   'A', 1.000, 0.000], // Produced and exported to nEPB uses
@@ -88,7 +88,7 @@ export const FACTORESDEPASO = [
         ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','B', 0.072, 2.718], // Savings to the grid when exporting to the grid
         ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','B', 0.072, 2.718], // Savings to the grid when exporting to nEPB uses
 
-        ['MEDIOAMBIENTE',       'grid',         'input',     'A', 1.000, 0.000], // Grid is able to deliver this carrier
+        ['MEDIOAMBIENTE',       'RED',          'input',     'A', 1.000, 0.000], // Grid is able to deliver this carrier
         ['MEDIOAMBIENTE',       'INSITU',       'input',     'A', 1.000, 0.000], // in-situ production of this carrier
         ['MEDIOAMBIENTE',       'INSITU',       'to_grid',   'A', 0.000, 0.000], // export to grid is not accounted for
         ['MEDIOAMBIENTE',       'INSITU',       'to_nEPB',   'A', 1.000, 0.000], // export to nEPB uses in step A
@@ -96,17 +96,17 @@ export const FACTORESDEPASO = [
         ['MEDIOAMBIENTE',       'INSITU',       'to_nEPB',   'B', 1.000, 0.000], // Savings to the grid when exporting to nEPB uses
 
         // BIOCARBURANTE == BIOMASA DENSIFICADA (PELLETS)
-        ['BIOCARBURANTE',       'grid',         'input',     'A', 1.028, 0.085], // Delivered energy
-        ['BIOMASA',             'grid',         'input',     'A', 1.003, 0.034], // Delivered energy
-        ['BIOMASADENSIFICADA',  'grid',         'input',     'A', 1.028, 0.085], // Delivered energy
-        ['CARBON',              'grid',         'input',     'A', 0.002, 1.082], // Delivered energy
+        ['BIOCARBURANTE',       'RED',          'input',     'A', 1.028, 0.085], // Delivered energy
+        ['BIOMASA',             'RED',          'input',     'A', 1.003, 0.034], // Delivered energy
+        ['BIOMASADENSIFICADA',  'RED',          'input',     'A', 1.028, 0.085], // Delivered energy
+        ['CARBON',              'RED',          'input',     'A', 0.002, 1.082], // Delivered energy
         // FUELOIL == GASOLEO
-        ['FUELOIL',             'grid',         'input',     'A', 0.003, 1.179], // Delivered energy
-        ['GASNATURAL',          'grid',         'input',     'A', 0.005, 1.190], // Delivered energy
-        ['GASOLEO',             'grid',         'input',     'A', 0.003, 1.179], // Delivered energy
-        ['GLP',                 'grid',         'input',     'A', 0.030, 1.201], // Delivered energy
-        ['RED1',                'grid',         'input',     'A', 0.000, 1.300], // User defined!, district heating/cooling carrier
-        ['RED2',                'grid',         'input',     'A', 0.000, 1.300]  // User defined!, district heating/cooling carrier
+        ['FUELOIL',             'RED',          'input',     'A', 0.003, 1.179], // Delivered energy
+        ['GASNATURAL',          'RED',          'input',     'A', 0.005, 1.190], // Delivered energy
+        ['GASOLEO',             'RED',          'input',     'A', 0.003, 1.179], // Delivered energy
+        ['GLP',                 'RED',          'input',     'A', 0.030, 1.201], // Delivered energy
+        ['RED1',                'RED',          'input',     'A', 0.000, 1.300], // User defined!, district heating/cooling carrier
+        ['RED2',                'RED',          'input',     'A', 0.000, 1.300]  // User defined!, district heating/cooling carrier
 ].map(([vector, source, use, step, ren, nren]) => {
   return { vector, source, use, step, ren, nren };
 });
