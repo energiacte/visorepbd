@@ -107,8 +107,8 @@ export const FACTORESDEPASO = [
         ['GLP',                 'grid',         'input',     'A', 0.030, 1.201], // Delivered energy
         ['RED1',                'grid',         'input',     'A', 0.000, 1.300], // User defined!, district heating/cooling carrier
         ['RED2',                'grid',         'input',     'A', 0.000, 1.300]  // User defined!, district heating/cooling carrier
-].map(([vector, source, use, step, fren, fnren]) => {
-  return { vector, source, use, step, fren, fnren };
+].map(([vector, source, use, step, ren, nren]) => {
+  return { vector, source, use, step, ren, nren };
 });
 
 // ------------------------------------------------------------------------------------

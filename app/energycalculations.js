@@ -183,10 +183,10 @@ export function string_to_weighting_factors(factorsstring) {
       if (fieldslist.length !== 6) {
         throw new UserException('Wrong number of fields in ' + fieldsstring);
       }
-      let [ vector, source, use, step, fren, fnren ] = fieldslist;
-      fren = parseFloat(fren);
-      fnren = parseFloat(fnren);
-      return { vector, source, use, step, fren, fnren, comment };
+      let [ vector, source, use, step, ren, nren ] = fieldslist;
+      ren = parseFloat(ren);
+      nren = parseFloat(nren);
+      return { vector, source, use, step, ren, nren, comment };
     });
 }
 
@@ -369,8 +369,8 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
     && fp.source === 'grid'
   );
   const E_we_del_cr_grid_an = {
-    ren: E_del_cr_an * fpA_grid.fren,
-    nren: E_del_cr_an * fpA_grid.fnren
+    ren: E_del_cr_an * fpA_grid.ren,
+    nren: E_del_cr_an * fpA_grid.nren
   }; // formula 19, 39
 
   // 2) Delivered energy from non cogeneration sources
@@ -381,8 +381,8 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
       const E_pr_i = E_pr_cr_pr_i_an[gen];
       if (E_pr_i === 0) { return obj; }
       return {
-        ren: obj.ren + E_pr_i * fpA_pr_i.fren,
-        nren: obj.nren + E_pr_i * fpA_pr_i.fnren
+        ren: obj.ren + E_pr_i * fpA_pr_i.ren,
+        nren: obj.nren + E_pr_i * fpA_pr_i.nren
       };
     },
     { ren: 0, nren: 0 }
@@ -435,7 +435,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
         .reduce((acc, gen) => {
           const F_g = F_pr_i[gen];
           const fpA_g = fpA_nEPus_i.find(fp => fp.source === gen);
-          return { ren: acc.ren + F_g * fpA_g.fren, nren: acc.nren + F_g * fpA_g.fnren };
+          return { ren: acc.ren + F_g * fpA_g.ren, nren: acc.nren + F_g * fpA_g.nren };
         },
         { ren: 0.0, nren: 0.0 }
       ); // suma de todos los i: fpA_nEPus_i * F_pr_i[gen]
@@ -451,7 +451,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
         .reduce((acc, gen) => {
           const F_g = F_pr_i[gen];
           const fpA_g = fpA_grid_i.find(fp => fp.source === gen);
-          return { ren: acc.ren + F_g * fpA_g.fren, nren: acc.nren + F_g * fpA_g.fnren };
+          return { ren: acc.ren + F_g * fpA_g.ren, nren: acc.nren + F_g * fpA_g.nren };
         },
         { ren: 0.0, nren: 0.0 }
       ); // suma de todos los i: fpA_grid_i * F_pr_i[gen];
@@ -477,7 +477,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
         .reduce((acc, gen) => {
           const F_g = F_pr_i[gen];
           const fpB_g = fpB_nEPus_i.find(fp => fp.source === gen);
-          return { ren: acc.ren + F_g * fpB_g.fren, nren: acc.nren + F_g * fpB_g.fnren };
+          return { ren: acc.ren + F_g * fpB_g.ren, nren: acc.nren + F_g * fpB_g.nren };
         },
         { ren: 0.0, nren: 0.0 }
       ); // suma de todos los i: fpB_nEPus_i * F_pr_i[gen]
@@ -493,7 +493,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
         .reduce((acc, gen) => {
           const F_g = F_pr_i[gen];
           const fpB_g = fpB_grid_i.find(fp => fp.source === gen);
-          return { ren: acc.ren + F_g * fpB_g.fren, nren: acc.nren + F_g * fpB_g.fnren };
+          return { ren: acc.ren + F_g * fpB_g.ren, nren: acc.nren + F_g * fpB_g.nren };
         },
         { ren: 0.0, nren: 0.0 }
       ); // suma de todos los i: fpB_grid_i * F_pr_i[gen];

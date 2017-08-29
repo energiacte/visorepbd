@@ -34,30 +34,30 @@ class WeightingFactorsPage extends React.Component {
               <tr>
                 <td>RED1</td><td>grid</td><td>input</td><td>A</td>
                 <td>
-                  <input type="text" ref="red1fren"
-                         defaultValue={ red1.fren.toFixed(3) }
-                         onChange={ e => this.handleChange('RED1', 'fren', e) }
+                  <input type="text" ref="red1ren"
+                         defaultValue={ red1.ren.toFixed(3) }
+                         onChange={ e => this.handleChange('RED1', 'ren', e) }
                   />
                 </td>
                 <td>
-                  <input type="text" ref="red1fnren"
-                         defaultValue={ red1.fnren.toFixed(3) }
-                         onChange={ e => this.handleChange('RED1', 'fnren', e) }
+                  <input type="text" ref="red1nren"
+                         defaultValue={ red1.nren.toFixed(3) }
+                         onChange={ e => this.handleChange('RED1', 'nren', e) }
                   />
                 </td>
               </tr>
               <tr>
                 <td>RED2</td><td>grid</td><td>input</td><td>A</td>
                 <td>
-                  <input type="text" ref="red2fren"
-                         defaultValue={ red2.fren.toFixed(3) }
-                         onChange={ e => this.handleChange('RED2', 'fren', e) }
+                  <input type="text" ref="red2ren"
+                         defaultValue={ red2.ren.toFixed(3) }
+                         onChange={ e => this.handleChange('RED2', 'ren', e) }
                   />
                 </td>
                 <td>
-                  <input type="text" contentEditable ref='red2fnren'
-                         defaultValue={ red2.fnren.toFixed(3) }
-                         onChange={ e => this.handleChange('RED2', 'fnren', e) }
+                  <input type="text" contentEditable ref="red2nren"
+                         defaultValue={ red2.nren.toFixed(3) }
+                         onChange={ e => this.handleChange('RED2', 'nren', e) }
                   />
                 </td>
               </tr>
@@ -76,14 +76,14 @@ class WeightingFactorsPage extends React.Component {
             </thead>
             <tbody>
               { wfactors2.map(
-                ({ vector, source, use, step, fren, fnren }) =>
+                ({ vector, source, use, step, ren, nren }) =>
                   <tr key={ `${vector}-${source}-${use}-${step}` }>
                     <td>{ vector }</td>
                     <td>{ source }</td>
                     <td>{ use }</td>
                     <td>{ step }</td>
-                    <td>{ fren.toFixed(3) }</td>
-                    <td>{ fnren.toFixed(3) }</td>
+                    <td>{ ren.toFixed(3) }</td>
+                    <td>{ nren.toFixed(3) }</td>
                   </tr>
               )}
             </tbody>
@@ -100,7 +100,9 @@ class WeightingFactorsPage extends React.Component {
             <ul>
               <li><tt>grid</tt>: red</li>
               <li><tt>INSITU</tt>: producción 'in situ'</li>
-              <li><tt>COGENERACION</tt>: energía procedente de la cogeneración (debe aplicarse únicamente a la energía eléctrica producida, considerando la energía térmica dentro de la frontera de evaluación)</li>
+              <li><tt>COGENERACION</tt>: energía procedente de la cogeneración
+              (debe aplicarse únicamente a la energía eléctrica producida,
+              considerando la energía térmica dentro de la frontera de evaluación)</li>
             </ul>
             <p>Uso:</p>
             <ul>
@@ -121,12 +123,12 @@ class WeightingFactorsPage extends React.Component {
     const newvalue = parseFloat(e.target.value.replace(/,/g, '.'));
     if (isNaN(newvalue)) return;
     const { wfactors, dispatch } = this.props;
-    const vecobj = wfactors.find(e => e.vector === vec);
-    const otherveclist = wfactors.filter(e => e.vector !== vec);
+    const vecobj = wfactors.find(f => f.vector === vec);
+    const otherveclist = wfactors.filter(f => f.vector !== vec);
     vecobj[factor] = newvalue;
     dispatch(editWFactors([...otherveclist, vecobj]));
   }
-};
+}
 
 export default WeightingFactorsPage = connect(state => {
   return {
