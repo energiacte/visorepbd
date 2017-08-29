@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { string_to_carrier_list } from '../energycalculations.js';
+import { string_to_carrier_data } from '../energycalculations.js';
 
 export default class ActionsPanel extends React.Component {
 
@@ -13,7 +13,7 @@ export default class ActionsPanel extends React.Component {
     }
 
     let getData = str => {
-      let { components, meta } = string_to_carrier_list(str);
+      let { components, meta } = string_to_carrier_data(str);
       components = components.map(dd => { return { ...dd, active: true }; });
       return { components, meta };
     };

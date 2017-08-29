@@ -41,162 +41,18 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
   - make the input sanitizer (weighting factors) smarter
 */
 
-// ---------------------------------------------------------------------------------------------------------
-// Default values for energy efficiency calculation
-//
-// These are aimed towards energy efficiency evaluation in the spanish
-// building code regulations (Código Técnico de la Edificación CTE).
-//
-// Weighting factors are based on primary energy use.
-// Weighting factors are considered constant through timesteps
-// ---------------------------------------------------------------------------------------------------------
-
-export const K_EXP = 0.0;
-export const K_RDEL = 0.0;
-export const FACTORESDEPASO = [
-        // FpA - weighting factors accounting for the resources used to produce this energy
-        // FpB - weighting factors accounting for the resources avoided by the external grid due to the export
-        //  Energy carrier         origin          use         step Fpren  Fpnren
-        ['ELECTRICIDAD',        'grid',         'input',     'A', 0.414, 1.954], // Delivered energy
-        ['ELECTRICIDAD',        'INSITU',       'input',     'A', 1.000, 0.000], // Produced energy
-        ['ELECTRICIDAD',        'INSITU',       'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
-        ['ELECTRICIDAD',        'INSITU',       'to_nEPB',   'A', 1.000, 0.000], // Produced and exported to nEPB uses
-        ['ELECTRICIDAD',        'INSITU',       'to_grid',   'B', 0.414, 1.954], // Savings to the grid due to produced and exported to the grid energy
-        ['ELECTRICIDAD',        'INSITU',       'to_nEPB',   'B', 0.414, 1.954], // Savings to the grid due to produced and exported to nEPB uses
-        ['ELECTRICIDAD',        'COGENERACION', 'input',     'A', 0.000, 0.000], // There is no delivery from grid for this carrier
-        ['ELECTRICIDAD',        'COGENERACION', 'to_grid',   'A', 0.000, 2.500], // User defined!
-        ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',   'A', 0.000, 2.500], // User defined!
-        ['ELECTRICIDAD',        'COGENERACION', 'to_grid',   'B', 0.414, 1.954], // Savings to the grid when exporting to the grid
-        ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',   'B', 0.414, 1.954], // Savings to the grid when exporting to nEPB uses
-
-        ['ELECTRICIDADBALEARES','grid',         'input',     'A', 0.082, 2.968], // Delivered energy
-        ['ELECTRICIDADBALEARES','INSITU',       'input',     'A', 1.000, 0.000], // Produced energy
-        ['ELECTRICIDADBALEARES','INSITU',       'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
-        ['ELECTRICIDADBALEARES','INSITU',       'to_nEPB',   'A', 1.000, 0.000], // Produced and exported to nEPB uses
-        ['ELECTRICIDADBALEARES','INSITU',       'to_grid',   'B', 0.082, 2.968], // Savings to the grid due to produced and exported to the grid energy
-        ['ELECTRICIDADBALEARES','INSITU',       'to_nEPB',   'B', 0.082, 2.968], // Savings to the grid due to produced and exported to nEPB uses
-        ['ELECTRICIDADBALEARES','COGENERACION', 'input',     'A', 0.000, 0.000], // There is no delivery from grid for this carrier
-        ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',   'A', 0.000, 2.500], // User defined!
-        ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',   'A', 0.000, 2.500], // User defined!
-        ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',   'B', 0.082, 2.968], // Savings to the grid when exporting to the grid
-        ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',   'B', 0.082, 2.968], // Savings to the grid when exporting to nEPB uses
-
-        ['ELECTRICIDADCANARIAS','grid',         'input',     'A', 0.070, 2.924], // Delivered energy
-        ['ELECTRICIDADCANARIAS','INSITU',       'input',     'A', 1.000, 0.000], // Produced energy
-        ['ELECTRICIDADCANARIAS','INSITU',       'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
-        ['ELECTRICIDADCANARIAS','INSITU',       'to_nEPB',   'A', 1.000, 0.000], // Produced and exported to nEPB uses
-        ['ELECTRICIDADCANARIAS','INSITU',       'to_grid',   'B', 0.070, 2.924], // Savings to the grid due to produced and exported to the grid energy
-        ['ELECTRICIDADCANARIAS','INSITU',       'to_nEPB',   'B', 0.070, 2.924], // Savings to the grid due to produced and exported to nEPB uses
-        ['ELECTRICIDADCANARIAS','COGENERACION', 'input',     'A', 0.000, 0.000], // There is no delivery from grid for this carrier
-        ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',   'A', 0.000, 2.500], // User defined!
-        ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',   'A', 0.000, 2.500], // User defined!
-        ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',   'B', 0.070, 2.924], // Savings to the grid when exporting to the grid
-        ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',   'B', 0.070, 2.924], // Savings to the grid when exporting to nEPB uses
-
-        ['ELECTRICIDADCEUTAMELILLA','grid',     'input',     'A', 0.072, 2.718], // Delivered energy
-        ['ELECTRICIDADCEUTAMELILLA','INSITU',   'input',     'A', 1.000, 0.000], // Produced energy
-        ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
-        ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_nEPB',   'A', 1.000, 0.000], // Produced and exported to nEPB uses
-        ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_grid',   'B', 0.072, 2.718], // Savings to the grid due to produced and exported to the grid energy
-        ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_nEPB',   'B', 0.072, 2.718], // Savings to the grid due to produced and exported to nEPB uses
-        ['ELECTRICIDADCEUTAMELILLA','COGENERACION','input',  'A', 0.000, 0.000], // There is no delivery from grid for this carrier
-        ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','A', 0.000, 2.500], // User defined!
-        ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','A', 0.000, 2.500], // User defined!
-        ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','B', 0.072, 2.718], // Savings to the grid when exporting to the grid
-        ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','B', 0.072, 2.718], // Savings to the grid when exporting to nEPB uses
-
-        ['MEDIOAMBIENTE',       'grid',         'input',     'A', 1.000, 0.000], // Grid is able to deliver this carrier
-        ['MEDIOAMBIENTE',       'INSITU',       'input',     'A', 1.000, 0.000], // in-situ production of this carrier
-        ['MEDIOAMBIENTE',       'INSITU',       'to_grid',   'A', 0.000, 0.000], // export to grid is not accounted for
-        ['MEDIOAMBIENTE',       'INSITU',       'to_nEPB',   'A', 1.000, 0.000], // export to nEPB uses in step A
-        ['MEDIOAMBIENTE',       'INSITU',       'to_grid',   'B', 0.000, 0.000], // Savings to the grid when exporting to grid
-        ['MEDIOAMBIENTE',       'INSITU',       'to_nEPB',   'B', 1.000, 0.000], // Savings to the grid when exporting to nEPB uses
-
-        // BIOCARBURANTE == BIOMASA DENSIFICADA (PELLETS)
-        ['BIOCARBURANTE',       'grid',         'input',     'A', 1.028, 0.085], // Delivered energy
-        ['BIOMASA',             'grid',         'input',     'A', 1.003, 0.034], // Delivered energy
-        ['BIOMASADENSIFICADA',  'grid',         'input',     'A', 1.028, 0.085], // Delivered energy
-        ['CARBON',              'grid',         'input',     'A', 0.002, 1.082], // Delivered energy
-        // FUELOIL == GASOLEO
-        ['FUELOIL',             'grid',         'input',     'A', 0.003, 1.179], // Delivered energy
-        ['GASNATURAL',          'grid',         'input',     'A', 0.005, 1.190], // Delivered energy
-        ['GASOLEO',             'grid',         'input',     'A', 0.003, 1.179], // Delivered energy
-        ['GLP',                 'grid',         'input',     'A', 0.030, 1.201], // Delivered energy
-        ['RED1',                'grid',         'input',     'A', 0.000, 1.300], // User defined!, district heating/cooling carrier
-        ['RED2',                'grid',         'input',     'A', 0.000, 1.300]  // User defined!, district heating/cooling carrier
-].map(([vector, source, use, step, fren, fnren]) => {
-  return { vector, source, use, step, fren, fnren };
-});
-
-// ------------------------------------------------------------------------------------
-// Constraints
-// ------------------------------------------------------------------------------------
-
-export const VALIDDATA = {
-  CONSUMO: {
-    EPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
-          // 'COGENERACION',
-          'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-          'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
-          'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2'],
-    NEPB: ['BIOCARBURANTE', 'BIOMASA', 'BIOMASADENSIFICADA', 'CARBON',
-           // 'COGENERACION',
-           'ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-           'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA', 'FUELOIL',
-           'GASNATURAL', 'GASOLEO', 'GLP', 'MEDIOAMBIENTE', 'RED1', 'RED2']
-  },
-  PRODUCCION: {
-    INSITU: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-             'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA',
-             'MEDIOAMBIENTE'],
-    COGENERACION: ['ELECTRICIDAD', 'ELECTRICIDADBALEARES',
-                   'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA']
-  }
-};
+import { VALIDDATA } from './constants.js';
+import {
+  vecsum,
+  veckmul,
+  veclistsum,
+  vecvecsum, vecvecdif, vecvecmul, vecvecmin } from './vecutils.js';
 
 // Custom exception
 function UserException(message) {
   this.message = message;
   this.name = 'UserException';
 }
-
-// -----------------------------------------------------------------------------------
-// Vector utilities
-// -----------------------------------------------------------------------------------
-const zip = (...rows) => [...rows[0]].map((_, c) => rows.map(row => row[c]));
-
-// Elementwise sum res[i] = vec1[i] + vec2[i] + ... + vecj[i]
-function veclistsum(veclist) {
-  return zip(...veclist).map(valsi => valsi.reduce((a, b) => a + b, 0));
-}
-
-// Elementwise minimum min res[i] = min(vec1[i], vec2[i])
-function vecvecmin(vec1, vec2) {
-  return vec1.map((el, ii) => Math.min(el, vec2[ii]));
-}
-
-// Elementwise sum of arrays
-function vecvecsum(vec1, vec2) {
-  return vec1.map((el, ii) => el + vec2[ii]);
-}
-
-// Elementwise difference res[i] = vec1[i] - vec2[i]
-function vecvecdif(vec1, vec2) {
-  return vec1.map((el, ii) => el - vec2[ii]);
-}
-
-// Elementwise multiplication res[i] = vec1[i] * vec2[i]
-function vecvecmul(vec1, vec2) {
-  return vec1.map((el, ii) => el * vec2[ii]);
-}
-
-// Multiply vector by scalar
-function veckmul(vec1, k) {
-  return vec1.map(v => v * k);
-}
-
-// Sum all elements in a vector
-const vecsum = vec => vec.reduce((a, b) => a + b, 0);
 
 
 // -----------------------------------------------------------------------------------
@@ -205,9 +61,11 @@ const vecsum = vec => vec.reduce((a, b) => a + b, 0);
 
 // Input parsing functions -----------------------------------------------------------
 
-// Read energy input data from string and return a carrier data list
+// Read energy input data from string and return a carrier data object { components,  meta }
 //
-// The carrier data list has the following structure:
+// The carrier data object has 'carrierlist' and 'metadata' keys
+//
+// = The carrierlist has the following structure:
 //
 // [ {carrier: carrier1, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
 //   {carrier: carrier2, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
@@ -221,7 +79,11 @@ const vecsum = vec => vec.reduce((a, b) => a + b, 0);
 //   - the energy end use (EPB or NEPB) for delivered energy
 // * values is a list of energy values, one for each timestep
 // * comment is a comment string for the vector
-export function string_to_carrier_list(datastring) {
+//
+// = The metadata object stores an object { key1: value1, key2: value2, ... }
+// where key and value are converted from lines like '#CTE_key: value'
+//
+export function string_to_carrier_data(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
         .map(line => line.trim())
         .filter(line => !(line === '' || line.startsWith('vector')));
@@ -236,7 +98,6 @@ export function string_to_carrier_list(datastring) {
       .map(([fieldsstring, comment]) => {
         const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
         let [ carrier, ctype, originoruse, ...values ] = fieldslist;
-        // TODO: Move out minimal consistency checks to explicit check function?
         if (fieldslist.length > 3
             && Object.keys(VALIDDATA).includes(ctype)
             && Object.keys(VALIDDATA[ctype]).includes(originoruse)
@@ -244,9 +105,10 @@ export function string_to_carrier_list(datastring) {
           values = values.map(Number);
           return { carrier, ctype, originoruse, values, comment };
         }
-        return null;
+        throw new UserException(`Invalid input values: ${ fieldsstring }`);
       })
       .filter(v => v !== null);
+
   if (components.length === 0) {
     const EMPTYCOMPONENT = {
       active: true,
@@ -271,7 +133,6 @@ export function string_to_carrier_list(datastring) {
       meta[key] = value;
     });
 
-  // Check: same number of timesteps for all carriers
   const lengths = components.map(datum => datum.values.length);
   const numSteps = Math.max(...lengths);
   const errLengths = lengths.filter(v => v < numSteps);
@@ -284,10 +145,8 @@ export function string_to_carrier_list(datastring) {
   return { components, meta };
 }
 
-
 // Save energy data and metadata to string
-// TODO: revisar con últimos cambios en formato de salida
-export function saveenergystring(carrierdata, meta) {
+export function carrier_data_to_string(carrierdata, meta) {
   const metalines = [
     `#CTE_Name: EPBDpanel`,
     `#CTE_Datetime: ${ new Date().toLocaleString() }`,
@@ -307,14 +166,16 @@ export function saveenergystring(carrierdata, meta) {
 }
 
 // Read energy weighting factors data from string
-export function readfactors(factorsstring) {
+//
+
+export function string_to_weighting_factors(factorsstring) {
   return factorsstring.replace('\n\r', '\n').split('\n')
     .map(line => line.trim())
     .filter(line => !(line === ''
                       || line.startsWith('#')
                       || line.startsWith('vector')))
     .map(line => {
-      let parts = line.split('#').map(part => part.trim());
+      const parts = line.split('#').map(part => part.trim());
       return (parts.lenght > 1) ? [parts[0], parts[1]] : [parts[0], ''];
     })
     .map(([fieldsstring, comment]) => {

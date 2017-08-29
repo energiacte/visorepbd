@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import ActionsPanel from 'components/ActionsPanel';
 import EnergyComponentChart from 'components/EnergyComponentChart';
 import { getValues, CURVENAMES } from '../epbdutils';
-import { VALIDDATA } from '../energycalculations';
+import { VALIDDATA } from '../constants.js';
 
 export default class EnergyComponentEditor extends React.Component {
   constructor(props) {

@@ -57,15 +57,21 @@ configpackages:
 ${BUILDDIR}:
 	mkdir -p ${BUILDDIR}
 
-energycalculations.js: ${BUILDDIR}
+${BUILDDIR}/constants.js: app/constants.js
+	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/constants.js app/constants.js
+
+${BUILDDIR}/vecutils.js: app/vecutils.js
+	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/vecutils.js app/vecutils.js
+
+${BUILDDIR}/energycalculations.js: ${BUILDDIR} app/energycalculations.js ${BUILDDIR}/constants.js ${BUILDDIR}/vecutils.js
 	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/energycalculations.js app/energycalculations.js
 
-test.js: ${BUILDDIR}
+${BUILDDIR}/test.js: ${BUILDDIR} ${BUILDDIR}/energycalculations.js
 	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/test.js app/test.js
 
 build/examples:
 	ln -s ../app/examples ${BUILDDIR}/
 
-test: energycalculations.js test.js ${BUILDDIR}/examples
+test: ${BUILDDIR}/test.js ${BUILDDIR}/examples
 	node build/test.js
 

@@ -1,7 +1,7 @@
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import reducer from 'reducers/reducers.js';
-import { FACTORESDEPASO } from 'energycalculations';
+import { FACTORESDEPASO } from '../constants.js';
 
 const initialState = {
   data: { EPnren: 0, EPren: 0, EPtotal: 0, EPrer: 0,

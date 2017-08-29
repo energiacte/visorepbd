@@ -25,11 +25,14 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
            Daniel Jiménez González <dani@ietcc.csic.es>
 */
 
-import { string_to_carrier_list, readfactors, energy_performance } from './energycalculations.js';
+import {
+  string_to_carrier_data,
+  string_to_weighting_factors,
+  energy_performance } from './energycalculations.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const TESTFPJ = readfactors(`vector, fuente, uso, step, ren, nren
+const TESTFPJ = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, grid, input, A, 0.5, 2.0
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
@@ -40,14 +43,14 @@ MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
 MEDIOAMBIENTE, grid, input,  A, 1.0, 0.0
 `);
 
-const TESTFPJ7 = readfactors(`vector, fuente, uso, step, ren, nren
+const TESTFPJ7 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, grid, input, A, 0.5, 2.0
 GASNATURAL, grid, input,A, 0.0, 1.1
 ELECTRICIDAD, COGENERACION, input, A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 0.0, 2.5
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0`);
 
-const TESTFPJ8 = readfactors(`vector, fuente, uso, step, ren, nren
+const TESTFPJ8 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, grid, input, A, 0.5, 2.0
 GASNATURAL, grid, input,A, 0.0, 1.1
 BIOCARBURANTE, grid, input, A, 1.0, 0.1
@@ -55,7 +58,7 @@ ELECTRICIDAD, COGENERACION, input, A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 2.27, 0.23
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0`);
 
-const TESTFPJ9 = readfactors(`vector, fuente, uso, step, ren, nren
+const TESTFPJ9 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, grid, input, A, 0.5, 2.0
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
@@ -63,7 +66,7 @@ ELECTRICIDAD, INSITU, to_nEPB, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
 ELECTRICIDAD, INSITU, to_nEPB, B, 0.5, 2.0`);
 
-const TESTFP = readfactors(`vector, fuente, uso, step, ren, nren
+const TESTFP = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
 
 ELECTRICIDAD, grid, input, A, 0.5, 2.0
 
@@ -86,7 +89,7 @@ ELECTRICIDAD, COGENERACION, to_nEPB, A, 1.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0
 ELECTRICIDAD, COGENERACION, to_nEPB, B, 0.5, 2.0`);
 
-const CTEFP = readfactors(`vector, fuente, uso, step, ren, nren
+const CTEFP = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
 #valores de la propuesta del documento reconocido del IDAE de 03/02/2014, página 14
 
 ELECTRICIDAD, grid, input, A, 0.341, 2.082
@@ -201,7 +204,7 @@ function epfromdata(datalist, fp, kexp) {
 function epfromfile(filename, fp, kexp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const datalist = string_to_carrier_list(datastring).components;
+  const datalist = string_to_carrier_data(datastring).components;
   return epfromdata(datalist, fp, kexp);
 }
 

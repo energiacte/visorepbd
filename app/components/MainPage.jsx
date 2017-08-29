@@ -8,7 +8,7 @@ import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 
-import { saveenergystring } from '../energycalculations.js';
+import { carrier_data_to_string } from '../energycalculations.js';
 
 import { changeKexp,
          changeArea,
@@ -83,7 +83,7 @@ class MainPage extends React.Component {
   getEnergyString() {
     const { kexp, area, components, wfactors } = this.props;
     const meta = { area, kexp };
-    const energystring = saveenergystring(components, meta);
+    const energystring = carrier_data_to_string(components, meta);
     return energystring;
   }
 }
