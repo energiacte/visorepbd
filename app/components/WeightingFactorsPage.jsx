@@ -10,9 +10,9 @@ class WeightingFactorsPage extends React.Component {
 
   render() {
     const { wfactors } = this.props;
-    const wfactors2 = wfactors.filter(e => !e.vector.startsWith('RED'));
-    const red1 = wfactors.filter(e => e.vector === 'RED1')[0];
-    const red2 = wfactors.filter(e => e.vector === 'RED2')[0];
+    const wfactors2 = wfactors.filter(e => !e.carrier.startsWith('RED'));
+    const red1 = wfactors.filter(e => e.carrier === 'RED1')[0];
+    const red2 = wfactors.filter(e => e.carrier === 'RED2')[0];
 
     return (
       <div>
@@ -76,9 +76,9 @@ class WeightingFactorsPage extends React.Component {
             </thead>
             <tbody>
               { wfactors2.map(
-                ({ vector, source, use, step, ren, nren }) =>
-                  <tr key={ `${vector}-${source}-${use}-${step}` }>
-                    <td>{ vector }</td>
+                ({ carrier, source, use, step, ren, nren }) =>
+                  <tr key={ `${carrier}-${source}-${use}-${step}` }>
+                    <td>{ carrier }</td>
                     <td>{ source }</td>
                     <td>{ use }</td>
                     <td>{ step }</td>
@@ -122,8 +122,8 @@ class WeightingFactorsPage extends React.Component {
     const newvalue = parseFloat(e.target.value.replace(/,/g, '.'));
     if (isNaN(newvalue)) return;
     const { wfactors, dispatch } = this.props;
-    const vecobj = wfactors.find(f => f.vector === vec);
-    const otherveclist = wfactors.filter(f => f.vector !== vec);
+    const vecobj = wfactors.find(f => f.carrier === vec);
+    const otherveclist = wfactors.filter(f => f.carrier !== vec);
     vecobj[factor] = newvalue;
     dispatch(editWFactors([...otherveclist, vecobj]));
   }

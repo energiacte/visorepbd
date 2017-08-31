@@ -78,7 +78,7 @@ function UserException(message) {
 //   - the energy origin for produced energy (INSITU or COGENERACION)
 //   - the energy end use (EPB or NEPB) for delivered energy
 // * values is a list of energy values, one for each timestep
-// * comment is a comment string for the vector
+// * comment is a comment string for the carrier
 //
 // = The metadata object stores an object { key1: value1, key2: value2, ... }
 // where key and value are converted from lines like '#CTE_key: value'
@@ -202,11 +202,11 @@ export function string_to_weighting_factors(factorsstring) {
       if (fieldslist.length !== 6) {
         throw new UserException(`WeightingFactorParsing: Wrong number of fields in ${ fieldsstring }`);
       }
-      const [ vector, source, use, step, sren, snren ] = fieldslist;
+      const [ carrier, source, use, step, sren, snren ] = fieldslist;
       try {
         const ren = parseFloat(sren);
         const nren = parseFloat(snren);
-        return { type: 'FACTOR', vector, source, use, step, ren, nren, comment };
+        return { type: 'FACTOR', carrier, source, use, step, ren, nren, comment };
       } catch (err) {
         throw new UserException(`WeightingFactorsParsing: ren (${ sren }) or nren (${ snren }) can't be converted to float`);
       }
@@ -603,7 +603,7 @@ export function energy_performance(carrierlist, fp, k_exp) {
   // Compute balance
   let balance_cr_i = {};
   CARRIERS.map(carrier => {
-    const fp_cr = fp.filter(e => e.vector === carrier);
+    const fp_cr = fp.filter(e => e.carrier === carrier);
     const cr_i_list = carrierlist.filter(e => e.carrier === carrier);
     balance_cr_i[carrier] = balance_cr(cr_i_list, fp_cr, k_exp);
   });
