@@ -167,27 +167,51 @@ export function carrier_data_to_string(carrierdata, meta) {
 
 // Read energy weighting factors data from string
 //
-
+// Input format:
+//
+// String composed of metadata or factor lines.
+//
+// Space only lines, lines starting with 'vector,' (backcompat)
+// and lines starting with '#' which are not metadata lines are ignored
+//
+// Metadata lines:
+//  - start with #META key: value
+//  - are stored as objects with keys in [type, key, value]:
+//    { type: META, key: string, value: string }
+// Factor lines:
+//  - Composed of 6 comma separated fields and an optional comment
+//  - Any content after a '#' is considered a comment
+//  - are stored as objects with keys in [ type, carrier, source, use, step, ren, nren, comment]
+//    { type: FACTOR, carrier: string, source: string, use: string: step: string, ren: float, nren: float, comment: string }
+//
+// Returns: list of objects representing metadata and factor data.
+//
 export function string_to_weighting_factors(factorsstring) {
-  return factorsstring.replace('\n\r', '\n').split('\n')
-    .map(line => line.trim())
-    .filter(line => !(line === ''
-                      || line.startsWith('#')
-                      || line.startsWith('vector')))
-    .map(line => {
-      const parts = line.split('#').map(part => part.trim());
-      return (parts.lenght > 1) ? [parts[0], parts[1]] : [parts[0], ''];
-    })
-    .map(([fieldsstring, comment]) => {
-      const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
+  const contentlines = factorsstring.replace('\n\r', '\n')
+    .split('\n').map(l => l.trim()).filter(l => l !== '' && !l.startsWith('vector,'));
+
+  const metas = contentlines.filter(l => l.startsWith('#META'))
+    .map(l => l.substr('#META'.length).split(':', 2).map(e => e.trim()))
+    .map(([key, value = '']) => ({ type: 'META', key, value }));
+
+
+  const factors = contentlines.filter(l => !l.startsWith('#'))
+    .map(l => l.split('#', 2).map(e => e.trim())) // [fields, str | undefined]
+    .map(([fieldsstring, comment = '']) => {
+      const fieldslist = fieldsstring.split(',').map(e => e.trim());
       if (fieldslist.length !== 6) {
-        throw new UserException('Wrong number of fields in ' + fieldsstring);
+        throw new UserException(`WeightingFactorParsing: Wrong number of fields in ${ fieldsstring }`);
       }
-      let [ vector, source, use, step, ren, nren ] = fieldslist;
-      ren = parseFloat(ren);
-      nren = parseFloat(nren);
-      return { vector, source, use, step, ren, nren, comment };
+      const [ vector, source, use, step, sren, snren ] = fieldslist;
+      try {
+        const ren = parseFloat(sren);
+        const nren = parseFloat(snren);
+        return { type: 'FACTOR', vector, source, use, step, ren, nren, comment };
+      } catch (err) {
+        throw new UserException(`WeightingFactorsParsing: ren (${ sren }) or nren (${ snren }) can't be converted to float`);
+      }
     });
+  return [ ...metas, ...factors ];
 }
 
 // TODO: const fP = sanitize_weighting_factors(fp);
