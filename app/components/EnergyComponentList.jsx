@@ -26,7 +26,7 @@ export default class EnergyComponentList extends React.Component {
           <tr>
             <th></th>
             <th>Tipo</th>
-            <th className="col-md-1">Origen/Uso</th>
+            <th className="col-md-1">Subtipo</th>
             <th className="col-md-3">Vector energético</th>
             <th className="col-md-1">kWh/año</th>
             <th className="col-md-1">kWh/año·m²</th>
@@ -37,7 +37,7 @@ export default class EnergyComponentList extends React.Component {
         <tbody>
           {components.map(
              (component, i) => {
-               const { active, ctype, originoruse, carrier, values, comment } = component;
+               const { active, ctype, csubtype, carrier, values, comment } = component;
                const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
                const rowstyles = [
                  (selectedkey === i) ? 'bg-info' : '',
@@ -52,13 +52,13 @@ export default class EnergyComponentList extends React.Component {
                    <td><input type="checkbox" defaultChecked={active}
                               onClick={ e => this.handleChange(i) } /></td>
                    <td>{ ctype }</td>
-                   <td>{ originoruse }</td><td>{ carrier }</td>
+                   <td>{ csubtype }</td><td>{ carrier }</td>
                    <td>{ sumvalues.toFixed(2) }</td>
                    <td>{ (sumvalues / area).toFixed(2) }</td>
                    <td><EnergyComponentChart ctype={ ctype }
                                              data={ data }
                                              maxvalue={ maxvalue }
-                                             width='50px' /></td>
+                                             width="50px" /></td>
                    <td>{ comment }</td>
                  </tr>
                );

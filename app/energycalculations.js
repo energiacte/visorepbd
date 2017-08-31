@@ -67,14 +67,14 @@ function UserException(message) {
 //
 // = The carrierlist has the following structure:
 //
-// [ {carrier: carrier1, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
-//   {carrier: carrier2, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
+// [ {carrier: carrier1, ctype: ctype1, csubtype: csubtype1, values: [...values1], comment: comment1},
+//   {carrier: carrier2, ctype: ctype2, csubtype: csubtype2, values: [...values2], comment: comment2},
 //   ...
 // ]
 //
 // * carrier is an energy carrier
 // * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
-// * originoruse defines:
+// * csubtype defines:
 //   - the energy origin for produced energy (INSITU or COGENERACION)
 //   - the energy end use (EPB or NEPB) for delivered energy
 // * values is a list of energy values, one for each timestep
@@ -97,13 +97,13 @@ export function string_to_carrier_data(datastring) {
       })
       .map(([fieldsstring, comment]) => {
         const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
-        let [ carrier, ctype, originoruse, ...values ] = fieldslist;
+        let [ carrier, ctype, csubtype, ...values ] = fieldslist;
         if (fieldslist.length > 3
             && Object.keys(VALIDDATA).includes(ctype)
-            && Object.keys(VALIDDATA[ctype]).includes(originoruse)
-            && VALIDDATA[ctype][originoruse].includes(carrier)) {
+            && Object.keys(VALIDDATA[ctype]).includes(csubtype)
+            && VALIDDATA[ctype][csubtype].includes(carrier)) {
           values = values.map(Number);
-          return { carrier, ctype, originoruse, values, comment };
+          return { carrier, ctype, csubtype, values, comment };
         }
         throw new UserException(`Invalid input values: ${ fieldsstring }`);
       })
@@ -114,7 +114,7 @@ export function string_to_carrier_data(datastring) {
       active: true,
       carrier: 'ELECTRICIDAD',
       ctype: 'CONSUMO',
-      originoruse: 'EPB',
+      csubtype: 'EPB',
       values: [0.0],
       comment: ''
     };
@@ -157,9 +157,9 @@ export function carrier_data_to_string(carrierdata, meta) {
         .filter(cc => cc.active)
         .map(
           cc => {
-            const { carrier, ctype, originoruse, values, comment } = cc;
+            const { carrier, ctype, csubtype, values, comment } = cc;
             const valuelist = values.map(v=> v.toFixed(2)).join(',');
-            return `${ carrier },${ ctype },${ originoruse },${ valuelist } #${ comment }`;
+            return `${ carrier },${ ctype },${ csubtype },${ valuelist } #${ comment }`;
           }
         );
   return [...metalines, 'vector,tipo,src_dst', ...carrierlines].join('\n');
@@ -264,8 +264,8 @@ export function ep2dict(EP, area = 1.0) {
 // Calculate energy balance for carrier
 //
 //    cr_i_list: list of components for carrier_i
-//     [ {carrier: carrier_i, ctype: ctype1, originoruse: originoruse1, values: [...values1], comment: comment1},
-//       {carrier: carrier_i, ctype: ctype2, originoruse: originoruse2, values: [...values2], comment: comment2},
+//     [ {carrier: carrier_i, ctype: ctype1, csubtype: csubtype1, values: [...values1], comment: comment1},
+//       {carrier: carrier_i, ctype: ctype2, csubtype: csubtype2, values: [...values2], comment: comment2},
 //       ...
 //     ]
 //
@@ -284,7 +284,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
   // * Energy used by technical systems for EPB services, for each time step
   const E_EPus_cr_t = cr_i_list
     .filter(e => e.ctype === 'CONSUMO')
-    .filter(e => e.originoruse === 'EPB')
+    .filter(e => e.csubtype === 'EPB')
     .reduce(
       (acc, e) => vecvecsum(acc, e.values),
       [ ...EMPTYVALUES ]
@@ -293,7 +293,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
   // * Energy used by technical systems for non-EPB services, for each time step
   const E_nEPus_cr_t = cr_i_list
     .filter(e => e.ctype === 'CONSUMO')
-    .filter(e => e.originoruse === 'NEPB')
+    .filter(e => e.csubtype === 'NEPB')
     .reduce(
       (acc, e) => vecvecsum(acc, e.values),
       [ ...EMPTYVALUES ]
@@ -305,7 +305,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
   .reduce(
     (acc, e) => ({
       ...acc,
-      [e.originoruse]: vecvecsum(acc[e.originoruse] || [ ...EMPTYVALUES ], e.values)
+      [e.csubtype]: vecvecsum(acc[e.csubtype] || [ ...EMPTYVALUES ], e.values)
     }),
     {}
   );

@@ -13,10 +13,10 @@ export default class EnergyComponentEditor extends React.Component {
 
   render() {
     const { selectedkey, components } = this.props;
-    const { carrier, ctype, originoruse, values, comment } = components[selectedkey];
+    const { carrier, ctype, csubtype, values, comment } = components[selectedkey];
     const ctypevalues = Object.keys(VALIDDATA);
-    const originorusevalues = Object.keys(VALIDDATA[ctype]);
-    const carriervalues = VALIDDATA[ctype][originoruse];
+    const csubtypevalues = Object.keys(VALIDDATA[ctype]);
+    const carriervalues = VALIDDATA[ctype][csubtype];
     const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
 
     const currenttotalenergy = values.reduce((a, b) => a + b, 0);
@@ -39,13 +39,13 @@ export default class EnergyComponentEditor extends React.Component {
               </div>
 
               <label className="col-md-1 control-label"
-                     htmlFor="selectoriginoruse">Origen/Uso</label>
+                     htmlFor="selectcsubtype">Origen/Uso</label>
               <div className="col-md-3">
-                <select ref="selectoriginoruse"
-                        name="selectoriginoruse" className="form-control"
+                <select ref="selectcsubtype"
+                        name="selectcsubtype" className="form-control"
                         onChange={ e => this.handleChange(e) }
-                        value={ originoruse } >
-                  { originorusevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
+                        value={ csubtype } >
+                  { csubtypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
               </div>
 
@@ -148,7 +148,7 @@ export default class EnergyComponentEditor extends React.Component {
     onEdit(selectedkey, currentcomponent);
   }
 
-  // Handle changes in ctype, originoruse and carrier select boxes
+  // Handle changes in ctype, csubtype and carrier select boxes
   // It tries to keep coherent values
   handleChange(e) {
     const { selectedkey, components, onEdit } = this.props;
@@ -159,17 +159,17 @@ export default class EnergyComponentEditor extends React.Component {
     if (currentcomponent[prop] === value) { return; }
 
     if (prop === 'ctype') {
-      const originorusekey0 = Object.keys(VALIDDATA[value])[0];
+      const csubtypekey0 = Object.keys(VALIDDATA[value])[0];
       currentcomponent.ctype = value;
-      currentcomponent.originoruse = originorusekey0;
-      if (!VALIDDATA[value][originorusekey0].includes(currentcomponent.carrier)) {
-          currentcomponent.carrier = VALIDDATA[value][originorusekey0][0];
+      currentcomponent.csubtype = csubtypekey0;
+      if (!VALIDDATA[value][csubtypekey0].includes(currentcomponent.carrier)) {
+          currentcomponent.carrier = VALIDDATA[value][csubtypekey0][0];
       }
     }
 
-    if (prop === 'originoruse') {
+    if (prop === 'csubtype') {
       const currctype = currentcomponent.ctype;
-      currentcomponent.originoruse = value;
+      currentcomponent.csubtype = value;
       if (!VALIDDATA[currctype][value].includes(currentcomponent.carrier)) {
           currentcomponent.carrier = VALIDDATA[currctype][value][0];
       }
@@ -254,7 +254,7 @@ export default class EnergyComponentEditor extends React.Component {
                            {
                              active: true,
                              ctype: 'PRODUCCION',
-                             originoruse: 'INSITU',
+                             csubtype: 'INSITU',
                              carrier: 'ELECTRICIDAD',
                              values: [10] * 12,
                              comment:'Comentario'
