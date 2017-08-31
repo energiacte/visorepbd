@@ -66,7 +66,7 @@ ${BUILDDIR}/vecutils.js: app/vecutils.js
 ${BUILDDIR}/energycalculations.js: ${BUILDDIR} app/energycalculations.js ${BUILDDIR}/constants.js ${BUILDDIR}/vecutils.js
 	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/energycalculations.js app/energycalculations.js
 
-${BUILDDIR}/test.js: ${BUILDDIR} ${BUILDDIR}/energycalculations.js
+${BUILDDIR}/test.js: ${BUILDDIR} ${BUILDDIR}/energycalculations.js app/test.js
 	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/test.js app/test.js
 
 build/examples:
