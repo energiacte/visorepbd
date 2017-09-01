@@ -58,12 +58,7 @@ class MainPage extends React.Component {
               onAdd={ component => dispatch(addEnergyComponent(component)) }
               onRemove={ key => dispatch(removeEnergyComponent(key)) }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
-              onLoad={ ({ components, meta }) => {
-                  dispatch(loadEnergyComponents(components));
-                  dispatch(changeArea(meta.Area_ref || 1.0));
-                  dispatch(changeKexp(meta.kexp || kexp));
-                }
-                     }
+              onLoad={ d => this.onLoad(d) }
               onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
               currentfilename={ this.props.currentfilename }
               getEnergyString={ () => this.getEnergyString() }
@@ -78,6 +73,14 @@ class MainPage extends React.Component {
         <Footer />
       </div>
     );
+  }
+
+  onLoad(data) {
+    const { dispatch, kexp, area } = this.props;
+    const { components, meta } = data;
+    dispatch(loadEnergyComponents(components));
+    dispatch(changeArea(meta.Area_ref || area));
+    dispatch(changeKexp(meta.kexp || kexp));
   }
 
   getEnergyString() {
