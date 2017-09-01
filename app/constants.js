@@ -108,7 +108,7 @@ export const FACTORESDEPASO = [
         ['RED1',                'RED',          'input',     'A', 0.000, 1.300], // User defined!, district heating/cooling carrier
         ['RED2',                'RED',          'input',     'A', 0.000, 1.300]  // User defined!, district heating/cooling carrier
 ].map(([carrier, source, use, step, ren, nren]) => {
-  return { carrier, source, use, step, ren, nren };
+  return { type: 'FACTOR', carrier, source, use, step, ren, nren };
 });
 
 // ------------------------------------------------------------------------------------
