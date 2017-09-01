@@ -8,7 +8,7 @@ import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 
-import { carrier_data_to_string } from '../energycalculations.js';
+import { carrier_data_to_string, string_to_carrier_data } from '../energycalculations.js';
 
 import { changeKexp,
          changeArea,
@@ -75,9 +75,11 @@ class MainPage extends React.Component {
     );
   }
 
-  onLoad(data) {
+  onLoad(datastr) {
+    let { components, meta } = string_to_carrier_data(datastr);
+    components = components.map(dd => { return { ...dd, active: true }; });
+
     const { dispatch, kexp, area } = this.props;
-    const { components, meta } = data;
     dispatch(loadEnergyComponents(components));
     dispatch(changeArea(meta.Area_ref || area));
     dispatch(changeKexp(meta.kexp || kexp));

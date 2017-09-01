@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { string_to_carrier_data } from '../energycalculations.js';
-
 export default class ActionsPanel extends React.Component {
 
   handleFiles(e, onLoadHandler) {
@@ -12,14 +10,8 @@ export default class ActionsPanel extends React.Component {
       file = e.target.files[0];
     }
 
-    let getData = str => {
-      let { components, meta } = string_to_carrier_data(str);
-      components = components.map(dd => { return { ...dd, active: true }; });
-      return { components, meta };
-    };
-
     const reader = new FileReader();
-    reader.onload = el => onLoadHandler(getData(el.target.result));
+    reader.onload = el => onLoadHandler(el.target.result);
     reader.readAsText(file);
     this.props.onChangeCurrentFileName(file.name);
   }
