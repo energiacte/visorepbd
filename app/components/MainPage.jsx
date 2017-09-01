@@ -81,10 +81,10 @@ class MainPage extends React.Component {
   }
 
   getEnergyString() {
-    const { kexp, area, components, wfactors } = this.props;
+    const { kexp, area, components } = this.props;
     const meta = { area, kexp };
-    const energystring = carrier_data_to_string(components, meta);
-    return energystring;
+    const activecomponents = components.filter(e => e.active === true);
+    return carrier_data_to_string(activecomponents, meta);
   }
 }
 

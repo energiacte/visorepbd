@@ -111,7 +111,6 @@ export function string_to_carrier_data(datastring) {
 
   if (components.length === 0) {
     const EMPTYCOMPONENT = {
-      active: true,
       carrier: 'ELECTRICIDAD',
       ctype: 'CONSUMO',
       csubtype: 'EPB',
@@ -154,7 +153,6 @@ export function carrier_data_to_string(carrierdata, meta) {
     `#CTE_kexp: ${ meta.kexp.toFixed(2) }`
   ];
   const carrierlines = carrierdata
-        .filter(cc => cc.active)
         .map(
           cc => {
             const { carrier, ctype, csubtype, values, comment } = cc;
