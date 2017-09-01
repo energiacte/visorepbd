@@ -123,12 +123,12 @@ export function string_to_carrier_data(datastring) {
   const floatRegex = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
   const meta = {};
   commentlines
-    .filter(line => line.startsWith('#CTE_'))
+    .filter(line => line.startsWith('#CTE_') || line.startsWith('#META'))
     .map(line => line.slice('#CTE_'.length))
     .map(line => {
-      let [key, value] = line.split(':').map(l => l.trim());
+      const [key, svalue] = line.split(':').map(l => l.trim());
       // TODO: allow here lists of numbers too
-      value = value.match(floatRegex) ? parseFloat(value) : value;
+      const value = svalue.match(floatRegex) ? parseFloat(svalue) : svalue;
       meta[key] = value;
     });
 
