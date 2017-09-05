@@ -63,25 +63,37 @@ function UserException(message) {
 
 // Read energy input data from string and return a carrier data object { components,  meta }
 //
-// The carrier data object has 'carrierlist' and 'metadata' keys
+// # Input format:
 //
-// = The carrierlist has the following structure:
+// #META Area_ref: 100.5
+// ELECTRICIDAD,CONSUMO,EPB,16.39,13.11,8.20,7.38,4.10,4.92,6.56,5.74,4.10,6.56,9.84,13.11
+// ELECTRICIDAD,PRODUCCION,INSITU,8.20,6.56,4.10,3.69,2.05,2.46,3.28,2.87,2.05,3.28,4.92,6.56
 //
-// [ {carrier: carrier1, ctype: ctype1, csubtype: csubtype1, values: [...values1], comment: comment1},
-//   {carrier: carrier2, ctype: ctype2, csubtype: csubtype2, values: [...values2], comment: comment2},
+// # Output format:
+//
+// The carrier list has objects with 'CARRIER' and 'META' type
+//
+// [ { type: 'CARRIER', carrier: carrier1, ctype: ctype1, csubtype: csubtype1, values: [...values1], comment: comment1 },
+//   { type: 'CARRIER', carrier: carrier2, ctype: ctype2, csubtype: csubtype2, values: [...values2], comment: comment2 },
 //   ...
+//   { type: 'META', key: key1, value: value1 },
+//   { type: 'META', key: key2, value: value2 },
+//   ...
+//   {}
 // ]
 //
-// * carrier is an energy carrier
-// * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
-// * csubtype defines:
-//   - the energy origin for produced energy (INSITU or COGENERACION)
-//   - the energy end use (EPB or NEPB) for delivered energy
-// * values is a list of energy values, one for each timestep
-// * comment is a comment string for the carrier
+// * objects with type 'CARRIER' represent an energy carrier component:
+//   - carrier is the carrier name
+//   - ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
+//   - csubtype defines:
+//     - the energy origin for produced energy (INSITU or COGENERACION)
+//     - the energy end use (EPB or NEPB) for delivered energy
+//   - values is a list of energy values, one for each timestep
+//   - comment is a comment string for the carrier
 //
-// = The metadata object stores an object { key1: value1, key2: value2, ... }
-// where key and value are converted from lines like '#CTE_key: value'
+// * objects with type 'META' represent metadata
+//   - key is the metadata name
+//   - value is the metadata value
 export function string_to_carrier_list(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
         .map(line => line.trim())
