@@ -26,7 +26,7 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
 */
 
 import {
-  string_to_carrier_data,
+  string_to_carrier_list,
   string_to_weighting_factors,
   energy_performance } from './energycalculations.js';
 import * as fs from 'fs';
@@ -207,7 +207,7 @@ function epfromdata(datalist, fp, kexp) {
 function epfromfile(filename, fp, kexp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const carrierlist = string_to_carrier_data(datastring).filter(c => c.type === 'CARRIER');
+  const carrierlist = string_to_carrier_list(datastring).filter(c => c.type === 'CARRIER');
   return epfromdata(carrierlist, fp, kexp);
 }
 
@@ -345,7 +345,7 @@ console.log("*** Lectura de archivo .csv con metadatos");
   const datapath = path.resolve(__dirname, 'examples',
     'cteEPBD-N_R09_unif-ET5-V048R070-C1_peninsula.csv');
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const datalist = string_to_carrier_data(datastring);
+  const datalist = string_to_carrier_list(datastring);
   const metas2 = datalist.filter(e => e.type === 'META');
   const carriers = datalist.filter(e => e.type === 'CARRIER');
   console.log(metas2[0]);

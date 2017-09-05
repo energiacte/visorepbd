@@ -8,7 +8,7 @@ import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 
-import { carrier_data_to_string, string_to_carrier_data } from '../energycalculations.js';
+import { carrier_list_to_string, string_to_carrier_list } from '../energycalculations.js';
 
 import { changeKexp,
          changeArea,
@@ -76,7 +76,7 @@ class MainPage extends React.Component {
   }
 
   onLoad(datastr) {
-    const data = string_to_carrier_data(datastr);
+    const data = string_to_carrier_list(datastr);
     const components = data
       .filter(c => c.type === 'CARRIER')
       .map(dd => ({ ...dd, active: true }));
@@ -100,7 +100,7 @@ class MainPage extends React.Component {
       { type: 'META', key: 'Area_ref', value: area },
       { type: 'META', key: 'kexp', value: kexp }
     ];
-    return carrier_data_to_string([...activecomponents, ...metalines]);
+    return carrier_list_to_string([...activecomponents, ...metalines]);
   }
 }
 

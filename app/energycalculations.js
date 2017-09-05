@@ -82,7 +82,7 @@ function UserException(message) {
 //
 // = The metadata object stores an object { key1: value1, key2: value2, ... }
 // where key and value are converted from lines like '#CTE_key: value'
-export function string_to_carrier_data(datastring) {
+export function string_to_carrier_list(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
         .map(line => line.trim())
         .filter(line => !(line === '' || line.startsWith('vector')));
@@ -139,7 +139,7 @@ export function string_to_carrier_data(datastring) {
 }
 
 // Convert energy data as carrierlist to string
-export function carrier_data_to_string(carrierlist) {
+export function carrier_list_to_string(carrierlist) {
   const metas = carrierlist
     .filter(e => e.type === 'META')
     .map(m => `#META ${ m.key }: ${ m.value }`);
