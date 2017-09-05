@@ -8,6 +8,7 @@ const initialState = {
           EPAnren: 0, EPAren: 0, EPAtotal: 0, EPArer: 0 },
   storedcomponent: {
     active: true,
+    type: 'CARRIER',
     carrier: 'ELECTRICIDAD',
     ctype: 'CONSUMO',
     csubtype: 'EPB',
@@ -20,6 +21,7 @@ const initialState = {
   components: [ // Energy components array (ejemplo3PVBdC.csv)
     {
       active: true,
+      type: 'CARRIER',
       carrier: 'ELECTRICIDAD',
       ctype: 'CONSUMO',
       csubtype: 'EPB',
@@ -28,6 +30,7 @@ const initialState = {
     },
     {
       active: true,
+      type: 'CARRIER',
       carrier: 'ELECTRICIDAD',
       ctype: 'PRODUCCION',
       csubtype: 'INSITU',
@@ -36,6 +39,7 @@ const initialState = {
     },
     {
       active: true,
+      type: 'CARRIER',
       carrier: 'MEDIOAMBIENTE',
       ctype: 'CONSUMO',
       csubtype: 'EPB',
@@ -44,6 +48,7 @@ const initialState = {
     },
     {
       active: true,
+      type: 'CARRIER',
       carrier: 'MEDIOAMBIENTE',
       ctype: 'PRODUCCION',
       csubtype: 'INSITU',

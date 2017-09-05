@@ -82,35 +82,31 @@ function UserException(message) {
 //
 // = The metadata object stores an object { key1: value1, key2: value2, ... }
 // where key and value are converted from lines like '#CTE_key: value'
-//
 export function string_to_carrier_data(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
         .map(line => line.trim())
         .filter(line => !(line === '' || line.startsWith('vector')));
-  const commentlines = datalines.filter(line => line.startsWith('#'));
-  const componentlines = datalines.filter(line => !line.startsWith('#'));
 
-  let components = componentlines
-      .map(line => {
-        const parts = line.split('#').map(pp => pp.trim());
-        return (parts.length > 1) ? [parts[0], parts[1]] : [parts[0], ''];
-      })
-      .map(([fieldsstring, comment]) => {
-        const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
-        let [ carrier, ctype, csubtype, ...values ] = fieldslist;
-        if (fieldslist.length > 3
-            && Object.keys(VALIDDATA).includes(ctype)
-            && Object.keys(VALIDDATA[ctype]).includes(csubtype)
-            && VALIDDATA[ctype][csubtype].includes(carrier)) {
-          values = values.map(Number);
-          return { carrier, ctype, csubtype, values, comment };
-        }
-        throw new UserException(`Invalid input values: ${ fieldsstring }`);
-      })
-      .filter(v => v !== null);
+  const components = datalines
+    .filter(line => !line.startsWith('#'))
+    .map(line => {
+      const [fieldsstring, comment = ''] = line.split('#', 2).map(pp => pp.trim());
+      const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
+      let [ carrier, ctype, csubtype, ...values ] = fieldslist;
+      if (fieldslist.length > 3
+          && Object.keys(VALIDDATA).includes(ctype)
+          && Object.keys(VALIDDATA[ctype]).includes(csubtype)
+          && VALIDDATA[ctype][csubtype].includes(carrier)) {
+        values = values.map(Number);
+        return { type: 'CARRIER', carrier, ctype, csubtype, values, comment };
+      }
+      throw new UserException(`Invalid input values: ${ fieldsstring }`);
+    })
+    .filter(v => v !== null);
 
   if (components.length === 0) {
     const EMPTYCOMPONENT = {
+      type: 'CARRIER',
       carrier: 'ELECTRICIDAD',
       ctype: 'CONSUMO',
       csubtype: 'EPB',
@@ -119,18 +115,6 @@ export function string_to_carrier_data(datastring) {
     };
     components.push(EMPTYCOMPONENT);
   }
-
-  const floatRegex = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
-  const meta = {};
-  commentlines
-    .filter(line => line.startsWith('#CTE_') || line.startsWith('#META'))
-    .map(line => line.slice('#CTE_'.length))
-    .map(line => {
-      const [key, svalue] = line.split(':').map(l => l.trim());
-      // TODO: allow here lists of numbers too
-      const value = svalue.match(floatRegex) ? parseFloat(svalue) : svalue;
-      meta[key] = value;
-    });
 
   const lengths = components.map(datum => datum.values.length);
   const numSteps = Math.max(...lengths);
@@ -141,26 +125,32 @@ export function string_to_carrier_data(datastring) {
                             Problem found in lines ${ errLengths }`);
   }
 
-  return { components, meta };
+  const floatRegex = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
+  const meta = datalines
+    .filter(line => line.startsWith('#META') || line.startsWith('#CTE_'))
+    .map(line => line.slice('#META'.length)) // strips #CTE_ too
+    .map(line => {
+      const [key, svalue] = line.split(':', 2).map(l => l.trim());
+      const value = svalue.match(floatRegex) ? parseFloat(svalue) : svalue;
+      return { type: 'META', key, value };
+    });
+
+  return [ ...components, ...meta ];
 }
 
-// Save energy data and metadata to string
-export function carrier_data_to_string(carrierdata, meta) {
-  const metalines = [
-    `#CTE_Name: EPBDpanel`,
-    `#CTE_Datetime: ${ new Date().toLocaleString() }`,
-    `#CTE_Area_ref: ${ meta.area.toFixed(1) }`,
-    `#CTE_kexp: ${ meta.kexp.toFixed(2) }`
-  ];
-  const carrierlines = carrierdata
-        .map(
-          cc => {
-            const { carrier, ctype, csubtype, values, comment } = cc;
-            const valuelist = values.map(v=> v.toFixed(2)).join(',');
-            return `${ carrier },${ ctype },${ csubtype },${ valuelist } #${ comment }`;
-          }
-        );
-  return [...metalines, 'vector,tipo,src_dst', ...carrierlines].join('\n');
+// Convert energy data as carrierlist to string
+export function carrier_data_to_string(carrierlist) {
+  const metas = carrierlist
+    .filter(e => e.type === 'META')
+    .map(m => `#META ${ m.key }: ${ m.value }`);
+  const carriers = carrierlist
+    .filter(e => e.type === 'CARRIER')
+    .map(cc => {
+      const { carrier, ctype, csubtype, values, comment } = cc;
+      const valuelist = values.map(v=> v.toFixed(2)).join(',');
+      return `${ carrier }, ${ ctype }, ${ csubtype }, ${ valuelist } #${ comment }`;
+    });
+  return [...metas, ...carriers].join('\n');
 }
 
 // Read energy weighting factors data from string

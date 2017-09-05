@@ -1,0 +1,82 @@
+# Datos de entrada
+#CTE_Name: N_R09_unif
+#CTE_Datetime: 23/08/2017 09:56
+#CTE_Weather_file: C1_peninsula
+#CTE_Altitud: 650
+#CTE_Coef_stack: 0.00029
+#CTE_Coef_wind: 0.000231
+#CTE_Design_flow_rate: 0.48
+#CTE_F_sombras_moviles: 0.3
+#CTE_Fan_ntot: 0.63
+#CTE_Fan_sfp: 1
+#CTE_Heat_recovery: 0.7
+#CTE_Permeabilidad_ventanas: Clase 4
+#CTE_Provincia: Automatico
+#CTE_Psi_contorno_huecos: 0.05
+#CTE_Psi_forjado_cubierta: 0.24
+#CTE_Psi_forjado_exterior: 0.23
+#CTE_Psi_frente_forjado: 0.1
+#CTE_Psi_solera_terreno: 0.28
+#CTE_Tipo_edificio: Nuevo
+#CTE_Uso_edificio: Residencial
+#CTE_Zona_climatica: C1_peninsula
+#CTE_ConstructionSet: ET5
+#CTE_Carpinteria: Marco_RPT_1.3
+# Datos medidos
+#CTE_Area_ref: 217.4
+#CTE_Vol_ref: 574.54
+#CTE_Compacidad: 1.33
+#CTE_qsj: 0.97
+# Medicion construcciones: [Area [m2], Transmitancia U [W/m2K]]
+#CTE_medicion_CTE_2006_FORJADO_INTERIOR_SUELO: [52.42, 5.674]
+#CTE_medicion_CTE_2006_PARTICION_PLADUR: [26.14, 0.495]
+#CTE_medicion_ET4_SUELO_AIRE: [0.81, 0.505]
+#CTE_medicion_ET4_SUELO_TERRENO: [89.4, 0.309]
+#CTE_medicion_ET5_CUBIERTA: [40.77, 0.251]
+#CTE_medicion_ET5_MURO: [184.38, 0.286]
+#CTE_medicion_H3_HUECO: [37.74, 0.999]
+# Medicion de superficies por orientacion: [area]
+#CTE_orientacion_noreste_ET5_MURO: 62.92
+#CTE_orientacion_sureste_ET5_MURO: 29.76
+#CTE_orientacion_sureste_H3_HUECO: 17.39
+#CTE_orientacion_suroeste_ET5_MURO: 49.44
+#CTE_orientacion_suroeste_H3_HUECO: 10.93
+#CTE_orientacion_noroeste_ET5_MURO: 42.27
+#CTE_orientacion_noroeste_H3_HUECO: 9.42
+# Medicion puentes termicos: ['Coef. acoplamiento [W/K]', 'Longitud [m]', 'PSI [W/mK]']
+#CTE_medicion_PT_SoleraTerreno: [11, 40, 0.28]
+#CTE_medicion_PT_ForjadoCubierta: [24, 99, 0.24]
+#CTE_medicion_PT_ContornoHuecos: [5, 99, 0.05]
+#CTE_medicion_PT_FrenteForjado: [7, 70, 0.1]
+#CTE_K: 0.49
+# Valores anuales de demanda por servicios en Kwh
+#CTE_Demanda_calefaccion: 2458
+#CTE_Demanda_refrigeracion: 133
+#CTE_Demanda_iluminacion_interior: 2094
+#CTE_Demanda_iluminacion_exterior: 0
+#CTE_Demanda_equipos_interiores: 2094
+#CTE_Demanda_equipos_exteriores: 0
+#CTE_Demanda_ventiladores: 1164
+#CTE_Demanda_bombas: 64
+#CTE_Demanda_disipacion_calor: 0
+#CTE_Demanda_humidificacion: 0
+#CTE_Demanda_recuperacion_calor: 0
+#CTE_Demanda_sistemas_agua: 2078
+#CTE_Demanda_equipos_frigorificos: 0
+#CTE_Demanda_equipos_generacion: 0
+# Potencia máxima [W] por servicios (genéricos)
+#CTE_ELECTRICITY_FACILITY_W: 1096.43
+#CTE_INTERIORLIGHTS_ELECTRICITY_W: 478.28
+#CTE_INTERIOREQUIPMENT_ELECTRICITY_W: 478.28
+#CTE_FANS_ELECTRICITY_W: 132.71
+#CTE_PUMPS_ELECTRICITY_W: 7.15
+#CTE_DISTRICTHEATING_FACILITY_W: 24998.13
+#CTE_HEATING_DISTRICTHEATING_W: 2175.44
+#CTE_WATERSYSTEMS_DISTRICTHEATING_W: 22823.34
+#CTE_DISTRICTCOOLING_FACILITY_W: 1837.93
+#CTE_COOLING_DISTRICTCOOLING_W: 1837.93
+vector,tipo,src_dst
+RED1,CONSUMO,EPB,159.73,159.75,182.58,182.58,159.75,182.58,182.58,159.76,182.58,182.58,159.76,182.58# WATERSYSTEMS, generic_acs, DISTRICTHEATING-->RED1, 1
+RED1,CONSUMO,EPB,766.79,477.27,249.74,53.71,36.84,0.0,0.0,0.0,0.0,17.63,171.11,685.18# HEATING, generic_heat, DISTRICTHEATING-->RED1, 1
+RED2,CONSUMO,EPB,0.0,0.0,0.0,0.0,0.0,4.84,55.43,30.92,42.09,0.0,0.0,0.0# COOLING, generic_cool, DISTRICTCOOLING-->RED2, 1
+ELECTRICIDAD,CONSUMO,EPB,98.74,89.18,98.74,95.55,98.74,95.55,98.74,98.74,95.55,98.74,95.55,98.74#FANS

@@ -76,8 +76,11 @@ class MainPage extends React.Component {
   }
 
   onLoad(datastr) {
-    let { components, meta } = string_to_carrier_data(datastr);
-    components = components.map(dd => { return { ...dd, active: true }; });
+    const data = string_to_carrier_data(datastr);
+    const components = data
+      .filter(c => c.type === 'CARRIER')
+      .map(dd => ({ ...dd, active: true }));
+    const meta = data.filter(c => c.type === 'META');
 
     const { dispatch, kexp, area } = this.props;
     dispatch(loadEnergyComponents(components));
@@ -87,9 +90,17 @@ class MainPage extends React.Component {
 
   getEnergyString() {
     const { kexp, area, components } = this.props;
-    const meta = { area, kexp };
-    const activecomponents = components.filter(e => e.active === true);
-    return carrier_data_to_string(activecomponents, meta);
+    const activecomponents = components
+      .filter(e => e.active === true)
+      .map(({ active, ...rest }) => rest); // remove active key
+
+    // TODO: this doesn't preserve previous existing metadata
+    const metalines = [
+      { type: 'META', key: 'App', value: 'VisorEPBD_1.0' },
+      { type: 'META', key: 'Area_ref', value: area },
+      { type: 'META', key: 'kexp', value: kexp }
+    ];
+    return carrier_data_to_string([...activecomponents, ...metalines]);
   }
 }
 

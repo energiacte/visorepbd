@@ -207,8 +207,8 @@ function epfromdata(datalist, fp, kexp) {
 function epfromfile(filename, fp, kexp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const datalist = string_to_carrier_data(datastring).components;
-  return epfromdata(datalist, fp, kexp);
+  const carrierlist = string_to_carrier_data(datastring).filter(c => c.type === 'CARRIER');
+  return epfromdata(carrierlist, fp, kexp);
 }
 
 // Tests ----------------------------------------------------------
@@ -338,4 +338,21 @@ if (metas.length === 1 && fps.length === 21) {
   console.log(`[OK] Encontrados (META/FACTOR) ${ metas.length } / ${ fps.length }`);
 } else {
   console.log(`[ERROR] Encontrados (META/FACTOR) ${ metas.length } / ${ fps.length }. Esperados 1 / 21`);
+}
+
+console.log("*** Lectura de archivo .csv con metadatos");
+{
+  const datapath = path.resolve(__dirname, 'examples',
+    'cteEPBD-N_R09_unif-ET5-V048R070-C1_peninsula.csv');
+  const datastring = fs.readFileSync(datapath, 'utf-8');
+  const datalist = string_to_carrier_data(datastring);
+  const metas2 = datalist.filter(e => e.type === 'META');
+  const carriers = datalist.filter(e => e.type === 'CARRIER');
+  console.log(metas2[0]);
+  console.log(carriers[0]);
+  if (metas2.length === 70 && carriers.length === 4) {
+    console.log(`[OK] Encontrados (META/CARRIER) ${ metas2.length } / ${ carriers.length }`);
+  } else {
+    console.log(`[ERROR] Encontrados (META/CARRIER) ${ metas2.length } / ${ carriers.length }. Esperados 1 / 21`);
+  }
 }
