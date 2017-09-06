@@ -148,7 +148,7 @@ export function string_to_carrier_list(datastring) {
 
   if (errLengths.length !== 0) {
     throw new UserException(`All input must have the same number of timesteps.
-                            Problem found in lines ${ errLengths }`);
+${ errLengths.length } lines with less than ${ numSteps } values.`);
   }
 
   const floatRegex = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
