@@ -54,6 +54,9 @@ function UserException(message) {
   this.name = 'UserException';
 }
 
+const FLOAT_REGEX = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
+const TAG_REGEX = /[A-Za-z]+[0-9]*/;
+const LEGACY_SERVICE_TAG_REGEX = /^[ ]*(WATERSYSTEMS|HEATING|COOLING|FANS)/;
 
 // -----------------------------------------------------------------------------------
 // Input/Output functions
