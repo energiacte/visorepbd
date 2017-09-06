@@ -64,6 +64,18 @@ const LEGACY_SERVICE_TAG_REGEX = /^[ ]*(WATERSYSTEMS|HEATING|COOLING|FANS)/;
 
 // Input parsing functions -----------------------------------------------------------
 
+// Validate carrier data coherence
+function validate_carrier(carrier, ctype, csubtype, fieldsstring) {
+  let validcarriers;
+  try {
+    validcarriers = VALIDDATA[ctype][csubtype];
+  } catch (e) {
+    throw new UserException(`Invalid input values: ${ fieldsstring }`);
+  }
+  if (!validcarriers.includes(carrier)) throw new UserException(`Invalid carrier:  ${ fieldsstring }`);
+  return true;
+}
+
 // Read energy input data from string and return a carrier data object { components,  meta }
 //
 // # Input format:
