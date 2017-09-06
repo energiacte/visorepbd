@@ -151,13 +151,12 @@ export function string_to_carrier_list(datastring) {
 ${ errLengths.length } lines with less than ${ numSteps } values.`);
   }
 
-  const floatRegex = /^[+-]?([0-9]+([.,][0-9]*)?|[.,][0-9]+)$/;
   const meta = datalines
     .filter(line => line.startsWith('#META') || line.startsWith('#CTE_'))
     .map(line => line.slice('#META'.length)) // strips #CTE_ too
     .map(line => {
       const [key, svalue] = line.split(':', 2).map(l => l.trim());
-      const value = svalue.match(floatRegex) ? parseFloat(svalue) : svalue;
+      const value = svalue.match(FLOAT_REGEX) ? parseFloat(svalue) : svalue;
       return { type: 'META', key, value };
     });
 
