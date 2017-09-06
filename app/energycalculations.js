@@ -113,6 +113,23 @@ export function string_to_carrier_list(datastring) {
         throw new UserException(`Invalid number of items in: ${ fieldsstring }`);
       }
 
+      validate_carrier(carrier, ctype, csubtype, fieldsstring);
+
+      // Try to find service tag or use generic tag
+      let service;
+      const maybeservice = values[0];
+      if (maybeservice.match(TAG_REGEX) || maybeservice === '') {
+        service = maybeservice === '' ? 'NODEFINIDO' : maybeservice;
+        values = values.splice(1);
+      } else {
+        const legacy_service = comment.match(LEGACY_SERVICE_TAG_REGEX);
+        service = legacy_service ? legacy_service[0] : 'NODEFINIDO';
+      }
+
+      values = values.map(Number);
+      return { type: 'CARRIER', carrier, ctype, csubtype, service, values, comment };
+    });
+
   if (components.length === 0) {
     const EMPTYCOMPONENT = {
       type: 'CARRIER',
