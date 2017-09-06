@@ -329,15 +329,17 @@ check('J9 electricity monthly kexp=1.0',
 // ---------------------------------------------------------------
 
 console.log("*** Lectura de cadena de factores de paso");
-const fp_list = string_to_weighting_factors(CTEFPSTRING);
-const metas = fp_list.filter(e => e.type === 'META');
-const fps = fp_list.filter(e => e.type === 'FACTOR');
-console.log(metas[0]);
-console.log(fps[0]);
-if (metas.length === 1 && fps.length === 21) {
-  console.log(`[OK] Encontrados (META/FACTOR) ${ metas.length } / ${ fps.length }`);
-} else {
-  console.log(`[ERROR] Encontrados (META/FACTOR) ${ metas.length } / ${ fps.length }. Esperados 1 / 21`);
+{
+  const fp_list = string_to_weighting_factors(CTEFPSTRING);
+  const metas = fp_list.filter(e => e.type === 'META');
+  const fps = fp_list.filter(e => e.type === 'FACTOR');
+  console.log(metas[0]);
+  console.log(fps[0]);
+  if (metas.length === 1 && fps.length === 21) {
+    console.log(`[OK] Encontrados (META/FACTOR) ${ metas.length } / ${ fps.length }`);
+  } else {
+    console.log(`[ERROR] Encontrados (META/FACTOR) ${ metas.length } / ${ fps.length }. Esperados 1 / 21`);
+  }
 }
 
 console.log("*** Lectura de archivo .csv con metadatos");
@@ -346,13 +348,27 @@ console.log("*** Lectura de archivo .csv con metadatos");
     'cteEPBD-N_R09_unif-ET5-V048R070-C1_peninsula.csv');
   const datastring = fs.readFileSync(datapath, 'utf-8');
   const datalist = string_to_carrier_list(datastring);
-  const metas2 = datalist.filter(e => e.type === 'META');
+  const metas = datalist.filter(e => e.type === 'META');
   const carriers = datalist.filter(e => e.type === 'CARRIER');
-  console.log(metas2[0]);
-  console.log(carriers[0]);
-  if (metas2.length === 70 && carriers.length === 4) {
-    console.log(`[OK] Encontrados (META/CARRIER) ${ metas2.length } / ${ carriers.length }`);
+  // console.log(metas2[0]);
+  // console.log(carriers[0]);
+  if (metas.length === 70 && carriers.length === 4) {
+    console.log(`[OK] Encontrados (META/CARRIER) ${ metas.length } / ${ carriers.length }`);
   } else {
-    console.log(`[ERROR] Encontrados (META/CARRIER) ${ metas2.length } / ${ carriers.length }. Esperados 1 / 21`);
+    console.log(`[ERROR] Encontrados (META/CARRIER) ${ metas.length } / ${ carriers.length }. Esperados 1 / 21`);
+  }
+}
+
+console.log("*** Lectura de archivo .csv con definición de servicios");
+{
+  const datapath = path.resolve(__dirname, 'examples', 'newServicesFormat.csv');
+  const datastring = fs.readFileSync(datapath, 'utf-8');
+  const datalist = string_to_carrier_list(datastring);
+  const metas = datalist.filter(e => e.type === 'META');
+  const carriers = datalist.filter(e => e.type === 'CARRIER');
+  if (metas.length === 3 && carriers.length === 4) {
+    console.log(`[OK] Encontrados (META/CARRIER) ${ metas.length } / ${ carriers.length }`);
+  } else {
+    console.log(`[ERROR] Encontrados (META/CARRIER) ${ metas.length } / ${ carriers.length }. Esperados 1 / 21`);
   }
 }

@@ -1,0 +1,8 @@
+# Datos de entrada
+#CTE_Name: N_R09_unif
+#CTE_Datetime: 23/08/2017 09:56
+#CTE_Weather_file: C1_peninsula
+RED1,CONSUMO,EPB,ACS,159.73,159.75,182.58,182.58,159.75,182.58,182.58,159.76,182.58,182.58,159.76,182.58# Comentario 1
+RED1,CONSUMO,EPB,CAL,766.79,477.27,249.74,53.71,36.84,0.0,0.0,0.0,0.0,17.63,171.11,685.18# Comentario 2
+RED2,CONSUMO,EPB,REF,0.0,0.0,0.0,0.0,0.0,4.84,55.43,30.92,42.09,0.0,0.0,0.0# Comentario 3
+ELECTRICIDAD,CONSUMO,EPB,,98.74,89.18,98.74,95.55,98.74,95.55,98.74,98.74,95.55,98.74,95.55,98.74# Falta definir servicio VEN, dejándolo en blanco para ver qué pasa

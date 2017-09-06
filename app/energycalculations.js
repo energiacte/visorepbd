@@ -148,6 +148,7 @@ export function string_to_carrier_list(datastring) {
       carrier: 'ELECTRICIDAD',
       ctype: 'CONSUMO',
       csubtype: 'EPB',
+      service: '',
       values: [0.0],
       comment: ''
     };
@@ -183,9 +184,9 @@ export function carrier_list_to_string(carrierlist) {
   const carriers = carrierlist
     .filter(e => e.type === 'CARRIER')
     .map(cc => {
-      const { carrier, ctype, csubtype, values, comment } = cc;
+      const { carrier, ctype, csubtype, service, values, comment } = cc;
       const valuelist = values.map(v=> v.toFixed(2)).join(',');
-      return `${ carrier }, ${ ctype }, ${ csubtype }, ${ valuelist } #${ comment }`;
+      return `${ carrier }, ${ ctype }, ${ csubtype }, ${ service }, ${ valuelist } #${ comment }`;
     });
   return [...metas, ...carriers].join('\n');
 }
