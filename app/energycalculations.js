@@ -65,14 +65,14 @@ const LEGACY_SERVICE_TAG_REGEX = /^[ ]*(WATERSYSTEMS|HEATING|COOLING|FANS)/;
 // Input parsing functions -----------------------------------------------------------
 
 // Validate carrier data coherence
-function validate_carrier(carrier, ctype, csubtype, fieldsstring) {
+function validate_carrier(carrier, ctype, csubtype, line) {
   let validcarriers;
   try {
     validcarriers = VALIDDATA[ctype][csubtype];
   } catch (e) {
-    throw new UserException(`Invalid input values: ${ fieldsstring }`);
+    throw new UserException(`Invalid type and subtype data in: ${ line }`);
   }
-  if (!validcarriers.includes(carrier)) throw new UserException(`Invalid carrier:  ${ fieldsstring }`);
+  if (!validcarriers.includes(carrier)) throw new UserException(`Invalid carrier in line:  ${ line }`);
   return true;
 }
 
@@ -125,7 +125,7 @@ export function string_to_carrier_list(datastring) {
         throw new UserException(`Invalid number of items in: ${ fieldsstring }`);
       }
 
-      validate_carrier(carrier, ctype, csubtype, fieldsstring);
+      validate_carrier(carrier, ctype, csubtype, line);
 
       // Try to find service tag or use generic tag
       let service;
