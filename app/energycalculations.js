@@ -99,8 +99,9 @@ const LEGACY_SERVICE_TAG_REGEX = /^[ ]*(WATERSYSTEMS|HEATING|COOLING|FANS)/;
 //   - value is the metadata value
 export function string_to_carrier_list(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
-        .map(line => line.trim())
-        .filter(line => !(line === '' || line.startsWith('vector')));
+        .map(l => l.trim())
+        .filter(l => !(l === '' || l.startsWith('vector')))
+        .filter(v => v !== null);
 
   const components = datalines
     .filter(line => !line.startsWith('#'))
@@ -108,16 +109,9 @@ export function string_to_carrier_list(datastring) {
       const [fieldsstring, comment = ''] = line.split('#', 2).map(pp => pp.trim());
       const fieldslist = fieldsstring.split(',').map(ff => ff.trim());
       let [ carrier, ctype, csubtype, ...values ] = fieldslist;
-      if (fieldslist.length > 3
-          && Object.keys(VALIDDATA).includes(ctype)
-          && Object.keys(VALIDDATA[ctype]).includes(csubtype)
-          && VALIDDATA[ctype][csubtype].includes(carrier)) {
-        values = values.map(Number);
-        return { type: 'CARRIER', carrier, ctype, csubtype, values, comment };
+      if (fieldslist.lenght < 4) {
+        throw new UserException(`Invalid number of items in: ${ fieldsstring }`);
       }
-      throw new UserException(`Invalid input values: ${ fieldsstring }`);
-    })
-    .filter(v => v !== null);
 
   if (components.length === 0) {
     const EMPTYCOMPONENT = {
