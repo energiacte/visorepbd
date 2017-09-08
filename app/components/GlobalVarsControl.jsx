@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 export default class GlobalVarsControl extends React.Component {
   render() {
-    const { kexp, area, onChangeKexp, onChangeArea } = this.props;
+    const { kexp, area, onChangeKexp, onChangeArea, currentfilename } = this.props;
 
     return (
       <div id="globalvarscontrol" className="form-horizontal bg-primary col-md-12">
@@ -36,7 +36,7 @@ export default class GlobalVarsControl extends React.Component {
               <span className="glyphicon glyphicon-upload" /> Cargar datos
             </button>
             <button className="btn bg-primary" id="save" type="button"
-              onClick={e => this.downloadFile(e, this.props.onCarriersDownload)}>
+              onClick={e => this.downloadFile(e, this.props.onCarriersDownload, currentfilename)}>
               <span className="glyphicon glyphicon-download" /> Guardar datos
             </button>
           </div>
@@ -59,7 +59,7 @@ export default class GlobalVarsControl extends React.Component {
     this.props.onChangeCurrentFileName(file.name);
   }
 
-  downloadFile(e, handler) {
+  downloadFile(e, handler, filename) {
     const energystring = handler();
     const data = new Blob([energystring],
                           { type: 'text/plain;charset=utf8;' });
@@ -67,7 +67,7 @@ export default class GlobalVarsControl extends React.Component {
     const element = document.createElement('a');
     document.body.appendChild(element);
     element.setAttribute('href', window.URL.createObjectURL(data));
-    element.setAttribute('download', this.props.currentfilename);
+    element.setAttribute('download', filename);
     element.style.display = '';
     element.click();
     document.body.removeChild(element);
