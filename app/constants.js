@@ -111,6 +111,16 @@ export const FACTORESDEPASO = [
   return { type: 'FACTOR', carrier, source, use, step, ren, nren };
 });
 
+// TODO: function cte_weighting_factors(loc, extradata=null) {}
+// TODO: función que genere lista de factores de paso según localización (PENINSULA, CANARIAS, BALEARES, CEUTAYMELILLA)
+// TODO: y factores de paso de cogeneración, y factores para RED1 y RED2
+// TODO: usa META, LOCALIZACION, xxxx
+// TODO: Podría aplicar criterios CTE:
+// TODO:    - el factor en paso B para exportación es igual al de paso A para la importación de red
+// TODO:    - el factor input de cogeneración es 0.0, 0.0
+// TODO:    - se considera igual la exportación a la red (to_grid) que a usos NEPB (to_nEPB)
+// TODO:    - MEDIOAMBIENTE, RED, input es 1.0, 0.0
+
 // ------------------------------------------------------------------------------------
 // Constraints
 // ------------------------------------------------------------------------------------
@@ -151,3 +161,9 @@ export function carrier_isvalid(carrier_obj) {
   if (validcarriers.includes(carrier)) return true;
   return false;
 }
+
+
+// TODO: const fP = sanitize_weighting_factors(fp);
+// TODO: Podría avisar si no existe un factor: ['MEDIOAMBIENTE', 'RED', 'input', 'A', 1.000, 0.000]
+// TODO: podría considerar que to_nEPB es igual a to_grid si no se define
+// TODO: podría considerar que to_grid es igual a input si no se define
