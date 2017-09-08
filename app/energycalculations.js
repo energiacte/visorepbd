@@ -160,7 +160,13 @@ ${ errLengths.length } lines with less than ${ numSteps } values.`);
   return [ ...components, ...meta ];
 }
 
-// Convert energy data as carrierlist to string
+/**
+ * Convert energy data as carrierlist to string
+ *
+ * @export
+ * @param {any} carrierlist
+ * @returns {string}
+ */
 export function carrier_list_to_string(carrierlist) {
   const metas = carrierlist
     .filter(e => e.type === 'META')
