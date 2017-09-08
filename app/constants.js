@@ -136,3 +136,15 @@ export const VALIDDATA = {
                    'ELECTRICIDADCANARIAS', 'ELECTRICIDADCEUTAMELILLA']
   }
 };
+
+// Validate carrier data coherence
+export function validate_carrier(carrier, ctype, csubtype, line) {
+  let validcarriers;
+  try {
+    validcarriers = VALIDDATA[ctype][csubtype];
+  } catch (e) {
+    throw new UserException(`Invalid type and subtype data in: ${ line }`);
+  }
+  if (!validcarriers.includes(carrier)) throw new UserException(`Invalid carrier in line:  ${ line }`);
+  return true;
+}

@@ -41,7 +41,7 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
   - make the input sanitizer (weighting factors) smarter
 */
 
-import { VALIDDATA } from './constants.js';
+import { VALIDDATA, validate_carrier } from './constants.js';
 import {
   vecsum,
   veckmul,
@@ -64,17 +64,6 @@ const LEGACY_SERVICE_TAG_REGEX = /^[ ]*(WATERSYSTEMS|HEATING|COOLING|FANS)/;
 
 // Input parsing functions -----------------------------------------------------------
 
-// Validate carrier data coherence
-function validate_carrier(carrier, ctype, csubtype, line) {
-  let validcarriers;
-  try {
-    validcarriers = VALIDDATA[ctype][csubtype];
-  } catch (e) {
-    throw new UserException(`Invalid type and subtype data in: ${ line }`);
-  }
-  if (!validcarriers.includes(carrier)) throw new UserException(`Invalid carrier in line:  ${ line }`);
-  return true;
-}
 
 // Read energy input data from string and return a carrier data object { components,  meta }
 //
