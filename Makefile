@@ -57,13 +57,13 @@ configpackages:
 ${BUILDDIR}:
 	mkdir -p ${BUILDDIR}
 
-${BUILDDIR}/constants.js: app/constants.js
-	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/constants.js app/constants.js
+${BUILDDIR}/cteepbd.js: app/cteepbd.js
+	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/cteepbd.js app/cteepbd.js
 
 ${BUILDDIR}/vecutils.js: app/vecutils.js
 	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/vecutils.js app/vecutils.js
 
-${BUILDDIR}/energycalculations.js: ${BUILDDIR} app/energycalculations.js ${BUILDDIR}/constants.js ${BUILDDIR}/vecutils.js
+${BUILDDIR}/energycalculations.js: ${BUILDDIR} app/energycalculations.js ${BUILDDIR}/cteepbd.js ${BUILDDIR}/vecutils.js
 	./node_modules/.bin/babel --presets es2015,stage-0 -o ${BUILDDIR}/energycalculations.js app/energycalculations.js
 
 ${BUILDDIR}/test.js: ${BUILDDIR} ${BUILDDIR}/energycalculations.js app/test.js

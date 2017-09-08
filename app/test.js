@@ -29,7 +29,7 @@ import {
   string_to_carrier_list,
   string_to_weighting_factors,
   energy_performance } from './energycalculations.js';
-import { carrier_isvalid } from './constants.js';
+import { carrier_isvalid } from './cteepbd.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

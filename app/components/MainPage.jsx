@@ -9,7 +9,7 @@ import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 
 import { carrier_list_to_string, string_to_carrier_list } from '../energycalculations.js';
-import { carrier_isvalid } from '../constants.js';
+import { carrier_isvalid } from '../cteepbd.js';
 
 import { changeKexp,
          changeArea,
