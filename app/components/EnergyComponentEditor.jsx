@@ -103,11 +103,10 @@ export default class EnergyComponentEditor extends React.Component {
                        onKeyDown={ e => this.handleChangeTotalEnergyEntry(e) }/>
               </div>
               <div className="col-md-4 control-label">
-                <ActionsPanel
-                    onAdd={() => this.handleAdd(selectedkey)}
-                    onRemove={() => this.handleRemove(selectedkey)}
-                    onRestore={() => this.handleRestore()}
-                />
+                <button className="btn" id="modify" type="button"
+                  onClick={() => this.handleRestore()}>
+                  <span className="glyphicon glyphicon-repeat"/> Restaurar
+                </button>
               </div>
             </div>
             <div className="form-group">

@@ -61,8 +61,6 @@ class MainPage extends React.Component {
               selectedkey = { selectedkey }
               components = { components }
               storedcomponent = { storedcomponent }
-              onAdd={ component => dispatch(addEnergyComponent(component)) }
-              onRemove={ key => dispatch(removeEnergyComponent(key)) }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
           />
           <EnergyComponentList
@@ -70,7 +68,10 @@ class MainPage extends React.Component {
               components = { components }
               area ={ area }
               onSelect={ (key, component) => dispatch(selectEnergyComponent(key, component)) }
-              onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) } />
+              onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
+              onAdd={ component => dispatch(addEnergyComponent(component)) }
+              onRemove={ key => dispatch(removeEnergyComponent(key)) }
+          />
         </div>
         <Footer />
       </div>

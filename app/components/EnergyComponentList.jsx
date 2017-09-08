@@ -16,11 +16,43 @@ export default class EnergyComponentList extends React.Component {
     this.props.onEdit(i, { ...component, active: !component.active });
   }
 
+  // Add component to component list
+  handleAdd(selectedkey, event) {
+    let currentcomponent = (selectedkey !== null)
+      ? { ...this.props.components[selectedkey] }
+      : { active: true,
+        type: 'CARRIER',
+        ctype: 'PRODUCCION',
+        csubtype: 'INSITU',
+        carrier: 'ELECTRICIDAD',
+        values: [10] * 12,
+        comment: 'Comentario'
+      };
+
+    this.props.onAdd(currentcomponent);
+  }
+
+  // Remove current component to component list
+  handleRemove(selectedkey, event) {
+    this.props.onRemove(selectedkey);
+  }
+
   render() {
     const { components, selectedkey, area } = this.props;
     const maxvalue = Math.max(...components.map(component => Math.max(...component.values)));
 
     return (
+      <div>
+      <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
+        <button className="btn" id="add" type="button"
+                onClick={ () => this.handleAdd(selectedkey) }>
+          <span className="glyphicon glyphicon-plus"/> Añadir
+        </button>
+        <button className="btn" id="remove" type="button"
+                onClick={ () => this.handleRemove(selectedkey) }>
+          <span className="glyphicon glyphicon-minus"/> Borrar
+        </button>
+      </div>
       <table id="components" className="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
@@ -67,6 +99,7 @@ export default class EnergyComponentList extends React.Component {
           }
         </tbody>
       </table>
+      </div>
     );
   }
 
