@@ -249,16 +249,16 @@ export default class EnergyComponentEditor extends React.Component {
 
   // Add component to component list
   handleAdd(selectedkey, event) {
-    let currentcomponent = (selectedkey !== null) ?
-                           { ...this.props.components[selectedkey] } :
-                           {
-                             active: true,
-                             ctype: 'PRODUCCION',
-                             csubtype: 'INSITU',
-                             carrier: 'ELECTRICIDAD',
-                             values: [10] * 12,
-                             comment:'Comentario'
-                           }
+    let currentcomponent = (selectedkey !== null)
+      ? { ...this.props.components[selectedkey] }
+      : { active: true,
+        type: 'CARRIER',
+        ctype: 'PRODUCCION',
+        csubtype: 'INSITU',
+        carrier: 'ELECTRICIDAD',
+        values: [10] * 12,
+        comment: 'Comentario'
+      };
 
     this.props.onAdd(currentcomponent);
   }
