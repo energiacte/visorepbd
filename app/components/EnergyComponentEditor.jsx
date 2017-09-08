@@ -107,10 +107,6 @@ export default class EnergyComponentEditor extends React.Component {
                     onAdd={() => this.handleAdd(selectedkey)}
                     onRemove={() => this.handleRemove(selectedkey)}
                     onRestore={() => this.handleRestore()}
-                    onCarriersLoad={ this.props.onCarriersLoad }
-                    getEnergyString={ this.props.getEnergyString }
-                    onChangeCurrentFileName={ this.props.onChangeCurrentFileName }
-                    currentfilename={ this.props.currentfilename }
                 />
               </div>
             </div>
