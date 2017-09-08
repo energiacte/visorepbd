@@ -69,7 +69,7 @@ export default class EnergyComponentEditor extends React.Component {
               <div className="col-md-3">
                 <select ref={ ref => this.CurveSelect = ref }
                         name="selectcurve" className="form-control"
-                        style={{width:'50%', display:'inline-block', verticalAlign:'top'}}
+                        style={{ width: '50%', display: 'inline-block', verticalAlign: 'top' }}
                         defaultValue={ CURVENAMES[0] }
                         onChange={ e => this.updateValues() }>
                   { CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>) }
@@ -91,14 +91,14 @@ export default class EnergyComponentEditor extends React.Component {
                        min="0"
                        max={ Math.max(10, 10 + 1.5 * Math.round(currenttotalenergy / 5) * 5) }
                        step="5"
-                       style={{width:'50%'}}
+                       style={{ width:'50%' }}
                        defaultValue={ currenttotalenergy }
                        onChange={ e => this.handleChangeTotalEnergyRange(e) } />
                 <input className="form-control col-md-1"
                        ref={ ref => this.totalEnergyEntry = ref }
                        name="totalenergyentry"
                        type="text"
-                       style={ { width:'50%', background: this.state.totalenergyOnEdit ? '#fcf8c3': '' } }
+                       style={ { width: '50%', background: this.state.totalenergyOnEdit ? '#fcf8c3' : '' } }
                        defaultValue={ currenttotalenergy.toFixed(2) }
                        onKeyDown={ e => this.handleChangeTotalEnergyEntry(e) }/>
               </div>
@@ -121,7 +121,7 @@ export default class EnergyComponentEditor extends React.Component {
                 <input className={ "form-control" }
                        name="commentinput"
                        type="text"
-                       style={ { width:'100%', backgroundColor: this.state.commentOnEdit ? '#fcf8c3': '' } }
+                       style={ { width: '100%', backgroundColor: this.state.commentOnEdit ? '#fcf8c3' : '' } }
                        defaultValue={ comment || '' }
                        onKeyDown={ e => this.handleChangeComment(e) }
                 />
@@ -171,7 +171,7 @@ export default class EnergyComponentEditor extends React.Component {
       const currctype = currentcomponent.ctype;
       currentcomponent.csubtype = value;
       if (!VALIDDATA[currctype][value].includes(currentcomponent.carrier)) {
-          currentcomponent.carrier = VALIDDATA[currctype][value][0];
+        currentcomponent.carrier = VALIDDATA[currctype][value][0];
       }
     }
 
@@ -202,16 +202,15 @@ export default class EnergyComponentEditor extends React.Component {
       } else if (op === '/') {
         newvalue = (val1 / val2);
       }
-      newvalue = isNaN(newvalue)? null: newvalue;
+      newvalue = isNaN(newvalue) ? null : newvalue;
     } else {
       newvalue = null;
     }
 
     if (newvalue === null) {
       return null;
-    } else {
-      return newvalue.toFixed(2);
     }
+    return newvalue.toFixed(2);
   }
 
   // Handle changes in total energy entry through UI
