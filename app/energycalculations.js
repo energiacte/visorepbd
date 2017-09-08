@@ -115,8 +115,7 @@ export function string_to_carrier_list(datastring) {
       }
 
       validate_carrier(carrier, ctype, csubtype, line);
-
-      // Try to find service tag or use generic tag
+      // Find a service tag or use the generic tag instead
       let service;
       const maybeservice = values[0];
       if (maybeservice.match(TAG_REGEX) || maybeservice === '') {
