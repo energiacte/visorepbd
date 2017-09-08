@@ -41,7 +41,6 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
   - make the input sanitizer (weighting factors) smarter
 */
 
-import { VALIDDATA, validate_carrier } from './constants.js';
 import {
   vecsum,
   veckmul,
@@ -113,8 +112,6 @@ export function string_to_carrier_list(datastring) {
       if (fieldslist.lenght < 4) {
         throw new UserException(`Invalid number of items in: ${ fieldsstring }`);
       }
-
-      validate_carrier(carrier, ctype, csubtype, line);
       // Find a service tag or use the generic tag instead
       let service;
       const maybeservice = values[0];
