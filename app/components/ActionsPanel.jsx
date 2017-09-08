@@ -2,7 +2,7 @@ import React from 'react';
 
 export default class ActionsPanel extends React.Component {
 
-  loadFiles(e, onLoadHandler) {
+  loadFiles(e, onCarriersLoadHandler) {
     let file;
     if (e.dataTransfer) {
       file = e.dataTransfer.files[0];
@@ -11,7 +11,7 @@ export default class ActionsPanel extends React.Component {
     }
 
     const reader = new FileReader();
-    reader.onload = el => onLoadHandler(el.target.result);
+    reader.onload = el => onCarriersLoadHandler(el.target.result);
     reader.readAsText(file);
     this.props.onChangeCurrentFileName(file.name);
   }
@@ -46,7 +46,7 @@ export default class ActionsPanel extends React.Component {
           <span className="glyphicon glyphicon-repeat"/> Restaurar
         </button>
         <input ref="fileInput" type="file"
-               onChange={ e => this.loadFiles(e, this.props.onLoad) }
+               onChange={ e => this.loadFiles(e, this.props.onCarriersLoad) }
                style={{ visibility: 'hidden', position: 'absolute', top: '-50px', left: '-50px' }} />
         <button className="btn bg-primary" id="modify" type="button"
                 onClick={ () => this.refs.fileInput.click() }>

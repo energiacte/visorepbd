@@ -51,7 +51,9 @@ class MainPage extends React.Component {
               kexp={ kexp }
               area={ area }
               onChangeKexp={ value => dispatch(changeKexp(value)) }
-              onChangeArea={ value => dispatch(changeArea(value)) } />
+              onChangeArea={ value => dispatch(changeArea(value)) }
+              onCarriersLoad={ d => this.onCarriersLoad(d) }
+          />
           <EnergyComponentEditor
               selectedkey = { selectedkey }
               components = { components }
@@ -59,7 +61,7 @@ class MainPage extends React.Component {
               onAdd={ component => dispatch(addEnergyComponent(component)) }
               onRemove={ key => dispatch(removeEnergyComponent(key)) }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
-              onLoad={ d => this.onLoad(d) }
+              onCarriersLoad={ d => this.onCarriersLoad(d) }
               onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
               currentfilename={ this.props.currentfilename }
               getEnergyString={ () => this.getEnergyString() }
@@ -76,7 +78,7 @@ class MainPage extends React.Component {
     );
   }
 
-  onLoad(datastr) {
+  onCarriersLoad(datastr) {
     const data = string_to_carrier_list(datastr);
     const components = data
       .filter(c => c.type === 'CARRIER')
