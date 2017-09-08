@@ -38,7 +38,6 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
   TODO:
   - allow other values of load matching factor (or functions) (formula 32, B.32)
   - get results by use items (service), maybe using the reverse method E.3 (E.3.6, E.3.7)
-  - make the input sanitizer (weighting factors) smarter
 */
 
 import {
@@ -224,11 +223,6 @@ export function string_to_weighting_factors(factorsstring) {
     });
   return [ ...metas, ...factors ];
 }
-
-// TODO: const fP = sanitize_weighting_factors(fp);
-// TODO: Podría avisar si no existe un factor: ['MEDIOAMBIENTE', 'RED', 'input', 'A', 1.000, 0.000]
-// TODO: podría considerar que to_nEPB es igual a to_grid si no se define
-// TODO: podría considerar que to_grid es igual a input si no se define
 
 // Utility output functions ---------------------------------------------------
 
