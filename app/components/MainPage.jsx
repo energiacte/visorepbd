@@ -9,6 +9,7 @@ import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 
 import { carrier_list_to_string, string_to_carrier_list } from '../energycalculations.js';
+import { carrier_isvalid } from '../constants.js';
 
 import { changeKexp,
          changeArea,
@@ -79,6 +80,7 @@ class MainPage extends React.Component {
     const data = string_to_carrier_list(datastr);
     const components = data
       .filter(c => c.type === 'CARRIER')
+      .filter(c => carrier_isvalid(c))
       .map(dd => ({ ...dd, active: true }));
     const meta = data.filter(c => c.type === 'META');
 

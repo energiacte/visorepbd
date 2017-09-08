@@ -137,14 +137,17 @@ export const VALIDDATA = {
   }
 };
 
+
 // Validate carrier data coherence
-export function validate_carrier(carrier, ctype, csubtype, line) {
+export function carrier_isvalid(carrier_obj) {
+  const { type, carrier, ctype, csubtype } = carrier_obj;
+  if (type !== 'CARRIER') return false;
   let validcarriers;
   try {
     validcarriers = VALIDDATA[ctype][csubtype];
   } catch (e) {
-    throw new UserException(`Invalid type and subtype data in: ${ line }`);
+    return false;
   }
-  if (!validcarriers.includes(carrier)) throw new UserException(`Invalid carrier in line:  ${ line }`);
-  return true;
+  if (validcarriers.includes(carrier)) return true;
+  return false;
 }

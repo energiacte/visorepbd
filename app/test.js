@@ -29,6 +29,7 @@ import {
   string_to_carrier_list,
   string_to_weighting_factors,
   energy_performance } from './energycalculations.js';
+import { carrier_isvalid } from './constants.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -207,7 +208,9 @@ function epfromdata(datalist, fp, kexp) {
 function epfromfile(filename, fp, kexp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const carrierlist = string_to_carrier_list(datastring).filter(c => c.type === 'CARRIER');
+  const carrierlist = string_to_carrier_list(datastring)
+    .filter(c => c.type === 'CARRIER')
+    .filter(carrier_isvalid);
   return epfromdata(carrierlist, fp, kexp);
 }
 
@@ -349,7 +352,9 @@ console.log("*** Lectura de archivo .csv con metadatos");
   const datastring = fs.readFileSync(datapath, 'utf-8');
   const datalist = string_to_carrier_list(datastring);
   const metas = datalist.filter(e => e.type === 'META');
-  const carriers = datalist.filter(e => e.type === 'CARRIER');
+  const carriers = datalist
+    .filter(e => e.type === 'CARRIER')
+    .filter(carrier_isvalid);
   // console.log(metas2[0]);
   // console.log(carriers[0]);
   if (metas.length === 70 && carriers.length === 4) {
@@ -365,7 +370,9 @@ console.log("*** Lectura de archivo .csv con definición de servicios");
   const datastring = fs.readFileSync(datapath, 'utf-8');
   const datalist = string_to_carrier_list(datastring);
   const metas = datalist.filter(e => e.type === 'META');
-  const carriers = datalist.filter(e => e.type === 'CARRIER');
+  const carriers = datalist
+    .filter(e => e.type === 'CARRIER')
+    .filter(carrier_isvalid);
   if (metas.length === 3 && carriers.length === 4) {
     console.log(`[OK] Encontrados (META/CARRIER) ${ metas.length } / ${ carriers.length }`);
   } else {
