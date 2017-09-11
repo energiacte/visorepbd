@@ -84,12 +84,15 @@ class MainPage extends React.Component {
       .filter(c => c.type === 'CARRIER')
       .filter(c => carrier_isvalid(c))
       .map(dd => ({ ...dd, active: true }));
+    // TODO: preserve metadata roundtrip
     const meta = data.filter(c => c.type === 'META');
+    const m_Area_ref = meta.find(c => c.key === 'Area_ref');
+    const m_kexp = meta.find(c => c.key === 'kexp');
 
     const { dispatch, kexp, area } = this.props;
     dispatch(loadEnergyComponents(components));
-    dispatch(changeArea(meta.Area_ref || area));
-    dispatch(changeKexp(meta.kexp || kexp));
+    dispatch(changeArea(m_Area_ref ? m_Area_ref.value : area));
+    dispatch(changeKexp(m_kexp ? m_kexp.value : kexp));
   }
 
   carriersDownloadHandler() {
