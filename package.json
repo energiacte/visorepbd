@@ -5,6 +5,9 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "stats": "webpack --profile --json > stats.json",
+    "statsprod": "NODE_ENV=production webpack -p --profile --json > stats.json",
+    "analyze": "webpack-bundle-analyzer stats.json build",
     "clean": "rm -rf build/",
     "buildprod": "NODE_ENV=production webpack --progress --colors -p",
     "builddev": "NODE_ENV=development webpack --progress -d --colors --watch",
@@ -56,6 +59,7 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.14.1"
+    "webpack-bundle-analyzer": "^2.9.0",
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
