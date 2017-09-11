@@ -10,7 +10,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <NavBar route={ this.props.route } />
+        <NavBar match={ this.props.match } />
         <div className="container">
           <div className="page-header">
             <h1>VisorEPBD</h1>

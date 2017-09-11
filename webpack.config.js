@@ -40,26 +40,24 @@ var plugins = [
     filename: './index.html', // relativo al output path
     minify: { removeComments: true, collapseWhitespace: true }
   }),
-  new webpack.NoErrorsPlugin(),
+  new webpack.NoEmitOnErrorsPlugin(),
   new webpack.optimize.CommonsChunkPlugin({
     names: ['vendor'],
     filename: '[name].js',
     minChunks: Infinity // only vendor chunks here
-  })
+  }),
+  new webpack.optimize.ModuleConcatenationPlugin()
 ];
 
 if (production) { // Production plugins go here
   plugins = plugins.concat([
     // Cleanup the builds/ folder before compiling final assets
     new CleanPlugin(PATHS.build),
-    // Looks for similar chunks and files and merge them
-    new webpack.optimize.DedupePlugin(),
-    // Optimize chunks and modules by how much they are used
-    new webpack.optimize.OccurenceOrderPlugin(),
     // Prevent Webpack from creating too small chunks
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 51200 }), // ~50kb
     // Minify all the Javascript code of the final bundle
     new webpack.optimize.UglifyJsPlugin({ minimize: true,
+                                          sourceMap: true,
                                           compress: { warnings: false } }),
     new webpack.optimize.AggressiveMergingPlugin(),
     // Define variables, useful to distinguish production and devel
@@ -76,7 +74,6 @@ if (production) { // Production plugins go here
 }
 
 var config = {
-  debug: !production,
   cache: true,
   devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   entry: {
@@ -94,9 +91,8 @@ var config = {
     publicPath: production ? epbdurlprefix : '' // This is used to generate URLs to e.g. images,css
   },
   resolve: {
-    root: [PATHS.app, PATHS.node],
-    modulesDirectories: [PATHS.nodedir],
-    extensions: ['', '.js', '.jsx', '.json'],
+    modules: [PATHS.app, PATHS.node, PATHS.nodedir],
+    extensions: ['.js', '.jsx', '.json'],
     alias: { // Para usar alias en imports
       'styles': PATHS.styles,
       'components': PATHS.components,
@@ -108,48 +104,69 @@ var config = {
     }
   },
   module: {
-    noParse: [],
-    loaders: [
+    rules: [
       { // JS, JSX: BABEL
         test: /\.jsx?$/,
         include: PATHS.app,
-        loader: 'babel',
-        query: {cacheDirectory: true,
-                presets: ['es2015', 'stage-0', 'react']}
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+          presets: [['es2015', { modules: false }], 'stage-0', 'react']
+        }
       },
       { // CSS
         test: /\.css$/,
         include: [PATHS.app, PATHS.node],
-        loader: ExtractTextPlugin.extract('style', 'css!postcss')
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            { loader: 'css-loader' },
+            { loader: 'postcss-loader',
+              options: {
+                plugins: function () { return [autoprefixer('last 2 versions', 'ie 10')] }
+              }
+            }
+          ]
+        })
       },
       { // SASS
         test: /\.scss$/,
         include: PATHS.app,
-        loader: ExtractTextPlugin.extract('style', 'css!postcss!sass?outputStyle=expanded')
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            { loader: 'css-loader' },
+            { loader: 'postcss-loader',
+              options: {
+                plugins: function () { return [autoprefixer('last 2 versions', 'ie 10')] }
+              }
+            },
+            { loader: 'sass-loader', options: { outputStyle: 'expanded' } }
+          ]
+        })
       },
       { // IMG  direct URLs for the rest
         test: /\.(png|jpe?g|gif)$/i,
         include: PATHS.app,
-        loader: 'img!file?name=img/[name]-[hash].[ext]'
+        loader: ['img-loader', 'file-loader?name=img/[name]-[hash].[ext]']
       },
       { // .ico files
         test: /\.ico$/i,
         include: PATHS.app,
-        loader: 'img!file?name=[name].[ext]'
+        loader: ['img-loader', 'file-loader?name=[name].[ext]']
       },
       // required for bootstrap icons
-      { test: /\.woff2?$/,                     loader: 'file?name=fonts/[name]-[hash].[ext]' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=fonts/[name]-[hash].[ext]' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=fonts/[name]-[hash].[ext]' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file?name=img/[name]-[hash].[ext]' },
+      { test: /\.woff2?$/,                     loader: 'file-loader?name=fonts/[name]-[hash].[ext]' },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file-loader?name=fonts/[name]-[hash].[ext]' },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file-loader?name=fonts/[name]-[hash].[ext]' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file-loader?name=img/[name]-[hash].[ext]' },
       // Bootstrap 3
       { test: /bootstrap-sass\/assets\/javascripts\//, loader: 'imports?jQuery=jquery' },
       // Bootstrap 4
       { test: /bootstrap\/build\/js\/umd\//, loader: 'imports?jQuery=jquery' }
     ]
   },
-  plugins: plugins,
-  postcss: [ autoprefixer({ browsers: ['last 3 versions'] }) ]
+  plugins: plugins
 };
 
 module.exports = config;

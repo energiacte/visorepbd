@@ -40,7 +40,7 @@ class MainPage extends React.Component {
             data, dispatch } = this.props;
     return (
       <div>
-        <NavBar route={ this.props.route } />
+        <NavBar match={ this.props.match } />
         <div className="container">
           <ChartsContainer
               width="100%" height="200px"

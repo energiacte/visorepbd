@@ -16,7 +16,7 @@ class WeightingFactorsPage extends React.Component {
 
     return (
       <div>
-        <NavBar route={ this.props.route } />
+        <NavBar match={ this.props.match } />
         <div className="container">
           <div className="page-header">
             <h1>Factores de paso</h1>
