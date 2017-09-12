@@ -5,9 +5,9 @@ import Footer from 'components/Footer';
 import mfomlogo from 'img/logomfom.png';
 import ietcclogo from 'img/logoietcccsic.png';
 
-const AboutPage = _props => (
+const AboutPage = props => (
   <div>
-    <NavBar match={this.props.match} />
+    <NavBar match={ props.match } />
     <div className="container">
       <div className="page-header">
         <h1>VisorEPBD</h1>

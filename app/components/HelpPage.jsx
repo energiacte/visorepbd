@@ -29,9 +29,9 @@ import ejemplo3cogenconsumo from 'img/ejemplos/ejemplo3cogenconsumo.png';
 import ejemplo3cogendemanda from 'img/ejemplos/ejemplo3cogendemanda.png';
 
 
-const HelpPage = () => (
+const HelpPage = props => (
   <div>
-    <NavBar match={this.props.match} />
+    <NavBar match={ props.match } />
     <div className="container">
       <div className="page-header">
         <h1>VisorEPBD</h1>
