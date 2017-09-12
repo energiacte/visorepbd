@@ -19,5 +19,6 @@ module.exports = {
   "rules": {
     "no-unused-vars": [1, { "vars": "local", "args": "after-used", "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }], // disallow declaration of variables that are not used in the code
     "react/prop-types": 0,
+    "no-console": "warn"
   }
 }
