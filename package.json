@@ -10,7 +10,7 @@
     "analyze": "webpack-bundle-analyzer stats.json build",
     "clean": "rm -rf build/",
     "buildprod": "NODE_ENV=production webpack --progress --colors -p",
-    "builddev": "NODE_ENV=development webpack --progress -d --colors --watch",
+    "builddev": "NODE_ENV=development webpack --progress --colors -d --watch",
     "webpack-server": "webpack-dev-server --hot --inline --colors",
     "web-server": "http-server -p 3000 ./build",
     "prodserver": "npm run web-server | npm run buildprod",
