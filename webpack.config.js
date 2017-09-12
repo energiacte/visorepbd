@@ -5,6 +5,7 @@ const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin'); 
 const CleanPlugin = require('clean-webpack-plugin');
 
 const production = process.env.NODE_ENV === 'production';
@@ -59,6 +60,10 @@ if (production) { // Production plugins go here
     new webpack.optimize.UglifyJsPlugin({ minimize: true,
                                           sourceMap: true,
                                           compress: { warnings: false } }),
+    // Generate a manifest file which contains a mapping of all asset filenames
+    // to their corresponding output file so that tools can pick it up without
+    // having to parse `index.html`.
+    new ManifestPlugin({ fileName: 'asset-manifest.json' }),
     new webpack.optimize.AggressiveMergingPlugin(),
     // Define variables, useful to distinguish production and devel
     new webpack.DefinePlugin({
