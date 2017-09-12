@@ -151,7 +151,7 @@ var config = {
         options: {
           cacheDirectory: production ? false : true,
           compact: production ? true : false,
-          presets: [['es2015', { modules: false }], 'stage-0', 'react', 'flow']
+          presets: [['es2015', { "modules": false }], 'stage-0', 'react', 'flow']
         }
       },
       { // CSS
