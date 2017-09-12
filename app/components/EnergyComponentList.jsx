@@ -90,7 +90,7 @@ export default class EnergyComponentList extends React.Component {
                    <td><EnergyComponentChart ctype={ ctype }
                                              data={ data }
                                              maxvalue={ maxvalue }
-                                             width="50px" /></td>
+                                             width="100%" /></td>
                    <td>{ comment }</td>
                  </tr>
                );

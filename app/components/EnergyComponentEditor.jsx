@@ -76,7 +76,6 @@ export default class EnergyComponentEditor extends React.Component {
                 <EnergyComponentChart ctype={ ctype }
                                       maxvalue={ Math.max(...values) }
                                       data={ data }
-                                      className="form-control"
                                       width="50%" height="34px" />
               </div>
 
