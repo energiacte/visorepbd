@@ -5,10 +5,7 @@ import Footer from 'components/Footer';
 import mfomlogo from 'img/logomfom.png';
 import ietcclogo from 'img/logoietcccsic.png';
 
-export default React.createClass({
-
-  render() {
-    return (
+const AboutPage = _props => {
       <div>
         <NavBar match={ this.props.match } />
         <div className="container">
@@ -38,6 +35,6 @@ export default React.createClass({
         </div>
         <Footer />
       </div>
-    );
-  }
-});
+};
+
+export default AboutPage;

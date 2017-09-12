@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import EnergyComponentChart from 'components/EnergyComponentChart';
 import { getValues, CURVENAMES } from '../epbdutils';
@@ -29,7 +29,7 @@ export default class EnergyComponentEditor extends React.Component {
               <label className="col-md-1 control-label"
                      htmlFor="selectctype">Tipo</label>
               <div className="col-md-3">
-                <select ref="selectctype"
+                <select id="selectctype"
                         name="selectctype" className="form-control"
                         onChange={ e => this.handleChange(e) }
                         value={ ctype } >
@@ -40,7 +40,7 @@ export default class EnergyComponentEditor extends React.Component {
               <label className="col-md-1 control-label"
                      htmlFor="selectcsubtype">Origen/Uso</label>
               <div className="col-md-3">
-                <select ref="selectcsubtype"
+                <select id="selectcsubtype"
                         name="selectcsubtype" className="form-control"
                         onChange={ e => this.handleChange(e) }
                         value={ csubtype } >
@@ -51,7 +51,7 @@ export default class EnergyComponentEditor extends React.Component {
               <label className="col-md-1 control-label"
                      htmlFor="selectcarrier">Vector</label>
               <div className="col-md-3">
-                <select ref="selectcarrier"
+                <select id="selectcarrier"
                         name="selectcarrier" className="form-control"
                         onChange={ e => this.handleChange(e) }
                         value={ carrier }>
@@ -70,7 +70,7 @@ export default class EnergyComponentEditor extends React.Component {
                         name="selectcurve" className="form-control"
                         style={{ width: '50%', display: 'inline-block', verticalAlign: 'top' }}
                         defaultValue={ CURVENAMES[0] }
-                        onChange={ e => this.updateValues() }>
+                        onChange={ _e => this.updateValues() }>
                   { CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
                 <EnergyComponentChart ctype={ ctype }
@@ -178,13 +178,13 @@ export default class EnergyComponentEditor extends React.Component {
 
   parseTotalEnergyValue(value) {
     const PLAINNUMBERREGEX = /^[+-]?([0-9]*[.])?[0-9]+$/;
-    const SIMPLEEXPRESSIONREGEX = /^((?:[0-9]*[.])?[0-9]+)([\/*+-])((?:[0-9]*[.])?[0-9]+)$/;
+    const SIMPLEEXPRESSIONREGEX = /^((?:[0-9]*[.])?[0-9]+)([/*+-])((?:[0-9]*[.])?[0-9]+)$/;
 
     let newvalue = value.replace(/,/g, '.');
     if (PLAINNUMBERREGEX.test(newvalue)) {
       newvalue = Math.abs(parseFloat(newvalue));
     } else if (SIMPLEEXPRESSIONREGEX.test(newvalue)) {
-      let [ expr, val1, op, val2 ] = newvalue.match(SIMPLEEXPRESSIONREGEX);
+      let [ _expr, val1, op, val2 ] = newvalue.match(SIMPLEEXPRESSIONREGEX);
       val1 = parseFloat(val1);
       val2 = parseFloat(val2);
       if (op === '+') {
@@ -241,7 +241,7 @@ export default class EnergyComponentEditor extends React.Component {
   }
 
   // Add component to component list
-  handleAdd(selectedkey, event) {
+  handleAdd(selectedkey, _event) {
     let currentcomponent = (selectedkey !== null)
       ? { ...this.props.components[selectedkey] }
       : { active: true,
@@ -257,12 +257,12 @@ export default class EnergyComponentEditor extends React.Component {
   }
 
   // Remove current component to component list
-  handleRemove(selectedkey, event) {
+  handleRemove(selectedkey, _event) {
     this.props.onRemove(selectedkey);
   }
 
   // Restore current component to stored state
-  handleRestore(event) {
+  handleRestore(_event) {
     const { selectedkey, storedcomponent, onEdit } = this.props;
     const currenttotalenergy = storedcomponent.values.reduce((a, b) => a + b, 0);
 

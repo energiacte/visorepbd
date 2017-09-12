@@ -6,8 +6,7 @@ import Footer from 'components/Footer';
 
 import { editWFactors } from 'actions/actions.js';
 
-class WeightingFactorsPage extends React.Component {
-
+class WeightingFactorsPageClass extends React.Component {
   render() {
     const { wfactors } = this.props;
     const wfactors2 = wfactors.filter(e => !e.carrier.startsWith('RED'));
@@ -34,13 +33,13 @@ class WeightingFactorsPage extends React.Component {
               <tr>
                 <td>RED1</td><td>RED</td><td>input</td><td>A</td>
                 <td>
-                  <input type="text" ref="red1ren"
+                  <input type="text" id="red1ren"
                          defaultValue={ red1.ren.toFixed(3) }
                          onChange={ e => this.handleChange('RED1', 'ren', e) }
                   />
                 </td>
                 <td>
-                  <input type="text" ref="red1nren"
+                  <input type="text" id="red1nren"
                          defaultValue={ red1.nren.toFixed(3) }
                          onChange={ e => this.handleChange('RED1', 'nren', e) }
                   />
@@ -49,13 +48,13 @@ class WeightingFactorsPage extends React.Component {
               <tr>
                 <td>RED2</td><td>RED</td><td>input</td><td>A</td>
                 <td>
-                  <input type="text" ref="red2ren"
+                  <input type="text" id="red2ren"
                          defaultValue={ red2.ren.toFixed(3) }
                          onChange={ e => this.handleChange('RED2', 'ren', e) }
                   />
                 </td>
                 <td>
-                  <input type="text" contentEditable ref="red2nren"
+                  <input type="text" contentEditable id="red2nren"
                          defaultValue={ red2.nren.toFixed(3) }
                          onChange={ e => this.handleChange('RED2', 'nren', e) }
                   />
@@ -99,7 +98,7 @@ class WeightingFactorsPage extends React.Component {
             <p>Origen:</p>
             <ul>
               <li><tt>RED</tt>: red de distribución</li>
-              <li><tt>INSITU</tt>: producción 'in situ'</li>
+              <li><tt>INSITU</tt>: producción &quot;in situ&quot;</li>
               <li><tt>COGENERACION</tt>: cogeneración
               (energía producida usando otra energía importada dentro de la frontera de evaluación)</li>
             </ul>
@@ -129,8 +128,10 @@ class WeightingFactorsPage extends React.Component {
   }
 }
 
-export default WeightingFactorsPage = connect(state => {
+const WeightingFactorsPage = connect(state => {
   return {
     wfactors: state.wfactors
   };
-})(WeightingFactorsPage);
+})(WeightingFactorsPageClass);
+
+export default WeightingFactorsPage;

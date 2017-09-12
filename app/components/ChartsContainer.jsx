@@ -1,6 +1,5 @@
-import React, { PropTypes } from 'react';
-import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
+import React from 'react';
+//import { connect } from 'react-redux';
 
 import { IChartA, IChartAB } from 'components/IndicatorsChart';
 

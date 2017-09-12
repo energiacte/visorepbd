@@ -21,7 +21,7 @@ import { changeKexp,
          changeCurrentFileName,
          computeEnergy } from 'actions/actions.js';
 
-class MainPage extends React.Component {
+class MainPageClass extends React.Component {
 
   // Carga datos desde API al inicializar
   componentWillMount() { this.props.dispatch(computeEnergy()); }
@@ -99,7 +99,7 @@ class MainPage extends React.Component {
     const { kexp, area, components } = this.props;
     const activecomponents = components
       .filter(e => e.active === true)
-      .map(({ active, ...rest }) => rest); // remove active key
+      .map(({ _active, ...rest }) => rest); // remove active key
 
     // TODO: this doesn't preserve previous existing metadata
     const metalines = [
@@ -111,7 +111,7 @@ class MainPage extends React.Component {
   }
 }
 
-export default MainPage = connect(state => {
+const MainPage = connect(state => {
   return {
     kexp: state.kexp,
     area: state.area,
@@ -122,4 +122,6 @@ export default MainPage = connect(state => {
     components: state.components,
     currentfilename: state.currentfilename
   };
-})(MainPage);
+})(MainPageClass);
+
+export default MainPage;

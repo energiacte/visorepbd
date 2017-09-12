@@ -1,33 +1,27 @@
-import React, { PropTypes } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 
 import d3 from 'd3';
 import dimple from 'dimple';
 
 export default class EnergyComponentChart extends React.Component {
-
-  static propTypes = {
-    ctype: React.PropTypes.string.isRequired,
-    maxvalue: React.PropTypes.number.isRequired,
-    data: React.PropTypes.array.isRequired
+  static defaultProps = {
+    width: '200px',
+    height: '20px',
+    display: 'inline-block',
+    padding: '0 0 0 12px',
+    className: ''
   }
-
-  static defaultProps = { width: '200px',
-                          height: '20px',
-                          display:'inline-block',
-                          padding:'0 0 0 12px',
-                          className:'' }
 
   drawChart(node, props) {
     const { data, maxvalue, ctype } = props;
 
     d3.select(node).select('svg').remove();
     const svg = d3.select(node).append('svg')
-                .attr('width', '100%')
-                .attr('height', '100%')
-                .style('overflow', 'visible');
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('overflow', 'visible');
     const c = new dimple.chart(svg, data)
-                        .setMargins('1', '1', '1', '1');
+      .setMargins('1', '1', '1', '1');
 
     const csum = new dimple.color('blue');
     const cprod = new dimple.color('gray');
@@ -50,31 +44,30 @@ export default class EnergyComponentChart extends React.Component {
   }
 
   updateChart(props) {
-    //const node = ReactDOM.findDOMNode(this);
     this.chart.data = props.data;
     this.chart.axes[1].overrideMax = props.maxvalue;
     this.chart.draw(400);
   }
 
   componentDidMount() {
-    const node = ReactDOM.findDOMNode(this);
-    this.drawChart(node, this.props);
+    this.drawChart(this.node, this.props);
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.data !== this.props.data ||
-        nextProps.maxvalue !== this.props.maxvalue) {
-          this.updateChart(nextProps);
+    if (nextProps.data !== this.props.data || nextProps.maxvalue !== this.props.maxvalue) {
+      this.updateChart(nextProps);
     }
     return false;
   }
 
   render() {
-    return (<div style={ { width: this.props.width,
-                           height: this.props.height,
-                           display: this.props.display,
-                           padding: this.props.padding,
-                           className: this.props.className } }></div>);
+    return (<div ref= { node => this.node = node }
+      style={ {
+      width: this.props.width,
+      height: this.props.height,
+      display: this.props.display,
+      padding: this.props.padding,
+      className: this.props.className
+    }} />);
   }
-
 }

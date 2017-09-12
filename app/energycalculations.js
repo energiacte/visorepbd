@@ -337,7 +337,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
   // * Produced energy from all origins for EPB services for each time step (formula 31)
   // TODO: f_match_t constante para electricidad (formula 32)
   // let f_match_t = fmatch(E_pr_cr_t / E_EPus_cr_t)
-  const f_match_t = E_EPus_cr_t.map(x => 1.0);
+  const f_match_t = E_EPus_cr_t.map(_ => 1.0);
 
   const E_pr_cr_used_EPus_t = vecvecmul(f_match_t, vecvecmin(E_EPus_cr_t, E_pr_cr_t));
 

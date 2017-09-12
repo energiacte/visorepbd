@@ -44,7 +44,7 @@ function getValues(curvename, newtotalenergy, currentvalues) {
 
   if (currenttotalenergy === 0) {
     const val = newtotalenergy / numsteps;
-    values = currentvalues.map(value => val);
+    values = currentvalues.map(_ => val);
   } else if (curvename === 'ACTUAL') {
     if (currenttotalenergy !== newtotalenergy) {
       scale = (newtotalenergy === 0) ? 0 : newtotalenergy / currenttotalenergy;

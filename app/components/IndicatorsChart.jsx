@@ -1,6 +1,4 @@
-import React, { PropTypes } from 'react';
-import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
+import React from 'react';
 
 import d3 from 'd3';
 import dimple from 'dimple';
@@ -15,22 +13,21 @@ function buildDataA(values) {
 
 // Indicators Chart for step A
 export class IChartA extends React.Component {
-
   static defaultProps = { width: '50%', height: '100%' }
 
   static chart = null
 
   createChart() {
-    const svg = d3.select(ReactDOM.findDOMNode(this.refs.chartsvg));
+    const svg = d3.select(this.chartsvg);
     const c = new dimple.chart(svg, buildDataA(this.props.data));
     this.chart = c;
 
     c.setMargins('50px', '50px', '20px', '45px'); // left, top, right, bottom
     c.addCategoryAxis('x', 'Componente')
-     .addOrderRule('Order');
+      .addOrderRule('Order');
     c.addMeasureAxis('y', 'kWh/m²·año');
     c.addSeries('Componente', dimple.plot.bar)
-     .addOrderRule(['EP_ren', 'EP_nren', 'EP_total']);
+      .addOrderRule(['EP_ren', 'EP_nren', 'EP_total']);
     c.assignColor('EP_total', 'blue');
     c.assignColor('EP_nren', 'red');
     c.assignColor('EP_ren', 'green');
@@ -52,10 +49,10 @@ export class IChartA extends React.Component {
 
     // Subtitle
     svg.select('text#subtitle')
-       .text('kexp: ' + kexp.toFixed(1));
+      .text('kexp: ' + kexp.toFixed(1));
     // Subsubtitle
     svg.select('text#subsubtitle')
-       .html('RER: ' + data.EPArer.toFixed(2));
+      .html('RER: ' + data.EPArer.toFixed(2));
 
     // Draw so geometry properties are available to compute tooltips
     this.chart.data = cData;
@@ -64,25 +61,24 @@ export class IChartA extends React.Component {
     // Tooltips
     svg.selectAll('text.ylabel').remove();
     const s = chart.series[0];
-    s.shapes.each(function(d) {
+    s.shapes.each(function (d) {
       const rect = this; // Get the shape as a d3 selection
-      const rx = parseFloat(rect.x.animVal.value);
+      //const rx = parseFloat(rect.x.animVal.value);
       const rwidth = parseFloat(rect.width.animVal.value);
       const posx = x._scale(d.x) + (1 + d.xOffset) * rwidth + d.xOffset * rwidth * s.barGap / 2;
       const yoffset = d.yValue > 0 ? -6 : 16;
       const posy = y._scale(d.yValue) + yoffset;
       // Add a text label for the value
       svg.append("text")
-         .attr("class", "ylabel")
-         .attr("x", posx)
-         .attr("y", posy)
-         .style("text-anchor", "middle")
-         .style("font-size", "10px")
-         .style("font-family", "sans-serif")
-         .style("opacity", 0.7)
-         .text(d3.format(",.2f")(d.yValue));
+        .attr("class", "ylabel")
+        .attr("x", posx)
+        .attr("y", posy)
+        .style("text-anchor", "middle")
+        .style("font-size", "10px")
+        .style("font-family", "sans-serif")
+        .style("opacity", 0.7)
+        .text(d3.format(",.2f")(d.yValue));
     });
-
   }
 
   componentDidMount() {
@@ -97,19 +93,19 @@ export class IChartA extends React.Component {
 
   render() {
     return (
-      <svg ref='chartsvg'
-           width={ this.props.width }
-           height={ this.props.height }
-           style={ {overflow: 'visible'} }>
+      <svg ref={ ref => this.chartsvg = ref }
+        width={this.props.width}
+        height={this.props.height}
+        style={{ overflow: 'visible' }}>
         <text id='title' x='50%' y='15px'
-              fill='black' textAnchor='middle' fontSize='15px'>
+          fill='black' textAnchor='middle' fontSize='15px'>
           Consumo de energía primaria (Paso A)
         </text>
         <text id='subtitle' x='50%' y='30px'
-              fill='black' textAnchor='middle' fontSize='12px' />
+          fill='black' textAnchor='middle' fontSize='12px' />
         <text id='subsubtitle' x='50%' y='45px'
-              fill='black' textAnchor='middle' fontSize='12px' />
-</svg>);
+          fill='black' textAnchor='middle' fontSize='12px' />
+      </svg>);
   }
 }
 
@@ -123,22 +119,21 @@ function buildDataAB(values) {
 
 // Indicators Chart for step A+B
 export class IChartAB extends React.Component {
-
   static defaultProps = { width: '50%', height: '100%' }
 
   static chart = null
 
   createChart() {
-    const svg = d3.select(ReactDOM.findDOMNode(this.refs.chartsvg));
+    const svg = d3.select(this.chartsvg);
     const c = new dimple.chart(svg, buildDataAB(this.props.data));
     this.chart = c;
 
-    c.setMargins('50px', '50px', '20px', '45px') // left, top, right, bottom
+    c.setMargins('50px', '50px', '20px', '45px'); // left, top, right, bottom
     c.addCategoryAxis('x', 'Componente')
-     .addOrderRule('Order');
+      .addOrderRule('Order');
     c.addMeasureAxis('y', 'kWh/m²·año');
     c.addSeries('Componente', dimple.plot.bar)
-     .addOrderRule(['EP_ren', 'EP_nren', 'EP_total']);
+      .addOrderRule(['EP_ren', 'EP_nren', 'EP_total']);
     c.assignColor('EP_total', 'blue');
     c.assignColor('EP_nren', 'red');
     c.assignColor('EP_ren', 'green');
@@ -160,10 +155,10 @@ export class IChartAB extends React.Component {
 
     // Subtitle
     svg.select('text#subtitle')
-       .text('kexp: ' + kexp.toFixed(1));
+      .text('kexp: ' + kexp.toFixed(1));
     // Subsubtitle
     svg.select('text#subsubtitle')
-       .html('RER: ' + data.EPrer.toFixed(2));
+      .html('RER: ' + data.EPrer.toFixed(2));
 
     // Draw so geometry properties are available to compute tooltips
     this.chart.data = cData;
@@ -174,23 +169,22 @@ export class IChartAB extends React.Component {
     const s = chart.series[0];
     s.shapes.each(function (d) {
       const rect = this; // Get the shape as a d3 selection
-      const rx = parseFloat(rect.x.animVal.value);
+      //const rx = parseFloat(rect.x.animVal.value);
       const rwidth = parseFloat(rect.width.animVal.value);
       const posx = x._scale(d.x) + (1 + d.xOffset) * rwidth + d.xOffset * rwidth * s.barGap / 2;
       const yoffset = d.yValue > 0 ? -6 : 16;
       const posy = y._scale(d.yValue) + yoffset;
       // Add a text label for the value
       svg.append("text")
-         .attr("class", "ylabel")
-         .attr("x", posx)
-         .attr("y", posy)
-         .style("text-anchor", "middle")
-         .style("font-size", "10px")
-         .style("font-family", "sans-serif")
-         .style("opacity", 0.7)
-         .text(d3.format(",.2f")(d.yValue));
+        .attr("class", "ylabel")
+        .attr("x", posx)
+        .attr("y", posy)
+        .style("text-anchor", "middle")
+        .style("font-size", "10px")
+        .style("font-family", "sans-serif")
+        .style("opacity", 0.7)
+        .text(d3.format(",.2f")(d.yValue));
     });
-
   }
 
   componentDidMount() {
@@ -205,20 +199,18 @@ export class IChartAB extends React.Component {
 
   render() {
     return (
-      <svg ref='chartsvg'
-      width={ this.props.width }
-      height={ this.props.height }
-      style={ {overflow: 'visible'} }>
-      <text id='title' x='50%' y='15px'
-            fill='black' textAnchor='middle' fontSize='15px'>
-        Consumo de energía primaria (Paso B)
-      </text>
-      <text id='subtitle' x='50%' y='30px'
-            fill='black' textAnchor='middle' fontSize='12px' />
-      <text id='subsubtitle' x='50%' y='45px'
-            fill='black' textAnchor='middle' fontSize='12px' />
+      <svg ref={ ref => this.chartsvg = ref }
+        width={this.props.width}
+        height={this.props.height}
+        style={{ overflow: 'visible' }}>
+        <text id='title' x='50%' y='15px'
+          fill='black' textAnchor='middle' fontSize='15px'>
+          Consumo de energía primaria (Paso B)
+        </text>
+        <text id='subtitle' x='50%' y='30px'
+          fill='black' textAnchor='middle' fontSize='12px' />
+        <text id='subsubtitle' x='50%' y='45px'
+          fill='black' textAnchor='middle' fontSize='12px' />
       </svg>);
   }
 }
-
-

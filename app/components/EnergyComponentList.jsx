@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 
@@ -17,7 +17,7 @@ export default class EnergyComponentList extends React.Component {
   }
 
   // Add component to component list
-  handleAdd(selectedkey, event) {
+  handleAdd(selectedkey, _event) {
     let currentcomponent = (selectedkey !== null)
       ? { ...this.props.components[selectedkey] }
       : { active: true,
@@ -33,7 +33,7 @@ export default class EnergyComponentList extends React.Component {
   }
 
   // Remove current component to component list
-  handleRemove(selectedkey, event) {
+  handleRemove(selectedkey, _event) {
     this.props.onRemove(selectedkey);
   }
 
@@ -80,9 +80,9 @@ export default class EnergyComponentList extends React.Component {
                return (
                  <tr key={i}
                      className={ rowstyles }
-                     onClick={ e => this.handleClick(i) }>
+                     onClick={ _e => this.handleClick(i) }>
                    <td><input type="checkbox" defaultChecked={active}
-                              onClick={ e => this.handleChange(i) } /></td>
+                              onClick={ _e => this.handleChange(i) } /></td>
                    <td>{ ctype }</td>
                    <td>{ csubtype }</td><td>{ carrier }</td>
                    <td>{ sumvalues.toFixed(2) }</td>

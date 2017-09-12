@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+//import { connect } from 'react-redux';
 
 export default class GlobalVarsControl extends React.Component {
   render() {
@@ -28,11 +28,11 @@ export default class GlobalVarsControl extends React.Component {
         </div>
         <div className="form-group">
           <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
-            <input ref="fileInput" type="file"
+            <input ref={ ref => this.fileInput = ref } type="file"
               onChange={e => this.uploadFile(e, this.props.onCarriersLoad)}
               style={{ visibility: 'hidden', position: 'absolute', top: '-50px', left: '-50px' }} />
             <button className="btn bg-primary" id="modify" type="button"
-              onClick={() => this.refs.fileInput.click()}>
+              onClick={() => this.fileInput.click()}>
               <span className="glyphicon glyphicon-upload" /> Cargar datos
             </button>
             <button className="btn bg-primary" id="save" type="button"
