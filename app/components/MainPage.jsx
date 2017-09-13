@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import NavBar from 'components/NavBar';
-import ChartsContainer from 'components/ChartsContainer';
+import EPChart from 'components/EPChart';
 import GlobalVarsControl from 'components/GlobalVarsControl';
 import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import EnergyComponentList from 'components/EnergyComponentList';
@@ -42,11 +42,6 @@ class MainPageClass extends React.Component {
       <div>
         <NavBar match={ this.props.match } />
         <div className="container">
-          <ChartsContainer
-              width="100%" height="200px"
-              kexp={ kexp }
-              data={ data }
-          />
           <GlobalVarsControl
               kexp={ kexp }
               area={ area }
@@ -57,6 +52,7 @@ class MainPageClass extends React.Component {
               onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
               currentfilename={ this.props.currentfilename }
           />
+          <EPChart data={ data } kexp={ kexp } />
           <EnergyComponentEditor
               selectedkey = { selectedkey }
               components = { components }
