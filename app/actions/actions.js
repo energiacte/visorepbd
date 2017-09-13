@@ -1,4 +1,5 @@
-import { energy_performance, ep2dict } from 'energycalculations';
+import { energy_performance } from 'energycalculations';
+import { ep2dict } from 'epbdutils';
 
 /*
  * action types

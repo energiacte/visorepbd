@@ -232,42 +232,6 @@ export function parse_weighting_factors(factorsstring) {
 
 // TODO: serialize_weighting_factors(fplist)
 
-// Utility output functions ---------------------------------------------------
-
-// Format energy efficiency indicators as string from primary energy data
-export function ep2string(EP, area = 1.0) {
-  const areafactor = 1.0 / area;
-
-  const eparen = areafactor * EP.EP.A.ren;
-  const epanren = areafactor * EP.EP.A.nren;
-  const epatotal = eparen + epanren;
-  const eparer = epatotal ? eparen / epatotal : 0.0;
-
-  const epren = areafactor * EP.EP.B.ren;
-  const epnren = areafactor * EP.EP.B.nren;
-  const eptotal = epren + epnren;
-  const eprer = eptotal ? epren / eptotal : 0.0;
-
-  return 'EP(step A)  , ren =' + eparen.toFixed(1) + ', nren=' + epanren.toFixed(1) + ', '
-    + 'tot =' + epatotal.toFixed(1) + ', RER =' + eparer.toFixed(2) + '\n'
-    + 'EP(step A+B), ren =' + epren.toFixed(1) + ', nren=' + epnren.toFixed(1) + ', '
-    + 'tot =' + eptotal.toFixed(1) + ', RER =' + eprer.toFixed(2) + '\n';
-}
-
-// Convert EP object to epdict
-export function ep2dict(EP, area = 1.0) {
-  const areafactor = 1.0 / area;
-  const EPAren = areafactor * EP.EP.A.ren;
-  const EPAnren = areafactor * EP.EP.A.nren;
-  const EPAtotal = EPAren + EPAnren;
-  const EPArer = (EPAtotal === 0) ? 0 : EPAren / EPAtotal;
-  const EPren = areafactor * EP.EP.B.ren;
-  const EPnren = areafactor * EP.EP.B.nren;
-  const EPtotal = EPren + EPnren;
-  const EPrer = (EPtotal === 0) ? 0 : EPren / EPtotal;
-  return { EPAren, EPAnren, EPAtotal, EPArer, EPren, EPnren, EPtotal, EPrer };
-}
-
 // --------------------------------------------------------------------
 // Energy calculation functions
 // --------------------------------------------------------------------
