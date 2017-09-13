@@ -96,7 +96,7 @@ const LEGACY_SERVICE_TAG_REGEX = /^[ ]*(WATERSYSTEMS|HEATING|COOLING|FANS)/;
 // * objects with type 'META' represent metadata
 //   - key is the metadata name
 //   - value is the metadata value
-export function string_to_carrier_list(datastring) {
+export function parse_carrier_list(datastring) {
   const datalines = datastring.replace('\n\r', '\n').split('\n')
         .map(l => l.trim())
         .filter(l => !(l === '' || l.startsWith('vector')))
@@ -167,7 +167,7 @@ ${ errLengths.length } lines with less than ${ numSteps } values.`);
  * @param {any} carrierlist
  * @returns {string}
  */
-export function carrier_list_to_string(carrierlist) {
+export function serialize_carrier_list(carrierlist) {
   const metas = carrierlist
     .filter(e => e.type === 'META')
     .map(m => `#META ${ m.key }: ${ m.value }`);
@@ -202,7 +202,7 @@ export function carrier_list_to_string(carrierlist) {
 //
 // Returns: list of objects representing metadata and factor data.
 //
-export function string_to_weighting_factors(factorsstring) {
+export function parse_weighting_factors(factorsstring) {
   const contentlines = factorsstring.replace('\n\r', '\n')
     .split('\n').map(l => l.trim()).filter(l => l !== '' && !l.startsWith('vector,'));
 
@@ -229,6 +229,8 @@ export function string_to_weighting_factors(factorsstring) {
     });
   return [ ...metas, ...factors ];
 }
+
+// TODO: serialize_weighting_factors(fplist)
 
 // Utility output functions ---------------------------------------------------
 

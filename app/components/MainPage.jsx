@@ -8,7 +8,7 @@ import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 
-import { carrier_list_to_string, string_to_carrier_list } from '../energycalculations.js';
+import { serialize_carrier_list, parse_carrier_list } from '../energycalculations.js';
 import { carrier_isvalid } from '../cteepbd.js';
 
 import { changeKexp,
@@ -79,7 +79,7 @@ class MainPageClass extends React.Component {
   }
 
   carriersLoadHandler(datastr) {
-    const data = string_to_carrier_list(datastr);
+    const data = parse_carrier_list(datastr);
     const components = data
       .filter(c => c.type === 'CARRIER')
       .filter(c => carrier_isvalid(c))
@@ -107,7 +107,7 @@ class MainPageClass extends React.Component {
       { type: 'META', key: 'Area_ref', value: area },
       { type: 'META', key: 'kexp', value: kexp }
     ];
-    return carrier_list_to_string([...activecomponents, ...metalines]);
+    return serialize_carrier_list([...activecomponents, ...metalines]);
   }
 }
 

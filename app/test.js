@@ -26,14 +26,14 @@ Author(s): Rafael Villar Burke <pachi@ietcc.csic.es>,
 */
 
 import {
-  string_to_carrier_list,
-  string_to_weighting_factors,
+  parse_carrier_list,
+  parse_weighting_factors,
   energy_performance } from './energycalculations.js';
 import { carrier_isvalid } from './cteepbd.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const TESTFPJ = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
+const TESTFPJ = parse_weighting_factors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, RED, input, A, 0.5, 2.0
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
@@ -44,14 +44,14 @@ MEDIOAMBIENTE, INSITU, input,  A, 1.0, 0.0
 MEDIOAMBIENTE, RED, input,  A, 1.0, 0.0
 `);
 
-const TESTFPJ7 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
+const TESTFPJ7 = parse_weighting_factors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, RED, input, A, 0.5, 2.0
 GASNATURAL, RED, input,A, 0.0, 1.1
 ELECTRICIDAD, COGENERACION, input, A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 0.0, 2.5
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0`);
 
-const TESTFPJ8 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
+const TESTFPJ8 = parse_weighting_factors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, RED, input, A, 0.5, 2.0
 GASNATURAL, RED, input,A, 0.0, 1.1
 BIOCARBURANTE, RED, input, A, 1.0, 0.1
@@ -59,7 +59,7 @@ ELECTRICIDAD, COGENERACION, input, A, 0.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, A, 2.27, 0.23
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0`);
 
-const TESTFPJ9 = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
+const TESTFPJ9 = parse_weighting_factors(`vector, fuente, uso, step, ren, nren
 ELECTRICIDAD, RED, input, A, 0.5, 2.0
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, A, 1.0, 0.0
@@ -67,7 +67,7 @@ ELECTRICIDAD, INSITU, to_nEPB, A, 1.0, 0.0
 ELECTRICIDAD, INSITU, to_grid, B, 0.5, 2.0
 ELECTRICIDAD, INSITU, to_nEPB, B, 0.5, 2.0`);
 
-const TESTFP = string_to_weighting_factors(`vector, fuente, uso, step, ren, nren
+const TESTFP = parse_weighting_factors(`vector, fuente, uso, step, ren, nren
 
 ELECTRICIDAD, RED, input, A, 0.5, 2.0
 
@@ -125,7 +125,7 @@ ELECTRICIDAD, COGENERACION, to_nEPB, A, 1.0, 0.0
 ELECTRICIDAD, COGENERACION, to_grid, B, 0.5, 2.0
 ELECTRICIDAD, COGENERACION, to_nEPB, B, 0.5, 2.0`;
 
-const CTEFP = string_to_weighting_factors(CTEFPSTRING);
+const CTEFP = parse_weighting_factors(CTEFPSTRING);
 
 // data from ejemplo3PVBdC_normativo
 const ENERGYDATALIST = [
@@ -208,7 +208,7 @@ function epfromdata(datalist, fp, kexp) {
 function epfromfile(filename, fp, kexp) {
   const datapath = path.resolve(__dirname, 'examples', filename);
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const carrierlist = string_to_carrier_list(datastring)
+  const carrierlist = parse_carrier_list(datastring)
     .filter(c => c.type === 'CARRIER')
     .filter(carrier_isvalid);
   return epfromdata(carrierlist, fp, kexp);
@@ -333,7 +333,7 @@ check('J9 electricity monthly kexp=1.0',
 
 console.log("*** Lectura de cadena de factores de paso");
 {
-  const fp_list = string_to_weighting_factors(CTEFPSTRING);
+  const fp_list = parse_weighting_factors(CTEFPSTRING);
   const metas = fp_list.filter(e => e.type === 'META');
   const fps = fp_list.filter(e => e.type === 'FACTOR');
   console.log(metas[0]);
@@ -350,7 +350,7 @@ console.log("*** Lectura de archivo .csv con metadatos");
   const datapath = path.resolve(__dirname, 'examples',
     'cteEPBD-N_R09_unif-ET5-V048R070-C1_peninsula.csv');
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const datalist = string_to_carrier_list(datastring);
+  const datalist = parse_carrier_list(datastring);
   const metas = datalist.filter(e => e.type === 'META');
   const carriers = datalist
     .filter(e => e.type === 'CARRIER')
@@ -368,7 +368,7 @@ console.log("*** Lectura de archivo .csv con definición de servicios");
 {
   const datapath = path.resolve(__dirname, 'examples', 'newServicesFormat.csv');
   const datastring = fs.readFileSync(datapath, 'utf-8');
-  const datalist = string_to_carrier_list(datastring);
+  const datalist = parse_carrier_list(datastring);
   const metas = datalist.filter(e => e.type === 'META');
   const carriers = datalist
     .filter(e => e.type === 'CARRIER')
