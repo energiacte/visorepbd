@@ -39,7 +39,7 @@ export const K_EXP = 0.0;
 export const FACTORESDEPASO = [
         // FpA - weighting factors accounting for the resources used to produce this energy
         // FpB - weighting factors accounting for the resources avoided by the external grid due to the export
-        //  Energy carrier         origin          use         step Fpren  Fpnren
+        //  Energy carrier       source          dest        step Fpren  Fpnren
         ['ELECTRICIDAD',        'RED',          'input',     'A', 0.414, 1.954], // Delivered energy
         ['ELECTRICIDAD',        'INSITU',       'input',     'A', 1.000, 0.000], // Produced energy
         ['ELECTRICIDAD',        'INSITU',       'to_grid',   'A', 1.000, 0.000], // Produced and exported to the grid
@@ -107,8 +107,8 @@ export const FACTORESDEPASO = [
         ['GLP',                 'RED',          'input',     'A', 0.030, 1.201], // Delivered energy
         ['RED1',                'RED',          'input',     'A', 0.000, 1.300], // User defined!, district heating/cooling carrier
         ['RED2',                'RED',          'input',     'A', 0.000, 1.300]  // User defined!, district heating/cooling carrier
-].map(([carrier, source, use, step, ren, nren]) => {
-  return { type: 'FACTOR', carrier, source, use, step, ren, nren };
+].map(([carrier, source, dest, step, ren, nren]) => {
+  return { type: 'FACTOR', carrier, source, dest, step, ren, nren };
 });
 
 // TODO: function cte_weighting_factors(loc, extradata=null) {}

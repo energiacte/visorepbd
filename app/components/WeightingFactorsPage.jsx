@@ -75,11 +75,11 @@ class WeightingFactorsPageClass extends React.Component {
             </thead>
             <tbody>
               { wfactors2.map(
-                ({ carrier, source, use, step, ren, nren }) =>
-                  <tr key={ `${carrier}-${source}-${use}-${step}` }>
+                ({ carrier, source, dest, step, ren, nren }) =>
+                  <tr key={ `${ carrier }-${ source }-${ dest }-${ step }` }>
                     <td>{ carrier }</td>
                     <td>{ source }</td>
-                    <td>{ use }</td>
+                    <td>{ dest }</td>
                     <td>{ step }</td>
                     <td>{ ren.toFixed(3) }</td>
                     <td>{ nren.toFixed(3) }</td>

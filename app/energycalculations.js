@@ -197,8 +197,8 @@ export function serialize_carrier_list(carrierlist) {
 // Factor lines:
 //  - Composed of 6 comma separated fields and an optional comment
 //  - Any content after a '#' is considered a comment
-//  - are stored as objects with keys in [ type, carrier, source, use, step, ren, nren, comment]
-//    { type: FACTOR, carrier: string, source: string, use: string: step: string, ren: float, nren: float, comment: string }
+//  - are stored as objects with keys in [ type, carrier, source, dest, step, ren, nren, comment]
+//    { type: FACTOR, carrier: string, source: string, dest: string: step: string, ren: float, nren: float, comment: string }
 //
 // Returns: list of objects representing metadata and factor data.
 //
@@ -218,11 +218,11 @@ export function parse_weighting_factors(factorsstring) {
       if (fieldslist.length !== 6) {
         throw new UserException(`WeightingFactorParsing: Wrong number of fields in ${ fieldsstring }`);
       }
-      const [ carrier, source, use, step, sren, snren ] = fieldslist;
+      const [ carrier, source, dest, step, sren, snren ] = fieldslist;
       try {
         const ren = parseFloat(sren);
         const nren = parseFloat(snren);
-        return { type: 'FACTOR', carrier, source, use, step, ren, nren, comment };
+        return { type: 'FACTOR', carrier, source, dest, step, ren, nren, comment };
       } catch (err) {
         throw new UserException(`WeightingFactorsParsing: ren (${ sren }) or nren (${ snren }) can't be converted to float`);
       }
@@ -365,7 +365,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
   // 1) Delivered energy from the grid
   // NOTE: grid delivered energy is energy which is used but not produced (on-site or nearby)
   const fpA_grid = fp_cr.find(fp =>
-    fp.use === 'input'
+    fp.dest === 'input'
     && fp.step === 'A'
     && fp.source === 'RED'
   );
@@ -378,7 +378,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
   const delivery_sources = Object.keys(E_pr_cr_pr_i_an).filter(s => s !== 'RED' && s !== 'COGENERACION');
   const E_we_del_cr_pr_an = delivery_sources.reduce(
     (obj, gen) => {
-      const fpA_pr_i = fp_cr.find(fp => fp.use === 'input' && fp.step === 'A' && fp.source === gen);
+      const fpA_pr_i = fp_cr.find(fp => fp.dest === 'input' && fp.step === 'A' && fp.source === gen);
       const E_pr_i = E_pr_cr_pr_i_an[gen];
       if (E_pr_i === 0) { return obj; }
       return {
@@ -431,7 +431,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
     if (E_exp_cr_used_nEPus_an === 0) { // No energy exported to nEP uses
       f_we_exp_cr_stepA_nEPus = { ren: 0, nren: 0 };
     } else {
-      const fpA_nEPus_i = fp_cr.filter(fp => fp.use === 'to_nEPB' && fp.step === 'A');
+      const fpA_nEPus_i = fp_cr.filter(fp => fp.dest === 'to_nEPB' && fp.step === 'A');
       f_we_exp_cr_stepA_nEPus = exp_generators
         .reduce((acc, gen) => {
           const F_g = F_pr_i[gen];
@@ -447,7 +447,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
     if (E_exp_cr_grid_an === 0) { // No energy exported to grid
       f_we_exp_cr_stepA_grid = { ren: 0, nren: 0 };
     } else {
-      const fpA_grid_i = fp_cr.filter(fp => fp.use === 'to_grid' && fp.step === 'A');
+      const fpA_grid_i = fp_cr.filter(fp => fp.dest === 'to_grid' && fp.step === 'A');
       f_we_exp_cr_stepA_grid = exp_generators
         .reduce((acc, gen) => {
           const F_g = F_pr_i[gen];
@@ -473,7 +473,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
     if (E_exp_cr_used_nEPus_an === 0) { // No energy exported to nEP uses
       f_we_exp_cr_used_nEPus = { ren: 0, nren: 0 };
     } else {
-      const fpB_nEPus_i = fp_cr.filter(fp => fp.use === 'to_nEPB' && fp.step === 'B');
+      const fpB_nEPus_i = fp_cr.filter(fp => fp.dest === 'to_nEPB' && fp.step === 'B');
       f_we_exp_cr_used_nEPus = exp_generators
         .reduce((acc, gen) => {
           const F_g = F_pr_i[gen];
@@ -489,7 +489,7 @@ function balance_cr(cr_i_list, fp_cr, k_exp) {
     if (E_exp_cr_grid_an === 0) { // No energy exported to grid
       f_we_exp_cr_grid = { ren: 0, nren: 0 };
     } else {
-      const fpB_grid_i = fp_cr.filter(fp => fp.use === 'to_grid' && fp.step === 'B');
+      const fpB_grid_i = fp_cr.filter(fp => fp.dest === 'to_grid' && fp.step === 'B');
       f_we_exp_cr_grid = exp_generators
         .reduce((acc, gen) => {
           const F_g = F_pr_i[gen];
