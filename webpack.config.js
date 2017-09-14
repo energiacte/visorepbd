@@ -102,7 +102,7 @@ var config = {
       'babel-polyfill',
       PATHS.app
     ],
-    vendor: ['d3', 'dimple', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
+    vendor: ['react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   output: {
     path: PATHS.build,

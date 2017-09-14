@@ -74,8 +74,6 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "d3": "^3.5.17",
-    "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git#2.2.0",
     "react": "^15.6.1",
     "react-dom": "^15.0.1",
     "react-redux": "^5.0.6",
