@@ -54,8 +54,8 @@ class MainPageClass extends React.Component {
               area={ area }
               onChangeKexp={ value => dispatch(changeKexp(value)) }
               onChangeArea={ value => dispatch(changeArea(value)) }
-              onCarriersLoad={ d => this.carriersLoadHandler(d) }
-              onCarriersDownload={ () => this.carriersDownloadHandler() }
+              onCarriersLoad={ d => this.uploadCarriers(d) }
+              onCarriersDownload={ () => this.downloadCarriers() }
               onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
               currentfilename={ this.props.currentfilename }
           />
@@ -95,7 +95,7 @@ class MainPageClass extends React.Component {
     );
   }
 
-  carriersLoadHandler(datastr) {
+  uploadCarriers(datastr) {
     const data = parse_carrier_list(datastr);
     const components = data
       .filter(c => c.type === 'CARRIER')
@@ -112,7 +112,7 @@ class MainPageClass extends React.Component {
     dispatch(changeKexp(m_kexp ? m_kexp.value : kexp));
   }
 
-  carriersDownloadHandler() {
+  downloadCarriers() {
     const { kexp, area, components } = this.props;
     const activecomponents = components
       .filter(e => e.active === true)
