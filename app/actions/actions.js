@@ -7,6 +7,7 @@ import { ep2dict } from 'epbdutils';
 
 export const SELECT_ENERGY_COMPONENT = 'SELECT_ENERGY_COMPONENT';
 export const ADD_ENERGY_COMPONENT = 'ADD_ENERGY_COMPONENT';
+export const CLONE_ENERGY_COMPONENT = 'CLONE_ENERGY_COMPONENT';
 export const REMOVE_ENERGY_COMPONENT = 'REMOVE_ENERGY_COMPONENT';
 export const EDIT_ENERGY_COMPONENT = 'EDIT_ENERGY_COMPONENT';
 export const LOAD_ENERGY_COMPONENTS = 'LOAD_ENERGY_COMPONENTS';
@@ -26,6 +27,10 @@ export function selectEnergyComponent(id, component) {
 
 export function addEnergyComponent(component) {
   return { type: ADD_ENERGY_COMPONENT, component };
+}
+
+export function cloneEnergyComponent(id) {
+  return { type: CLONE_ENERGY_COMPONENT, id };
 }
 
 export function removeEnergyComponent(id) {

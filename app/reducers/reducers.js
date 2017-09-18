@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { SELECT_ENERGY_COMPONENT,
          ADD_ENERGY_COMPONENT,
+         CLONE_ENERGY_COMPONENT,
          REMOVE_ENERGY_COMPONENT,
          EDIT_ENERGY_COMPONENT,
          LOAD_ENERGY_COMPONENTS,
@@ -68,6 +69,24 @@ function components(state = [], action) {
   switch (action.type) {
   case ADD_ENERGY_COMPONENT:
     return [... state, action.component];
+  case CLONE_ENERGY_COMPONENT:
+    if (action.id === null || state.length === 0) {
+      const numelems = (state.length > 0 ) ? state[0].values.length : 12;
+      return [
+        ... state,
+        { active: true,
+          type: 'CARRIER',
+          ctype: 'PRODUCCION',
+          csubtype: 'INSITU',
+          carrier: 'ELECTRICIDAD',
+          values: new Array(numelems).fill(10),
+          comment: 'Comentario'
+        }
+      ];
+    }
+    currlist = [...state];
+    currlist.splice(action.id + 1, 0, currlist[action.id]);
+    return currlist;
   case REMOVE_ENERGY_COMPONENT:
     if (state.length > 0) {
       currlist = [... state];

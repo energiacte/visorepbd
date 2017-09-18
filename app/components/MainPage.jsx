@@ -14,7 +14,7 @@ import { carrier_isvalid } from '../cteepbd.js';
 
 import { changeKexp,
          changeArea,
-         addEnergyComponent,
+         cloneEnergyComponent,
          removeEnergyComponent,
          editEnergyComponent,
          selectEnergyComponent,
@@ -62,7 +62,7 @@ class MainPageClass extends React.Component {
           <EPChart data={data} kexp={kexp} />
           <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
             <button className="btn" id="add" type="button"
-              onClick={() => this.handleAddComponent(selectedkey)}>
+              onClick={ () => dispatch(cloneEnergyComponent(selectedkey)) }>
               <span className="glyphicon glyphicon-plus" /> Añadir
             </button>
             <button className="btn" id="remove" type="button"
@@ -93,27 +93,6 @@ class MainPageClass extends React.Component {
         <Footer />
       </div>
     );
-  }
-
-  // Add component to component list
-  handleAddComponent(selectedkey, _event) {
-    let currentcomponent = (selectedkey !== null)
-      ? { ...this.props.components[selectedkey] }
-      : { active: true,
-        type: 'CARRIER',
-        ctype: 'PRODUCCION',
-        csubtype: 'INSITU',
-        carrier: 'ELECTRICIDAD',
-        values: [10] * 12,
-        comment: 'Comentario'
-      };
-
-    this.props.dispatch(addEnergyComponent(currentcomponent));
-  }
-
-  // Remove selected component to component list
-  handleRemoveComponent(selectedkey, _event) {
-    this.props.dispatch(removeEnergyComponent(selectedkey));
   }
 
   carriersLoadHandler(datastr) {
