@@ -26,7 +26,10 @@ const ModalContainer = props => {
     <div className="backdrop" style={ backdropStyle }>
       <div className="modalcontainer" style={ modalStyle }>
         { props.children }
-        <div className="footer"><button onClick={props.onClose}>Close</button></div>
+        <div className="footer">
+          <button className="btn btn-primary" id="closemodal" type="button" onClick={ props.onClose }>
+          <span className="glyphicon glyphicon-ok"/> Close</button>
+        </div>
       </div>
     </div>
   );

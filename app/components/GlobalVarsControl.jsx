@@ -17,7 +17,6 @@ export default class GlobalVarsControl extends React.Component {
           <input type="text" readOnly maxLength="3" size="3"
                  value={ kexp.toFixed(1) } />
         </div>
-        <div className="form-group col-md-3" />
         <div id="area" className="form-group col-md-3">
           <label className="control-label" htmlFor="areaentry">Area<sub>ref</sub> (m²) </label>
           <input type="number" lang="es" min="1" step="1"
@@ -26,8 +25,8 @@ export default class GlobalVarsControl extends React.Component {
                  value={ area.toFixed(0) }
                  onChange={ e => onChangeArea(e.target.value) } />
         </div>
-        <div className="form-group">
-          <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
+        <div id="buttons" className="form-group pull-right">
+          <div className="btn-group btn-group-md" role="group" aria-label="acciones">
             <input ref={ ref => this.fileInput = ref } type="file"
               onChange={e => this.uploadFile(e, this.props.onCarriersLoad)}
               style={{ visibility: 'hidden', position: 'absolute', top: '-50px', left: '-50px' }} />

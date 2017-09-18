@@ -85,8 +85,7 @@ export default class EnergyComponentEditor extends React.Component {
         <form className="form-horizontal"
               onSubmit={ e => e.preventDefault() }>
             <div className="form-group">
-
-              <label className="col-md-1 control-label"
+              <label className="col-md-2 control-label"
                      htmlFor="selectctype">Tipo</label>
               <div className="col-md-3">
                 <select id="selectctype"
@@ -96,9 +95,11 @@ export default class EnergyComponentEditor extends React.Component {
                   { ctypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
               </div>
+            </div>
 
-              <label className="col-md-1 control-label"
-                     htmlFor="selectcsubtype">Origen/Uso</label>
+            <div className="form-group">
+              <label className="col-md-2 control-label"
+                     htmlFor="selectcsubtype">Subtipo</label>
               <div className="col-md-3">
                 <select id="selectcsubtype"
                         name="selectcsubtype" className="form-control"
@@ -107,8 +108,10 @@ export default class EnergyComponentEditor extends React.Component {
                   { csubtypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
               </div>
+            </div>
 
-              <label className="col-md-1 control-label"
+            <div className="form-group">
+              <label className="col-md-2 control-label"
                      htmlFor="selectcarrier">Vector</label>
               <div className="col-md-3">
                 <select id="selectcarrier"
@@ -118,12 +121,10 @@ export default class EnergyComponentEditor extends React.Component {
                   { carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
                 </select>
               </div>
-
             </div>
 
             <div className="form-group">
-
-              <label className="col-md-1 control-label"
+              <label className="col-md-2 control-label"
                      htmlFor="selectcurve">Curva</label>
               <div className="col-md-3">
                 <select ref={ ref => this.CurveSelect = ref }
@@ -138,8 +139,10 @@ export default class EnergyComponentEditor extends React.Component {
                                       data={ data }
                                       width="50%" height="34px" />
               </div>
+            </div>
 
-              <label className="col-md-1 control-label"
+            <div className="form-group">
+              <label className="col-md-2 control-label"
                      htmlFor="rangecontrol">E.Total</label>
               <div className="col-md-3">
                 <input className="form-control col-md-2"
@@ -167,10 +170,11 @@ export default class EnergyComponentEditor extends React.Component {
                 </button>
               </div>
             </div>
+
             <div className="form-group">
-              <label className="col-md-1 control-label"
+              <label className="col-md-2 control-label"
                      htmlFor="commentinput">Comentario</label>
-              <div className="col-md-11">
+              <div className="col-md-10">
                 <input className={ "form-control" }
                        name="commentinput"
                        type="text"

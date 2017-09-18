@@ -49,6 +49,7 @@ class MainPageClass extends React.Component {
       <div>
         <NavBar match={ this.props.match } />
         <div className="container">
+          <div className="row">
           <GlobalVarsControl
               kexp={ kexp }
               area={ area }
@@ -59,7 +60,11 @@ class MainPageClass extends React.Component {
               onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
               currentfilename={ this.props.currentfilename }
           />
+          </div>
+          <div className="row">
           <EPChart data={data} kexp={kexp} />
+          </div>
+          <div className="row">
           <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
             <button className="btn" id="add" type="button"
               onClick={ () => dispatch(cloneEnergyComponent(selectedkey)) }>
@@ -82,6 +87,8 @@ class MainPageClass extends React.Component {
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
             />
           </ModalContainer>
+          </div>
+          <div className="row">
           <EnergyComponentList
               selectedkey = { selectedkey }
               components = { components }
@@ -89,6 +96,7 @@ class MainPageClass extends React.Component {
               onSelect={ (key, component) => dispatch(selectEnergyComponent(key, component)) }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
           />
+          </div>
         </div>
         <Footer />
       </div>
