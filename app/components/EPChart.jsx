@@ -4,7 +4,7 @@ const EPChart = props => {
   const { width = "100%", height = "135px", className = null, data, kexp } = props;
   const { EPtotal, EPnren, EPren, EPrer } = data;
 
-  const steps = [0, 100, 200, 500];
+  const steps = [0, 100, 200, 300];
   const barheight = 25;
   const maxvalue = Math.max(0, EPtotal, EPnren, EPren);
   const minvalue = Math.min(0, EPtotal, EPnren, EPren);
