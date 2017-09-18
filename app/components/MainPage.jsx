@@ -28,7 +28,7 @@ class MainPageClass extends React.Component {
     this.state = { showModal: false };
   }
 
-  toggleModal() {this.setState({ showModal: !this.state.showModal })}
+  toggleModal() { this.setState({ showModal: !this.state.showModal }) }
 
   // Carga datos desde API al inicializar
   componentWillMount() { this.props.dispatch(computeEnergy()); }
@@ -66,7 +66,7 @@ class MainPageClass extends React.Component {
               <span className="glyphicon glyphicon-plus" /> Añadir
             </button>
             <button className="btn" id="remove" type="button"
-              onClick={() => this.handleRemoveComponent(selectedkey)}>
+              onClick={ () => dispatch(removeEnergyComponent(selectedkey)) }>
               <span className="glyphicon glyphicon-minus" /> Borrar
             </button>
             <button className="btn" id="edit" type="button"
