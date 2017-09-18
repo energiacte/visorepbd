@@ -7,6 +7,7 @@ import GlobalVarsControl from 'components/GlobalVarsControl';
 import EnergyComponentEditor from 'components/EnergyComponentEditor';
 import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
+import ModalContainer from 'components/ModalContainer';
 
 import { serialize_carrier_list, parse_carrier_list } from '../energycalculations.js';
 import { carrier_isvalid } from '../cteepbd.js';
@@ -22,6 +23,12 @@ import { changeKexp,
          computeEnergy } from 'actions/actions.js';
 
 class MainPageClass extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showModal: false };
+  }
+
+  toggleModal = () => this.setState({ showModal: !this.state.showModal });
 
   // Carga datos desde API al inicializar
   componentWillMount() { this.props.dispatch(computeEnergy()); }
@@ -53,12 +60,15 @@ class MainPageClass extends React.Component {
               currentfilename={ this.props.currentfilename }
           />
           <EPChart data={ data } kexp={ kexp } />
-          <EnergyComponentEditor
+          <button onClick={ this.toggleModal }>Editar</button>
+          <ModalContainer show={ this.state.showModal } onClose={ this.toggleModal }>
+            <EnergyComponentEditor
               selectedkey = { selectedkey }
               components = { components }
               storedcomponent = { storedcomponent }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
-          />
+            />
+          </ModalContainer>
           <EnergyComponentList
               selectedkey = { selectedkey }
               components = { components }
