@@ -59,8 +59,21 @@ class MainPageClass extends React.Component {
               onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
               currentfilename={ this.props.currentfilename }
           />
-          <EPChart data={ data } kexp={ kexp } />
-          <button onClick={ this.toggleModal }>Editar</button>
+          <EPChart data={data} kexp={kexp} />
+          <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
+            <button className="btn" id="add" type="button"
+              onClick={() => this.handleAddComponent(selectedkey)}>
+              <span className="glyphicon glyphicon-plus" /> Añadir
+            </button>
+            <button className="btn" id="remove" type="button"
+              onClick={() => this.handleRemoveComponent(selectedkey)}>
+              <span className="glyphicon glyphicon-minus" /> Borrar
+            </button>
+            <button className="btn" id="edit" type="button"
+              onClick={ this.toggleModal }>
+              <span className="glyphicon glyphicon-edit" /> Editar
+            </button>
+          </div>
           <ModalContainer show={ this.state.showModal } onClose={ this.toggleModal }>
             <EnergyComponentEditor
               selectedkey = { selectedkey }
@@ -75,13 +88,32 @@ class MainPageClass extends React.Component {
               area ={ area }
               onSelect={ (key, component) => dispatch(selectEnergyComponent(key, component)) }
               onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
-              onAdd={ component => dispatch(addEnergyComponent(component)) }
-              onRemove={ key => dispatch(removeEnergyComponent(key)) }
           />
         </div>
         <Footer />
       </div>
     );
+  }
+
+  // Add component to component list
+  handleAddComponent(selectedkey, _event) {
+    let currentcomponent = (selectedkey !== null)
+      ? { ...this.props.components[selectedkey] }
+      : { active: true,
+        type: 'CARRIER',
+        ctype: 'PRODUCCION',
+        csubtype: 'INSITU',
+        carrier: 'ELECTRICIDAD',
+        values: [10] * 12,
+        comment: 'Comentario'
+      };
+
+    this.props.dispatch(addEnergyComponent(currentcomponent));
+  }
+
+  // Remove selected component to component list
+  handleRemoveComponent(selectedkey, _event) {
+    this.props.dispatch(removeEnergyComponent(selectedkey));
   }
 
   carriersLoadHandler(datastr) {
