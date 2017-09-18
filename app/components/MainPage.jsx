@@ -50,52 +50,52 @@ class MainPageClass extends React.Component {
         <NavBar match={ this.props.match } />
         <div className="container">
           <div className="row">
-          <GlobalVarsControl
-              kexp={ kexp }
-              area={ area }
-              onChangeKexp={ value => dispatch(changeKexp(value)) }
-              onChangeArea={ value => dispatch(changeArea(value)) }
-              onCarriersLoad={ d => this.uploadCarriers(d) }
-              onCarriersDownload={ () => this.downloadCarriers() }
-              onChangeCurrentFileName={ newname => dispatch(changeCurrentFileName(newname)) }
-              currentfilename={ this.props.currentfilename }
-          />
-          </div>
-          <div className="row">
-          <EPChart data={data} kexp={kexp} />
-          </div>
-          <div className="row">
-          <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
-            <button className="btn" id="add" type="button"
-              onClick={ () => dispatch(cloneEnergyComponent(selectedkey)) }>
-              <span className="glyphicon glyphicon-plus" /> Añadir
-            </button>
-            <button className="btn" id="remove" type="button"
-              onClick={ () => dispatch(removeEnergyComponent(selectedkey)) }>
-              <span className="glyphicon glyphicon-minus" /> Borrar
-            </button>
-            <button className="btn" id="edit" type="button"
-              onClick={ () => this.toggleModal() }>
-              <span className="glyphicon glyphicon-edit" /> Editar
-            </button>
-          </div>
-          <ModalContainer show={ this.state.showModal } onClose={ () => this.toggleModal() }>
-            <EnergyComponentEditor
-              selectedkey = { selectedkey }
-              components = { components }
-              storedcomponent = { storedcomponent }
-              onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
+            <GlobalVarsControl
+              kexp={kexp}
+              area={area}
+              onChangeKexp={value => dispatch(changeKexp(value))}
+              onChangeArea={value => dispatch(changeArea(value))}
+              onCarriersLoad={d => this.uploadCarriers(d)}
+              onCarriersDownload={() => this.downloadCarriers()}
+              onChangeCurrentFileName={newname => dispatch(changeCurrentFileName(newname))}
+              currentfilename={this.props.currentfilename}
             />
-          </ModalContainer>
           </div>
           <div className="row">
-          <EnergyComponentList
-              selectedkey = { selectedkey }
-              components = { components }
-              area ={ area }
-              onSelect={ (key, component) => dispatch(selectEnergyComponent(key, component)) }
-              onEdit={ (key, component) => dispatch(editEnergyComponent(key, component)) }
-          />
+            <EPChart data={data} kexp={kexp} />
+          </div>
+          <div className="row">
+            <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
+              <button className="btn" id="add" type="button"
+                onClick={() => dispatch(cloneEnergyComponent(selectedkey))}>
+                <span className="glyphicon glyphicon-plus" /> Añadir
+              </button>
+              <button className="btn" id="remove" type="button"
+                onClick={() => dispatch(removeEnergyComponent(selectedkey))}>
+                <span className="glyphicon glyphicon-minus" /> Borrar
+              </button>
+              <button className="btn" id="edit" type="button"
+                onClick={() => this.toggleModal()}>
+                <span className="glyphicon glyphicon-edit" /> Editar
+              </button>
+            </div>
+            <ModalContainer show={this.state.showModal} onClose={() => this.toggleModal()}>
+              <EnergyComponentEditor
+                selectedkey={selectedkey}
+                components={components}
+                storedcomponent={storedcomponent}
+                onEdit={(key, component) => dispatch(editEnergyComponent(key, component))}
+              />
+            </ModalContainer>
+          </div>
+          <div className="row">
+            <EnergyComponentList
+              selectedkey={selectedkey}
+              components={components}
+              area={area}
+              onSelect={(key, component) => dispatch(selectEnergyComponent(key, component))}
+              onEdit={(key, component) => dispatch(editEnergyComponent(key, component))}
+            />
           </div>
         </div>
         <Footer />
