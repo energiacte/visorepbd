@@ -9,8 +9,8 @@ import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 import ModalContainer from 'components/ModalContainer';
 
-import { serialize_carrier_list, parse_carrier_list } from '../energycalculations.js';
-import { carrier_isvalid } from '../cteepbd.js';
+import { serialize_carrier_list, parse_carrier_list, cte } from 'epbdjs';
+const { carrier_isvalid } = cte;
 
 import { changeKexp,
          changeArea,

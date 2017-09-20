@@ -74,6 +74,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "epbdjs": "^2.0.1",
     "react": "^15.6.1",
     "react-dom": "^15.0.1",
     "react-redux": "^5.0.6",

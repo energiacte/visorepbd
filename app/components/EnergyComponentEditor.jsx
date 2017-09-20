@@ -1,7 +1,8 @@
 import React from 'react';
 
 import EnergyComponentChart from 'components/EnergyComponentChart';
-import { VALIDDATA } from '../cteepbd.js';
+import { cte } from 'epbdjs';
+const { VALIDDATA } = cte;
 
 const CURVENAMES = ['ACTUAL', 'CONSTANTE', 'CONCAVA', 'CONVEXA', 'CRECIENTE', 'DECRECIENTE'];
 

@@ -8,4 +8,4 @@ stats.json
 *.log
 *.generated.*
 npm-debug.log
-__pycache__
+package-lock.json

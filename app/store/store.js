@@ -1,7 +1,8 @@
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import reducer from 'reducers/reducers.js';
-import { FACTORESDEPASO } from '../cteepbd.js';
+import { cte } from 'epbdjs';
+const { FACTORESDEPASO } = cte;
 
 const initialState = {
   data: { EPnren: 0, EPren: 0, EPtotal: 0, EPrer: 0,

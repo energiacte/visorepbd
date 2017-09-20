@@ -1,5 +1,5 @@
-import { energy_performance } from 'energycalculations';
-import { ep2dict } from 'epbdutils';
+import { energy_performance, utils as epbdutils } from 'epbdjs';
+const { ep2dict } = epbdutils;
 
 /*
  * action types
