@@ -9,7 +9,7 @@ const backdropStyle = {
 
 // The modal "window"
 const modalStyle = {
-  backgroundColor: "rgba(255,255,255,0.7)",
+  backgroundColor: "rgba(200,200,200,0.8)",
   borderRadius: 5,
   maxWidth: "80%",
   minHeight: 300,

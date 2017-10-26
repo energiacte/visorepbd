@@ -82,13 +82,13 @@ export default class EnergyComponentEditor extends React.Component {
     const currenttotalenergy = values.reduce((a, b) => a + b, 0);
 
     return (
-      <div id="energycomponenteditor" className="panel-body bg-info" key={ 'selected' + selectedkey } >
+      <div id="energycomponenteditor" className="panel-body" key={ 'selected' + selectedkey } >
         <form className="form-horizontal"
               onSubmit={ e => e.preventDefault() }>
             <div className="form-group">
               <label className="col-md-2 control-label"
                      htmlFor="selectctype">Tipo</label>
-              <div className="col-md-3">
+              <div className="col-md-10">
                 <select id="selectctype"
                         name="selectctype" className="form-control"
                         onChange={ e => this.handleChange(e) }
@@ -101,7 +101,7 @@ export default class EnergyComponentEditor extends React.Component {
             <div className="form-group">
               <label className="col-md-2 control-label"
                      htmlFor="selectcsubtype">Subtipo</label>
-              <div className="col-md-3">
+              <div className="col-md-10">
                 <select id="selectcsubtype"
                         name="selectcsubtype" className="form-control"
                         onChange={ e => this.handleChange(e) }
@@ -114,7 +114,7 @@ export default class EnergyComponentEditor extends React.Component {
             <div className="form-group">
               <label className="col-md-2 control-label"
                      htmlFor="selectcarrier">Vector</label>
-              <div className="col-md-3">
+              <div className="col-md-10">
                 <select id="selectcarrier"
                         name="selectcarrier" className="form-control"
                         onChange={ e => this.handleChange(e) }
@@ -127,7 +127,7 @@ export default class EnergyComponentEditor extends React.Component {
             <div className="form-group">
               <label className="col-md-2 control-label"
                      htmlFor="selectcurve">Curva</label>
-              <div className="col-md-3">
+              <div className="col-md-10">
                 <select ref={ ref => this.CurveSelect = ref }
                         name="selectcurve" className="form-control"
                         style={{ width: '50%', display: 'inline-block', verticalAlign: 'top' }}
@@ -144,9 +144,9 @@ export default class EnergyComponentEditor extends React.Component {
 
             <div className="form-group">
               <label className="col-md-2 control-label"
-                     htmlFor="rangecontrol">E.Total</label>
-              <div className="col-md-3">
-                <input className="form-control col-md-2"
+                     htmlFor="totalenergyrange">E.Total</label>
+              <div className="col-md-10">
+                <input className="form-control col-md-5"
                        ref={ ref => this.totalEnergyRange = ref }
                        name="totalenergyrange"
                        type="range"
@@ -156,19 +156,13 @@ export default class EnergyComponentEditor extends React.Component {
                        style={{ width:'50%' }}
                        defaultValue={ currenttotalenergy }
                        onChange={ e => this.handleChangeTotalEnergyRange(e) } />
-                <input className="form-control col-md-1"
+                <input className="form-control col-md-5"
                        ref={ ref => this.totalEnergyEntry = ref }
                        name="totalenergyentry"
                        type="text"
                        style={ { width: '50%', background: this.state.totalenergyOnEdit ? '#fcf8c3' : '' } }
                        defaultValue={ currenttotalenergy.toFixed(2) }
                        onKeyDown={ e => this.handleChangeTotalEnergyEntry(e) }/>
-              </div>
-              <div className="col-md-4 control-label">
-                <button className="btn" id="modify" type="button"
-                  onClick={() => this.handleRestore()}>
-                  <span className="glyphicon glyphicon-repeat"/> Restaurar
-                </button>
               </div>
             </div>
 
@@ -185,7 +179,10 @@ export default class EnergyComponentEditor extends React.Component {
                 />
               </div>
             </div>
-
+            <button className="col-md-2 btn btn-default pull-right" id="modify" type="button"
+                  onClick={() => this.handleRestore()}>
+                  <span className="glyphicon glyphicon-repeat"/> Restaurar
+            </button>
         </form>
 
       </div>
