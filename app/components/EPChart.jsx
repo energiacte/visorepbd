@@ -1,5 +1,8 @@
 import React from 'react';
 
+// Gráfico SVG de barras para eficiencia energética
+// TODO: Para ajustar mejor al ancho ver:
+// TODO: https://stackoverflow.com/questions/35153599/reactjs-get-height-of-an-element
 const EPChart = props => {
   const { width = "100%", height = "135px", className = null, data, kexp } = props;
   const { EPtotal, EPnren, EPren, EPrer } = data;

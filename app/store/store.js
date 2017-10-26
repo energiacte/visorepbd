@@ -2,11 +2,10 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import reducer from 'reducers/reducers.js';
 import { cte } from 'epbdjs';
-const { FACTORESDEPASO } = cte;
+const { CTE_FP } = cte;
 
 const initialState = {
-  data: { EPnren: 0, EPren: 0, EPtotal: 0, EPrer: 0,
-          EPAnren: 0, EPAren: 0, EPAtotal: 0, EPArer: 0 },
+  data: { EPnren: 0, EPren: 0, EPtotal: 0, EPrer: 0 },
   storedcomponent: {
     active: true,
     type: 'CARRIER',
@@ -18,7 +17,7 @@ const initialState = {
   selectedkey: 0, // Currently selected component
   kexp: 0.0,
   area: 1,
-  wfactors: FACTORESDEPASO,
+  wfactors: CTE_FP,
   components: [ // Energy components array (ejemplo3PVBdC.csv)
     {
       active: true,

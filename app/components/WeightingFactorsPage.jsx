@@ -9,9 +9,9 @@ import { editWFactors } from 'actions/actions.js';
 class WeightingFactorsPageClass extends React.Component {
   render() {
     const { wfactors } = this.props;
-    const wfactors2 = wfactors.filter(e => !e.carrier.startsWith('RED'));
-    const red1 = wfactors.filter(e => e.carrier === 'RED1')[0];
-    const red2 = wfactors.filter(e => e.carrier === 'RED2')[0];
+    const wfactors2 = wfactors.wdata.filter(e => !e.carrier.startsWith('RED'));
+    const red1 = wfactors.wdata.filter(e => e.carrier === 'RED1')[0];
+    const red2 = wfactors.wdata.filter(e => e.carrier === 'RED2')[0];
 
     return (
       <div>
@@ -22,7 +22,7 @@ class WeightingFactorsPageClass extends React.Component {
             <p>Factores de conversión de energía final a energía primaria renovable y no renovable. Estos factores corresponden a los definidos en el Documento reconocido del RITE <a href="http://www.minetad.gob.es/energia/desarrollo/EficienciaEnergetica/RITE/Reconocidos/Reconocidos/Otros%20documentos/Factores_emision_CO2.pdf">Factores de emisión de CO2 y coeficientes de paso a energía primaria de diferentes fuentes de energía final consumidas en el sector de edificios en España</a>, que incluye los factores de paso de energía final a energía primaria y a emisiones.</p>
           </div>
 
-          <h3>Factores personalizables</h3>
+          <h3>Factores definidos por el usuario</h3>
           <table id="weditor" className="table table-striped table-bordered table-condensed">
             <thead>
               <tr>
@@ -121,10 +121,11 @@ class WeightingFactorsPageClass extends React.Component {
     const newvalue = parseFloat(e.target.value.replace(/,/g, '.'));
     if (isNaN(newvalue)) return;
     const { wfactors, dispatch } = this.props;
-    const vecobj = wfactors.find(f => f.carrier === vec);
-    const otherveclist = wfactors.filter(f => f.carrier !== vec);
+    const { wmeta, wdata } = wfactors;
+    const vecobj = wdata.find(f => f.carrier === vec);
+    const otherveclist = wdata.filter(f => f.carrier !== vec);
     vecobj[factor] = newvalue;
-    dispatch(editWFactors([...otherveclist, vecobj]));
+    dispatch(editWFactors({ wmeta, wdata: [...otherveclist, vecobj] }));
   }
 }
 

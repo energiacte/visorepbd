@@ -2,7 +2,7 @@ import React from 'react';
 
 import EnergyComponentChart from 'components/EnergyComponentChart';
 import { cte } from 'epbdjs';
-const { VALIDDATA } = cte;
+const { CTE_VALIDDATA } = cte;
 
 const CURVENAMES = ['ACTUAL', 'CONSTANTE', 'CONCAVA', 'CONVEXA', 'CRECIENTE', 'DECRECIENTE'];
 
@@ -74,9 +74,9 @@ export default class EnergyComponentEditor extends React.Component {
   render() {
     const { selectedkey, components } = this.props;
     const { carrier, ctype, csubtype, values, comment } = components[selectedkey];
-    const ctypevalues = Object.keys(VALIDDATA);
-    const csubtypevalues = Object.keys(VALIDDATA[ctype]);
-    const carriervalues = VALIDDATA[ctype][csubtype];
+    const ctypevalues = Object.keys(CTE_VALIDDATA);
+    const csubtypevalues = Object.keys(CTE_VALIDDATA[ctype]);
+    const carriervalues = CTE_VALIDDATA[ctype][csubtype];
     const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
 
     const currenttotalenergy = values.reduce((a, b) => a + b, 0);
@@ -217,19 +217,19 @@ export default class EnergyComponentEditor extends React.Component {
     if (currentcomponent[prop] === value) { return; }
 
     if (prop === 'ctype') {
-      const csubtypekey0 = Object.keys(VALIDDATA[value])[0];
+      const csubtypekey0 = Object.keys(CTE_VALIDDATA[value])[0];
       currentcomponent.ctype = value;
       currentcomponent.csubtype = csubtypekey0;
-      if (!VALIDDATA[value][csubtypekey0].includes(currentcomponent.carrier)) {
-          currentcomponent.carrier = VALIDDATA[value][csubtypekey0][0];
+      if (!CTE_VALIDDATA[value][csubtypekey0].includes(currentcomponent.carrier)) {
+          currentcomponent.carrier = CTE_VALIDDATA[value][csubtypekey0][0];
       }
     }
 
     if (prop === 'csubtype') {
       const currctype = currentcomponent.ctype;
       currentcomponent.csubtype = value;
-      if (!VALIDDATA[currctype][value].includes(currentcomponent.carrier)) {
-        currentcomponent.carrier = VALIDDATA[currctype][value][0];
+      if (!CTE_VALIDDATA[currctype][value].includes(currentcomponent.carrier)) {
+        currentcomponent.carrier = CTE_VALIDDATA[currctype][value][0];
       }
     }
 

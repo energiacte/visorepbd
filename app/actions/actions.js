@@ -1,5 +1,4 @@
-import { energy_performance, utils as epbdutils } from 'epbdjs';
-const { ep2dict } = epbdutils;
+import { energy_performance } from 'epbdjs';
 
 /*
  * action types
@@ -67,13 +66,18 @@ export function deliverEnergy(newdata) {
 
 // async action creator to get API data: thunk (redux-thunk middleware)
 // could get params from store.getState() (import store from '../store/store.js') and return deliverData(res)
+
 export function computeEnergy() {
   // this async action also reads state
   return (dispatch, getState) => {
     const { kexp, area, components, wfactors } = getState();
     const activecomponents = components.filter(component => component.active);
-    const res = ep2dict(energy_performance(activecomponents, wfactors, kexp),
-                        area);
-    dispatch(deliverEnergy(res));
+    const componentsobj = { cmeta: [], cdata: activecomponents };
+    const ep = energy_performance(componentsobj, wfactors, kexp, area);
+    const EPren = ep.balance_m2.B.ren;
+    const EPnren = ep.balance_m2.B.nren;
+    const EPtotal = EPren + EPnren;
+    const EPrer = (EPtotal === 0) ? 0 : EPren / EPtotal;
+    dispatch(deliverEnergy({ EPren, EPnren, EPtotal, EPrer }));
   };
 }

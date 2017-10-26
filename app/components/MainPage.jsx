@@ -9,8 +9,8 @@ import EnergyComponentList from 'components/EnergyComponentList';
 import Footer from 'components/Footer';
 import ModalContainer from 'components/ModalContainer';
 
-import { serialize_carrier_list, parse_carrier_list, cte } from 'epbdjs';
-const { carrier_isvalid } = cte;
+import { serialize_components, cte } from 'epbdjs';
+const { parse_components } = cte;
 
 import { changeKexp,
          changeArea,
@@ -104,13 +104,11 @@ class MainPageClass extends React.Component {
   }
 
   uploadCarriers(datastr) {
-    const data = parse_carrier_list(datastr);
-    const components = data
-      .filter(c => c.type === 'CARRIER')
-      .filter(c => carrier_isvalid(c))
+    const data = parse_components(datastr);
+    const components = data.cdata
       .map(dd => ({ ...dd, active: true }));
     // TODO: preserve metadata roundtrip
-    const meta = data.filter(c => c.type === 'META');
+    const meta = data.cmeta;
     const m_Area_ref = meta.find(c => c.key === 'Area_ref');
     const m_kexp = meta.find(c => c.key === 'kexp');
 
@@ -132,7 +130,7 @@ class MainPageClass extends React.Component {
       { type: 'META', key: 'Area_ref', value: area },
       { type: 'META', key: 'kexp', value: kexp }
     ];
-    return serialize_carrier_list([...activecomponents, ...metalines]);
+    return serialize_components({ cdata: activecomponents, cmeta: metalines });
   }
 }
 
