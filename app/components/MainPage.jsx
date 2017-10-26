@@ -105,15 +105,15 @@ class MainPageClass extends React.Component {
 
   uploadCarriers(datastr) {
     const data = parse_components(datastr);
-    const components = data.cdata
+    const cdata = data.cdata
       .map(dd => ({ ...dd, active: true }));
     // TODO: preserve metadata roundtrip
-    const meta = data.cmeta;
-    const m_Area_ref = meta.find(c => c.key === 'Area_ref');
-    const m_kexp = meta.find(c => c.key === 'kexp');
+    const cmeta = data.cmeta;
+    const m_Area_ref = cmeta.find(c => c.key === 'Area_ref');
+    const m_kexp = cmeta.find(c => c.key === 'kexp');
 
     const { dispatch, kexp, area } = this.props;
-    dispatch(loadEnergyComponents(components));
+    dispatch(loadEnergyComponents(cdata));
     dispatch(changeArea(m_Area_ref ? m_Area_ref.value : area));
     dispatch(changeKexp(m_kexp ? m_kexp.value : kexp));
   }
