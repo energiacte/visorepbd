@@ -5,7 +5,7 @@ import { cte } from 'epbdjs';
 const { CTE_FP } = cte;
 
 const initialState = {
-  data: { EPnren: 0, EPren: 0, EPtotal: 0, EPrer: 0 },
+  data: { ren: 0, nren: 0, total: 0, rer: 0 },
   storedcomponent: {
     active: true,
     type: 'CARRIER',

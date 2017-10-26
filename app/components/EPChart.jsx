@@ -5,12 +5,12 @@ import React from 'react';
 // TODO: https://stackoverflow.com/questions/35153599/reactjs-get-height-of-an-element
 const EPChart = props => {
   const { width = "100%", height = "135px", className = null, data, kexp } = props;
-  const { EPtotal, EPnren, EPren, EPrer } = data;
+  const { ren, nren, total, rer } = data;
 
   const steps = [0, 100, 200, 300];
   const barheight = 25;
-  const maxvalue = Math.max(0, EPtotal, EPnren, EPren);
-  const minvalue = Math.min(0, EPtotal, EPnren, EPren);
+  const maxvalue = Math.max(0, total, nren, ren);
+  const minvalue = Math.min(0, total, nren, ren);
   const maxlimit = Math.max(100, steps.find(v => v >= maxvalue) || maxvalue);
   const minlimit = Math.min(0, -steps.find(v => -v <= minvalue) || minvalue);
   const pos0 = -minlimit;
@@ -19,9 +19,9 @@ const EPChart = props => {
   const vbh = 4 * barheight;
 
   const bars = [
-    { label: "EP_total", value: EPtotal, color: "blue" },
-    { label: "EP_nren", value: EPnren, color: "red" },
-    { label: "EP_ren", value: EPren, color: "green" }
+    { label: "EP_total", value: total, color: "blue" },
+    { label: "EP_nren", value: nren, color: "red" },
+    { label: "EP_ren", value: ren, color: "green" }
   ];
 
   const Bars = bars.map((el, i) => (
@@ -66,7 +66,7 @@ const EPChart = props => {
       <p style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
         Consumo de energía primaria [kWh/m²·año]
       </p>
-      <p>(k_exp: { kexp.toFixed(2) }, RER: { EPrer.toFixed(2) })</p>
+      <p>(k_exp: { kexp.toFixed(2) }, RER: { rer.toFixed(2) })</p>
       <svg width="100%" height="100px" className={ className }
         preserveAspectRatio="xMidYMin meet" viewBox={`0 0 ${ vbw } ${ vbh }`}
         style={{
@@ -75,9 +75,9 @@ const EPChart = props => {
           font: "12px sans-serif"
         }}>
         <title id="title" fill="black">
-          Consumo de energía primaria (k_exp: { kexp.toFixed(2) }, RER: { EPrer.toFixed(2) })
+          Consumo de energía primaria (k_exp: { kexp.toFixed(2) }, RER: { rer.toFixed(2) })
         </title>
-        <desc id="desc">EP_total: { EPtotal.toFixed(2) }, EP_nren: { EPnren.toFixed(2) }, EP_ren: { EPren.toFixed(2) }</desc>
+        <desc id="desc">EP_total: { total.toFixed(2) }, EP_nren: { nren.toFixed(2) }, EP_ren: { ren.toFixed(2) }</desc>
         <g transform={`translate(${ textw },0)`}>
           { LimitAxis }
           { GridLines }

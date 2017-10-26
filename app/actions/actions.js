@@ -74,10 +74,9 @@ export function computeEnergy() {
     const activecomponents = components.filter(component => component.active);
     const componentsobj = { cmeta: [], cdata: activecomponents };
     const ep = energy_performance(componentsobj, wfactors, kexp, area);
-    const EPren = ep.balance_m2.B.ren;
-    const EPnren = ep.balance_m2.B.nren;
-    const EPtotal = EPren + EPnren;
-    const EPrer = (EPtotal === 0) ? 0 : EPren / EPtotal;
-    dispatch(deliverEnergy({ EPren, EPnren, EPtotal, EPrer }));
+    const { ren, nren } = ep.balance_m2.B;
+    const total = ren + nren;
+    const rer = (total === 0) ? 0 : ren / total;
+    dispatch(deliverEnergy({ ren, nren, total, rer }));
   };
 }
