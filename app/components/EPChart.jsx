@@ -28,42 +28,28 @@ export default class EPChart extends React.Component {
       className = null, data, kexp
     } = this.props;
     const { ren, nren, total, rer } = data;
+    const svgwidth = this.state.width;
 
-    const steps = [0, 100, 200, 300];
+    const steps = [0, 50, 100, 200, 300];
     const barheight = 25;
-    const maxvalue = Math.max(0, total, nren, ren);
-    const minvalue = Math.min(0, total, nren, ren);
-    const maxlimit = Math.max(100, steps.find(v => v >= maxvalue) || maxvalue);
+    const maxvalue = Math.max(0, total, ren, nren);
+    const minvalue = Math.min(0, total, ren, nren);
+    const maxlimit = Math.max(steps[1], steps.find(v => v >= maxvalue) || maxvalue);
     const minlimit = Math.min(0, -steps.find(v => -v <= minvalue) || minvalue);
-    const pos0 = -minlimit;
-    const textw = 70;
-    const vbw = textw + maxlimit - minlimit + 20;
+    const textw = 70; // text area width
+    const paddingw = 10; // left and right padding width
+    // View size
+    const vbw = 2 * paddingw + textw + (maxlimit - minlimit);
     const vbh = 4 * barheight;
-
-    const bars = [
-      { label: "EP_total", value: total, color: "blue" },
-      { label: "EP_nren", value: nren, color: "red" },
-      { label: "EP_ren", value: ren, color: "green" }
-    ];
-
-    const Bars = bars.map((el, i) => (
-      <g className="bar" height={ barheight } key={ `${ el.label }_bar` }>
-        <rect width={ Math.abs(el.value) } height={ barheight - 3 }
-          x={ Math.min(pos0, pos0 + el.value) } y={ i * barheight }
-          fill={ el.color } fillOpacity="0.7" />
-        <text x={ -textw + 5 } y={ (i + 0.5) * barheight }
-          dominantBaseline="middle" fill="#555">{ el.label }</text>
-        <text x={ Math.min(pos0, pos0 + el.value) + 5 } y={ (i + 0.5) * barheight }
-          dominantBaseline="middle" fill="white" fontWeight="bold">
-          { (el.value).toFixed(2) }</text>
-        <title>{ el.label }: { (el.value).toFixed(2) } kWh/m²·año</title>
-      </g>
-    ));
+    // Plot area size
+    const plotw = svgwidth - textw - 2 * paddingw; // plot area width
+    // Cambia de dominio, de [minlimit, maxlimit] a [0, plotw]
+    const x = x0 => (x0 - minlimit) / (maxlimit - minlimit) * (plotw);
 
     const LimitAxis = [minlimit, 0, maxlimit].map((v, i) => (
       <g key={ `limitaxis_${ i }` }>
-        <line x1={ pos0 + v } y1="0" x2={ pos0 + v } y2="75" strokeWidth="1" stroke="#333" />
-        <text x={ pos0 + v } y="90" textAnchor="middle" fill="#333">{ v.toFixed(0) }</text>
+        <line x1={ x(v) } y1="0" x2={ x(v) } y2="75" strokeWidth="1" stroke="#333" />
+        <text x={ x(v) } y="90" textAnchor="middle" fill="#333">{ v.toFixed(0) }</text>
       </g>
     ));
 
@@ -72,27 +58,45 @@ export default class EPChart extends React.Component {
     const gridposmin = Array.from(Array(9), (v, i) => -(i + 1) * gridstep).filter(v => v > minlimit);
     const GridLines = gridposmin.concat(gridposmax).map((v, i) => (
       <g key={ `gridline_${ i }` }>
-        <line x1={ pos0 + v } y1="0" x2={ pos0 + v } y2="75"
+        <line x1={ x(v) } y1="0" x2={ x(v) } y2="75"
           strokeWidth="0.5" stroke="#333" strokeDasharray="2,3" />
-        <text x={ pos0 + v } y="90"
+        <text x={ x(v) } y="90"
           textAnchor="middle" fill="#555" fontSize="10px">{ v.toFixed(0) }</text>
       </g>
     ));
+
+    const Bars = [
+      { label: "EP_total", value: total, color: "blue" },
+      { label: "EP_nren", value: nren, color: "red" },
+      { label: "EP_ren", value: ren, color: "green" }
+    ].map((el, i) => (
+      <g className="bar" height={ barheight } key={`${ el.label }_bar`}>
+        <rect width={ x(Math.abs(el.value)) - x(0) } height={ barheight - 3 }
+          x={ x(Math.min(0, el.value)) } y={ i * barheight }
+          fill={ el.color } fillOpacity="0.7" />
+        <text x={ -textw + paddingw } y={ (i + 0.5) * barheight }
+          dominantBaseline="middle" fill="#555">{ el.label }</text>
+        <text x={ x(Math.min(0, el.value) + 5) } y={ (i + 0.5) * barheight }
+          dominantBaseline="middle" fill="white" fontWeight="bold">
+          { (el.value).toFixed(2) }</text>
+        <title>{ el.label }: { (el.value).toFixed(2) } kWh/m²·año</title>
+      </g>
+    ));
+
     return (
       <div width={ width } height={ height }
+        ref={ (svgElement) => this.divElement = svgElement }
         style={{
           backgroundColor: "rgb(70, 130, 180, 0.3)",
           textAlign: "center", font: "14px sans-serif", fontWeight: "normal"
         }}>
-        <p>Ancho: { this.state.width }px</p>
         <p style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
           Consumo de energía primaria [kWh/m²·año]
         </p>
         <p>(k_exp: { kexp.toFixed(2) }, RER: { rer.toFixed(2) })</p>
-        <svg width="100%" height="100px" className={ className }
-          preserveAspectRatio="xMidYMin meet" viewBox={`0 0 ${ vbw } ${ vbh }`}
-          style={{ display, padding, font: "12px sans-serif" }}
-          ref={ (svgElement) => this.svgElement = svgElement }>
+        <svg width={ svgwidth } height={ 4 * barheight } className={ className }
+          preserveAspectRatio="xMidYMin meet" viewBox={`0 0 ${ svgwidth } ${ vbh }`}
+          style={{ display, padding, font: "12px sans-serif" }}>
           <title id="title" fill="black">
             Consumo de energía primaria (k_exp: { kexp.toFixed(2) }, RER: { rer.toFixed(2) })
           </title>
