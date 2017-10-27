@@ -7,9 +7,18 @@ export default class EPChart extends React.Component {
     this.state = { width: 0 };
   }
 
-  componentDidMount() {
-    const width = this.svgElement.clientWidth || this.svgElement.parentNode.clientWidth;
+  updateDimensions() {
+    const width = this.divElement.clientWidth || this.divElement.parentNode.clientWidth;
     this.setState({ width });
+  }
+
+  componentDidMount() {
+    this.updateDimensions()
+    window.addEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  componentWillUnmount() {
+      window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
 
   render() {
