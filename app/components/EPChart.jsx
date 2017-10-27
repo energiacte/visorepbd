@@ -3,89 +3,91 @@ import React from 'react';
 // Gráfico SVG de barras para eficiencia energética
 // TODO: Para ajustar mejor al ancho ver:
 // TODO: https://stackoverflow.com/questions/35153599/reactjs-get-height-of-an-element
-const EPChart = props => {
-  const { width = "100%", height = "135px", className = null, data, kexp } = props;
-  const { ren, nren, total, rer } = data;
 
-  const steps = [0, 100, 200, 300];
-  const barheight = 25;
-  const maxvalue = Math.max(0, total, nren, ren);
-  const minvalue = Math.min(0, total, nren, ren);
-  const maxlimit = Math.max(100, steps.find(v => v >= maxvalue) || maxvalue);
-  const minlimit = Math.min(0, -steps.find(v => -v <= minvalue) || minvalue);
-  const pos0 = -minlimit;
-  const textw = 70;
-  const vbw = textw + maxlimit - minlimit + 20;
-  const vbh = 4 * barheight;
+export default class EPChart extends React.Component {
+  render() {
+    const {
+      width = "100%", height = "135px",
+      display = "inline-block", padding = 0,
+      className = null, data, kexp
+    } = this.props;
+    const { ren, nren, total, rer } = data;
 
-  const bars = [
-    { label: "EP_total", value: total, color: "blue" },
-    { label: "EP_nren", value: nren, color: "red" },
-    { label: "EP_ren", value: ren, color: "green" }
-  ];
+    const steps = [0, 100, 200, 300];
+    const barheight = 25;
+    const maxvalue = Math.max(0, total, nren, ren);
+    const minvalue = Math.min(0, total, nren, ren);
+    const maxlimit = Math.max(100, steps.find(v => v >= maxvalue) || maxvalue);
+    const minlimit = Math.min(0, -steps.find(v => -v <= minvalue) || minvalue);
+    const pos0 = -minlimit;
+    const textw = 70;
+    const vbw = textw + maxlimit - minlimit + 20;
+    const vbh = 4 * barheight;
 
-  const Bars = bars.map((el, i) => (
-    <g className="bar" height={ barheight } key={ `${el.label}_bar` }>
-      <rect width={ Math.abs(el.value) } height={ barheight - 3 }
-        x={ Math.min(pos0, pos0 + el.value) } y={ i * barheight }
-        fill={ el.color } fillOpacity="0.7" />
-      <text x={ -textw + 5 } y={ (i + 0.5) * barheight }
-        dominantBaseline="middle" fill="#555">{ el.label }</text>
-      <text x={ Math.min(pos0, pos0 + el.value) + 5 } y={ (i + 0.5) * barheight }
-        dominantBaseline="middle" fill="white" fontWeight="bold">
-        { (el.value).toFixed(2) }</text>
-      <title>{ el.label }: { (el.value).toFixed(2) } kWh/m²·año</title>
-    </g>
-  ));
+    const bars = [
+      { label: "EP_total", value: total, color: "blue" },
+      { label: "EP_nren", value: nren, color: "red" },
+      { label: "EP_ren", value: ren, color: "green" }
+    ];
 
-  const LimitAxis = [minlimit, 0, maxlimit].map((v, i) => (
-    <g key={ `limitaxis_${i}` }>
-      <line x1={ pos0 + v } y1="0" x2={ pos0 + v } y2="75" strokeWidth="1" stroke="#333" />
-      <text x={ pos0 + v } y="90" textAnchor="middle" fill="#333">{ v.toFixed(0) }</text>
-    </g>
-  ));
+    const Bars = bars.map((el, i) => (
+      <g className="bar" height={barheight} key={`${el.label}_bar`}>
+        <rect width={Math.abs(el.value)} height={barheight - 3}
+          x={Math.min(pos0, pos0 + el.value)} y={i * barheight}
+          fill={el.color} fillOpacity="0.7" />
+        <text x={-textw + 5} y={(i + 0.5) * barheight}
+          dominantBaseline="middle" fill="#555">{el.label}</text>
+        <text x={Math.min(pos0, pos0 + el.value) + 5} y={(i + 0.5) * barheight}
+          dominantBaseline="middle" fill="white" fontWeight="bold">
+          {(el.value).toFixed(2)}</text>
+        <title>{el.label}: {(el.value).toFixed(2)} kWh/m²·año</title>
+      </g>
+    ));
 
-  const gridstep = Math.max(maxlimit / 10, -minlimit / 10, 25);
-  const gridposmax = Array.from(Array(9), (v, i) => (i + 1) * gridstep).filter(v => v < maxlimit);
-  const gridposmin = Array.from(Array(9), (v, i) => -(i + 1) * gridstep).filter(v => v > minlimit);
-  const GridLines = gridposmin.concat(gridposmax).map((v, i) =>(
-    <g key={`gridline_${i}`}>
-      <line x1={ pos0 + v } y1="0" x2={ pos0 + v } y2="75"
-        strokeWidth="0.5" stroke="#333" strokeDasharray="2,3" />
-        <text x={ pos0 + v } y="90"
-          textAnchor="middle" fill="#555" fontSize="10px">{ v.toFixed(0) }</text>
-    </g>
-  ));
+    const LimitAxis = [minlimit, 0, maxlimit].map((v, i) => (
+      <g key={`limitaxis_${i}`}>
+        <line x1={pos0 + v} y1="0" x2={pos0 + v} y2="75" strokeWidth="1" stroke="#333" />
+        <text x={pos0 + v} y="90" textAnchor="middle" fill="#333">{v.toFixed(0)}</text>
+      </g>
+    ));
 
-  return (
-    <div width={ width } height={ height }
-      style={{
-        backgroundColor: "rgb(70, 130, 180, 0.3)",
-        textAlign: "center", font: "14px sans-serif", fontWeight: "normal"
-      }}>
-      <p style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
-        Consumo de energía primaria [kWh/m²·año]
-      </p>
-      <p>(k_exp: { kexp.toFixed(2) }, RER: { rer.toFixed(2) })</p>
-      <svg width="100%" height="100px" className={ className }
-        preserveAspectRatio="xMidYMin meet" viewBox={`0 0 ${ vbw } ${ vbh }`}
+    const gridstep = Math.max(maxlimit / 10, -minlimit / 10, 25);
+    const gridposmax = Array.from(Array(9), (v, i) => (i + 1) * gridstep).filter(v => v < maxlimit);
+    const gridposmin = Array.from(Array(9), (v, i) => -(i + 1) * gridstep).filter(v => v > minlimit);
+    const GridLines = gridposmin.concat(gridposmax).map((v, i) => (
+      <g key={`gridline_${i}`}>
+        <line x1={pos0 + v} y1="0" x2={pos0 + v} y2="75"
+          strokeWidth="0.5" stroke="#333" strokeDasharray="2,3" />
+        <text x={pos0 + v} y="90"
+          textAnchor="middle" fill="#555" fontSize="10px">{v.toFixed(0)}</text>
+      </g>
+    ));
+
+    return (
+      <div width={width} height={height}
         style={{
-          display: props.display || "inline-block",
-          padding: props.padding || 0,
-          font: "12px sans-serif"
+          backgroundColor: "rgb(70, 130, 180, 0.3)",
+          textAlign: "center", font: "14px sans-serif", fontWeight: "normal"
         }}>
-        <title id="title" fill="black">
-          Consumo de energía primaria (k_exp: { kexp.toFixed(2) }, RER: { rer.toFixed(2) })
+        <p style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
+          Consumo de energía primaria [kWh/m²·año]
+      </p>
+        <p>(k_exp: {kexp.toFixed(2)}, RER: {rer.toFixed(2)})</p>
+        <svg width="100%" height="100px" className={className}
+          preserveAspectRatio="xMidYMin meet" viewBox={`0 0 ${vbw} ${vbh}`}
+          style={{ display, padding, font: "12px sans-serif" }}>
+          <title id="title" fill="black">
+            Consumo de energía primaria (k_exp: {kexp.toFixed(2)}, RER: {rer.toFixed(2)})
         </title>
-        <desc id="desc">EP_total: { total.toFixed(2) }, EP_nren: { nren.toFixed(2) }, EP_ren: { ren.toFixed(2) }</desc>
-        <g transform={`translate(${ textw },0)`}>
-          { LimitAxis }
-          { GridLines }
-          { Bars }
-        </g>
-      </svg>
-    </div>
-  )
-};
-export default EPChart;
+          <desc id="desc">EP_total: {total.toFixed(2)}, EP_nren: {nren.toFixed(2)}, EP_ren: {ren.toFixed(2)}</desc>
+          <g transform={`translate(${textw},0)`}>
+            {LimitAxis}
+            {GridLines}
+            {Bars}
+          </g>
+        </svg>
+      </div>
+    )
+  }
+}
   
