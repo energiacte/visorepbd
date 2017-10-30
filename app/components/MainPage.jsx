@@ -109,7 +109,7 @@ class MainPageClass extends React.Component {
       .map(dd => ({ ...dd, active: true }));
     // TODO: preserve metadata roundtrip
     const cmeta = data.cmeta;
-    const m_Area_ref = cmeta.find(c => c.key === 'Area_ref');
+    const m_Area_ref = cmeta.find(c => c.key === 'CTE_AREAREF');
     const m_kexp = cmeta.find(c => c.key === 'kexp');
 
     const { dispatch, kexp, area } = this.props;
