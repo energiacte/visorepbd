@@ -110,7 +110,7 @@ class MainPageClass extends React.Component {
     // TODO: preserve metadata roundtrip
     const cmeta = data.cmeta;
     const m_Area_ref = cmeta.find(c => c.key === 'CTE_AREAREF');
-    const m_kexp = cmeta.find(c => c.key === 'kexp');
+    const m_kexp = cmeta.find(c => c.key === 'CTE_KEXP');
 
     const { dispatch, kexp, area } = this.props;
     dispatch(loadEnergyComponents(cdata));
@@ -124,11 +124,12 @@ class MainPageClass extends React.Component {
       .filter(e => e.active === true)
       .map(({ _active, ...rest }) => rest); // remove active key
 
-    // TODO: this doesn't preserve previous existing metadata
+    // TODO: this doesn't preserve existing metadata
     const metalines = [
       { type: 'META', key: 'App', value: 'VisorEPBD_1.0' },
-      { type: 'META', key: 'Area_ref', value: area },
-      { type: 'META', key: 'kexp', value: kexp }
+      { type: 'META', key: 'CTE_AREAREF', value: area },
+      { type: 'META', key: 'CTE_KEXP', value: kexp },
+      { type: 'META', key: 'CTE_LOCALIZACION', value: ''} //TODO:
     ];
     return serialize_components({ cdata: activecomponents, cmeta: metalines });
   }
