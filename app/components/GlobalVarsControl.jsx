@@ -15,7 +15,9 @@ export default class GlobalVarsControl extends React.Component {
                  defaultValue={ kexp }
                  onChange={ e => onChangeKexp(e.target.value) } />
           <input type="text" readOnly maxLength="3" size="3"
-                 value={ kexp.toFixed(1) } />
+                 value={ kexp.toFixed(1) }
+                 style={ kexp !== 0.0 ? { backgroundColor: "orange" }: null }
+                 title={ kexp !== 0.0 ? "Valor no reglamentario (kexp != 0)": null} />
         </div>
         <div id="area" className="form-group col-md-3">
           <label className="control-label" htmlFor="areaentry">Area<sub>ref</sub> (m²) </label>
