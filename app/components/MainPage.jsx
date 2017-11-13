@@ -14,6 +14,7 @@ const { parse_components } = cte;
 
 import { changeKexp,
          changeArea,
+         changeLocalizacion,
          cloneEnergyComponent,
          removeEnergyComponent,
          editEnergyComponent,
@@ -107,19 +108,21 @@ class MainPageClass extends React.Component {
     const data = parse_components(datastr);
     const cdata = data.cdata
       .map(dd => ({ ...dd, active: true }));
-    // TODO: preserve metadata roundtrip
+    // TODO: preserve metadata roundtrip, and RED1, RED2 and COGEN values
     const cmeta = data.cmeta;
     const m_Area_ref = cmeta.find(c => c.key === 'CTE_AREAREF');
     const m_kexp = cmeta.find(c => c.key === 'CTE_KEXP');
+    const m_localizacion = cmeta.find(c => c.key === 'CTE_LOCALIZACION');
 
-    const { dispatch, kexp, area } = this.props;
+    const { dispatch, kexp, area, localizacion } = this.props;
     dispatch(loadEnergyComponents(cdata));
     dispatch(changeArea(m_Area_ref ? m_Area_ref.value : area));
     dispatch(changeKexp(m_kexp ? m_kexp.value : kexp));
+    dispatch(changeLocalizacion(m_localizacion ? m_localizacion.value : localizacion));
   }
 
   downloadCarriers() {
-    const { kexp, area, components } = this.props;
+    const { kexp, area, localizacion, components } = this.props;
     const activecomponents = components
       .filter(e => e.active === true)
       .map(({ _active, ...rest }) => rest); // remove active key
@@ -129,7 +132,7 @@ class MainPageClass extends React.Component {
       { type: 'META', key: 'App', value: 'VisorEPBD_1.0' },
       { type: 'META', key: 'CTE_AREAREF', value: area },
       { type: 'META', key: 'CTE_KEXP', value: kexp },
-      { type: 'META', key: 'CTE_LOCALIZACION', value: ''} //TODO:
+      { type: 'META', key: 'CTE_LOCALIZACION', value: localizacion} //TODO:
     ];
     return serialize_components({ cdata: activecomponents, cmeta: metalines });
   }
