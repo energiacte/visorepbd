@@ -39,7 +39,7 @@ export default class EPChart extends React.Component {
     const textw = 70; // text area width
     const paddingw = 10; // left and right padding width
     // View size
-    const vbw = 2 * paddingw + textw + (maxlimit - minlimit);
+    // const vbw = 2 * paddingw + textw + (maxlimit - minlimit);
     const vbh = 4 * barheight;
     // Plot area size
     const plotw = svgwidth - textw - 2 * paddingw; // plot area width
