@@ -2,7 +2,6 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import reducer from 'reducers/reducers.js';
 import { cte } from 'epbdjs';
-const { CTE_FP } = cte;
 
 const initialState = {
   data: { ren: 0, nren: 0, total: 0, rer: 0 },
@@ -17,7 +16,8 @@ const initialState = {
   selectedkey: 0, // Currently selected component
   kexp: 0.0,
   area: 1,
-  wfactors: CTE_FP,
+  localizacion: 'PENINSULA',
+  wfactors: cte.new_wfactors('PENINSULA'),
   components: [ // Energy components array (ejemplo3PVBdC.csv)
     {
       active: true,

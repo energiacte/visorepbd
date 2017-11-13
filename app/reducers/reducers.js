@@ -7,6 +7,7 @@ import { SELECT_ENERGY_COMPONENT,
          LOAD_ENERGY_COMPONENTS,
          CHANGE_KEXP,
          CHANGE_AREA,
+         CHANGE_LOCALIZACION,
          EDIT_WFACTORS,
          RECEIVE_ENERGYDATA,
          CHANGE_CURRENTFILENAME } from '../actions/actions.js';
@@ -49,6 +50,15 @@ function area(state = 1, action) {
   switch (action.type) {
   case CHANGE_AREA:
     return Number(action.value);
+  default:
+    return state;
+  }
+}
+
+function localizacion(state = 'PENINSULA', action) {
+  switch (action.type) {
+  case CHANGE_LOCALIZACION:
+    return action.value;
   default:
     return state;
   }
@@ -149,6 +159,7 @@ export default combineReducers({
   selectedkey,
   kexp,
   area,
+  localizacion,
   wfactors,
   components,
   currentfilename

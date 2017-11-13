@@ -4,24 +4,37 @@ import { connect } from 'react-redux';
 import NavBar from 'components/NavBar';
 import Footer from 'components/Footer';
 
-import { editWFactors } from 'actions/actions.js';
+import { editWFactors, changeLocalizacion } from 'actions/actions.js';
+import { cte } from 'epbdjs';
+
+const CTELOCS = {'PENINSULA': 'Península', 'CANARIAS': 'Islas Canarias', 'BALEARES': 'Islas Baleares', 'CEUTAMELILLA': 'Ceuta y Melilla' };
 
 class WeightingFactorsPageClass extends React.Component {
   render() {
-    const { wfactors } = this.props;
-    const wfactors2 = wfactors.wdata.filter(e => !e.carrier.startsWith('RED'));
-    const red1 = wfactors.wdata.filter(e => e.carrier === 'RED1')[0];
-    const red2 = wfactors.wdata.filter(e => e.carrier === 'RED2')[0];
+    const { wfactors, localizacion } = this.props;
+    const wfactors2 = wfactors.wdata.filter(f => !f.carrier.startsWith('RED') && !(f.source === 'COGENERACION' && f.dest === 'to_grid' && f.step === 'A'));
+    const red1 = wfactors.wdata.find(f => f.carrier === 'RED1');
+    const red2 = wfactors.wdata.find(f => f.carrier === 'RED2');
+    const cog = wfactors.wdata.find(f => f.source === 'COGENERACION' && f.dest === 'to_grid' && f.step === 'A');
 
     return (
       <div>
         <NavBar match={ this.props.match } />
         <div className="container">
           <div className="page-header">
-            <h1>Factores de paso</h1>
+            <h1>Factores de paso <small>(de energía final a energía primaria)</small></h1>
             <p>Factores de conversión de energía final a energía primaria renovable y no renovable. Estos factores corresponden a los definidos en el Documento reconocido del RITE <a href="http://www.minetad.gob.es/energia/desarrollo/EficienciaEnergetica/RITE/Reconocidos/Reconocidos/Otros%20documentos/Factores_emision_CO2.pdf">Factores de emisión de CO2 y coeficientes de paso a energía primaria de diferentes fuentes de energía final consumidas en el sector de edificios en España</a>, que incluye los factores de paso de energía final a energía primaria y a emisiones.</p>
           </div>
-
+          <h3>Localización <small>(define los factores de paso reglamentarios)</small></h3>
+            <div className="form-group">
+              <select id="selectLocalizacion" className="form-control"
+                onChange={ e => this.handleLocalizacionChange(e) } value={ localizacion }>
+                <option value={ 'PENINSULA' }>{ CTELOCS['PENINSULA'] }</option>
+                <option value={ 'CANARIAS' }>{ CTELOCS['CANARIAS'] }</option>
+                <option value={ 'BALEARES' }>{ CTELOCS['BALEARES'] }</option>
+                <option value={ 'CEUTAMELILLA' }>{ CTELOCS['CEUTAMELILLA'] }</option>
+              </select>
+              </div>
           <h3>Factores definidos por el usuario</h3>
           <table id="weditor" className="table table-striped table-bordered table-condensed">
             <thead>
@@ -60,10 +73,25 @@ class WeightingFactorsPageClass extends React.Component {
                   />
                 </td>
               </tr>
+              <tr>
+                <td>ELECTRICIDAD</td><td>COGENERACION</td><td>to_grid</td><td>A</td>
+                <td>
+                  <input type="text" id="red2ren"
+                         defaultValue={ cog.ren.toFixed(3) }
+                         onChange={ e => this.handleChange('ELECTRICIDADCOGEN', 'ren', e) }
+                  />
+                </td>
+                <td>
+                  <input type="text" contentEditable id="red2nren"
+                         defaultValue={ cog.nren.toFixed(3) }
+                         onChange={ e => this.handleChange('ELECTRICIDADCOGEN', 'nren', e) }
+                  />
+                </td>
+              </tr>
             </tbody>
           </table>
 
-          <h3>Factores definidos reglamentariamente</h3>
+          <h3>Factores definidos reglamentariamente <small>(para la localización &quot;{ CTELOCS[localizacion] }&quot;)</small></h3>
           <table id="components" className="table table-striped table-bordered table-condensed">
             <thead>
               <tr>
@@ -122,16 +150,37 @@ class WeightingFactorsPageClass extends React.Component {
     if (isNaN(newvalue)) return;
     const { wfactors, dispatch } = this.props;
     const { wmeta, wdata } = wfactors;
-    const vecobj = wdata.find(f => f.carrier === vec);
-    const otherveclist = wdata.filter(f => f.carrier !== vec);
+    let vecobj, otherveclist;
+    if (vec==='ELECTRICIDADCOGEN') {
+      vecobj = wdata.find(f => f.source === 'COGENERACION' && f.dest === 'to_grid');
+      otherveclist = wdata.filter(f => f.source !== 'COGENERACION' && f.dest !=='to_grid');
+    } else {
+      vecobj = wdata.find(f => f.carrier === vec);
+      otherveclist = wdata.filter(f => f.carrier !== vec);
+    }
     vecobj[factor] = newvalue;
     dispatch(editWFactors({ wmeta, wdata: [...otherveclist, vecobj] }));
+  }
+
+  handleLocalizacionChange(e) {
+    const loc = e.target.value;
+    const { wfactors, dispatch } = this.props;
+    const red1 = wfactors.wdata.find(f => f.carrier === 'RED1');
+    const red2 = wfactors.wdata.find(f => f.carrier === 'RED2');
+    const cog = wfactors.wdata.find(f => f.source === 'COGENERACION' && f.dest === 'to_grid' && f.step === 'A');
+    dispatch(changeLocalizacion(loc))
+    const newfactors = cte.new_wfactors(loc, {
+      cogen: { to_grid: { ren: cog.ren, nren: cog.nren }, to_nEPB: { ren: cog.ren, nren: cog.nren } },
+      RED1: { ren: red1.ren, nren: red1.nren }, RED2: { ren: red2.ren, nren: red2.nren }
+    });
+    dispatch(editWFactors(newfactors))
   }
 }
 
 const WeightingFactorsPage = connect(state => {
   return {
-    wfactors: state.wfactors
+    wfactors: state.wfactors,
+    localizacion: state.localizacion
   };
 })(WeightingFactorsPageClass);
 
