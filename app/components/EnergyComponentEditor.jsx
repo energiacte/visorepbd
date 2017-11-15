@@ -179,9 +179,9 @@ export default class EnergyComponentEditor extends React.Component {
                 />
               </div>
             </div>
-            <button className="col-md-2 btn btn-default pull-right" id="modify" type="button"
+            <button className="col-md-4 btn btn-info pull-right" id="modify" type="button"
                   onClick={() => this.handleRestore()}>
-                  <span className="glyphicon glyphicon-repeat"/> Restaurar
+                  <span className="glyphicon glyphicon-repeat"/> Restaurar a valores iniciales
             </button>
         </form>
 
