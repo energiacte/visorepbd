@@ -1,6 +1,6 @@
 // Import React and JS
 import React from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
@@ -16,14 +16,14 @@ import AboutPage from 'components/AboutPage.jsx';
 // Render
 ReactDOM.render(
   <Provider store={store} >
-    <HashRouter>
+    <BrowserRouter>
       <Switch>
         <Route exact path="/weightingfactors" component={ WeightingFactorsPage }/>
         <Route exact path="/help" component={ HelpPage }/>
         <Route exact path="/about" component={ AboutPage }/>
         <Route exact path="/" component={ MainPage }/>
       </Switch>
-    </HashRouter>
+    </BrowserRouter>
   </Provider>,
   document.body.appendChild(document.createElement('div'))
 );
