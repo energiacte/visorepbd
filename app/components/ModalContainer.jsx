@@ -28,7 +28,7 @@ const ModalContainer = props => {
         { props.children }
         <div className="footer">
           <button className="btn btn-primary" id="closemodal" type="button" onClick={ props.onClose }>
-          <span className="glyphicon glyphicon-ok"/> Close</button>
+          <span className="glyphicon glyphicon-ok"/> Cerrar</button>
         </div>
       </div>
     </div>
