@@ -5,7 +5,7 @@ import Footer from 'components/Footer';
 import esquema_0pasos from 'img/esquema_0pasos.svg';
 import esquema_1balance from 'img/esquema_1balance.svg';
 import esquema_2ponderacion from 'img/esquema_2ponderacion.svg';
-import esquema_3resultados from 'img/esquema_3resultados.svg';
+import esquema_3resultados from 'img/esquema_3resultados.png';
 import interfaz_general from 'img/interfaz/general.png';
 import interfaz_menu from 'img/interfaz/menu.png';
 import interfaz_parametrosgenerales from 'img/interfaz/parametrosgenerales.png';
@@ -194,7 +194,7 @@ const HelpPage = props => (
         <p>VisorEPBD se alimenta de entradas externas que consisten en:</p>
 
         <ul>
-          <li><strong>Parámetros generales</strong> (factores de resuministro y exportación, factores de paso, duración del intervalo de cálculo y del paso de cálculo);</li>
+          <li><strong>Parámetros generales</strong> (factor de exportación, factores de paso, duración del intervalo de cálculo y del paso de cálculo);</li>
           <li>Valores de <strong>consumo</strong> y <strong>producción</strong> de <strong>energía final</strong> en cada intervalo de cálculo, por vector energético, obtenidos mediante procedimientos de simulación energético o de mediciones.</li>
         </ul>
 
@@ -214,13 +214,11 @@ const HelpPage = props => (
 
         <p>En esta etapa <i>VisorEPBD</i> obtiene, a partir de los datos de energía final consumida y producida <i>in situ</i> para cada intervalo de cálculo, un balance de la energía suministrada (por las redes de suministro o el medioambiente) al edificio (energía importada al edificio) y la energía exportada por el edificio en cada intervalo de cálculo.</p>
 
-        <p>Un parámetro global que influye en este balance, es el <b>factor de resuministro</b>, <b>k<sub>rdel</sub></b>, que controla qué fracción de la energía producida y no consumida (exportada) en otros intervalos de tiempo puede resuministrarse al edificio, siendo la restante finalmente exportada a la red.</p>
-
         <div className="well alert-info">
           <p>El <b>intervalo de cálculo</b> determina la granularidad de los datos de entrada (p.e. mensual) para el proceso de evaluación de la eficiencia energética y no necesariamente se correponde con la que se ha empleado para su obtención o para la simulación energética (p.e. horaria). El <b>paso de cálculo</b> suele ser, casi siempre, anual.</p>
         </div>
 
-        <img className="img-responsive col-md-offset-2" src={esquema_1balance} />
+        <img className="img-responsive col-md-offset-2 col-md-8" src={esquema_1balance} />
 
         <h4>Ponderación de la energía suministrada y exportada</h4>
 
@@ -230,7 +228,7 @@ const HelpPage = props => (
 
         <p>En la consideración del <i>paso B</i> interviene otro parámetro global, el <b>factor de exportación</b>, <b>k<sub>exp</sub></b>, que determina la fracción de la energía finalmente exportada que se tiene en cuenta para evaluar el impacto en la red.</p>
 
-        <img className="img-responsive col-md-offset-2" src={esquema_2ponderacion} />
+        <img className="img-responsive col-md-offset-2 col-md-8" src={esquema_2ponderacion} />
 
         <div className="well alert-info">
           <p>En el contexto reglamentario del <i>CTE DB-HE</i> la ponderación utilizada está orientada a la obtención de <b>energía primaria</b> y, en la <i>Certificación energética</i>, también de las <b>emisiones de CO<sub>2e</sub></b>.</p>
@@ -244,7 +242,7 @@ const HelpPage = props => (
 
         <p>Los indicadores (como el consumo de energía primaria) pueden, a su vez, descomponerse en la fracción procedente de fuentes renovables y la procedente de fuentes no renovables.</p>
 
-        <img className="img-responsive col-md-offset-2" src={esquema_3resultados} />
+        <img className="img-responsive col-md-offset-2 col-md-8" src={esquema_3resultados} />
       </div>
 
       <hr />
