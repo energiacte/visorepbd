@@ -1,5 +1,4 @@
-import thunk from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore } from 'redux';
 import reducer from 'reducers/reducers.js';
 import { cte } from 'epbdjs';
 
@@ -62,6 +61,5 @@ const initialState = {
 
 export default createStore(
   reducer,
-  initialState,
-  applyMiddleware(thunk)
+  initialState
 );
