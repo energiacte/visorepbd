@@ -1,6 +1,7 @@
 import React from 'react';
 
 import EnergyComponentChart from 'components/EnergyComponentChart';
+import ValuesEditor from 'components/ValuesEditor';
 import { cte } from 'epbdjs';
 const { CTE_VALIDDATA } = cte;
 
@@ -141,6 +142,11 @@ export default class EnergyComponentEditor extends React.Component {
               </div>
             </div>
 
+            <ValuesEditor
+              values={ components[selectedkey].values }
+              onEdit={ vals => this.handleEditValues(vals) }
+            />
+
             <div className="form-group">
               <label className="col-md-2 control-label"
                      htmlFor="totalenergyrange">E.Total</label>
@@ -200,6 +206,14 @@ export default class EnergyComponentEditor extends React.Component {
     this.setState({ commentOnEdit: false });
     currentcomponent.comment = newComment;
     onEdit(selectedkey, currentcomponent);
+  }
+
+  handleEditValues(vals) {
+    const { selectedkey, components } = this.props;
+    const currentcomponent = { ...components[selectedkey] };
+    currentcomponent.values = vals;
+    this.props.onEdit(selectedkey, currentcomponent);
+    this.totalEnergyEntry.value = vals.reduce((a, b) => a + b, 0);
   }
 
   // Handle changes in ctype, csubtype and carrier select boxes
