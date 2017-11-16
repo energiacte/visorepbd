@@ -83,8 +83,7 @@ export default class EnergyComponentEditor extends React.Component {
 
     return (
       <div id="energycomponenteditor" className="panel-body" key={ 'selected' + selectedkey } >
-        <form className="form-horizontal"
-              onSubmit={ e => e.preventDefault() }>
+        <form className="form-horizontal" onSubmit={ e => e.preventDefault() }>
             <div className="form-group">
               <label className="col-md-2 control-label"
                      htmlFor="selectctype">Tipo</label>
