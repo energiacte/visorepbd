@@ -239,10 +239,10 @@ var config = {
         loader: 'file-loader?name=img/[name]-[hash:8].[ext]' },
       // Bootstrap 3
       { test: /bootstrap-sass\/assets\/javascripts\//,
-        loader: 'imports?jQuery=jquery' },
+        loader: 'imports-loader?jQuery=jquery' },
       // Bootstrap 4
       { test: /bootstrap\/build\/js\/umd\//,
-        loader: 'imports?jQuery=jquery' }
+        loader: 'imports-loader?jQuery=jquery' }
     ]
   },
   plugins: plugins,
