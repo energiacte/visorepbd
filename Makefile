@@ -16,7 +16,7 @@ buildjs:
 	npm run buildprod
 
 buildprodjs:
-	$(info [INFO]: Generando bundle JS de producción con prefijo de URL)
+	$(info [INFO]: Generando bundle JS de producción con prefijo de URL $(EPBDURLPREFIX))
 	EPBDURLPREFIX=${EPBDURLPREFIX} make buildjs
 
 # antes hacer un git pull
