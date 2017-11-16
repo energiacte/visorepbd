@@ -22,7 +22,7 @@ buildprodjs:
 # antes hacer un git pull
 update: ${REPODIR}/package.json
 	$(info [INFO]: actualizando dependencias)
-	cd ${REPODIR} && yarn
+	cd ${REPODIR} && npm install
 	$(info [INFO]: actualización del proyecto completada. Complete la operación con $ sudo make restart)
 
 restart: ${RESDIR}/${NGINXCONF}
@@ -35,8 +35,8 @@ npminstall:
 	$(info [INFO]: Instalación de nodejs y dependencias JS)
 	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 	sudo apt-get install -y nodejs
-	sudo npm install -g eslint babel-eslint eslint-plugin-react http-server webpack webpack-dev-server yarn
-	yarn
+	sudo npm install -g eslint babel-eslint eslint-plugin-react http-server webpack webpack-dev-server
+	npm install
 
 .PHONY: analyze
 analyze:
