@@ -85,111 +85,109 @@ export default class EnergyComponentEditor extends React.Component {
     return (
       <div id="energycomponenteditor" className="panel-body" key={ 'selected' + selectedkey } >
         <form className="form-horizontal" onSubmit={ e => e.preventDefault() }>
-            <div className="form-group">
-              <label className="col-md-2 control-label"
-                     htmlFor="selectctype">Tipo</label>
-              <div className="col-md-10">
-                <select id="selectctype"
-                        name="selectctype" className="form-control"
-                        onChange={ e => this.handleChange(e) }
-                        value={ ctype } >
-                  { ctypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
-                </select>
-              </div>
+          <div className="form-group">
+            <label className="col-md-2 control-label"
+              htmlFor="selectctype">Tipo</label>
+            <div className="col-md-10">
+              <select id="selectctype"
+                name="selectctype" className="form-control"
+                onChange={ e => this.handleChange(e) }
+                value={ ctype } >
+                {ctypevalues.map(val => <option key={ val } value={ val }>{ val }</option>)}
+              </select>
             </div>
+          </div>
 
-            <div className="form-group">
-              <label className="col-md-2 control-label"
-                     htmlFor="selectcsubtype">Subtipo</label>
-              <div className="col-md-10">
-                <select id="selectcsubtype"
-                        name="selectcsubtype" className="form-control"
-                        onChange={ e => this.handleChange(e) }
-                        value={ csubtype } >
-                  { csubtypevalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
-                </select>
-              </div>
+          <div className="form-group">
+            <label className="col-md-2 control-label"
+              htmlFor="selectcsubtype">Subtipo</label>
+            <div className="col-md-10">
+              <select id="selectcsubtype"
+                name="selectcsubtype" className="form-control"
+                onChange={ e => this.handleChange(e) }
+                value={ csubtype } >
+                {csubtypevalues.map(val => <option key={ val } value={ val }>{ val }</option>)}
+              </select>
             </div>
+          </div>
 
-            <div className="form-group">
-              <label className="col-md-2 control-label"
-                     htmlFor="selectcarrier">Vector</label>
-              <div className="col-md-10">
-                <select id="selectcarrier"
-                        name="selectcarrier" className="form-control"
-                        onChange={ e => this.handleChange(e) }
-                        value={ carrier }>
-                  { carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>) }
-                </select>
-              </div>
+          <div className="form-group">
+            <label className="col-md-2 control-label"
+              htmlFor="selectcarrier">Vector</label>
+            <div className="col-md-10">
+              <select id="selectcarrier"
+                name="selectcarrier" className="form-control"
+                onChange={ e => this.handleChange(e) }
+                value={ carrier }>
+                {carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>)}
+              </select>
             </div>
+          </div>
 
-            <div className="form-group">
-              <label className="col-md-2 control-label"
-                     htmlFor="selectcurve">Curva</label>
-              <div className="col-md-10">
-                <select ref={ ref => this.CurveSelect = ref }
-                        name="selectcurve" className="form-control"
-                        style={{ width: '50%', display: 'inline-block', verticalAlign: 'top' }}
-                        defaultValue={ CURVENAMES[0] }
-                        onChange={ _e => this.updateValues() }>
-                  { CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>) }
-                </select>
-                <EnergyComponentChart ctype={ ctype }
-                                      maxvalue={ Math.max(...values) }
-                                      data={ data }
-                                      width="50%" height="34px" />
-              </div>
+          <div className="form-group">
+            <label className="col-md-2 control-label"
+              htmlFor="selectcurve">Curva</label>
+            <div className="col-md-10">
+              <select ref={ ref => this.CurveSelect = ref }
+                name="selectcurve" className="form-control"
+                style={{ width: '50%', display: 'inline-block', verticalAlign: 'top' }}
+                defaultValue={ CURVENAMES[0] }
+                onChange={ _ => this.updateValues() }>
+                {CURVENAMES.map(val => <option key={ val } value={ val }>{ val }</option>)}
+              </select>
+              <EnergyComponentChart ctype={ ctype }
+                maxvalue={ Math.max(...values) }
+                data={ data }
+                width="50%" height="34px" />
             </div>
+          </div>
 
-            <ValuesEditor
-              values={ components[selectedkey].values }
-              onEdit={ vals => this.handleEditValues(vals) }
-            />
+          <ValuesEditor
+            values={ components[selectedkey].values }
+            onEdit={ vals => this.handleEditValues(vals) } />
 
-            <div className="form-group">
-              <label className="col-md-2 control-label"
-                     htmlFor="totalenergyrange">E.Total</label>
-              <div className="col-md-10">
-                <input className="form-control col-md-5"
-                       ref={ ref => this.totalEnergyRange = ref }
-                       name="totalenergyrange"
-                       type="range"
-                       min="0"
-                       max={ Math.max(10, 10 + 1.5 * Math.round(currenttotalenergy / 5) * 5) }
-                       step="5"
-                       style={{ width:'50%' }}
-                       defaultValue={ currenttotalenergy }
-                       onChange={ e => this.handleChangeTotalEnergyRange(e) } />
-                <input className="form-control col-md-5"
-                       ref={ ref => this.totalEnergyEntry = ref }
-                       name="totalenergyentry"
-                       type="text"
-                       style={ { width: '50%', background: this.state.totalenergyOnEdit ? '#fcf8c3' : '' } }
-                       defaultValue={ currenttotalenergy.toFixed(2) }
-                       onKeyDown={ e => this.handleChangeTotalEnergyEntry(e) }/>
-              </div>
+          <div className="form-group">
+            <label className="col-md-2 control-label"
+              htmlFor="totalenergyrange">E.Total</label>
+            <div className="col-md-10">
+              <input className="form-control col-md-5"
+                ref={ ref => this.totalEnergyRange = ref }
+                name="totalenergyrange"
+                type="range"
+                min="0"
+                max={ Math.max(10, 10 + 1.5 * Math.round(currenttotalenergy / 5) * 5) }
+                step="5"
+                style={ { width: '50%' } }
+                defaultValue={ currenttotalenergy }
+                onChange={ e => this.handleChangeTotalEnergyRange(e) } />
+              <input className="form-control col-md-5"
+                ref={ ref => this.totalEnergyEntry = ref }
+                name="totalenergyentry"
+                type="text"
+                style={ { width: '50%', background: this.state.totalenergyOnEdit ? '#fcf8c3' : '' } }
+                defaultValue={ currenttotalenergy.toFixed(2) }
+                onKeyDown={ e => this.handleChangeTotalEnergyEntry(e) } />
             </div>
+          </div>
 
-            <div className="form-group">
-              <label className="col-md-2 control-label"
-                     htmlFor="commentinput">Comentario</label>
-              <div className="col-md-10">
-                <input className={ "form-control" }
-                       name="commentinput"
-                       type="text"
-                       style={ { width: '100%', backgroundColor: this.state.commentOnEdit ? '#fcf8c3' : '' } }
-                       defaultValue={ comment || '' }
-                       onKeyDown={ e => this.handleChangeComment(e) }
-                />
-              </div>
+          <div className="form-group">
+            <label className="col-md-2 control-label"
+              htmlFor="commentinput">Comentario</label>
+            <div className="col-md-10">
+              <input className="form-control"
+                name="commentinput"
+                type="text"
+                style={ { width: '100%', backgroundColor: this.state.commentOnEdit ? '#fcf8c3' : '' } }
+                defaultValue={ comment || '' }
+                onKeyDown={ e => this.handleChangeComment(e) }
+              />
             </div>
-            <button className="col-md-4 btn btn-info pull-right" id="modify" type="button"
-                  onClick={() => this.handleRestore()}>
-                  <span className="glyphicon glyphicon-repeat"/> Restaurar a valores iniciales
-            </button>
+          </div>
+          <button className="col-md-4 btn btn-info pull-right" id="modify" type="button"
+            onClick={ _ => this.handleRestore() }>
+            <span className="glyphicon glyphicon-repeat" /> Restaurar a valores iniciales
+          </button>
         </form>
-
       </div>
     );
   }
