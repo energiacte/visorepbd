@@ -22,7 +22,7 @@ export default class NavBar extends React.Component {
                 <Link to="/"><span className="glyphicon glyphicon-home" aria-hidden="true"/> Inicio</Link>
               </li>
               <li className={ activeIfCurrent('/weightingfactors') } role="presentation">
-                <Link to="/weightingfactors">Factores de paso</Link>
+                <Link to="/weightingfactors"><span className="glyphicon glyphicon-oil" aria-hidden="true"/> Factores de paso</Link>
               </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
