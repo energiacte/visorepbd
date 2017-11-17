@@ -48,7 +48,7 @@ const HelpPage = props => (
 
         <p className="lead"><em>VisorEPBD</em> es una aplicación web de ayuda a la <strong>evaluación de la eficiencia energética de los edificios</strong> usando el procedimiento de la norma FprEN ISO 52000-1 y destinado a la <strong>aplicación del Documento Básico de Ahorro de Energía</strong> (DB-HE) del <strong>Código Técnico de la Edificación</strong> (CTE).</p>
 
-        <p>La aplicación <a href="https://github.com/energiacte/epbdcalc">EPBDcalc</a> proporciona una implementación alternativa del procedimiento para su uso desde la consola.</p>
+        <p>La aplicación <a href="https://github.com/energiacte/epbdjs-cli">cteepbd (epbdjs-cli)</a> proporciona una implementación alternativa del procedimiento para su uso desde la consola.</p>
       </div>
 
       <div className="row well bg-info" id="Indice">
