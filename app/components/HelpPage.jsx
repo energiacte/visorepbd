@@ -52,21 +52,21 @@ const HelpPage = props => (
       </div>
 
       <div className="row well bg-info" id="Indice">
-        <h2>Índice</h2>
-        <LinkId to='Interfaz'><h3>Interfaz de la herramienta <i>VisorEPBD</i></h3></LinkId>
-        <LinkId to='Interfaz1'><h4>Organización general</h4></LinkId>
-        <LinkId to='Interfaz2'><h4>Menú de navegación</h4></LinkId>
-        <LinkId to='Interfaz3'><h4>Sección <i>Inicio</i></h4></LinkId>
-        <LinkId to='Interfaz4'><h4>Sección <i>Factores de paso</i></h4></LinkId>
-        <LinkId to='Interfaz5'><h4>Sección <i>Ayuda</i></h4></LinkId>
-        <LinkId to='Interfaz6'><h4>Sección <i>Créditos</i></h4></LinkId>
-        <LinkId to='Evaluacion'><h3>Evaluación de la eficiencia energética con VisorEPBD</h3></LinkId>
-        <LinkId to='Evaluacion1'><h4>Etapas de evaluación de la eficiencia energética</h4></LinkId>
-        <LinkId to='Evaluacion2'><h4>Proceso de cálculo del <i>VisorEPBD</i></h4></LinkId>
-        <LinkId to='Uso'><h3>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h3></LinkId>
-        <LinkId to='Uso1'><h4>Predimensionado de soluciones</h4></LinkId>
-        <LinkId to='Uso2'><h4>Introducción de sistemas en <i>VisorEPBD</i></h4></LinkId>
-        <LinkId to='Uso3'><h4>Estimación de la de la energía final a partir de la demanda</h4></LinkId>
+        <h3>Índice</h3>
+        <LinkId to='Interfaz'><h4>Interfaz de <i>VisorEPBD</i></h4></LinkId>
+        <LinkId to='Interfaz1'><p>Organización general</p></LinkId>
+        <LinkId to='Interfaz2'><p>Menú de navegación</p></LinkId>
+        <LinkId to='Interfaz3'><p>Sección <i>Inicio</i></p></LinkId>
+        <LinkId to='Interfaz4'><p>Sección <i>Factores de paso</i></p></LinkId>
+        <LinkId to='Interfaz5'><p>Sección <i>Ayuda</i></p></LinkId>
+        <LinkId to='Interfaz6'><p>Sección <i>Créditos</i></p></LinkId>
+        <LinkId to='Evaluacion'><h4>Evaluación de la eficiencia energética con <i>VisorEPBD</i></h4></LinkId>
+        <LinkId to='Evaluacion1'><p>Etapas de evaluación de la eficiencia energética</p></LinkId>
+        <LinkId to='Evaluacion2'><p>Proceso de cálculo del <i>VisorEPBD</i></p></LinkId>
+        <LinkId to='Uso'><h4>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h4></LinkId>
+        <LinkId to='Uso1'><p>Predimensionado de soluciones</p></LinkId>
+        <LinkId to='Uso2'><p>Introducción de sistemas en <i>VisorEPBD</i></p></LinkId>
+        <LinkId to='Uso3'><p>Estimación de la de la energía final a partir de la demanda</p></LinkId>
       </div>
       <hr />
 
