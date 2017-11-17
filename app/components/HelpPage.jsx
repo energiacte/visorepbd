@@ -71,20 +71,18 @@ const HelpPage = props => (
       <hr />
 
       <div className="row">
-        <a id="Interfaz" /><h2>Interfaz de la herramienta <i>VisorEPBD</i></h2>
+        <a id="Interfaz" /><h2 className="help-header">Interfaz de la herramienta <i>VisorEPBD</i></h2>
 
         <a id="Interfaz1" /><h3>Organización general <ScrollToIndex/></h3>
 
+        <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_general} />
         <p>La pantalla de la aplicación se organiza mediante un menú y un espacio que se modifica en función de la sección que se encuentre activada.</p>
         <p>En la imagen siguiente se muestra la sección principal o de <i>Inicio</i>.</p>
 
-        <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_general} />
-
         <a id="Interfaz2" /><h3>Menú de navegación <ScrollToIndex/></h3>
 
-        <p>El menú permite cambiar la sección sobre la que se trabaja, pudiendo activarse las secciones de <i>Inicio</i>, <i>Factores de paso</i>, <i>Ayuda</i> y <i>Créditos</i>.</p>
-
         <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_menu} /></p>
+        <p>El menú permite cambiar la sección sobre la que se trabaja, pudiendo activarse las secciones de <i>Inicio</i>, <i>Factores de paso</i>, <i>Ayuda</i> y <i>Créditos</i>.</p>
 
         <a id="Interfaz3" /><h3>Sección <i>Inicio</i> <ScrollToIndex/></h3>
 
@@ -92,59 +90,58 @@ const HelpPage = props => (
 
         <h4>Parámetros generales</h4>
 
-        <p>Esta pestaña permite definir y modificar los parámetros generales de cálculo, tanto el <b>factor de exportación</b> (<b>k<sub>exp</sub></b>), como el <b>factor de resuministro</b> (<b>k<sub>exp</sub></b>) y el <b>área de referencia</b>.</p>
-
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_parametrosgenerales} />
-
-        <h4>Líneas de valores energéticos</h4>
-
-        <p>Esta lista muestra información sobre las <b>líneas de valores</b> de consumo y producción <i>in situ</i> del edificio (expresadas en términos de energía final) sobre las que se realizarán los cálculos. Permite también seleccionar la línea activa para su modificación en el editor.</p>
-
-        <p>Cada línea dispone de las siguientes columnas:</p>
-
-        <ul>
-          <li>Activación: permite activar o desactivar la línea en el cálculo</li>
-          <li>Tipo: define si se trata de una línea de valores de tipo <tt>CONSUMO</tt> o <tt>PRODUCCION</tt></li>
-          <li>Origen/Uso: define el origen de la energía producida o el uso de la energía consumida</li>
-          <li>kWh/año: muestra la suma de todos los valores de la línea</li>
-          <li>kWh/año/m2: muestra la suma de todos los valores de la línea repercutida por el área de referencia</li>
-          <li>Valores: muestra un histograma con los valores de la línea (a lo largo del periodo de cálculo)</li>
-          <li>Comentario: muestra un comentario descriptivo de la línea.</li>
-        </ul>
-
-        <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_lineasvalores} />
-
-        <p>Las líneas de tipo <tt>CONSUMO</tt> se muestran en color azul y las de tipo <tt>PRODUCCION</tt> en color negro.</p>
-
-        <h4>Editor de la línea de valores seleccionada</h4>
-
-        <p>El panel de edición permite modificar los datos de la línea de valores actualmente seleccionada.</p>
-
-        <p>Se pueden cambiar el <b>tipo</b> de valores (<tt>CONSUMO</tt> o <tt>PRODUCCION</tt>), el <b>origen</b> (<tt>COGENERACION</tt> o <tt>INSITU</tt>, para líneas de tipo <tt>PRODUCCION</tt>) o <b>uso</b> (<tt>EPB</tt> o <tt>NEPB</tt>, para líneas de tipo <tt>CONSUMO</tt>) y el <b>vector</b> energético.</p>
-
-        <p>El desplegable <b>Curva</b> permite modificar la forma de la línea de valores (que se ve a su derecha), manteniendo la forma actual o estableciendo una forma distinta (constante, creciente, decreciente, cóncava, convexa), manteniendo el valor agregado de la línea.</p>
-
-        <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_editor} /></p>
-
-        <p className="well alert-info">El interés de este apartado es exploratorio, al permitir modificar los datos de entrada.</p>
-
-        <p>La entrada de Energía total permite escalar los valores de la línea (manteniendo la forma) moviendo el deslizador lateral, introduciendo un valor o una expresión matemática simple (+-*/), debiendo presionar la tecla ENTER para aceptar el valor introducido.</p>
-
-        <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_entradavalorexpresion} /></p>
-
-        <p>La casilla de entrada de comentario permite introducir o modificar un comentario descriptivo de la línea de valores.</p>
-
-        <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_comentario} /></p>
+        <p>Esta pestaña permite definir y modificar los parámetros generales de cálculo, el <b>factor de exportación</b> (<b>k<sub>exp</sub></b>) y el <b>área de referencia</b>.</p>
 
         <h4>Diagrama de indicadores</h4>
 
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_indicadores} />
+        <p>El diagrama muestra los indicadores: <b>consumo de energía primaria total (<i>C<sub>ep,tot</sub></i>)</b>, <b>consumo de energía primaria no renovable (<i>C<sub>ep,nren</sub></i>)</b> y <b>consumo de energía primaria renovable (<i>C<sub>ep,ren</sub></i>)</b>, además de la fracción de energía renovable (<i>RER</i>) y el factor de exportación utilizado en el cálculo.</p>
+
+        <h4>Componentes energéticos</h4>
+
+        <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_lineasvalores} />
+        <p>Esta parte de la interfaz incluye una tabla con información sobre los <b>componentes de consumo y producción de energía</b> del edificio y una botonera con acciones para modificar los componentes energéticos de la tabla.</p>
+        <p>La tabla muestra en columnas la siguiente información sobre cada componente energético:</p>
+        <ul>
+          <li>(Activación): permite activar o desactivar la línea en el cálculo</li>
+          <li><b>Tipo</b>: define si se trata de un componente de tipo <tt>CONSUMO</tt> o <tt>PRODUCCION</tt></li>
+          <li><b>Subtipo</b>: define el origen de la energía producida o el uso de la energía consumida</li>
+          <li><b>Vector energético</b>: vector energético del componente</li>
+          <li><b>kWh/a</b>: muestra la energía final total del componente energético</li>
+          <li><b>kWh/m²·a</b>: muestra la energía final total del componente, repercutida por el área de referencia</li>
+          <li><b>Valores</b>: muestra un histograma de los valores mensuales de energía final del componente</li>
+          <li><b>Comentario</b>: muestra un comentario descriptivo del componente energético.</li>
+        </ul>
+        <p>Las líneas de tipo <tt>CONSUMO</tt> se muestran en color azul y las de tipo <tt>PRODUCCION</tt> en color negro, y se resalta la línea seleccionada.</p>
+        <p>La tabla de componentes energéticos dispone además de tres botones de acciones: 
+         <b><span className="glyphicon glyphicon-plus" /> Añadir</b>, <b><span className="glyphicon glyphicon-minus" /> Borrar</b> y <b><span className="glyphicon glyphicon-edit" /> Editar</b>,
+         que permiten, respectivamente, añadir un nuevo componente, borrar el componente seleccionado y editar el componente seleccionado.</p>
+
+        <h4>Editor del componente energético seleccionado (botón <b><span className="glyphicon glyphicon-edit" /> Editar</b>)</h4>
+
+        <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_editor} /></p>
+        <p className="well alert-warning">NOTA: El interés de este apartado es exploratorio, al permitir modificar los datos de entrada.</p>
+
+        <p>El panel de edición muestra una ventana que permite modificar los datos del componente energético actualmente seleccionado.</p>
+        <p>Se pueden cambiar el <b>tipo</b> de valores (<tt>CONSUMO</tt> o <tt>PRODUCCION</tt>), el <b>origen</b> (<tt>COGENERACION</tt> o <tt>INSITU</tt>, para líneas de tipo <tt>PRODUCCION</tt>) o <b>uso</b> (<tt>EPB</tt> o <tt>NEPB</tt>, para líneas de tipo <tt>CONSUMO</tt>) y el <b>vector</b> energético.</p>
+        <p>El desplegable <b>Curva</b> permite modificar la forma de la línea de valores del componente energético (que se muestra a su derecha), manteniendo la forma actual o estableciendo una forma distinta (constante, creciente, decreciente, cóncava, convexa), manteniendo el valor de energía (final) total del componente.</p>
+        <p>La entrada <b>Valores</b> permite modificar los valores de energía final de cada paso de cálculo (valores mensuales) editando una cadena de valores numéricos separados por comas.</p>
+        <p>La entrada de <b>Energía total</b> permite escalar los valores de cada paso de cálculo (valores mensuales) del componente energético, manteniendo su forma. Permite actuar moviendo el deslizador lateral o introduciendo un valor o una expresión matemática simple (+-*/), debiendo presionar la tecla ENTER para aceptar el valor introducido.</p>
+
+        <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_entradavalorexpresion} /></p>
+
+        <p>La casilla de entrada de comentario permite introducir o modificar un comentario descriptivo del componente energético.</p>
+
+        <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_comentario} /></p>
 
         <a id="Interfaz4" /><h3>Sección <i>Factores de paso</i> <ScrollToIndex/></h3>
 
-        <p>En esta sección se muestran los factores de paso usados en el cálculo, y se permite la edición de los factores de paso configurables por el usuario.</p>
-
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_factorespaso} />
+        <p>En esta sección se definen y muestran los factores de paso para el cálculo.</p>
+        <p>El apartado <b>Localización</b> permite elegir la localización del edificio (Península, Canarias, Baleares o Ceuta y Melilla), que determina los factores de paso reglamentarios.</p>
+        <p>El apartado <b>Factores definidos por el usuario</b> permite introducir los factores que no están determinados de forma reglamentaria, sino que deben ser aportados y justificados por el usuario.</p>
+        <p>El apartado <b>Factores definidos reglamentariamente</b> muestra los valores resultantes de la localización definida anteriormente.</p>
 
         <a id="Interfaz5" /><h3>Sección <i>Ayuda</i> <ScrollToIndex/></h3>
 
@@ -152,15 +149,15 @@ const HelpPage = props => (
 
         <a id="Interfaz6" /><h3>Sección <i>Créditos</i> <ScrollToIndex/></h3>
 
+        <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_creditos} />
         <p>En esta sección se muestran los créditos del programa y la licencia con la que se distribuye.</p>
 
-        <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_creditos} />
       </div>
 
       <hr />
 
       <div className="row">
-        <a id="Evaluacion" /><h2>Evaluación de la eficiencia energética con VisorEPBD</h2>
+        <a id="Evaluacion" /><h2 className="help-header">Evaluación de la eficiencia energética con VisorEPBD</h2>
 
         <a id="Evaluacion1" /><h3>Etapas de evaluación de la eficiencia energética <ScrollToIndex/></h3>
 
@@ -258,7 +255,7 @@ const HelpPage = props => (
       <hr />
 
       <div className="row">
-        <a id="Uso" /><h2>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h2>
+        <a id="Uso" /><h2 className="help-header">Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h2>
 
         <a id="Uso1" /><h3>Predimensionado de soluciones <ScrollToIndex/></h3>
 
