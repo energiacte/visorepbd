@@ -7,7 +7,6 @@ import esquema_1balance from 'img/esquema_1balance.svg';
 import esquema_2ponderacion from 'img/esquema_2ponderacion.svg';
 import esquema_3resultados from 'img/esquema_3resultados.png';
 import interfaz_general from 'img/interfaz/general.png';
-import interfaz_menu from 'img/interfaz/menu.png';
 import interfaz_parametrosgenerales from 'img/interfaz/parametrosgenerales.png';
 import interfaz_lineasvalores from 'img/interfaz/lineasvalores.png';
 import interfaz_editor from 'img/interfaz/editor.png';
@@ -53,36 +52,41 @@ const HelpPage = props => (
 
       <div className="row well bg-info" id="Indice">
         <h3>Índice</h3>
-        <LinkId to='Interfaz'><h4>Interfaz de <i>VisorEPBD</i></h4></LinkId>
-        <LinkId to='Interfaz1'><p>Organización general</p></LinkId>
-        <LinkId to='Interfaz2'><p>Menú de navegación</p></LinkId>
-        <LinkId to='Interfaz3'><p>Sección <i>Inicio</i></p></LinkId>
-        <LinkId to='Interfaz4'><p>Sección <i>Factores de paso</i></p></LinkId>
-        <LinkId to='Interfaz5'><p>Sección <i>Ayuda</i></p></LinkId>
-        <LinkId to='Interfaz6'><p>Sección <i>Créditos</i></p></LinkId>
-        <LinkId to='Evaluacion'><h4>Evaluación de la eficiencia energética con <i>VisorEPBD</i></h4></LinkId>
-        <LinkId to='Evaluacion1'><p>Etapas de evaluación de la eficiencia energética</p></LinkId>
-        <LinkId to='Evaluacion2'><p>Proceso de cálculo del <i>VisorEPBD</i></p></LinkId>
-        <LinkId to='Uso'><h4>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h4></LinkId>
-        <LinkId to='Uso1'><p>Predimensionado de soluciones</p></LinkId>
-        <LinkId to='Uso2'><p>Introducción de sistemas en <i>VisorEPBD</i></p></LinkId>
-        <LinkId to='Uso3'><p>Estimación de la de la energía final a partir de la demanda</p></LinkId>
+        <ul>
+          <li><LinkId to='Interfaz'><b>Interfaz de <i>VisorEPBD</i></b></LinkId>
+          <ul>
+            <li><LinkId to='Interfaz1'>Organización general y menú de navegación</LinkId></li>
+            <li><LinkId to='Interfaz3'>Sección <i>Inicio</i></LinkId></li>
+            <li><LinkId to='Interfaz4'>Sección <i>Factores de paso</i></LinkId></li>
+            <li><LinkId to='Interfaz5'>Sección <i>Ayuda</i></LinkId></li>
+            <li><LinkId to='Interfaz6'>Sección <i>Créditos</i></LinkId></li>
+          </ul>
+          </li>
+          <li><LinkId to='Evaluacion'><b>Evaluación de la eficiencia energética con <i>VisorEPBD</i></b></LinkId>
+          <ul>
+            <li><LinkId to='Evaluacion1'>Etapas de evaluación de la eficiencia energética</LinkId></li>
+            <li><LinkId to='Evaluacion2'>Proceso de cálculo del <i>VisorEPBD</i></LinkId></li>
+          </ul>
+          </li>
+          <li><LinkId to='Uso'><b>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</b></LinkId>
+          <ul>
+            <li><LinkId to='Uso1'>Predimensionado de soluciones</LinkId></li>
+            <li><LinkId to='Uso2'>Introducción de sistemas en <i>VisorEPBD</i></LinkId></li>
+            <li><LinkId to='Uso3'>Estimación de la de la energía final a partir de la demanda</LinkId></li>
+          </ul>
+          </li>
+        </ul>
       </div>
       <hr />
 
       <div className="row">
         <a id="Interfaz" /><h2 className="help-header">Interfaz de la herramienta <i>VisorEPBD</i></h2>
 
-        <a id="Interfaz1" /><h3>Organización general <ScrollToIndex/></h3>
+        <a id="Interfaz1" /><h3>Organización general y menú de navegación <ScrollToIndex/></h3>
 
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_general} />
         <p>La pantalla de la aplicación se organiza mediante un menú y un espacio que se modifica en función de la sección que se encuentre activada.</p>
-        <p>En la imagen siguiente se muestra la sección principal o de <i>Inicio</i>.</p>
-
-        <a id="Interfaz2" /><h3>Menú de navegación <ScrollToIndex/></h3>
-
-        <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_menu} /></p>
-        <p>El menú permite cambiar la sección sobre la que se trabaja, pudiendo activarse las secciones de <i>Inicio</i>, <i>Factores de paso</i>, <i>Ayuda</i> y <i>Créditos</i>.</p>
+        <p>El menú permite acceder a las secciones: <i>Inicio</i>, <i>Factores de paso</i>, <i>Ayuda</i> y <i>Créditos</i>, que se describen a continuación.</p>
 
         <a id="Interfaz3" /><h3>Sección <i>Inicio</i> <ScrollToIndex/></h3>
 
@@ -92,6 +96,7 @@ const HelpPage = props => (
 
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_parametrosgenerales} />
         <p>Esta pestaña permite definir y modificar los parámetros generales de cálculo, el <b>factor de exportación</b> (<b>k<sub>exp</sub></b>) y el <b>área de referencia</b>.</p>
+        <p>El botón &quot;<b><span className="glyphicon glyphicon-download" />&quot; Guardar datos</b> permite descargar en un archivo los datos de los componentes energéticos que se muestran en la aplicación, para poder recuperarlos en otro momento usando el botón &quot;<b><span className="glyphicon glyphicon-upload" /> Cargar datos</b>&quot;.</p>
 
         <h4>Diagrama de indicadores</h4>
 
