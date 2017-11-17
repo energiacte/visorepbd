@@ -106,7 +106,9 @@ const HelpPage = props => (
         <h4>Componentes energéticos</h4>
 
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_lineasvalores} />
-        <p>Esta parte de la interfaz incluye una tabla con información sobre los <b>componentes de consumo y producción de energía</b> del edificio y una botonera con acciones para modificar los componentes energéticos de la tabla.</p>
+        <p>Esta parte de la interfaz incluye una tabla con información sobre los <b>componentes de consumo y producción de energía</b> del edificio.</p>
+        <p>Aunque estos datos se obtendrán generalmente de una aplicación de cálculo energético (como la <i>Herramienta Unificada LIDER/CALENER</i>), se dispone de una botonera con acciones que permite añadir, eliminar o modificar componentes energéticos.</p>
+
         <p>La tabla muestra en columnas la siguiente información sobre cada componente energético:</p>
         <ul>
           <li>(Activación): permite activar o desactivar la línea en el cálculo</li>
@@ -126,7 +128,7 @@ const HelpPage = props => (
         <h4>Editor del componente energético seleccionado (botón <b><span className="glyphicon glyphicon-edit" /> Editar</b>)</h4>
 
         <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_editor} /></p>
-        <p className="well alert-warning">NOTA: El interés de este apartado es exploratorio, al permitir modificar los datos de entrada.</p>
+        <p className="well alert-danger">NOTA: El interés de este apartado es exploratorio, al permitir modificar los datos de entrada.</p>
 
         <p>El panel de edición muestra una ventana que permite modificar los datos del componente energético actualmente seleccionado.</p>
         <p>Se pueden cambiar el <b>tipo</b> de valores (<tt>CONSUMO</tt> o <tt>PRODUCCION</tt>), el <b>origen</b> (<tt>COGENERACION</tt> o <tt>INSITU</tt>, para líneas de tipo <tt>PRODUCCION</tt>) o <b>uso</b> (<tt>EPB</tt> o <tt>NEPB</tt>, para líneas de tipo <tt>CONSUMO</tt>) y el <b>vector</b> energético.</p>
