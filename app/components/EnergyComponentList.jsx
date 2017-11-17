@@ -29,8 +29,8 @@ export default class EnergyComponentList extends React.Component {
             <th>Tipo</th>
             <th className="col-md-1">Subtipo</th>
             <th className="col-md-3">Vector energético</th>
-            <th className="col-md-1">kWh/año</th>
-            <th className="col-md-1">kWh/año·m²</th>
+            <th className="col-md-1">kWh/a</th>
+            <th className="col-md-1">kWh/m²·a</th>
             <th className="col-md-1">Valores</th>
             <th className="col-md-4">Comentario</th>
           </tr>
