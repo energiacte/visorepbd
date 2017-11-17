@@ -28,6 +28,11 @@ import ejemplo2bdcdemanda from 'img/ejemplos/ejemplo2bdcdemanda.png';
 import ejemplo3cogenconsumo from 'img/ejemplos/ejemplo3cogenconsumo.png';
 import ejemplo3cogendemanda from 'img/ejemplos/ejemplo3cogendemanda.png';
 
+function scrollToId(e, id) {
+  e.preventDefault();
+  document.getElementById(id).scrollIntoView(true);
+  window.scrollBy(0, -40); // Adjust scrolling with a negative value here
+}
 
 const HelpPage = props => (
   <div>
@@ -41,42 +46,45 @@ const HelpPage = props => (
         <p>La aplicación <a href="https://github.com/energiacte/epbdcalc">EPBDcalc</a> proporciona una implementación alternativa del procedimiento para su uso desde la consola.</p>
       </div>
 
-      <div className="row">
+      <div className="row" id="Indice">
         <h2>Indice de la ayuda</h2>
-        <a href="#Interfaz"><h3>Interfaz de la herramienta <i>VisorEPBD</i></h3></a>
-        <a href="#Interfaz1"><h4>Organización general</h4></a>
-        <a href="#Interfaz2"><h4>Menú de navegación</h4></a>
-        <a href="#Interfaz3"><h4>Sección <i>Inicio</i></h4></a>
-        <a href="#Interfaz4"><h4>Sección <i>Factores de paso</i></h4></a>
-        <a href="#Interfaz5"><h4>Sección <i>Ayuda</i></h4></a>
-        <a href="#Interfaz6"><h4>Sección <i>Créditos</i></h4></a>
-        <a href="#Evaluacion"><h3>Evaluación de la eficiencia energética con VisorEPBD</h3></a>
-        <a href="#Evaluacion1"><h4>Etapas de evaluación de la eficiencia energética</h4></a>
-        <a href="#Evaluacion2"><h4>Proceso de cálculo del <i>VisorEPBD</i></h4></a>
-        <a href="#Uso"><h3>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h3></a>
-        <a href="#Uso1"><h4>Predimensionado de soluciones</h4></a>
-        <a href="#Uso2"><h4>Introducción de sistemas en <i>VisorEPBD</i></h4></a>
-        <a href="#Uso3"><h4>Estimación de la de la energía final a partir de la demanda</h4></a>
+        <a onClick={ e => scrollToId(e, 'Interfaz')  }><h3>Interfaz de la herramienta <i>VisorEPBD</i></h3></a>
+        <a onClick={ e => scrollToId(e, 'Interfaz1') }><h4>Organización general</h4></a>
+        <a onClick={ e => scrollToId(e, 'Interfaz2')  }><h4>Menú de navegación</h4></a>
+        <a onClick={ e => scrollToId(e, 'Interfaz3')  }><h4>Sección <i>Inicio</i></h4></a>
+        <a onClick={ e => scrollToId(e, 'Interfaz4')  }><h4>Sección <i>Factores de paso</i></h4></a>
+        <a onClick={ e => scrollToId(e, 'Interfaz5')  }><h4>Sección <i>Ayuda</i></h4></a>
+        <a onClick={ e => scrollToId(e, 'Interfaz6')  }><h4>Sección <i>Créditos</i></h4></a>
+        <a onClick={ e => scrollToId(e, 'Evaluacion')  }><h3>Evaluación de la eficiencia energética con VisorEPBD</h3></a>
+        <a onClick={ e => scrollToId(e, 'Evaluacion1')  }><h4>Etapas de evaluación de la eficiencia energética</h4></a>
+        <a onClick={ e => scrollToId(e, 'Evaluacion2')  }><h4>Proceso de cálculo del <i>VisorEPBD</i></h4></a>
+        <a onClick={ e => scrollToId(e, 'Uso')  }><h3>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h3></a>
+        <a onClick={ e => scrollToId(e, 'Uso1')  }><h4>Predimensionado de soluciones</h4></a>
+        <a onClick={ e => scrollToId(e, 'Uso2')  }><h4>Introducción de sistemas en <i>VisorEPBD</i></h4></a>
+        <a onClick={ e => scrollToId(e, 'Uso3')  }><h4>Estimación de la de la energía final a partir de la demanda</h4></a>
       </div>
       <hr />
 
       <div className="row">
-        <a name="Interfaz" /><h2>Interfaz de la herramienta <i>VisorEPBD</i></h2>
+        <a id="Interfaz" /><h2>Interfaz de la herramienta <i>VisorEPBD</i></h2>
 
-        <a name="Interfaz1" /><h3>Organización general</h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Interfaz1" /><h3>Organización general</h3>
 
         <p>La pantalla de la aplicación se organiza mediante un menú y un espacio que se modifica en función de la sección que se encuentre activada.</p>
         <p>En la imagen siguiente se muestra la sección principal o de <i>Inicio</i>.</p>
 
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_general} />
 
-        <a name="Interfaz2" /><h3>Menú de navegación</h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Interfaz2" /><h3>Menú de navegación</h3>
 
         <p>El menú permite cambiar la sección sobre la que se trabaja, pudiendo activarse las secciones de <i>Inicio</i>, <i>Factores de paso</i>, <i>Ayuda</i> y <i>Créditos</i>.</p>
 
         <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_menu} /></p>
 
-        <a name="Interfaz3" /><h3>Sección <i>Inicio</i></h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Interfaz3" /><h3>Sección <i>Inicio</i></h3>
 
         <p>Esta es la sección principal de trabajo, en la que se opera con los datos de entrada y los parámetros generales, a excepción de los factores de paso, que disponen de una sección propia.</p>
 
@@ -130,17 +138,20 @@ const HelpPage = props => (
 
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_indicadores} />
 
-        <a name="Interfaz4" /><h3>Sección <i>Factores de paso</i></h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Interfaz4" /><h3>Sección <i>Factores de paso</i></h3>
 
         <p>En esta sección se muestran los factores de paso usados en el cálculo, y se permite la edición de los factores de paso configurables por el usuario.</p>
 
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_factorespaso} />
 
-        <a name="Interfaz5" /><h3>Sección <i>Ayuda</i></h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Interfaz5" /><h3>Sección <i>Ayuda</i></h3>
 
         <p>Contiene esta información de ayuda sobre el funcionamiento del programa y su proceso de cálculo.</p>
 
-        <a name="Interfaz6" /><h3>Sección <i>Créditos</i></h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Interfaz6" /><h3>Sección <i>Créditos</i></h3>
 
         <p>En esta sección se muestran los créditos del programa y la licencia con la que se distribuye.</p>
 
@@ -150,9 +161,10 @@ const HelpPage = props => (
       <hr />
 
       <div className="row">
-        <a name="Evaluacion" /><h2>Evaluación de la eficiencia energética con VisorEPBD</h2>
+        <a id="Evaluacion" /><h2>Evaluación de la eficiencia energética con VisorEPBD</h2>
 
-        <a name="Evaluacion1" /><h3>Etapas de evaluación de la eficiencia energética</h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Evaluacion1" /><h3>Etapas de evaluación de la eficiencia energética</h3>
 
         <p><i>VisorEPBD</i> se basa en el procedimiento de evaluación de la eficiencia energética detallado en la norma <i>FprEN ISO 52000-1</i> para la obtención de indicadores de eficiencia energética.</p>
 
@@ -187,7 +199,8 @@ const HelpPage = props => (
           <li><b>Elaboración de los resultados</b> (pasos <i>j</i> a <l>l</l>): para la comunicación de resultados, incluyendo indicadores globales o parciales.</li>
         </ol>
 
-        <a name="Evaluacion2" /><h3>Proceso de cálculo del <i>VisorEPBD</i></h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Evaluacion2" /><h3>Proceso de cálculo del <i>VisorEPBD</i></h3>
 
         <h4>Entradas externas</h4>
 
@@ -248,9 +261,10 @@ const HelpPage = props => (
       <hr />
 
       <div className="row">
-        <a name="Uso" /><h2>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h2>
+        <a id="Uso" /><h2>Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño</h2>
 
-        <a name="Uso1" /><h3>Predimensionado de soluciones</h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Uso1" /><h3>Predimensionado de soluciones</h3>
 
         <p>Además de la evaluación energética de un edificio o proyecto particular, <i>VisorEPBD</i> puede usarse como herramienta de ayuda al diseño, con datos de demanda energética para evaluar el impacto de:</p>
         <ul>
@@ -259,7 +273,8 @@ const HelpPage = props => (
           <li>la producción <i>in situ</i> de energía renovable</li>
         </ul>
 
-        <a name="Uso2" /><h3>Introducción de sistemas en <i>VisorEPBD</i></h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Uso2" /><h3>Introducción de sistemas en <i>VisorEPBD</i></h3>
 
         <h4>Introducción de sistemas de un único vector energético</h4>
 
@@ -331,7 +346,8 @@ const HelpPage = props => (
         <pre>MEDIOAMBIENTE, CONSUMO, EPB, 1410.97, 1273.37, 1422.52, 1364.87, 1422.64, 1365.08, 1422.9, 1411.0, 1376.98, 1410.65, 1376.97, 1410.88 # ACS, Paneles solares térmicos
             </pre>
 
-        <a name="Uso3" /><h3>Estimación de la de la energía final a partir de la demanda</h3>
+        <a onClick={ e => scrollToId(e, 'Indice')  }><small>Regresar al índice</small></a>
+        <a id="Uso3" /><h3>Estimación de la de la energía final a partir de la demanda</h3>
         <h4>Demanda y rendimientos</h4>
 
         <p>Aunque para evaluar un edificio concreto es posible obtener datos de energía final mediante medición o simulación energética, resulta interesante poder evaluar distintas alternativas de diseño en fases previas de diseño y, específicamente, la <b>estimación de los consumos de energía final a partir de datos de demanda</b> y el <b>rendimiento medio de los sistemas</b>.</p>
