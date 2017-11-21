@@ -142,6 +142,7 @@ const MainPage = connect(state => {
   return {
     kexp: state.kexp,
     area: state.area,
+    localizacion: state.localizacion,
     data: state.data,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
