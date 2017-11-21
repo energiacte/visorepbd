@@ -1,4 +1,4 @@
-import { energy_performance } from 'epbdjs';
+import { energy_performance, cte } from 'epbdjs';
 
 /*
  * action types
@@ -80,10 +80,19 @@ export function computeEnergy() {
       cmeta: components.cmeta,
       cdata: components.cdata.filter(c => c.active)
     };
+    // Cálculo global
     const ep = energy_performance(componentsobj, wfactors, kexp, area);
     const { ren, nren } = ep.balance_m2.B;
     const total = ren + nren;
     const rer = (total === 0) ? 0 : ren / total;
-    dispatch(deliverEnergy({ ren, nren, total, rer }));
+    // Cálculo para ACS en perímetro próximo
+    const wfactors_nrb = cte.wfactors_to_nearby(wfactors);
+    const components_acs = cte.components_by_service(componentsobj, 'ACS');
+    const res_acs_nrb = energy_performance(components_acs, wfactors_nrb, kexp, area);
+    const { ren: ren_acs, nren: nren_acs } = res_acs_nrb.balance_m2.B;
+    const total_acs = ren_acs + nren_acs;
+    const rer_acs_nrb = (total_acs === 0) ? 0 : ren_acs / total_acs;
+    // Actualización
+    dispatch(deliverEnergy({ ren, nren, total, rer, rer_acs_nrb }));
   };
 }

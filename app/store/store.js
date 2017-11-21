@@ -4,7 +4,7 @@ import reducer from 'reducers/reducers.js';
 import { cte } from 'epbdjs';
 
 const initialState = {
-  data: { ren: 0, nren: 0, total: 0, rer: 0 },
+  data: { ren: 0, nren: 0, total: 0, rer: 0, rer_acs_nrb: 0 },
   storedcomponent: {
     active: true,
     carrier: "ELECTRICIDAD",

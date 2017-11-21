@@ -27,7 +27,7 @@ export default class EPChart extends React.Component {
       display = "inline-block", padding = 0,
       className = null, data, kexp
     } = this.props;
-    const { ren, nren, total, rer } = data;
+    const { ren, nren, total, rer, rer_acs_nrb } = data;
     const svgwidth = this.state.width;
 
     const steps = [0, 50, 100, 200, 300];
@@ -93,7 +93,7 @@ export default class EPChart extends React.Component {
         <p style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
           Consumo de energía primaria [kWh/m²·año]
         </p>
-        <p>(k_exp: { kexp.toFixed(2) }, RER: { rer.toFixed(2) })</p>
+        <p>(k_exp: { kexp.toFixed(2) }, RER: { rer.toFixed(2) }, RER<sub>ACS;nrb</sub>: { rer_acs_nrb.toFixed(2) })</p>
         <svg width={ svgwidth } height={ 4 * barheight } className={ className }
           preserveAspectRatio="xMidYMin meet" viewBox={`0 0 ${ svgwidth } ${ vbh }`}
           style={{ display, padding, font: "12px sans-serif" }}>
