@@ -76,8 +76,10 @@ export function computeEnergy() {
   // this async action also reads state
   return (dispatch, getState) => {
     const { kexp, area, components, wfactors } = getState();
-    const activecomponents = components.filter(component => component.active);
-    const componentsobj = { cmeta: [], cdata: activecomponents };
+    const componentsobj = {
+      cmeta: components.cmeta,
+      cdata: components.cdata.filter(c => c.active)
+    };
     const ep = energy_performance(componentsobj, wfactors, kexp, area);
     const { ren, nren } = ep.balance_m2.B;
     const total = ren + nren;

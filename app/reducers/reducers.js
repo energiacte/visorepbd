@@ -73,42 +73,45 @@ function wfactors(state = [], action) {
   }
 }
 
-function components(state = [], action) {
+function components(state = { cdata: [], cmeta: [] }, action) {
   let currlist;
 
   switch (action.type) {
   case ADD_ENERGY_COMPONENT:
-    return [... state, action.component];
+    return { cmeta: state.cmeta, cdata: [... state.cdata, action.component] };
   case CLONE_ENERGY_COMPONENT:
     if (action.id === null || state.length === 0) {
       const numelems = (state.length > 0 ) ? state[0].values.length : 12;
-      return [
-        ... state,
-        { active: true,
-          type: 'CARRIER',
-          ctype: 'PRODUCCION',
-          csubtype: 'INSITU',
-          carrier: 'ELECTRICIDAD',
-          values: new Array(numelems).fill(10),
-          comment: 'Comentario'
-        }
-      ];
+      return {
+        cmeta: state.cmeta,
+        cdata: [
+          ... state.cdata,
+          { active: true,
+            carrier: 'ELECTRICIDAD',
+            ctype: 'PRODUCCION',
+            csubtype: 'INSITU',
+            service: 'NDEF',
+            values: new Array(numelems).fill(1),
+            comment: 'Nuevo componente energético'
+          }
+        ]
+      };
     }
-    currlist = [...state];
+    currlist = [...state.cdata];
     currlist.splice(action.id + 1, 0, currlist[action.id]);
-    return currlist;
+    return { cmeta: state.cmeta, cdata: currlist };
   case REMOVE_ENERGY_COMPONENT:
-    if (state.length > 0) {
-      currlist = [... state];
+    if (state.cdata.length > 0) {
+      currlist = [...state.cdata];
       currlist.splice(action.id, 1);
-      return currlist;
+      return { cmeta: state.cmeta, cdata: currlist };
     }
     return state;
   case EDIT_ENERGY_COMPONENT:
-    if (action.id < state.length) {
-      currlist = [... state];
+    if (action.id < state.cdata.length) {
+      currlist = [...state.cdata];
       currlist[action.id] = action.newcomponent;
-      return currlist;
+      return { cmeta: state.cmeta, cdata: currlist };
     }
     return state;
   case LOAD_ENERGY_COMPONENTS:

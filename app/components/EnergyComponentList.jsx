@@ -28,19 +28,19 @@ export default class EnergyComponentList extends React.Component {
 
   // Seleccionar componente
   handleClick(i) {
-    const component = this.props.components[i];
+    const component = this.props.cdata[i];
     this.props.onSelect(i, component);
   }
 
   // Cambiar estado activo del componente
   handleChange(i) {
-    const component = this.props.components[i];
+    const component = this.props.cdata[i];
     this.props.onEdit(i, { ...component, active: !component.active });
   }
 
   render() {
-    const { components, selectedkey, area } = this.props;
-    const maxvalue = Math.max(...components.map(component => Math.max(...component.values)));
+    const { cdata, selectedkey, area } = this.props;
+    const maxvalue = Math.max(...cdata.map(component => Math.max(...component.values)));
 
     return (
       <div>
@@ -59,7 +59,7 @@ export default class EnergyComponentList extends React.Component {
           </tr>
         </thead>
           <tbody>
-            { components.map(
+            { cdata.map(
               (component, i) => {
                 const { active, ctype, csubtype, carrier, service, values, comment } = component;
                 const data = values.map((value, imes) => ({ Mes: imes, Valor: value }) );

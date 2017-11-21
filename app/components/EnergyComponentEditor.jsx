@@ -73,8 +73,8 @@ export default class EnergyComponentEditor extends React.Component {
   }
 
   render() {
-    const { selectedkey, components } = this.props;
-    const { carrier, ctype, csubtype, service, values, comment } = components[selectedkey];
+    const { selectedkey, cdata } = this.props;
+    const { carrier, ctype, csubtype, service, values, comment } = cdata[selectedkey];
     const ctypevalues = Object.keys(CTE_VALIDDATA);
     const csubtypevalues = Object.keys(CTE_VALIDDATA[ctype]);
     const carriervalues = CTE_VALIDDATA[ctype][csubtype];
@@ -156,7 +156,7 @@ export default class EnergyComponentEditor extends React.Component {
           </div>
 
           <ValuesEditor
-            values={ components[selectedkey].values }
+            values={ cdata[selectedkey].values }
             onEdit={ vals => this.handleEditValues(vals) } />
 
           <div className="form-group">
@@ -206,9 +206,9 @@ export default class EnergyComponentEditor extends React.Component {
   }
 
   handleChangeComment(e) {
-    const { selectedkey, components, onEdit } = this.props;
+    const { selectedkey, cdata, onEdit } = this.props;
     let newComment = e.target.value;
-    let currentcomponent = { ...components[selectedkey] };
+    let currentcomponent = { ...cdata[selectedkey] };
 
     if (e.keyCode !== 13) {
       if (newComment !== currentcomponent.comment) this.setState({ commentOnEdit: true });
@@ -220,8 +220,8 @@ export default class EnergyComponentEditor extends React.Component {
   }
 
   handleEditValues(vals) {
-    const { selectedkey, components } = this.props;
-    const currentcomponent = { ...components[selectedkey] };
+    const { selectedkey, cdata } = this.props;
+    const currentcomponent = { ...cdata[selectedkey] };
     currentcomponent.values = vals;
     this.props.onEdit(selectedkey, currentcomponent);
     this.totalEnergyEntry.value = vals.reduce((a, b) => a + b, 0);
@@ -230,10 +230,10 @@ export default class EnergyComponentEditor extends React.Component {
   // Handle changes in ctype, csubtype and carrier select boxes
   // It tries to keep coherent values
   handleChange(e) {
-    const { selectedkey, components, onEdit } = this.props;
+    const { selectedkey, cdata, onEdit } = this.props;
     let prop = e.target.name.replace(/^select/, '');
     let value = e.target.value;
-    let currentcomponent = { ...components[selectedkey] };
+    let currentcomponent = { ...cdata[selectedkey] };
 
     if (currentcomponent[prop] === value) { return; }
 
@@ -320,8 +320,8 @@ export default class EnergyComponentEditor extends React.Component {
 
   // Update current energycomponent values using editor UI state
   updateValues() {
-    const { selectedkey, components, onEdit } = this.props;
-    let currentcomponent = { ...components[selectedkey] };
+    const { selectedkey, cdata, onEdit } = this.props;
+    let currentcomponent = { ...cdata[selectedkey] };
     let newvalues = getValues(this.CurveSelect.value,
                               parseFloat(this.totalEnergyEntry.value.replace(',', '.')),
                               currentcomponent.values);
