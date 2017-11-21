@@ -3,7 +3,7 @@ import React from 'react';
 import EnergyComponentChart from 'components/EnergyComponentChart';
 import ValuesEditor from 'components/ValuesEditor';
 import { cte } from 'epbdjs';
-const { CTE_VALIDDATA } = cte;
+const { CTE_VALIDDATA, CTE_VALIDSERVICES } = cte;
 
 const CURVENAMES = ['ACTUAL', 'CONSTANTE', 'CONCAVA', 'CONVEXA', 'CRECIENTE', 'DECRECIENTE'];
 
@@ -74,7 +74,7 @@ export default class EnergyComponentEditor extends React.Component {
 
   render() {
     const { selectedkey, components } = this.props;
-    const { carrier, ctype, csubtype, values, comment } = components[selectedkey];
+    const { carrier, ctype, csubtype, service, values, comment } = components[selectedkey];
     const ctypevalues = Object.keys(CTE_VALIDDATA);
     const csubtypevalues = Object.keys(CTE_VALIDDATA[ctype]);
     const carriervalues = CTE_VALIDDATA[ctype][csubtype];
@@ -85,6 +85,19 @@ export default class EnergyComponentEditor extends React.Component {
     return (
       <div id="energycomponenteditor" className="panel-body" key={ 'selected' + selectedkey } >
         <form className="form-horizontal" onSubmit={ e => e.preventDefault() }>
+        <div className="form-group">
+            <label className="col-md-2 control-label"
+              htmlFor="selectcarrier">Vector</label>
+            <div className="col-md-10">
+              <select id="selectcarrier"
+                name="selectcarrier" className="form-control"
+                onChange={ e => this.handleChange(e) }
+                value={ carrier }>
+                {carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>)}
+              </select>
+            </div>
+          </div>
+
           <div className="form-group">
             <label className="col-md-2 control-label"
               htmlFor="selectctype">Tipo</label>
@@ -113,13 +126,13 @@ export default class EnergyComponentEditor extends React.Component {
 
           <div className="form-group">
             <label className="col-md-2 control-label"
-              htmlFor="selectcarrier">Vector</label>
+              htmlFor="selectservice">Servicio</label>
             <div className="col-md-10">
-              <select id="selectcarrier"
-                name="selectcarrier" className="form-control"
+              <select id="selectservice"
+                name="selectservice" className="form-control"
                 onChange={ e => this.handleChange(e) }
-                value={ carrier }>
-                {carriervalues.map(val => <option key={ val } value={ val }>{ val }</option>)}
+                value={ service }>
+                { CTE_VALIDSERVICES.map(val => <option key={ val } value={ val }>{ val }</option>) }
               </select>
             </div>
           </div>
