@@ -2,6 +2,28 @@ import React from 'react';
 
 import EnergyComponentChart from 'components/EnergyComponentChart.jsx';
 
+const get_service_icon = service => {
+  switch (service) {
+  case 'CAL':
+    return { icon: 'glyphicon-fire', color: 'red', name: 'Calefacción' };
+  case 'REF':
+    return { icon: 'glyphicon-asterisk', color: 'navy', name: 'Refrigeración' };
+  case 'ACS':
+    return { icon: 'glyphicon-tint', color: 'blue', name: 'ACS' };
+  case 'VEN':
+    return { icon: 'glyphicon-random', color: 'blue', name: 'Ventilación' };
+  case 'ILU':
+    return { icon: 'glyphicon-sunglasses', color: 'yellow', name: 'Iluminación' };
+  case 'HU':
+    return { icon: 'glyphicon-cloud', color: 'navy' };
+  case 'DHU':
+    return { icon: 'glyphicon-cloud', color: 'red' };
+  default: // NDEF y otros
+    return { icon: 'glyphicon-question-sign', color: 'gray' };
+  }
+};
+
+
 export default class EnergyComponentList extends React.Component {
 
   // Seleccionar componente
@@ -26,47 +48,53 @@ export default class EnergyComponentList extends React.Component {
         <thead>
           <tr>
             <th></th>
-            <th>Tipo</th>
+            <th className="col-md-2">Vector energético</th>
+            <th className="col-md-1">Tipo</th>
             <th className="col-md-1">Subtipo</th>
-            <th className="col-md-3">Vector energético</th>
+            <th className="col-md-1">Servicio</th>
             <th className="col-md-1">kWh/a</th>
             <th className="col-md-1">kWh/m²·a</th>
             <th className="col-md-1">Valores</th>
             <th className="col-md-4">Comentario</th>
           </tr>
         </thead>
-        <tbody>
-          {components.map(
-             (component, i) => {
-               const { active, ctype, csubtype, carrier, values, comment } = component;
-               const data = values.map((value, imes) => { return { Mes: imes, Valor: value }; });
-               const rowstyles = [
-                 (selectedkey === i) ? 'bg-info' : '',
-                 active ? '' : 'inactivecomponent',
-                 (ctype === 'CONSUMO') ? 'deliveredstyle' : ''
-               ].join(' ');
-               const sumvalues = values.reduce((a, b)=> a + b, 0);
-               return (
-                 <tr key={i}
-                     className={ rowstyles }
-                     onClick={ _e => this.handleClick(i) }>
-                   <td><input type="checkbox" defaultChecked={active}
-                              onClick={ _e => this.handleChange(i) } /></td>
-                   <td>{ ctype }</td>
-                   <td>{ csubtype }</td><td>{ carrier }</td>
-                   <td>{ sumvalues.toFixed(2) }</td>
-                   <td>{ (sumvalues / area).toFixed(2) }</td>
-                   <td><EnergyComponentChart ctype={ ctype }
-                                             data={ data }
-                                             maxvalue={ maxvalue }
-                                             width="100%" /></td>
-                   <td>{ comment }</td>
-                 </tr>
-               );
-             }
-           )
-          }
-        </tbody>
+          <tbody>
+            { components.map(
+              (component, i) => {
+                const { active, ctype, csubtype, carrier, service, values, comment } = component;
+                const data = values.map((value, imes) => ({ Mes: imes, Valor: value }) );
+                const rowstyles = [
+                  (selectedkey === i) ? 'bg-info' : '',
+                  active ? '' : 'inactivecomponent',
+                  (ctype === 'CONSUMO') ? 'deliveredstyle' : ''
+                ].join(' ');
+                const sumvalues = values.reduce((a, b) => a + b, 0);
+                const { icon: iconname, color: iconcolor } = get_service_icon(service);
+                return (
+                  <tr key={ i }
+                    className={ rowstyles }
+                    onClick={ _ => this.handleClick(i) }>
+                    <td>
+                      <input
+                        type="checkbox" defaultChecked={active}
+                        onClick={_e => this.handleChange(i)} /></td>
+                    <td>{ carrier }</td>
+                    <td>{ ctype }</td>
+                    <td>{ csubtype }</td>
+                    <td><span className={`glyphicon ${iconname}`} aria-hidden="true" style={{ opacity: 0.5, color: iconcolor }} /> { service }</td>
+                    <td><p  className="pull-right">{ sumvalues.toFixed(2) }</p></td>
+                    <td><p  className="pull-right">{ (sumvalues / area).toFixed(2) }</p></td>
+                    <td><EnergyComponentChart ctype={ ctype }
+                      data={ data }
+                      maxvalue={ maxvalue }
+                      width="100%" /></td>
+                    <td>{ comment }</td>
+                  </tr>
+                );
+              }
+            )
+            }
+          </tbody>
       </table>
       </div>
     );
