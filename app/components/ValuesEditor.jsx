@@ -53,22 +53,22 @@ export default class ValuesEditor extends React.Component {
     }
 
     return (
-      <div className={`form-group has-feedback ${ feedback }`}>
-      <label className="col-md-2 control-label">Valores</label>
-      <div className="col-md-10">
-      <div className="input-group">
-        <input type="text" className="form-control" value={ text }
-          ref={ ref => this.userInput = ref }
-          onChange={ e => this.handleChange(e) }
-          onBlur={ e => this.handleAccept(e) }
-          onKeyDown={ e => e.key === "Enter" ? this.handleAccept(e) : null }
-        />
-        <span className="input-group-btn">
-        <span className={ `form-control form-control-feedback glyphicon ${ icon }` }></span>
-        </span>
+      <div className={`form-group has-feedback ${feedback}`}>
+        <label className="col-md-2 control-label">Valores</label>
+        <div className="col-md-10">
+          <div className="input-group">
+            <input type="text" className="form-control" value={text}
+              ref={ref => this.userInput = ref}
+              onChange={e => this.handleChange(e)}
+              onBlur={e => this.handleAccept(e)}
+              onKeyDown={e => e.key === "Enter" ? this.handleAccept(e) : null}
+            />
+            <span className="input-group-btn">
+              <span className={`form-control form-control-feedback glyphicon ${icon}`} />
+            </span>
+          </div>
         </div>
-        </div>
-        </div>
+      </div>
     );
   }
 
