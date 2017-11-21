@@ -258,6 +258,10 @@ export default class EnergyComponentEditor extends React.Component {
       currentcomponent.carrier = value;
     }
 
+    if (prop === 'service') {
+      currentcomponent.service = value;
+    }
+
     onEdit(selectedkey, currentcomponent);
   }
 
