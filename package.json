@@ -1,6 +1,6 @@
 {
   "name": "visorepbd",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Web panel for the epbdcalc library",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
