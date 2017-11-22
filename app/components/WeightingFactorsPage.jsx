@@ -91,7 +91,7 @@ class WeightingFactorsPageClass extends React.Component {
             </tbody>
           </table>
 
-          <h3>Factores definidos reglamentariamente <small>(para la localización &quot;{ CTELOCS[localizacion] }&quot;)</small></h3>
+          <h3>Factores definidos a partir de valores reglamentarios <small>(para la localización &quot;{ CTELOCS[localizacion] }&quot;)</small></h3>
           <table id="components" className="table table-striped table-bordered table-condensed">
             <thead>
               <tr>
