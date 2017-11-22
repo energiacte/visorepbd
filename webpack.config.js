@@ -36,7 +36,7 @@ var plugins = [
     __EPBDURLPREFIX__: JSON.stringify(epbdurlprefix)
   }),
   new webpack.HotModuleReplacementPlugin(),
-  new ExtractTextPlugin('bundle-[hash].css', { allChunks: true }),
+  new ExtractTextPlugin('bundle-[hash:8].css', { allChunks: true }),
   new HtmlWebpackPlugin({
     // https://github.com/jaketrent/html-webpack-template
     template: 'app/index.template.html',
@@ -45,19 +45,21 @@ var plugins = [
     //favicon: 'favicon.ico',
     filename: './index.html', // relativo al output path
     minify: {
-      removeComments: true,
       collapseWhitespace: true,
+      collapseInlineTagWhitespace: true,
+      keepClosingSlash: true,
       removeRedundantAttributes: true,
-      useShortDoctype: true,
+      removeComments: true,
       removeEmptyAttributes: true,
+      removeRedundantAttributes: true,
       removeStyleLinkTypeAttributes: true,
-      keepClosingSlash: true
+      useShortDoctype: true
     }
   }),
   new webpack.NoEmitOnErrorsPlugin(),
   new webpack.optimize.CommonsChunkPlugin({
-    names: ['vendor'],
-    filename: '[name].js',
+    names: ['vendor', 'polyfill'],
+    filename: '[name]-[hash:8].js',
     minChunks: Infinity // only vendor chunks here
   }),
   new webpack.optimize.ModuleConcatenationPlugin()
@@ -73,7 +75,21 @@ if (production) { // Production plugins go here
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       sourceMap: shouldUseSourceMap,
-      compress: { warnings: false }
+      compress: {
+        warnings: false,
+        screw_ie8: true,
+        conditionals: true,
+        unused: true,
+        comparisons: true,
+        sequences: true,
+        dead_code: true,
+        evaluate: true,
+        if_return: true,
+        join_vars: true
+      },
+      output: {
+        comments: false
+      }
     }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
@@ -85,10 +101,9 @@ if (production) { // Production plugins go here
       __SERVER__:      !production,
       __DEVELOPMENT__: !production,
       __DEVTOOLS__:    !production,
-      'process.env': { // This has effect on the react lib size
-        'NODE_ENV': JSON.stringify('production'),
-        'BABEL_ENV': JSON.stringify(process.env.NODE_ENV)
-      }
+      // This has effect on the react lib size
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env.BABEL_ENV': JSON.stringify('production')
     })
   ]);
 }
@@ -96,12 +111,10 @@ if (production) { // Production plugins go here
 var config = {
   cache: true,
   //devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
-  devtool: production ? (shouldUseSourceMap ? 'cheap-module-source-map' : false) : 'cheap-module-eval-source-map',
+  devtool: production ? (shouldUseSourceMap ? 'cheap-module-source-map' : false) : 'source-map',
   entry: {
-    app: [
-      'babel-polyfill',
-      PATHS.app
-    ],
+    polyfill: 'babel-polyfill',
+    app: [ PATHS.app ],
     vendor: ['react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
   output: {
