@@ -17,7 +17,7 @@ function storedcomponent(state = null, action) {
   case SELECT_ENERGY_COMPONENT:
     return action.component;
   case LOAD_ENERGY_COMPONENTS:
-    return action.newcomponents[0];
+    return action.newcomponents.cdata[0];
   default:
     return state;
   }

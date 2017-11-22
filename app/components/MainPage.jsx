@@ -111,7 +111,7 @@ class MainPageClass extends React.Component {
     const m_kexp = cmeta.find(c => c.key === 'CTE_KEXP');
     const m_localizacion = cmeta.find(c => c.key === 'CTE_LOCALIZACION');
     const { dispatch, kexp, area, localizacion } = this.props;
-    dispatch(loadEnergyComponents({ cmeta, newcdata }));
+    dispatch(loadEnergyComponents({ cmeta, cdata: newcdata }));
     dispatch(changeArea(m_Area_ref ? m_Area_ref.value : area));
     dispatch(changeKexp(m_kexp ? m_kexp.value : kexp));
     dispatch(changeLocalizacion(m_localizacion ? m_localizacion.value : localizacion));
