@@ -101,7 +101,9 @@ const HelpPage = props => (
         <h4>Diagrama de indicadores</h4>
 
         <img className="img-responsive col-md-offset-2" width="60%" src={interfaz_indicadores} />
-        <p>El diagrama muestra los indicadores: <b>consumo de energía primaria total (<i>C<sub>ep,tot</sub></i>)</b>, <b>consumo de energía primaria no renovable (<i>C<sub>ep,nren</sub></i>)</b> y <b>consumo de energía primaria renovable (<i>C<sub>ep,ren</sub></i>)</b>, además de la fracción de energía renovable (<i>RER</i>) y el factor de exportación utilizado en el cálculo.</p>
+        <p>El diagrama muestra barras y valores del <b>consumo de energía primaria total (<i>C<sub>ep,tot</sub></i>)</b>, el <b>consumo de energía primaria no renovable (<i>C<sub>ep,nren</sub></i>)</b> y el <b>consumo de energía primaria renovable (<i>C<sub>ep,ren</sub></i>)</b>.</p>
+
+        <p>El subtítulo del diagrama indica el factor de exportación utilizado en el cálculo (<i>k<sub>exp</sub></i>), la <b>fracción de energía energía primaria de origen renovable (<i>RER</i>)</b> y la <b>fracción de energía primaria de origen renovable para el servicio de ACS obtenido con factores de paso para el perímetro próximo (<i>RER<sub>ACS;nrb</sub></i>)</b>.</p>
 
         <h4>Componentes energéticos</h4>
 
@@ -111,13 +113,14 @@ const HelpPage = props => (
 
         <p>La tabla muestra en columnas la siguiente información sobre cada componente energético:</p>
         <ul>
-          <li>(Activación): permite activar o desactivar la línea en el cálculo</li>
-          <li><b>Tipo</b>: define si se trata de un componente de tipo <tt>CONSUMO</tt> o <tt>PRODUCCION</tt></li>
-          <li><b>Subtipo</b>: define el origen de la energía producida o el uso de la energía consumida</li>
-          <li><b>Vector energético</b>: vector energético del componente</li>
-          <li><b>kWh/a</b>: muestra la energía final total del componente energético</li>
-          <li><b>kWh/m²·a</b>: muestra la energía final total del componente, repercutida por el área de referencia</li>
-          <li><b>Valores</b>: muestra un histograma de los valores mensuales de energía final del componente</li>
+          <li>(Activación): permite activar o desactivar la línea en el cálculo;</li>
+          <li><b>Tipo</b>: define si se trata de un componente de tipo <tt>CONSUMO</tt> o <tt>PRODUCCION</tt>;</li>
+          <li><b>Subtipo</b>: define el origen de la energía producida (<tt>INSITU</tt> o <tt>COGENERACION</tt>,) o el uso de la energía consumida (<tt>EPB</tt> para usos EPB, o <tt>NEPB</tt> para usos no EPB);</li>
+          <li><b>Servicio</b>: servicio al que se refiere el componente energético (puede tomar un valor entre: <tt>CAL</tt>, <tt>REF</tt>, <tt>ACS</tt>, <tt>VEN</tt>, <tt>ILU</tt>, <tt>HU</tt>, <tt>DHU</tt> o <tt>NDEF</tt>, referidos, respectivamente, a los servicios de calefacción, refrigeración, agua caliente sanitaria, ventilación, iluminación, humidificación, deshumidificación o cualquiera de los servicios definidos;</li>
+          <li><b>Vector energético</b>: vector energético del componente (puede tomar un valor entre los siguientes: <tt>BIOCARBURANTE</tt>, <tt>BIOMASA</tt>, <tt>BIOMASADENSIFICADA</tt>, <tt>CARBON</tt>, <tt>ELECTRICIDAD</tt>, <tt>FUELOIL</tt>, <tt>GASNATURAL</tt>, <tt>GASOLEO</tt>, <tt>GLP</tt>, <tt>MEDIOAMBIENTE</tt>, <tt>RED1</tt>, <tt>RED2</tt>, donde <tt>RED1</tt> y <tt>RED2</tt> son vectores genéricos para redes de distrito, con factores de paso definibles por el usuario, y <tt>MEDIOAMBIENTE</tt> es energía térmica extraída del medioambiente);</li>
+          <li><b>kWh/a</b>: muestra la suma de los valores mensuales de energía final del componente energético;</li>
+          <li><b>kWh/m²·a</b>: muestra suma de los valores mensuales de energía final del componente, repercutida por el área de referencia;</li>
+          <li><b>Valores</b>: muestra un histograma de los valores mensuales de energía final del componente;</li>
           <li><b>Comentario</b>: muestra un comentario descriptivo del componente energético.</li>
         </ul>
         <p>Las líneas de tipo <tt>CONSUMO</tt> se muestran en color azul y las de tipo <tt>PRODUCCION</tt> en color negro, y se resalta la línea seleccionada.</p>
@@ -131,10 +134,10 @@ const HelpPage = props => (
         <p className="well alert-danger">NOTA: El interés de este apartado es exploratorio, al permitir modificar los datos de entrada.</p>
 
         <p>El panel de edición muestra una ventana que permite modificar los datos del componente energético actualmente seleccionado.</p>
-        <p>Se pueden cambiar el <b>tipo</b> de valores (<tt>CONSUMO</tt> o <tt>PRODUCCION</tt>), el <b>origen</b> (<tt>COGENERACION</tt> o <tt>INSITU</tt>, para líneas de tipo <tt>PRODUCCION</tt>) o <b>uso</b> (<tt>EPB</tt> o <tt>NEPB</tt>, para líneas de tipo <tt>CONSUMO</tt>) y el <b>vector</b> energético.</p>
-        <p>El desplegable <b>Curva</b> permite modificar la forma de la línea de valores del componente energético (que se muestra a su derecha), manteniendo la forma actual o estableciendo una forma distinta (constante, creciente, decreciente, cóncava, convexa), manteniendo el valor de energía (final) total del componente.</p>
+        <p>Se pueden cambiar el <b>vector energético</b>, el <b>tipo</b> de valores (<tt>CONSUMO</tt> o <tt>PRODUCCION</tt>), el <b>subtipo</b> (<tt>COGENERACION</tt> o <tt>INSITU</tt>, para líneas de tipo <tt>PRODUCCION</tt>, y <tt>EPB</tt> o <tt>NEPB</tt>, para líneas de tipo <tt>CONSUMO</tt>) y el <b>servicio</b> al que se destina la energía.</p>
+        <p>El desplegable <b>Curva</b> permite modificar la forma de la línea de valores del componente energético (que se muestra a su derecha), manteniendo la forma actual o estableciendo una forma distinta (constante, creciente, decreciente, cóncava, convexa), manteniendo el valor de energía (final) total del componente. El interés de este control reside en el uso del programa para el diseño, donde puede resultar útil partir de un valor total anual y una distribución mensual con una forma genérica.</p>
         <p>La entrada <b>Valores</b> permite modificar los valores de energía final de cada paso de cálculo (valores mensuales) editando una cadena de valores numéricos separados por comas.</p>
-        <p>La entrada de <b>Energía total</b> permite escalar los valores de cada paso de cálculo (valores mensuales) del componente energético, manteniendo su forma. Permite actuar moviendo el deslizador lateral o introduciendo un valor o una expresión matemática simple (+-*/), debiendo presionar la tecla ENTER para aceptar el valor introducido.</p>
+        <p>El botón deslizante y la entrada de <b>Energía total</b> permite escalar los valores de cada paso de cálculo (valores mensuales) del componente energético, manteniendo su forma. Permite actuar moviendo el deslizador lateral o introduciendo un valor o una expresión matemática simple (+-*/), debiendo presionar la tecla ENTER para aceptar el valor introducido.</p>
 
         <p><img className="img-responsive col-md-offset-2" width="60%" src={interfaz_entradavalorexpresion} /></p>
 
