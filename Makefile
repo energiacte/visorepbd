@@ -41,7 +41,7 @@ npminstall:
 .PHONY: analyze
 analyze:
 	$(info [INFO]: Estadísticas de rendimiento de webpack)
-	webpack --json > stats.json
+	webpack -p --json > stats.json
 	webpack-bundle-size-analyzer stats.json
 
 installpackages:
