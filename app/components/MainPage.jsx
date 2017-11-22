@@ -10,7 +10,7 @@ import Footer from 'components/Footer';
 import ModalContainer from 'components/ModalContainer';
 
 import { serialize_components, cte } from 'epbdjs';
-const { parse_components, updatemeta } = cte;
+const { parse_components, updatemeta, CTE_LOCS } = cte;
 
 import { changeKexp,
          changeArea,
@@ -112,9 +112,9 @@ class MainPageClass extends React.Component {
     const m_localizacion = cmeta.find(c => c.key === 'CTE_LOCALIZACION');
     const { dispatch, kexp, area, localizacion } = this.props;
     dispatch(loadEnergyComponents({ cmeta, cdata: newcdata }));
-    dispatch(changeArea(m_Area_ref ? m_Area_ref.value : area));
-    dispatch(changeKexp(m_kexp ? m_kexp.value : kexp));
-    dispatch(changeLocalizacion(m_localizacion ? m_localizacion.value : localizacion));
+    dispatch(changeArea((m_Area_ref && !isNaN(m_Area_ref.value)) ? m_Area_ref.value : area));
+    dispatch(changeKexp((m_kexp  && !isNaN(m_kexp.value)) ? m_kexp.value : kexp));
+    dispatch(changeLocalizacion((m_localizacion && CTE_LOCS.includes(m_localizacion.value)) ? m_localizacion.value : localizacion));
   }
 
   downloadCarriers() {
