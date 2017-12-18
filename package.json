@@ -2,6 +2,14 @@
   "name": "visorepbd",
   "version": "2.2.0",
   "description": "Web panel for the epbdcalc library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/energiacte/visorepbd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/energiacte/visorepbd/issues"
+  },
+  "homepage": "https://github.com/energiacte/visorepbd#README.md",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "stats": "webpack --profile --json > stats.json",
