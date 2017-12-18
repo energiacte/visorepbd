@@ -49,7 +49,13 @@ function kexp(state = 1, action) {
 function area(state = 1, action) {
   switch (action.type) {
   case CHANGE_AREA:
-    return Number(action.value);
+    {
+      let val = Number(action.value);
+      if (isNaN(val)) {
+        return 1.0;
+      }
+      return Math.max(Math.round(val), 1.0);
+    }
   default:
     return state;
   }
