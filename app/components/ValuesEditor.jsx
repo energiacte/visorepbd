@@ -5,13 +5,20 @@ const VALUESREGEX = /\s*([0-9]+[.]?[0-9]*)\s*(,\s*([0-9]+[.]?[0-9]*)\s*)*/;
 export default class ValuesEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: props.values.map(v => v.toFixed(2)).join(", "), status: 'OK' };
+    this.state = {
+      text: props.values.map(v => v.toFixed(2)).join(", "),
+      lastvalues: props.values,
+      status: 'OK'
+    };
   }
 
-  UNSAFE_componentWillUpdate(nextprops) {
-    if(this.props.values !== nextprops.values) {
-      this.setState({ text: nextprops.values.map(v => v.toFixed(2)).join(", "), status: 'OK' });
+  static getDerivedStateFromProps(props, state) {
+    const text = props.values.map(v => v.toFixed(2)).join(", ");
+    if (state.lastvalues !== props.values) {
+      return { text, lastvalues: props.values, status: 'OK' };
     }
+    // Return null to indicate no change to state.
+    return null;
   }
 
   handleChange(e) {
@@ -24,6 +31,7 @@ export default class ValuesEditor extends React.Component {
       && currvalues.every(v => !isNaN(v) && v.trim() !== '')) {
         status = 'VALIDATES';
     }
+    // No update for lastvalues as they will come back on handleAccept through new props.
     this.setState({ text: e.target.value, status });
   }
 
