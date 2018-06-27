@@ -27,21 +27,11 @@ class MainPageClass extends React.Component {
   constructor(props) {
     super(props);
     this.state = { showModal: false };
+    // Carga datos desde API al inicializar
+    this.props.dispatch(computeEnergy()); // nuevo
   }
 
   toggleModal() { this.setState({ showModal: !this.state.showModal }) }
-
-  // Carga datos desde API al inicializar
-  componentWillMount() { this.props.dispatch(computeEnergy()); }
-
-  // Carga datos desde API al cambiar las propiedades (y antes de renderizar hijos)
-  componentWillReceiveProps(nextProps) {
-    const { kexp, area, components } = this.props;
-    const np = nextProps;
-    if ((kexp !== np.kexp) || (area !== np.area) || (components !== np.components)) {
-      this.props.dispatch(computeEnergy());
-    }
-  }
 
   render() {
     const { kexp, area, selectedkey, components, storedcomponent, data, dispatch } = this.props;
@@ -53,8 +43,8 @@ class MainPageClass extends React.Component {
             <GlobalVarsControl
               kexp={kexp}
               area={area}
-              onChangeKexp={value => dispatch(changeKexp(value))}
-              onChangeArea={value => dispatch(changeArea(value))}
+              onChangeKexp={value => { dispatch(changeKexp(value)); dispatch(computeEnergy()) }}
+              onChangeArea={value => { dispatch(changeArea(value)); dispatch(computeEnergy()) }}
               onCarriersLoad={d => this.uploadCarriers(d)}
               onCarriersDownload={() => this.downloadCarriers()}
               onChangeCurrentFileName={newname => dispatch(changeCurrentFileName(newname))}
@@ -84,7 +74,7 @@ class MainPageClass extends React.Component {
                 selectedkey={selectedkey}
                 cdata={ components.cdata }
                 storedcomponent={storedcomponent}
-                onEdit={(key, component) => dispatch(editEnergyComponent(key, component))}
+                onEdit={(key, component) => { dispatch(editEnergyComponent(key, component)); dispatch(computeEnergy())}}
               />
             </ModalContainer>
           </div>
@@ -94,7 +84,7 @@ class MainPageClass extends React.Component {
               cdata={ components.cdata }
               area={area}
               onSelect={(key, component) => dispatch(selectEnergyComponent(key, component))}
-              onEdit={(key, component) => dispatch(editEnergyComponent(key, component))}
+              onEdit={(key, component) => { dispatch(editEnergyComponent(key, component)); dispatch(computeEnergy()) }}
             />
           </div>
         </div>
@@ -115,6 +105,7 @@ class MainPageClass extends React.Component {
     dispatch(changeArea((m_Area_ref && !isNaN(m_Area_ref.value)) ? m_Area_ref.value : area));
     dispatch(changeKexp((m_kexp  && !isNaN(m_kexp.value)) ? m_kexp.value : kexp));
     dispatch(changeLocalizacion((m_localizacion && CTE_LOCS.includes(m_localizacion.value)) ? m_localizacion.value : localizacion));
+    dispatch(computeEnergy());
   }
 
   downloadCarriers() {

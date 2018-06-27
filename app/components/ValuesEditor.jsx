@@ -8,7 +8,7 @@ export default class ValuesEditor extends React.Component {
     this.state = { text: props.values.map(v => v.toFixed(2)).join(", "), status: 'OK' };
   }
 
-  componentWillUpdate(nextprops) {
+  UNSAFE_componentWillUpdate(nextprops) {
     if(this.props.values !== nextprops.values) {
       this.setState({ text: nextprops.values.map(v => v.toFixed(2)).join(", "), status: 'OK' });
     }
@@ -48,7 +48,7 @@ export default class ValuesEditor extends React.Component {
         icon = "glyphicon-ok";
         break;
       default:
-      feedback = "has-warning";
+        feedback = "has-warning";
         icon = "glyphicon-warning-sign";
     }
 
