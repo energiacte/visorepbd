@@ -8,8 +8,10 @@ export default class EPChart extends React.Component {
   }
 
   updateDimensions() {
-    const width = this.divElement.clientWidth || this.divElement.parentNode.clientWidth;
-    this.setState({ width });
+    if (this.divElement !== null) {
+      const width = this.divElement.clientWidth || this.divElement.parentNode.clientWidth;
+      this.setState({ width });
+    }
   }
 
   componentDidMount() {
