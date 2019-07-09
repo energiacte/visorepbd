@@ -1,21 +1,21 @@
-import { energy_performance, cte } from 'epbdjs';
+import { energy_performance, cte } from "epbdjs";
 
 /*
  * action types
  */
 
-export const SELECT_ENERGY_COMPONENT = 'SELECT_ENERGY_COMPONENT';
-export const ADD_ENERGY_COMPONENT = 'ADD_ENERGY_COMPONENT';
-export const CLONE_ENERGY_COMPONENT = 'CLONE_ENERGY_COMPONENT';
-export const REMOVE_ENERGY_COMPONENT = 'REMOVE_ENERGY_COMPONENT';
-export const EDIT_ENERGY_COMPONENT = 'EDIT_ENERGY_COMPONENT';
-export const LOAD_ENERGY_COMPONENTS = 'LOAD_ENERGY_COMPONENTS';
-export const CHANGE_KEXP = 'CHANGE_KEXP';
-export const CHANGE_AREA = 'CHANGE_AREA';
-export const CHANGE_LOCALIZACION = 'CHANGE_LOCALIZACION';
-export const CHANGE_CURRENTFILENAME = 'CHANGE_CURRENTFILENAME';
-export const EDIT_WFACTORS = 'EDIT_WFACTORS';
-export const RECEIVE_ENERGYDATA = 'RECEIVE_ENERGYDATA';
+export const SELECT_ENERGY_COMPONENT = "SELECT_ENERGY_COMPONENT";
+export const ADD_ENERGY_COMPONENT = "ADD_ENERGY_COMPONENT";
+export const CLONE_ENERGY_COMPONENT = "CLONE_ENERGY_COMPONENT";
+export const REMOVE_ENERGY_COMPONENT = "REMOVE_ENERGY_COMPONENT";
+export const EDIT_ENERGY_COMPONENT = "EDIT_ENERGY_COMPONENT";
+export const LOAD_ENERGY_COMPONENTS = "LOAD_ENERGY_COMPONENTS";
+export const CHANGE_KEXP = "CHANGE_KEXP";
+export const CHANGE_AREA = "CHANGE_AREA";
+export const CHANGE_LOCALIZACION = "CHANGE_LOCALIZACION";
+export const CHANGE_CURRENTFILENAME = "CHANGE_CURRENTFILENAME";
+export const EDIT_WFACTORS = "EDIT_WFACTORS";
+export const RECEIVE_ENERGYDATA = "RECEIVE_ENERGYDATA";
 
 /*
  * action creators
@@ -84,14 +84,19 @@ export function computeEnergy() {
     const ep = energy_performance(componentsobj, wfactors, kexp, area);
     const { ren, nren } = ep.balance_m2.B;
     const total = ren + nren;
-    const rer = (total === 0) ? 0 : ren / total;
+    const rer = total === 0 ? 0 : ren / total;
     // Cálculo para ACS en perímetro próximo
     const wfactors_nrb = cte.wfactors_to_nearby(wfactors);
-    const components_acs = cte.components_by_service(componentsobj, 'ACS');
-    const res_acs_nrb = energy_performance(components_acs, wfactors_nrb, kexp, area);
+    const components_acs = cte.components_by_service(componentsobj, "ACS");
+    const res_acs_nrb = energy_performance(
+      components_acs,
+      wfactors_nrb,
+      kexp,
+      area
+    );
     const { ren: ren_acs, nren: nren_acs } = res_acs_nrb.balance_m2.B;
     const total_acs = ren_acs + nren_acs;
-    const rer_acs_nrb = (total_acs === 0) ? 0 : ren_acs / total_acs;
+    const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
     // Actualización
     dispatch(deliverEnergy({ ren, nren, total, rer, rer_acs_nrb }));
   };

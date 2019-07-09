@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 //import { connect } from 'react-redux';
 const VALUESREGEX = /\s*([0-9]+[.]?[0-9]*)\s*(,\s*([0-9]+[.]?[0-9]*)\s*)*/;
 
@@ -8,14 +8,14 @@ export default class ValuesEditor extends React.Component {
     this.state = {
       text: props.values.map(v => v.toFixed(2)).join(", "),
       lastvalues: props.values,
-      status: 'OK'
+      status: "OK"
     };
   }
 
   static getDerivedStateFromProps(props, state) {
     const text = props.values.map(v => v.toFixed(2)).join(", ");
     if (state.lastvalues !== props.values) {
-      return { text, lastvalues: props.values, status: 'OK' };
+      return { text, lastvalues: props.values, status: "OK" };
     }
     // Return null to indicate no change to state.
     return null;
@@ -24,12 +24,14 @@ export default class ValuesEditor extends React.Component {
   handleChange(e) {
     e.preventDefault();
     const currtext = e.target.value;
-    const currvalues = currtext.split(',');
-    let status = 'FAILS'
-    if (VALUESREGEX.test(currtext)
-      && currvalues.length === this.props.values.length
-      && currvalues.every(v => !isNaN(v) && v.trim() !== '')) {
-        status = 'VALIDATES';
+    const currvalues = currtext.split(",");
+    let status = "FAILS";
+    if (
+      VALUESREGEX.test(currtext) &&
+      currvalues.length === this.props.values.length &&
+      currvalues.every(v => !isNaN(v) && v.trim() !== "")
+    ) {
+      status = "VALIDATES";
     }
     // No update for lastvalues as they will come back on handleAccept through new props.
     this.setState({ text: e.target.value, status });
@@ -37,8 +39,8 @@ export default class ValuesEditor extends React.Component {
 
   handleAccept(e) {
     e.preventDefault();
-    if(['OK', 'VALIDATES'].includes(this.state.status)) {
-      const newvalues = this.state.text.split(',').map(Number);
+    if (["OK", "VALIDATES"].includes(this.state.status)) {
+      const newvalues = this.state.text.split(",").map(Number);
       this.props.onEdit(newvalues);
     }
   }
@@ -47,11 +49,11 @@ export default class ValuesEditor extends React.Component {
     const { status, text } = this.state;
     let feedback, icon;
     switch (status) {
-      case 'OK':
+      case "OK":
         feedback = "";
         icon = "glyphicon-ok";
         break;
-      case 'VALIDATES':
+      case "VALIDATES":
         feedback = "has-success";
         icon = "glyphicon-ok";
         break;
@@ -65,19 +67,23 @@ export default class ValuesEditor extends React.Component {
         <label className="col-lg-2 control-label">Valores</label>
         <div className="col-lg-10">
           <div className="input-group">
-            <input type="text" className="form-control" value={text}
-              ref={ref => this.userInput = ref}
+            <input
+              type="text"
+              className="form-control"
+              value={text}
+              ref={ref => (this.userInput = ref)}
               onChange={e => this.handleChange(e)}
               onBlur={e => this.handleAccept(e)}
-              onKeyDown={e => e.key === "Enter" ? this.handleAccept(e) : null}
+              onKeyDown={e => (e.key === "Enter" ? this.handleAccept(e) : null)}
             />
             <span className="input-group-btn">
-              <span className={`form-control form-control-feedback glyphicon ${icon}`} />
+              <span
+                className={`form-control form-control-feedback glyphicon ${icon}`}
+              />
             </span>
           </div>
         </div>
       </div>
     );
   }
-
 }
