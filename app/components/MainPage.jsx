@@ -58,15 +58,15 @@ class MainPageClass extends React.Component {
             <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
               <button className="btn" id="add" type="button"
                 onClick={() => dispatch(cloneEnergyComponent(selectedkey))}>
-                <span className="glyphicon glyphicon-plus" /> Añadir
+                <span className="fa fa-plus" /> Añadir
               </button>
               <button className="btn" id="remove" type="button"
                 onClick={() => dispatch(removeEnergyComponent(selectedkey))}>
-                <span className="glyphicon glyphicon-minus" /> Borrar
+                <span className="fa fa-minus" /> Borrar
               </button>
               <button className="btn" id="edit" type="button"
                 onClick={() => this.toggleModal()}>
-                <span className="glyphicon glyphicon-edit" /> Editar
+                <span className="fa fa-edit" /> Editar
               </button>
             </div>
             <ModalContainer show={this.state.showModal} onClose={() => this.toggleModal()}>

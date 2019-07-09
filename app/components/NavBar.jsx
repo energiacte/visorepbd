@@ -19,18 +19,18 @@ export default class NavBar extends React.Component {
           <div className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
               <li className={ activeIfCurrent('/') } role="presentation">
-                <Link to="/"><span className="glyphicon glyphicon-home" aria-hidden="true"/> Inicio</Link>
+                <Link className="nav-link" to="/"><span className="fa fa-home" aria-hidden="true"/> Inicio</Link>
               </li>
               <li className={ activeIfCurrent('/weightingfactors') } role="presentation">
-                <Link to="/weightingfactors"><span className="glyphicon glyphicon-oil" aria-hidden="true"/> Factores de paso</Link>
+                <Link className="nav-link" to="/weightingfactors"><span className="fa fa-exchange" aria-hidden="true"/> Factores de paso</Link>
               </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li className={ activeIfCurrent('/help') } role="presentation">
-                <Link to="/help"><span className="glyphicon glyphicon-info-sign" aria-hidden="true"/> Ayuda</Link>
+                <Link className="nav-link" to="/help"><span className="fa fa-info-circle" aria-hidden="true"/> Ayuda</Link>
               </li>
               <li className={ activeIfCurrent('/about') } role="presentation">
-                <Link to="/about"><span className="glyphicon glyphicon-question-sign" aria-hidden="true"/> Créditos</Link>
+                <Link className="nav-link" to="/about"><span className="fa fa-question-circle" aria-hidden="true"/> Créditos</Link>
               </li>
             </ul>
           </div>

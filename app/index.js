@@ -8,6 +8,7 @@ import 'img/favicon.ico';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'styles/style.scss'; // CSS
+import 'styles/font-awesome.min.css'; // copia de iconos fontawesome
 import store from 'store/store.js';
 import MainPage from 'components/MainPage.jsx';
 import WeightingFactorsPage from 'components/WeightingFactorsPage.jsx';

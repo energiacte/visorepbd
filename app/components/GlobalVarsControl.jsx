@@ -34,11 +34,11 @@ export default class GlobalVarsControl extends React.Component {
               style={{ visibility: 'hidden', position: 'absolute', top: '-50px', left: '-50px' }} />
             <button className="btn bg-primary" id="modify" type="button"
               onClick={() => this.fileInput.click()}>
-              <span className="glyphicon glyphicon-upload" /> Cargar datos
+              <span className="fa fa-upload" /> Cargar datos
             </button>
             <button className="btn bg-primary" id="save" type="button"
               onClick={e => this.downloadFile(e, this.props.onCarriersDownload, currentfilename)}>
-              <span className="glyphicon glyphicon-download" /> Guardar datos
+              <span className="fa fa-download" /> Guardar datos
             </button>
           </div>
         </div>
