@@ -71,7 +71,7 @@ const HelpPage = props => (
         </p>
       </div>
 
-      <div className="container card card-body bg-light" id="Indice">
+      <div className="card card-body bg-light" id="Indice">
         <h3>Índice</h3>
         <ul>
           <li>
@@ -154,6 +154,7 @@ const HelpPage = props => (
       <hr />
 
       <div className="row">
+        <div className="col">
         <a id="Interfaz" />
         <h2 className="help-header">
           Interfaz de la herramienta <i>VisorEPBD</i>
@@ -505,11 +506,13 @@ const HelpPage = props => (
           En esta sección se muestran los créditos del programa y la licencia
           con la que se distribuye.
         </p>
+        </div>
       </div>
 
       <hr />
 
       <div className="row">
+        <div className="col">
         <a id="Evaluacion" />
         <h2 className="help-header">
           Evaluación de la eficiencia energética con VisorEPBD
@@ -796,10 +799,12 @@ const HelpPage = props => (
           src={esquema_3resultados}
         />
       </div>
+      </div>
 
       <hr />
 
       <div className="row">
+        <div className="col">
         <a id="Uso" />
         <h2 className="help-header">
           Uso de <i>VisorEPBD</i> como herramienta de ayuda al diseño
@@ -1252,6 +1257,7 @@ const HelpPage = props => (
           P<sub>ELECTRICIDAD</sub> = C<sub>GASNATURAL</sub> * &eta;
           <sub>gen,el</sub>)= 54.30· 0.25 = 13.58~kWh/(m^2 an)
         </p>
+      </div>
       </div>
     </div>
     <Footer />
