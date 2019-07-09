@@ -9,7 +9,7 @@ const TerserJSPlugin = require("terser-webpack-plugin"); // JS minifier (webpack
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const ManifestPlugin = require("webpack-manifest-plugin");
-const CleanPlugin = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const production = process.env.NODE_ENV === "production";
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -75,7 +75,7 @@ if (production) {
   // Production plugins go here
   plugins = plugins.concat([
     // Cleanup the builds/ folder before compiling final assets
-    new CleanPlugin(PATHS.build),
+    new CleanWebpackPlugin(),
     // Prevent Webpack from creating too small chunks
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 51200 }), // ~50kb
     new OptimizeCSSAssetsPlugin({
