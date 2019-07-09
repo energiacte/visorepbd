@@ -115,7 +115,7 @@ class WeightingFactorsPageClass extends React.Component {
               )}
             </tbody>
           </table>
-          <div className="small bg-info">
+          <div className="small bg-light">
             <p><b>Notas</b>:</p>
             <p>Vector:</p>
             <ul>

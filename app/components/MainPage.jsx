@@ -40,6 +40,7 @@ class MainPageClass extends React.Component {
         <NavBar match={ this.props.match } />
         <div className="container">
           <div className="row">
+            <div className="col">
             <GlobalVarsControl
               kexp={kexp}
               area={area}
@@ -50,12 +51,16 @@ class MainPageClass extends React.Component {
               onChangeCurrentFileName={newname => dispatch(changeCurrentFileName(newname))}
               currentfilename={this.props.currentfilename}
             />
+            </div>
           </div>
           <div className="row">
+            <div className="col">
             <EPChart data={data} kexp={kexp} />
+            </div>
           </div>
           <div className="row">
-            <div className="btn-group pull-right btn-group-xs" role="group" aria-label="acciones">
+            <div className="col float-right">
+            <div className="btn-group float-right btn-group-xs" role="group" aria-label="acciones">
               <button className="btn" id="add" type="button"
                 onClick={() => dispatch(cloneEnergyComponent(selectedkey))}>
                 <span className="fa fa-plus" /> Añadir
@@ -69,6 +74,7 @@ class MainPageClass extends React.Component {
                 <span className="fa fa-edit" /> Editar
               </button>
             </div>
+            </div>
             <ModalContainer show={this.state.showModal} onClose={() => this.toggleModal()}>
               <EnergyComponentEditor
                 selectedkey={selectedkey}
@@ -79,6 +85,7 @@ class MainPageClass extends React.Component {
             </ModalContainer>
           </div>
           <div className="row">
+            <div className="col">
             <EnergyComponentList
               selectedkey={selectedkey}
               cdata={ components.cdata }
@@ -86,6 +93,7 @@ class MainPageClass extends React.Component {
               onSelect={(key, component) => dispatch(selectEnergyComponent(key, component))}
               onEdit={(key, component) => { dispatch(editEnergyComponent(key, component)); dispatch(computeEnergy()) }}
             />
+            </div>
           </div>
         </div>
         <Footer />

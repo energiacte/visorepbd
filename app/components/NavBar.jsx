@@ -7,17 +7,17 @@ export default class NavBar extends React.Component {
 
   render() {
     const currpath = this.props.match.path;
-    const activeIfCurrent = path => currpath === path ? 'active' : '';
+    const activeIfCurrent = path => currpath === path ? 'nav-item active' : 'nav-item';
 
     return (
-      <nav className="navbar navbar-inverse navbar-fixed-top">
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <div className="container">
-          <div className="navbar-header">
-            <Link className="navbar-brand" to="/">{ this.props.projectName }</Link>
-            <button className="navbar-toggle" type="button" />
-          </div>
-          <div className="navbar-collapse collapse">
-            <ul className="nav navbar-nav">
+          <Link className="navbar-brand" to="/">{ this.props.projectName }</Link>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="expandmenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="navbar-collapse collapse" id="expandmenu">
+            <ul className="mr-auto navbar-nav">
               <li className={ activeIfCurrent('/') } role="presentation">
                 <Link className="nav-link" to="/"><span className="fa fa-home" aria-hidden="true"/> Inicio</Link>
               </li>

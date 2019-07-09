@@ -1,12 +1,12 @@
 html {
     body {
-        /* font-size: 100%;
-        background: url(../img/repeater.jpg); */
+        /* márgenes para barras superior e inferior */
         padding-top: 60px;
-        .panel-body {padding:5px 5px 0 5px;}
+        padding-bottom: 60px;
+        .card-body {padding:5px 5px 0 5px;}
         .form-group {margin-bottom:5px;}
         #components {
-           .bg-info {background-color: #b7caff; cursor: pointer;}
+           .bg-info {background-color: #b7caff !important; cursor: pointer;}
            .deliveredstyle * {color: blue;}
            .inactivecomponent * {color: gray;}
            }
@@ -20,9 +20,6 @@ html {
                input[type=text] {width: 20%; display: inline; vertical-align: middle; color:black;}
                input[type=number] {width: 60%; display: inline; vertical-align: middle;}
            }
-        }
-        .footer {
-            margin-top: 20px;
         }
         .help-header {
             text-decoration: underline;

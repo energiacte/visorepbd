@@ -62,8 +62,8 @@ export default class ValuesEditor extends React.Component {
 
     return (
       <div className={`form-group has-feedback ${feedback}`}>
-        <label className="col-md-2 control-label">Valores</label>
-        <div className="col-md-10">
+        <label className="col-lg-2 control-label">Valores</label>
+        <div className="col-lg-10">
           <div className="input-group">
             <input type="text" className="form-control" value={text}
               ref={ref => this.userInput = ref}
