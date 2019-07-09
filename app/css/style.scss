@@ -9,6 +9,7 @@ html {
            .bg-info {background-color: #b7caff !important; cursor: pointer;}
            .deliveredstyle * {color: blue;}
            .inactivecomponent * {color: gray;}
+           td, th { padding: .5rem; }
            }
         #globalvarscontrol {
            #kexp, #area, #buttons {
