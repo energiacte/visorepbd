@@ -54,7 +54,7 @@ var plugins = [
     // https://github.com/jaketrent/html-webpack-template
     template: "app/index.template.html",
     title: "VisorEPBD: implementación de la ISO 52000-1 para el CTE DB-HE",
-    inject: false,
+    inject: "head",
     //favicon: 'favicon.ico',
     filename: "./index.html", // relativo al output path
     minify: {
@@ -97,6 +97,7 @@ if (production) {
 var config = {
   mode: production ? "production" : "development",
   cache: true,
+  watch: true,
   devtool: production
     ? shouldUseSourceMap
       ? "cheap-module-source-map"
@@ -164,7 +165,7 @@ var config = {
       },
       {
         // JS, JSX: BABEL
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)?$/,
         include: PATHS.app,
         loader: "babel-loader"
       },
