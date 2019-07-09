@@ -166,18 +166,7 @@ var config = {
         // JS, JSX: BABEL
         test: /\.jsx?$/,
         include: PATHS.app,
-        loader: "babel-loader",
-        options: {
-          presets: ["@babel/env", "@babel/react"],
-          plugins: [
-            "@babel/plugin-proposal-class-properties",
-            // [
-            //   "@babel/plugin-proposal-decorators", { "legacy": true }
-            // ],
-            "@babel/plugin-proposal-object-rest-spread",
-            "@babel/plugin-syntax-dynamic-import"
-          ]
-        }
+        loader: "babel-loader"
       },
       {
         // CSS
