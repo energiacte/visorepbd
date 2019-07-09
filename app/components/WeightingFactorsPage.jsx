@@ -31,7 +31,7 @@ class WeightingFactorsPageClass extends React.Component {
     return (
       <div>
         <NavBar match={this.props.match} />
-        <div className="container">
+        <div className="container-fluid">
           <div className="page-header">
             <h1>
               Factores de paso{" "}

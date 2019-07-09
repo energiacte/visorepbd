@@ -47,7 +47,7 @@ const ScrollToIndex = _ => (
 const HelpPage = props => (
   <div>
     <NavBar match={props.match} />
-    <div className="container">
+    <div className="container-fluid">
       <div className="page-header">
         <h1>VisorEPBD</h1>
 

@@ -50,7 +50,7 @@ class MainPageClass extends React.Component {
     return (
       <div>
         <NavBar match={this.props.match} />
-        <div className="container">
+        <div className="container-fluid">
           <div className="row">
             <div className="col">
               <GlobalVarsControl

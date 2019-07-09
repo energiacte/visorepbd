@@ -8,7 +8,7 @@ import ietcclogo from "img/logoietcccsic.png";
 const AboutPage = props => (
   <div>
     <NavBar match={props.match} />
-    <div className="container">
+    <div className="container-fluid">
       <h1>VisorEPBD</h1>
       <h3>Equipo de desarrollo (IETcc-CSIC):</h3>
       <ul>
@@ -46,8 +46,8 @@ const AboutPage = props => (
         </b>
         .
       </p>
-      {/* <div className="container"> */}
-      <div className="container">
+      {/* <div className="container-fluid"> */}
+      <div className="container-fluid">
         <a href="http://www.fomento.gob.es">
           <img className="img offset-md-3 col-md-3" src={mfomlogo} />
         </a>
