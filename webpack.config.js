@@ -5,7 +5,9 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const eslintFormatter = require('react-dev-utils/eslintFormatter');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const TerserJSPlugin = require('terser-webpack-plugin'); // JS minifier (webpack default)
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin'); 
 const CleanPlugin = require('clean-webpack-plugin');
 
@@ -32,11 +34,21 @@ const PATHS = {
 };
 
 var plugins = [
+  // This pulls out webpack module IDs that changes every build to help with caching
+  new webpack.HashedModuleIdsPlugin(),
+    // Inject the build date as an environment variable 
   new webpack.DefinePlugin({
-    __EPBDURLPREFIX__: JSON.stringify(epbdurlprefix)
+    'process.env':{
+      'BUILD_DATE': JSON.stringify(new Date())
+    }
   }),
   new webpack.HotModuleReplacementPlugin(),
-  new ExtractTextPlugin('bundle-[hash:8].css', { allChunks: true }),
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: production ? '[name].[hash].css' : '[name].css',
+    chunkFilename: production ? '[id].[hash].css' : '[id].css',
+  }),
   new HtmlWebpackPlugin({
     // https://github.com/jaketrent/html-webpack-template
     template: 'app/index.template.html',
@@ -55,14 +67,7 @@ var plugins = [
       removeStyleLinkTypeAttributes: true,
       useShortDoctype: true
     }
-  }),
-  new webpack.NoEmitOnErrorsPlugin(),
-  new webpack.optimize.CommonsChunkPlugin({
-    names: ['vendor', 'polyfill'],
-    filename: '[name]-[hash:8].js',
-    minChunks: Infinity // only vendor chunks here
-  }),
-  new webpack.optimize.ModuleConcatenationPlugin()
+  })
 ];
 
 if (production) { // Production plugins go here
@@ -71,56 +76,42 @@ if (production) { // Production plugins go here
     new CleanPlugin(PATHS.build),
     // Prevent Webpack from creating too small chunks
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 51200 }), // ~50kb
-    // Minify all the Javascript code of the final bundle
-    new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
-      sourceMap: shouldUseSourceMap,
-      compress: {
-        warnings: false,
-        screw_ie8: true,
-        conditionals: true,
-        unused: true,
-        comparisons: true,
-        sequences: true,
-        dead_code: true,
-        evaluate: true,
-        if_return: true,
-        join_vars: true
+    new OptimizeCSSAssetsPlugin({
+      assetNameRegExp: /\.optimize\.css$/g,
+      cssProcessor: require('cssnano'),
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }],
       },
-      output: {
-        comments: false
-      }
+      canPrint: true
     }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.
     new ManifestPlugin({ fileName: 'asset-manifest.json' }),
-    new webpack.optimize.AggressiveMergingPlugin(),
-    // Define variables, useful to distinguish production and devel
-    new webpack.DefinePlugin({
-      __SERVER__:      !production,
-      __DEVELOPMENT__: !production,
-      __DEVTOOLS__:    !production,
-      // This has effect on the react lib size
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.BABEL_ENV': JSON.stringify('production')
-    })
+    new webpack.optimize.AggressiveMergingPlugin()
   ]);
 }
 
 var config = {
+  mode: production ? 'production' : 'development',
   cache: true,
-  //devtool: production ? 'cheap-module-source-map': 'cheap-module-eval-source-map',
   devtool: production ? (shouldUseSourceMap ? 'cheap-module-source-map' : false) : 'source-map',
   entry: {
-    polyfill: 'babel-polyfill',
     app: [ PATHS.app ],
-    vendor: ['react', 'react-dom', 'react-redux', 'react-router', 'redux']
+    vendor: ['@babel/polyfill', 'react', 'react-dom', 'react-redux', 'react-router', 'redux']
   },
+	optimization: {
+		splitChunks: {
+			chunks: 'all',
+		},
+    runtimeChunk: true,
+    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+	},
   output: {
     path: PATHS.build,
     pathinfo: true, // /* filename */ comments to generated requires in otuput
-    filename: '[name]-[hash:8].js',
+    filename: '[name].[hash:8].js',
+		chunkFilename: '[name].[hash:8].js',
     // publicPath: "http://localhost:8080/", // Development server
     // publicPath: "http://example.com/", // Production
     publicPath: production ? epbdurlprefix : '' // This is used to generate URLs to e.g. images,css
@@ -153,7 +144,7 @@ var config = {
               formatter: eslintFormatter,
               eslintPath: require.resolve('eslint'),
             },
-            loader: require.resolve('eslint-loader'),
+            loader: 'eslint-loader',
           },
         ],
       },
@@ -162,77 +153,75 @@ var config = {
         include: PATHS.app,
         loader: 'babel-loader',
         options: {
-          cacheDirectory: production ? false : true,
-          compact: production ? true : false,
-          presets: [['env', { "modules": false }], 'stage-0', 'react', 'flow']
+          presets: ['@babel/env', '@babel/react'],
+          plugins: [
+            "@babel/plugin-proposal-class-properties", 
+            // [
+            //   "@babel/plugin-proposal-decorators", { "legacy": true }
+            // ],
+            '@babel/plugin-proposal-object-rest-spread', 
+            '@babel/plugin-syntax-dynamic-import', 
+          ],
         }
       },
       { // CSS
         test: /\.css$/,
         include: [PATHS.app, PATHS.node],
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            { loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                minimize: production ? true: false,
-                sourceMap: production ? shouldUseSourceMap : false
+        use: [
+          // production ? MiniCssExtractPlugin.loader : 'style-loader',
+          MiniCssExtractPlugin.loader,
+          { loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              sourceMap: production ? shouldUseSourceMap : false
+            }
+          },
+          { loader: 'postcss-loader',
+            options: {
+              config: {
+                path: __dirname + '/postcss.config.js'
               }
             },
-            { loader: 'postcss-loader',
-              options: {
-                plugins: () => [
-                  autoprefixer({
-                    browsers: [
-                      '>1%',
-                      'last 4 versions',
-                      'Firefox ESR',
-                      'not ie < 9', // React doesn't support IE8 anyway
-                    ]
-                  })
-                ]
-              }
-            }
-          ]
-        })
+          }
+        ]
       },
       { // SASS
         test: /\.scss$/,
         include: PATHS.app,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            { loader: 'css-loader' },
-            { loader: 'postcss-loader',
-              options: {
-                plugins: () => [
-                  autoprefixer({
-                    browsers: [
-                      '>1%',
-                      'last 4 versions',
-                      'Firefox ESR',
-                      'not ie < 9', // React doesn't support IE8 anyway
-                    ]
-                  })
-                ]
+        use: [
+          production ? MiniCssExtractPlugin.loader : 'style-loader',
+          { loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              sourceMap: production ? shouldUseSourceMap : false
+            }
+          },
+          { loader: 'postcss-loader',
+            options: {
+              config: {
+                path: __dirname + '/postcss.config.js'
               }
             },
-            { loader: 'sass-loader', options: { outputStyle: 'expanded' } }
-          ]
-        })
+          },
+          { loader: 'sass-loader',
+            options: {
+              sourceMap: production ? shouldUseSourceMap : false,
+              outputStyle: 'expanded'
+            }
+          }
+        ]
       },
       { // IMG  direct URLs for the rest
         test: [/\.bmp$/i, /\.gif$/i, /\.jpe?g$/i, /\.png$/i],
         include: PATHS.app,
         use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 2000,
-              name: 'img/[name]-[hash:8].[ext]'
-            }
-          },
+          // {
+          //   loader: 'url-loader',
+          //   options: {
+          //     limit: 2000,
+          //     name: 'img/[name]-[hash:8].[ext]'
+          //   }
+          // },
           'img-loader'
         ]
       },
@@ -242,13 +231,10 @@ var config = {
         loader: ['file-loader?name=[name].[ext]', 'img-loader']
       },
       // required for bootstrap icons
-      { test: /\.woff2?$/,
+      { test: /\.(woff|woff2|eot|ttf|otf)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader?name=fonts/[name]-[hash:8].[ext]' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader?name=fonts/[name]-[hash:8].[ext]' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader?name=fonts/[name]-[hash:8].[ext]' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+
+      { test: /\.(jpg|gif|png|svg)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader?name=img/[name]-[hash:8].[ext]' },
       // Bootstrap 3
       { test: /bootstrap-sass\/assets\/javascripts\//,
