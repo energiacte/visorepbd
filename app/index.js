@@ -1,9 +1,4 @@
-// Import React and JS
-import React from "react";
-import { HashRouter, Route, Switch } from "react-router-dom";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-
+// Recursos generales
 import "img/favicon.ico";
 // Polyfills
 import "@babel/polyfill/noConflict";
@@ -12,9 +7,16 @@ import "jquery";
 import "popper.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-// Elementos de la aplicación
-import "styles/style.scss"; // CSS
 import "styles/font-awesome.min.css"; // copia de iconos fontawesome
+
+// Import React and JS
+import React from "react";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+
+// Elementos propios
+import "styles/style.scss"; // CSS
 import store from "store/store.js";
 import MainPage from "components/MainPage.jsx";
 import WeightingFactorsPage from "components/WeightingFactorsPage.jsx";
