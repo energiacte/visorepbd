@@ -18,6 +18,8 @@ const get_service_icon = service => {
       return { icon: "fa-cloud", color: "navy" };
     case "DHU":
       return { icon: "fa-cloud", color: "red" };
+    case "BAC":
+        return { icon: "fa-building", color: "red" };
     default:
       // NDEF y otros
       return { icon: "fa-question-circle", color: "gray" };
