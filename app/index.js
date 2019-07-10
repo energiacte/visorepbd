@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 
 import "img/favicon.ico";
 // Polyfills
-import "@babel/polyfill";
+import "@babel/polyfill/noConflict";
 // Bootstrap
 import "jquery";
 import "popper.js";
