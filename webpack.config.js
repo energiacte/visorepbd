@@ -78,14 +78,6 @@ if (production) {
     new CleanWebpackPlugin(),
     // Prevent Webpack from creating too small chunks
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 51200 }), // ~50kb
-    new OptimizeCSSAssetsPlugin({
-      assetNameRegExp: /\.optimize\.css$/g,
-      cssProcessor: require("cssnano"),
-      cssProcessorPluginOptions: {
-        preset: ["default", { discardComments: { removeAll: true } }]
-      },
-      canPrint: true
-    }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.
@@ -96,36 +88,42 @@ if (production) {
 
 var config = {
   mode: production ? "production" : "development",
-  cache: true,
-  watch: true,
+  cache: production ? false : true,
   devtool: production
     ? shouldUseSourceMap
       ? "cheap-module-source-map"
       : false
     : "source-map",
-  entry: {
-    app: [PATHS.app],
-    vendor: [
-      "@babel/polyfill",
-      "react",
-      "react-dom",
-      "react-redux",
-      "react-router",
-      "redux"
-    ]
-  },
+  entry: PATHS.app,
   optimization: {
+    runtimeChunk: true,
     splitChunks: {
       chunks: "all"
     },
-    runtimeChunk: true,
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
+    minimizer: [
+      new TerserJSPlugin({
+        parallel: true,
+        sourceMap: production ? false : true,
+        terserOptions: {
+          warnings: false,
+          ie8: false
+        }
+      }),
+      new OptimizeCSSAssetsPlugin({
+        assetNameRegExp: /\.optimize\.css$/g,
+        cssProcessor: require("cssnano"),
+        cssProcessorPluginOptions: {
+          preset: ["default", { discardComments: { removeAll: true } }]
+        },
+        canPrint: true
+      })
+    ]
   },
   output: {
     path: PATHS.build,
-    pathinfo: true, // /* filename */ comments to generated requires in otuput
+    pathinfo: production ? false : true, // /* filename */ comments to generated requires in otuput
     filename: "[name].[hash:8].js",
-    chunkFilename: "[name].[hash:8].js",
+    chunkFilename: "[name].[chunkhash:8].js",
     // publicPath: "http://localhost:8080/", // Development server
     // publicPath: "http://example.com/", // Production
     publicPath: production ? epbdurlprefix : "" // This is used to generate URLs to e.g. images,css
@@ -174,7 +172,6 @@ var config = {
         test: /\.css$/,
         include: [PATHS.app, PATHS.node],
         use: [
-          // production ? MiniCssExtractPlugin.loader : 'style-loader',
           MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
@@ -225,18 +222,9 @@ var config = {
       },
       {
         // IMG  direct URLs for the rest
-        test: [/\.bmp$/i, /\.gif$/i, /\.jpe?g$/i, /\.png$/i],
+        test: [/\.(gif|jpe?g|png)$/i],
         include: PATHS.app,
-        use: [
-          // {
-          //   loader: 'url-loader',
-          //   options: {
-          //     limit: 2000,
-          //     name: 'img/[name]-[hash:8].[ext]'
-          //   }
-          // },
-          "img-loader"
-        ]
+        loader: "img-loader"
       },
       {
         // .ico files

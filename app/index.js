@@ -5,8 +5,14 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
 import "img/favicon.ico";
+// Polyfills
+import "@babel/polyfill";
+// Bootstrap
+import "jquery";
+import "popper.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
+// Elementos de la aplicación
 import "styles/style.scss"; // CSS
 import "styles/font-awesome.min.css"; // copia de iconos fontawesome
 import store from "store/store.js";
