@@ -63,8 +63,8 @@ const HelpPage = props => (
 
         <p>
           La aplicación{" "}
-          <a href="https://github.com/energiacte/epbdjs-cli">
-            cteepbd (epbdjs-cli)
+          <a href="https://github.com/energiacte/cteepbd">
+            CteEPBD
           </a>{" "}
           proporciona una implementación alternativa del procedimiento para su
           uso desde la consola.
