@@ -5,7 +5,7 @@ import NavBar from "components/NavBar";
 import Footer from "components/Footer";
 
 import { editWFactors, changeLocalizacion } from "actions/actions.js";
-import { cte } from "epbdjs";
+import { new_wfactors } from "components/myepbdjs";
 
 const CTELOCS = {
   PENINSULA: "Península",
@@ -280,7 +280,7 @@ class WeightingFactorsPageClass extends React.Component {
       f => f.source === "COGENERACION" && f.dest === "to_grid" && f.step === "A"
     );
     dispatch(changeLocalizacion(loc));
-    const newfactors = cte.new_wfactors(loc, {
+    const newfactors = new_wfactors(loc, {
       cogen: {
         to_grid: { ren: cog.ren, nren: cog.nren },
         to_nEPB: { ren: cog.ren, nren: cog.nren }

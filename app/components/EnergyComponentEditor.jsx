@@ -2,8 +2,7 @@ import React from "react";
 
 import EnergyComponentChart from "components/EnergyComponentChart";
 import ValuesEditor from "components/ValuesEditor";
-import { cte } from "epbdjs";
-const { CTE_VALIDDATA, CTE_VALIDSERVICES } = cte;
+import { CTE_VALIDDATA, CTE_VALIDSERVICES } from "components/myepbdjs";
 
 const CURVENAMES = [
   "ACTUAL",

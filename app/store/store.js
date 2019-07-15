@@ -1,7 +1,7 @@
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 import reducer from "reducers/reducers.js";
-import { cte } from "epbdjs";
+import { new_wfactors } from "components/myepbdjs";
 
 const initialState = {
   data: { ren: 0, nren: 0, total: 0, rer: 0, rer_acs_nrb: 0 },
@@ -31,7 +31,7 @@ const initialState = {
   kexp: 0.0,
   area: 200,
   localizacion: "PENINSULA",
-  wfactors: cte.new_wfactors("PENINSULA"),
+  wfactors: new_wfactors("PENINSULA"),
   components: {
     cmeta: [],
     cdata: [

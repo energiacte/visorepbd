@@ -1,4 +1,7 @@
-import { energy_performance, cte } from "epbdjs";
+import {
+  energy_performance,
+  energy_performance_acs_nrb
+} from "components/myepbdjs";
 
 /*
  * action types
@@ -86,11 +89,9 @@ export function computeEnergy() {
     const total = ren + nren;
     const rer = total === 0 ? 0 : ren / total;
     // Cálculo para ACS en perímetro próximo
-    const wfactors_nrb = cte.wfactors_to_nearby(wfactors);
-    const components_acs = cte.components_by_service(componentsobj, "ACS");
-    const res_acs_nrb = energy_performance(
-      components_acs,
-      wfactors_nrb,
+    const res_acs_nrb = energy_performance_acs_nrb(
+      componentsobj,
+      wfactors,
       kexp,
       area
     );

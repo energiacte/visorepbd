@@ -9,8 +9,12 @@ import EnergyComponentList from "components/EnergyComponentList";
 import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 
-import { serialize_components, cte } from "epbdjs";
-const { parse_components, updatemeta, CTE_LOCS } = cte;
+import {
+  serialize_components,
+  CTE_LOCS,
+  updatemeta,
+  parse_components
+} from "components/myepbdjs";
 
 import {
   changeKexp,
