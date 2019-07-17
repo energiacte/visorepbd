@@ -285,8 +285,10 @@ class WeightingFactorsPageClass extends React.Component {
         to_grid: { ren: cog.ren, nren: cog.nren },
         to_nEPB: { ren: cog.ren, nren: cog.nren }
       },
-      RED1: { ren: red1.ren, nren: red1.nren },
-      RED2: { ren: red2.ren, nren: red2.nren }
+      red: {
+        RED1: { ren: red1.ren, nren: red1.nren },
+        RED2: { ren: red2.ren, nren: red2.nren }
+      }
     });
     dispatch(editWFactors(newfactors));
   }
