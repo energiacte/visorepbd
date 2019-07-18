@@ -19,6 +19,9 @@ buildprodjs:
 	$(info [INFO]: Generando bundle JS de producción con prefijo de URL $(EPBDURLPREFIX))
 	EPBDURLPREFIX=${EPBDURLPREFIX} make buildjs
 
+buildwasm:
+	cd wasm && wasm-pack build
+
 # antes hacer un git pull
 update: ${REPODIR}/package.json
 	$(info [INFO]: actualizando dependencias)

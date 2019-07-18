@@ -5,7 +5,7 @@ import NavBar from "components/NavBar";
 import Footer from "components/Footer";
 
 import { editWFactors, changeLocalizacion } from "actions/actions.js";
-import { new_wfactors } from "components/myepbdjs";
+import { new_wfactors } from "wasm-cteepbd";
 
 const CTELOCS = {
   PENINSULA: "Península",
@@ -17,15 +17,18 @@ const CTELOCS = {
 class WeightingFactorsPageClass extends React.Component {
   render() {
     const { wfactors, localizacion } = this.props;
-    const wfactors2 = wfactors.wdata.filter(
+
+    // Factores definidos reglamentariamente
+    const wfactors_reglamentarios = wfactors.wdata.filter(
       f =>
         !f.carrier.startsWith("RED") &&
-        !(f.source === "COGENERACION" && f.dest === "to_grid" && f.step === "A")
+        !(f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A")
     );
+    // Factores definibles por el usuario
     const red1 = wfactors.wdata.find(f => f.carrier === "RED1");
     const red2 = wfactors.wdata.find(f => f.carrier === "RED2");
     const cog = wfactors.wdata.find(
-      f => f.source === "COGENERACION" && f.dest === "to_grid" && f.step === "A"
+      f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
     );
 
     return (
@@ -86,7 +89,7 @@ class WeightingFactorsPageClass extends React.Component {
               <tr>
                 <td>RED1</td>
                 <td>RED</td>
-                <td>input</td>
+                <td>SUMINISTRO</td>
                 <td>A</td>
                 <td>
                   <input
@@ -108,7 +111,7 @@ class WeightingFactorsPageClass extends React.Component {
               <tr>
                 <td>RED2</td>
                 <td>RED</td>
-                <td>input</td>
+                <td>SUMINISTRO</td>
                 <td>A</td>
                 <td>
                   <input
@@ -131,7 +134,7 @@ class WeightingFactorsPageClass extends React.Component {
               <tr>
                 <td>ELECTRICIDAD</td>
                 <td>COGENERACION</td>
-                <td>to_grid</td>
+                <td>A_RED</td>
                 <td>A</td>
                 <td>
                   <input
@@ -179,16 +182,18 @@ class WeightingFactorsPageClass extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {wfactors2.map(({ carrier, source, dest, step, ren, nren }) => (
-                <tr key={`${carrier}-${source}-${dest}-${step}`}>
-                  <td>{carrier}</td>
-                  <td>{source}</td>
-                  <td>{dest}</td>
-                  <td>{step}</td>
-                  <td>{ren.toFixed(3)}</td>
-                  <td>{nren.toFixed(3)}</td>
-                </tr>
-              ))}
+              {wfactors_reglamentarios.map(
+                ({ carrier, source, dest, step, ren, nren }) => (
+                  <tr key={`${carrier}-${source}-${dest}-${step}`}>
+                    <td>{carrier}</td>
+                    <td>{source}</td>
+                    <td>{dest}</td>
+                    <td>{step}</td>
+                    <td>{ren.toFixed(3)}</td>
+                    <td>{nren.toFixed(3)}</td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
           <div className="small bg-light">
@@ -226,13 +231,13 @@ class WeightingFactorsPageClass extends React.Component {
             <p>Uso:</p>
             <ul>
               <li>
-                <tt>input</tt>: sumiministro
+                <tt>SUMINISTRO</tt>: sumiministro
               </li>
               <li>
-                <tt>to_grid</tt>: exportación a la red
+                <tt>A_RED</tt>: exportación a la red
               </li>
               <li>
-                <tt>to_nEPB</tt>: exportación a usos nEPB
+                <tt>A_NEPB</tt>: exportación a usos nEPB
               </li>
             </ul>
             <p>
@@ -258,10 +263,10 @@ class WeightingFactorsPageClass extends React.Component {
     let vecobj, otherveclist;
     if (vec === "ELECTRICIDADCOGEN") {
       vecobj = wdata.find(
-        f => f.source === "COGENERACION" && f.dest === "to_grid"
+        f => f.source === "COGENERACION" && f.dest === "A_RED"
       );
       otherveclist = wdata.filter(
-        f => f.source !== "COGENERACION" && f.dest !== "to_grid"
+        f => f.source !== "COGENERACION" && f.dest !== "A_RED"
       );
     } else {
       vecobj = wdata.find(f => f.carrier === vec);
@@ -277,13 +282,13 @@ class WeightingFactorsPageClass extends React.Component {
     const red1 = wfactors.wdata.find(f => f.carrier === "RED1");
     const red2 = wfactors.wdata.find(f => f.carrier === "RED2");
     const cog = wfactors.wdata.find(
-      f => f.source === "COGENERACION" && f.dest === "to_grid" && f.step === "A"
+      f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
     );
     dispatch(changeLocalizacion(loc));
     const newfactors = new_wfactors(loc, {
       cogen: {
-        to_grid: { ren: cog.ren, nren: cog.nren },
-        to_nEPB: { ren: cog.ren, nren: cog.nren }
+        A_RED: { ren: cog.ren, nren: cog.nren },
+        A_NEPB: { ren: cog.ren, nren: cog.nren }
       },
       red: {
         RED1: { ren: red1.ren, nren: red1.nren },

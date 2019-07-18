@@ -1,7 +1,7 @@
 import {
   energy_performance,
   energy_performance_acs_nrb
-} from "components/myepbdjs";
+} from "wasm-cteepbd";
 
 /*
  * action types

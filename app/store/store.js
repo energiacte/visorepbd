@@ -1,7 +1,7 @@
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 import reducer from "reducers/reducers.js";
-import { new_wfactors } from "components/myepbdjs";
+import { new_wfactors } from "wasm-cteepbd";
 
 const initialState = {
   data: { ren: 0, nren: 0, total: 0, rer: 0, rer_acs_nrb: 0 },

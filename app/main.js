@@ -23,6 +23,10 @@ import WeightingFactorsPage from "components/WeightingFactorsPage.jsx";
 import HelpPage from "components/HelpPage.jsx";
 import AboutPage from "components/AboutPage.jsx";
 
+import { set_panic_hook } from "wasm-cteepbd";
+
+set_panic_hook();
+
 // Render
 ReactDOM.render(
   <Provider store={store}>

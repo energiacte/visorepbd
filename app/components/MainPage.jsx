@@ -9,9 +9,7 @@ import EnergyComponentList from "components/EnergyComponentList";
 import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 
-import {
-  parse_components
-} from "components/myepbdjs";
+import { parse_components } from "wasm-cteepbd";
 
 import {
   changeKexp,

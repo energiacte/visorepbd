@@ -97,7 +97,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "bootstrap": "^4.3.1",
-    "epbdjs": "^7.3.1",
     "jquery": "^3.4.1",
     "popper.js": "^1.15.0",
     "react": "^16.8.6",
@@ -106,6 +105,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "wasm-cteepbd": "file:./wasm/pkg"
   }
 }

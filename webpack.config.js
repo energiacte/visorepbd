@@ -23,6 +23,7 @@ const epbdurlprefix = process.env.EPBDURLPREFIX || "";
 
 const PATHS = {
   app: path.resolve(path.join(__dirname, "app")),
+  wasm: path.resolve(path.join(__dirname, "wasm")),
   build: path.resolve(path.join(__dirname, "build")),
   nodedir: "node_modules",
   node: path.resolve(path.join(__dirname, "node_modules")),
@@ -129,7 +130,7 @@ var config = {
     publicPath: production ? epbdurlprefix : "" // This is used to generate URLs to e.g. images,css
   },
   resolve: {
-    modules: [PATHS.app, PATHS.node, PATHS.nodedir],
+    modules: [PATHS.app, PATHS.wasm, PATHS.node, PATHS.nodedir],
     extensions: [".web.js", ".js", ".web.jsx", ".jsx", ".json"],
     alias: {
       // Para usar alias en imports
