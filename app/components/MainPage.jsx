@@ -27,13 +27,13 @@ import {
 class MainPageClass extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showModal: false };
+    this.state = { showEditWindow: false }; // Mostrar ventana modal de edición
     // Carga datos desde API al inicializar
     this.props.dispatch(computeEnergy()); // nuevo
   }
 
-  toggleModal() {
-    this.setState({ showModal: !this.state.showModal });
+  toggleEditWindow() {
+    this.setState({ showEditWindow: !this.state.showEditWindow });
   }
 
   render() {
@@ -104,15 +104,15 @@ class MainPageClass extends React.Component {
                   className="btn"
                   id="edit"
                   type="button"
-                  onClick={() => this.toggleModal()}
+                  onClick={() => this.toggleEditWindow()}
                 >
                   <span className="fa fa-edit" /> Editar
                 </button>
               </div>
             </div>
             <ModalContainer
-              show={this.state.showModal}
-              onClose={() => this.toggleModal()}
+              show={this.state.showEditWindow}
+              onClose={() => this.toggleEditWindow()}
             >
               <EnergyComponentEditor
                 selectedkey={selectedkey}
