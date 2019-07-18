@@ -10,9 +10,6 @@ import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 
 import {
-  serialize_components,
-  CTE_LOCS,
-  updatemeta,
   parse_components
 } from "components/myepbdjs";
 
@@ -160,6 +157,9 @@ class MainPageClass extends React.Component {
     const m_kexp = cmeta.find(c => c.key === "CTE_KEXP");
     const m_localizacion = cmeta.find(c => c.key === "CTE_LOCALIZACION");
     const { dispatch, kexp, area, localizacion } = this.props;
+    // Localizaciones válidas para CTE
+    const CTE_LOCS = ["PENINSULA", "BALEARES", "CANARIAS", "CEUTAMELILLA"];
+
     dispatch(loadEnergyComponents({ cmeta, cdata: newcdata }));
     dispatch(
       changeArea(
@@ -182,12 +182,40 @@ class MainPageClass extends React.Component {
     const { cmeta, cdata } = components;
     // remove active key
     const newcdata = cdata.filter(e => e.active); //.map(({ active, ...rest }) => rest);
+
+    // Actualiza objeto de metadatos con nuevo valor o inserta si no existe
+    function updatemeta(metaobj, key, value) {
+      const match = metaobj.find(c => c.key === key);
+      if (match) {
+        match.value = value;
+      } else {
+        metaobj.push({ key, value });
+      }
+      return metaobj;
+    }
+
     [
       { key: "App", value: "VisorEPBD_1.0" },
       { key: "CTE_AREAREF", value: area },
       { key: "CTE_KEXP", value: kexp },
       { key: "CTE_LOCALIZACION", value: localizacion }
     ].map(m => updatemeta(cmeta, m.key, m.value));
+
+    // Convert components (carrier data with metadata) to string
+    function serialize_components(components) {
+      // Serialize basic types to string
+      const cmetas = components.cmeta.map(mm => `#META ${mm.key}: ${mm.value}`);
+      const carriers = components.cdata.map(
+        cc =>
+          `${cc.carrier}, ${cc.ctype}, ${cc.csubtype}, ${
+            cc.service
+          }, ${cc.values.map(v => v.toFixed(2)).join(",")}${
+            cc.comment !== "" ? " # " + cc.comment : ""
+          }`
+      );
+      return [...cmetas, ...carriers].join("\n");
+    }
+
     return serialize_components({ cdata: newcdata, cmeta });
   }
 }

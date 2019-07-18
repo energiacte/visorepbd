@@ -2,7 +2,53 @@ import React from "react";
 
 import EnergyComponentChart from "components/EnergyComponentChart";
 import ValuesEditor from "components/ValuesEditor";
-import { CTE_VALIDDATA, CTE_VALIDSERVICES } from "components/myepbdjs";
+
+const CTE_VALIDDATA = {
+  CONSUMO: {
+    EPB: [
+      "BIOCARBURANTE",
+      "BIOMASA",
+      "BIOMASADENSIFICADA",
+      "CARBON",
+      "ELECTRICIDAD",
+      "GASNATURAL",
+      "GASOLEO",
+      "GLP",
+      "MEDIOAMBIENTE",
+      "RED1",
+      "RED2"
+    ],
+    NEPB: [
+      "BIOCARBURANTE",
+      "BIOMASA",
+      "BIOMASADENSIFICADA",
+      "CARBON",
+      "ELECTRICIDAD",
+      "GASNATURAL",
+      "GASOLEO",
+      "GLP",
+      "MEDIOAMBIENTE",
+      "RED1",
+      "RED2"
+    ]
+  },
+  PRODUCCION: {
+    INSITU: ["ELECTRICIDAD", "MEDIOAMBIENTE"],
+    COGENERACION: ["ELECTRICIDAD"]
+  }
+};
+
+const CTE_VALIDSERVICES = [
+  "ACS",
+  "CAL",
+  "REF",
+  "VEN",
+  "ILU",
+  "HU",
+  "DHU",
+  "BAC",
+  "NDEF"
+];
 
 const CURVENAMES = [
   "ACTUAL",
