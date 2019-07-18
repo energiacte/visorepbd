@@ -1,0 +1,36 @@
+[package]
+name = "wasm-cteepbd"
+description = "Wasm bindings to cteepbd"
+version = "0.1.0"
+authors = ["Rafael Villar Burke <pachi@ietcc.csic.es>"]
+edition = "2018"
+repository = "https://github.com/energiacte/visorepbd"
+license = "Apache-2.0 OR MIT"
+readme = "README.md"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["console_error_panic_hook"]
+
+[dependencies]
+wasm-bindgen = {version = "0.2", features = ["serde-serialize"]}
+serde = "1.0.95"
+serde_derive = "1.0.95"
+
+cteepbd = { path = "../../cteepbd" }
+
+# The `console_error_panic_hook` crate provides better debugging of panics by
+# logging them with `console.error`. This is great for development, but requires
+# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
+# code size when deploying.
+console_error_panic_hook = { version = "0.1.6", optional = true }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.2"
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"
+lto = true
