@@ -46,7 +46,7 @@ class MainPageClass extends React.Component {
       selectedkey,
       components,
       storedcomponent,
-      data,
+      results,
       dispatch
     } = this.props;
     return (
@@ -77,7 +77,7 @@ class MainPageClass extends React.Component {
           </div>
           <div className="row">
             <div className="col">
-              <EPChart data={data} kexp={kexp} />
+              <EPChart data={results} kexp={kexp} />
             </div>
           </div>
           <div className="row">
@@ -226,7 +226,7 @@ const MainPage = connect(state => {
     kexp: state.kexp,
     area: state.area,
     location: state.location,
-    data: state.data,
+    results: state.results,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
     wfactors: state.wfactors,

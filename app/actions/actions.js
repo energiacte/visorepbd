@@ -18,7 +18,7 @@ export const CHANGE_AREA = "CHANGE_AREA";
 export const CHANGE_LOCATION = "CHANGE_LOCATION";
 export const CHANGE_CURRENTFILENAME = "CHANGE_CURRENTFILENAME";
 export const EDIT_WFACTORS = "EDIT_WFACTORS";
-export const RECEIVE_ENERGYDATA = "RECEIVE_ENERGYDATA";
+export const RECEIVE_ENERGYRESULTS = "RECEIVE_ENERGYRESULTS";
 
 /*
  * action creators
@@ -68,8 +68,8 @@ export function changeCurrentFileName(newname) {
   return { type: CHANGE_CURRENTFILENAME, newname };
 }
 
-export function deliverEnergy(newdata) {
-  return { type: RECEIVE_ENERGYDATA, newdata };
+export function deliverEnergyResults(newresults) {
+  return { type: RECEIVE_ENERGYRESULTS, newresults };
 }
 
 // async action creator to get API data: thunk (redux-thunk middleware)
@@ -99,6 +99,6 @@ export function computeEnergy() {
     const total_acs = ren_acs + nren_acs;
     const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
     // Actualización
-    dispatch(deliverEnergy({ ren, nren, total, rer, rer_acs_nrb }));
+    dispatch(deliverEnergyResults({ ren, nren, total, rer, rer_acs_nrb }));
   };
 }

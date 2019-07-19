@@ -10,7 +10,7 @@ import {
   CHANGE_AREA,
   CHANGE_LOCATION,
   EDIT_WFACTORS,
-  RECEIVE_ENERGYDATA,
+  RECEIVE_ENERGYRESULTS,
   CHANGE_CURRENTFILENAME
 } from "../actions/actions.js";
 
@@ -141,10 +141,10 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
   }
 }
 
-function data(state = {}, action) {
+function results(state = {}, action) {
   switch (action.type) {
-    case RECEIVE_ENERGYDATA:
-      return action.newdata;
+    case RECEIVE_ENERGYRESULTS:
+      return action.newresults;
     default:
       return state;
   }
@@ -159,13 +159,13 @@ function data(state = {}, action) {
 //     selectedkey: selectedkey(state.selectedkey, action),
 //     kexp: kexp(state.kexp, action),
 //     components: components(state.components, action),
-//     data: data(state, action)
+//     results: results(state, action)
 //   };
 // };
 // export default reducer;
 
 export default combineReducers({
-  data,
+  results,
   storedcomponent,
   selectedkey,
   kexp,
