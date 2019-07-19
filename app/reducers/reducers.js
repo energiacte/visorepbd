@@ -10,7 +10,6 @@ import {
   CHANGE_AREA,
   CHANGE_LOCATION,
   EDIT_WFACTORS,
-  RECEIVE_ENERGYRESULTS,
   CHANGE_CURRENTFILENAME
 } from "../actions/actions.js";
 
@@ -149,19 +148,8 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
   }
 }
 
-// Reducer para la parte de results
-function results(state = {}, action) {
-  switch (action.type) {
-    case RECEIVE_ENERGYRESULTS:
-      return action.newresults;
-    default:
-      return state;
-  }
-}
-
 // Composición de reducers para general el estado general
 export default combineReducers({
-  results,
   storedcomponent,
   selectedkey,
   kexp,

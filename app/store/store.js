@@ -1,10 +1,8 @@
-import thunk from "redux-thunk";
-import { createStore, applyMiddleware } from "redux";
+import { createStore } from "redux";
 import reducer from "reducers/reducers.js";
 import { new_wfactors } from "wasm-cteepbd";
 
 const initialState = {
-  results: { ren: 0, nren: 0, total: 0, rer: 0, rer_acs_nrb: 0 },
   storedcomponent: {
     active: true,
     carrier: "ELECTRICIDAD",
@@ -272,4 +270,4 @@ const initialState = {
   currentfilename: "csvEPBDpanel.csv"
 };
 
-export default createStore(reducer, initialState, applyMiddleware(thunk));
+export default createStore(reducer, initialState);

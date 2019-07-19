@@ -9,7 +9,11 @@ import EnergyComponentsTable from "components/EnergyComponentsTable";
 import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 
-import { parse_components } from "wasm-cteepbd";
+import {
+  parse_components,
+  energy_performance,
+  energy_performance_acs_nrb
+} from "wasm-cteepbd";
 
 import {
   changeKexp,
@@ -20,8 +24,7 @@ import {
   editEnergyComponent,
   selectEnergyComponent,
   loadEnergyComponents,
-  changeCurrentFileName,
-  computeEnergy
+  changeCurrentFileName
 } from "actions/actions.js";
 
 // Página principal de la aplicación
@@ -29,11 +32,6 @@ class MainPageClass extends React.Component {
   constructor(props) {
     super(props);
     this.state = { showEditWindow: false }; // Mostrar ventana modal de edición
-  }
-
-  componentDidMount() {
-    // Carga datos desde API al inicializar
-    this.props.dispatch(computeEnergy()); // cálculo inicial
   }
 
   toggleEditWindow() {
@@ -47,9 +45,11 @@ class MainPageClass extends React.Component {
       selectedkey,
       components,
       storedcomponent,
-      results,
       dispatch
     } = this.props;
+
+    const results = this.computeEnergyResults();
+
     return (
       <div>
         <NavBar match={this.props.match} />
@@ -61,11 +61,9 @@ class MainPageClass extends React.Component {
                 area={area}
                 onChangeKexp={value => {
                   dispatch(changeKexp(value));
-                  dispatch(computeEnergy());
                 }}
                 onChangeArea={value => {
                   dispatch(changeArea(value));
-                  dispatch(computeEnergy());
                 }}
                 onCarriersLoad={d => this.uploadCarriers(d)}
                 onCarriersDownload={() => this.downloadCarriers()}
@@ -124,7 +122,6 @@ class MainPageClass extends React.Component {
                 storedcomponent={storedcomponent}
                 onEdit={(key, component) => {
                   dispatch(editEnergyComponent(key, component));
-                  dispatch(computeEnergy());
                 }}
               />
             </ModalContainer>
@@ -140,7 +137,6 @@ class MainPageClass extends React.Component {
                 }
                 onEdit={(key, component) => {
                   dispatch(editEnergyComponent(key, component));
-                  dispatch(computeEnergy());
                 }}
               />
             </div>
@@ -176,7 +172,6 @@ class MainPageClass extends React.Component {
           : location
       )
     );
-    dispatch(computeEnergy());
   }
 
   downloadCarriers() {
@@ -220,6 +215,31 @@ class MainPageClass extends React.Component {
 
     return serialize_components({ cdata: newcdata, cmeta });
   }
+
+  computeEnergyResults() {
+    const { kexp, area, components, wfactors } = this.props;
+    const componentsobj = {
+      cmeta: components.cmeta,
+      cdata: components.cdata.filter(c => c.active)
+    };
+    // Cálculo global
+    const ep = energy_performance(componentsobj, wfactors, kexp, area);
+    const { ren, nren } = ep.balance_m2.B;
+    const total = ren + nren;
+    const rer = total === 0 ? 0 : ren / total;
+    // Cálculo para ACS en perímetro próximo
+    const res_acs_nrb = energy_performance_acs_nrb(
+      componentsobj,
+      wfactors,
+      kexp,
+      area
+    );
+    const { ren: ren_acs, nren: nren_acs } = res_acs_nrb.balance_m2.B;
+    const total_acs = ren_acs + nren_acs;
+    const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
+    // Actualización
+    return { ren, nren, total, rer, rer_acs_nrb };
+  }
 }
 
 const MainPage = connect(state => {
@@ -227,7 +247,6 @@ const MainPage = connect(state => {
     kexp: state.kexp,
     area: state.area,
     location: state.location,
-    results: state.results,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
     wfactors: state.wfactors,

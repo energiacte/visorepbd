@@ -1,8 +1,3 @@
-import {
-  energy_performance,
-  energy_performance_acs_nrb
-} from "wasm-cteepbd";
-
 /*
  * action types
  */
@@ -18,7 +13,6 @@ export const CHANGE_AREA = "CHANGE_AREA";
 export const CHANGE_LOCATION = "CHANGE_LOCATION";
 export const CHANGE_CURRENTFILENAME = "CHANGE_CURRENTFILENAME";
 export const EDIT_WFACTORS = "EDIT_WFACTORS";
-export const RECEIVE_ENERGYRESULTS = "RECEIVE_ENERGYRESULTS";
 
 /*
  * action creators
@@ -66,39 +60,4 @@ export function editWFactors(newfactors) {
 
 export function changeCurrentFileName(newname) {
   return { type: CHANGE_CURRENTFILENAME, newname };
-}
-
-export function deliverEnergyResults(newresults) {
-  return { type: RECEIVE_ENERGYRESULTS, newresults };
-}
-
-// async action creator to get API data: thunk (redux-thunk middleware)
-// could get params from store.getState() (import store from '../store/store.js') and return deliverData(res)
-
-export function computeEnergy() {
-  // this async action also reads state
-  return (dispatch, getState) => {
-    const { kexp, area, components, wfactors } = getState();
-    const componentsobj = {
-      cmeta: components.cmeta,
-      cdata: components.cdata.filter(c => c.active)
-    };
-    // Cálculo global
-    const ep = energy_performance(componentsobj, wfactors, kexp, area);
-    const { ren, nren } = ep.balance_m2.B;
-    const total = ren + nren;
-    const rer = total === 0 ? 0 : ren / total;
-    // Cálculo para ACS en perímetro próximo
-    const res_acs_nrb = energy_performance_acs_nrb(
-      componentsobj,
-      wfactors,
-      kexp,
-      area
-    );
-    const { ren: ren_acs, nren: nren_acs } = res_acs_nrb.balance_m2.B;
-    const total_acs = ren_acs + nren_acs;
-    const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
-    // Actualización
-    dispatch(deliverEnergyResults({ ren, nren, total, rer, rer_acs_nrb }));
-  };
 }
