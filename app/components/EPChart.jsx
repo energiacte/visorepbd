@@ -24,6 +24,14 @@ export default class EPChart extends React.Component {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
 
+  chooseLabelText(label) {
+    switch (label) {
+      case "C_ep;tot": return "ep;tot";
+      case "C_ep;nren": return "ep;nren";
+      case "C_ep;ren": return "ep;ren";
+    }
+  }
+
   render() {
     const {
       width = "100%",
@@ -46,7 +54,7 @@ export default class EPChart extends React.Component {
       steps.find(v => v >= maxvalue) || maxvalue
     );
     const minlimit = Math.min(0, -steps.find(v => -v <= minvalue) || minvalue);
-    const textw = 70; // text area width
+    const textw = 80; // text area width
     const paddingw = 10; // left and right padding width
     // View size
     // const vbw = 2 * paddingw + textw + (maxlimit - minlimit);
@@ -99,9 +107,9 @@ export default class EPChart extends React.Component {
     ));
 
     const Bars = [
-      { label: "EP_total", value: total, color: "blue" },
-      { label: "EP_nren", value: nren, color: "red" },
-      { label: "EP_ren", value: ren, color: "green" }
+      { label: "C_ep;tot", value: total, color: "blue" },
+      { label: "C_ep;nren", value: nren, color: "red" },
+      { label: "C_ep;ren", value: ren, color: "green" }
     ].map((el, i) => (
       <g className="bar" height={barheight} key={`${el.label}_bar`}>
         <rect
@@ -116,9 +124,8 @@ export default class EPChart extends React.Component {
           x={-textw + paddingw}
           y={(i + 0.5) * barheight}
           dominantBaseline="middle"
-          fill="#555"
         >
-          {el.label}
+          C<tspan dy="1ex">{ this.chooseLabelText(el.label) }</tspan>
         </text>
         <text
           x={x(Math.min(0, el.value) + 5)}
@@ -141,7 +148,7 @@ export default class EPChart extends React.Component {
         height={height}
         ref={svgElement => (this.divElement = svgElement)}
         style={{
-          backgroundColor: "rgb(70, 130, 180, 0.3)",
+          backgroundColor: "white",
           textAlign: "center",
           font: "14px sans-serif",
           fontWeight: "normal"
@@ -151,7 +158,7 @@ export default class EPChart extends React.Component {
           Consumo de energía primaria [kWh/m²·año]
         </p>
         <p>
-          (k_exp: {kexp.toFixed(2)}, RER: {rer.toFixed(2)}, RER
+          (k<sub>exp</sub>: {kexp.toFixed(2)}, RER: {rer.toFixed(2)}, RER
           <sub>ACS;nrb</sub>: {rer_acs_nrb.toFixed(2)})
         </p>
         <svg
@@ -167,7 +174,7 @@ export default class EPChart extends React.Component {
             {rer.toFixed(2)})
           </title>
           <desc id="desc">
-            EP_total: {total.toFixed(2)}, EP_nren: {nren.toFixed(2)}, EP_ren:{" "}
+            C_ep_tot: {total.toFixed(2)}, C_ep_nren: {nren.toFixed(2)}, C_ep_ren:{" "}
             {ren.toFixed(2)}
           </desc>
           <g transform={`translate(${textw},0)`}>
