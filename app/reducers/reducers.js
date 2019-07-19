@@ -14,6 +14,7 @@ import {
   CHANGE_CURRENTFILENAME
 } from "../actions/actions.js";
 
+// Reducer para la parte de storedcomponent
 function storedcomponent(state = null, action) {
   switch (action.type) {
     case SELECT_ENERGY_COMPONENT:
@@ -25,6 +26,7 @@ function storedcomponent(state = null, action) {
   }
 }
 
+// Reducer para la parte de selectedkeys
 function selectedkey(state = null, action) {
   switch (action.type) {
     case SELECT_ENERGY_COMPONENT:
@@ -39,6 +41,7 @@ function selectedkey(state = null, action) {
   }
 }
 
+// Reducer para la parte de kexp
 function kexp(state = 1, action) {
   switch (action.type) {
     case CHANGE_KEXP:
@@ -48,6 +51,7 @@ function kexp(state = 1, action) {
   }
 }
 
+// Reducer para la parte de area
 function area(state = 1, action) {
   switch (action.type) {
     case CHANGE_AREA: {
@@ -62,6 +66,7 @@ function area(state = 1, action) {
   }
 }
 
+// Reducer para la parte de location
 function location(state = "PENINSULA", action) {
   switch (action.type) {
     case CHANGE_LOCATION:
@@ -71,6 +76,7 @@ function location(state = "PENINSULA", action) {
   }
 }
 
+// Reducer para la parte de wfactors
 function wfactors(state = [], action) {
   switch (action.type) {
     case EDIT_WFACTORS:
@@ -80,6 +86,7 @@ function wfactors(state = [], action) {
   }
 }
 
+// Reducer para la parte de components
 function components(state = { cdata: [], cmeta: [] }, action) {
   let currlist;
 
@@ -132,6 +139,7 @@ function components(state = { cdata: [], cmeta: [] }, action) {
   }
 }
 
+// Reducer para la parte de currentfilename
 function currentfilename(state = "csvEPBDpanel.csv", action) {
   switch (action.type) {
     case CHANGE_CURRENTFILENAME:
@@ -141,6 +149,7 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
   }
 }
 
+// Reducer para la parte de results
 function results(state = {}, action) {
   switch (action.type) {
     case RECEIVE_ENERGYRESULTS:
@@ -150,20 +159,7 @@ function results(state = {}, action) {
   }
 }
 
-// Para comportamiento más sofisticado habría que
-// evitar el combineReducers y hacer algo así, pasando el state general
-// y no solo una parte
-// const reducer = (state = {}, action) => {
-//   return {
-//     storedcomponent: storedcomponent(state.storedcomponent, action),
-//     selectedkey: selectedkey(state.selectedkey, action),
-//     kexp: kexp(state.kexp, action),
-//     components: components(state.components, action),
-//     results: results(state, action)
-//   };
-// };
-// export default reducer;
-
+// Composición de reducers para general el estado general
 export default combineReducers({
   results,
   storedcomponent,
