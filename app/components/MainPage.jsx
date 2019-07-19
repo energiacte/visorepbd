@@ -28,8 +28,11 @@ class MainPageClass extends React.Component {
   constructor(props) {
     super(props);
     this.state = { showEditWindow: false }; // Mostrar ventana modal de edición
+  }
+
+  componentDidMount() {
     // Carga datos desde API al inicializar
-    this.props.dispatch(computeEnergy()); // nuevo
+    this.props.dispatch(computeEnergy()); // cálculo inicial
   }
 
   toggleEditWindow() {
