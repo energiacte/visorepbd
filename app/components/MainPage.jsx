@@ -14,7 +14,7 @@ import { parse_components } from "wasm-cteepbd";
 import {
   changeKexp,
   changeArea,
-  changeLocalizacion,
+  changeLocation,
   cloneEnergyComponent,
   removeEnergyComponent,
   editEnergyComponent,
@@ -156,8 +156,8 @@ class MainPageClass extends React.Component {
     // TODO: preserve RED1, RED2 and COGEN values
     const m_Area_ref = cmeta.find(c => c.key === "CTE_AREAREF");
     const m_kexp = cmeta.find(c => c.key === "CTE_KEXP");
-    const m_localizacion = cmeta.find(c => c.key === "CTE_LOCALIZACION");
-    const { dispatch, kexp, area, localizacion } = this.props;
+    const m_location = cmeta.find(c => c.key === "CTE_LOCALIZACION");
+    const { dispatch, kexp, area, location } = this.props;
     // Localizaciones válidas para CTE
     const CTE_LOCS = ["PENINSULA", "BALEARES", "CANARIAS", "CEUTAMELILLA"];
 
@@ -169,17 +169,17 @@ class MainPageClass extends React.Component {
     );
     dispatch(changeKexp(m_kexp && !isNaN(m_kexp.value) ? m_kexp.value : kexp));
     dispatch(
-      changeLocalizacion(
-        m_localizacion && CTE_LOCS.includes(m_localizacion.value)
-          ? m_localizacion.value
-          : localizacion
+      changeLocation(
+        m_location && CTE_LOCS.includes(m_location.value)
+          ? m_location.value
+          : location
       )
     );
     dispatch(computeEnergy());
   }
 
   downloadCarriers() {
-    const { kexp, area, localizacion, components } = this.props;
+    const { kexp, area, location, components } = this.props;
     const { cmeta, cdata } = components;
     // remove active key
     const newcdata = cdata.filter(e => e.active); //.map(({ active, ...rest }) => rest);
@@ -199,7 +199,7 @@ class MainPageClass extends React.Component {
       { key: "App", value: "VisorEPBD_1.0" },
       { key: "CTE_AREAREF", value: area },
       { key: "CTE_KEXP", value: kexp },
-      { key: "CTE_LOCALIZACION", value: localizacion }
+      { key: "CTE_LOCALIZACION", value: location }
     ].map(m => updatemeta(cmeta, m.key, m.value));
 
     // Convert components (carrier data with metadata) to string
@@ -225,7 +225,7 @@ const MainPage = connect(state => {
   return {
     kexp: state.kexp,
     area: state.area,
-    localizacion: state.localizacion,
+    location: state.location,
     data: state.data,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,

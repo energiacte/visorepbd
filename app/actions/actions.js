@@ -15,7 +15,7 @@ export const EDIT_ENERGY_COMPONENT = "EDIT_ENERGY_COMPONENT";
 export const LOAD_ENERGY_COMPONENTS = "LOAD_ENERGY_COMPONENTS";
 export const CHANGE_KEXP = "CHANGE_KEXP";
 export const CHANGE_AREA = "CHANGE_AREA";
-export const CHANGE_LOCALIZACION = "CHANGE_LOCALIZACION";
+export const CHANGE_LOCATION = "CHANGE_LOCATION";
 export const CHANGE_CURRENTFILENAME = "CHANGE_CURRENTFILENAME";
 export const EDIT_WFACTORS = "EDIT_WFACTORS";
 export const RECEIVE_ENERGYDATA = "RECEIVE_ENERGYDATA";
@@ -56,8 +56,8 @@ export function changeArea(value) {
   return { type: CHANGE_AREA, value };
 }
 
-export function changeLocalizacion(value) {
-  return { type: CHANGE_LOCALIZACION, value };
+export function changeLocation(value) {
+  return { type: CHANGE_LOCATION, value };
 }
 
 export function editWFactors(newfactors) {

@@ -8,7 +8,7 @@ import {
   LOAD_ENERGY_COMPONENTS,
   CHANGE_KEXP,
   CHANGE_AREA,
-  CHANGE_LOCALIZACION,
+  CHANGE_LOCATION,
   EDIT_WFACTORS,
   RECEIVE_ENERGYDATA,
   CHANGE_CURRENTFILENAME
@@ -62,9 +62,9 @@ function area(state = 1, action) {
   }
 }
 
-function localizacion(state = "PENINSULA", action) {
+function location(state = "PENINSULA", action) {
   switch (action.type) {
-    case CHANGE_LOCALIZACION:
+    case CHANGE_LOCATION:
       return action.value;
     default:
       return state;
@@ -170,7 +170,7 @@ export default combineReducers({
   selectedkey,
   kexp,
   area,
-  localizacion,
+  location,
   wfactors,
   components,
   currentfilename

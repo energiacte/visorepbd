@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import NavBar from "components/NavBar";
 import Footer from "components/Footer";
 
-import { editWFactors, changeLocalizacion } from "actions/actions.js";
+import { editWFactors, changeLocation } from "actions/actions.js";
 import { new_wfactors } from "wasm-cteepbd";
 
 const CTELOCS = {
@@ -16,7 +16,7 @@ const CTELOCS = {
 
 class WeightingFactorsPageClass extends React.Component {
   render() {
-    const { wfactors, localizacion } = this.props;
+    const { wfactors, location } = this.props;
 
     // Factores definidos reglamentariamente
     const wfactors_reglamentarios = wfactors.wdata.filter(
@@ -59,10 +59,10 @@ class WeightingFactorsPageClass extends React.Component {
           </h3>
           <div className="form-group">
             <select
-              id="selectLocalizacion"
+              id="selectLocation"
               className="form-control"
-              onChange={e => this.handleLocalizacionChange(e)}
-              value={localizacion}
+              onChange={e => this.handleLocationChange(e)}
+              value={location}
             >
               <option value={"PENINSULA"}>{CTELOCS["PENINSULA"]}</option>
               <option value={"CANARIAS"}>{CTELOCS["CANARIAS"]}</option>
@@ -164,7 +164,7 @@ class WeightingFactorsPageClass extends React.Component {
           <h3>
             Factores definidos a partir de valores reglamentarios{" "}
             <small>
-              (para la localización &quot;{CTELOCS[localizacion]}&quot;)
+              (para la localización &quot;{CTELOCS[location]}&quot;)
             </small>
           </h3>
           <table
@@ -276,7 +276,7 @@ class WeightingFactorsPageClass extends React.Component {
     dispatch(editWFactors({ wmeta, wdata: [...otherveclist, vecobj] }));
   }
 
-  handleLocalizacionChange(e) {
+  handleLocationChange(e) {
     const loc = e.target.value;
     const { wfactors, dispatch } = this.props;
     const red1 = wfactors.wdata.find(f => f.carrier === "RED1");
@@ -284,7 +284,7 @@ class WeightingFactorsPageClass extends React.Component {
     const cog = wfactors.wdata.find(
       f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
     );
-    dispatch(changeLocalizacion(loc));
+    dispatch(changeLocation(loc));
     const newfactors = new_wfactors(loc, {
       cogen: {
         A_RED: { ren: cog.ren, nren: cog.nren },
@@ -302,7 +302,7 @@ class WeightingFactorsPageClass extends React.Component {
 const WeightingFactorsPage = connect(state => {
   return {
     wfactors: state.wfactors,
-    localizacion: state.localizacion
+    location: state.location
   };
 })(WeightingFactorsPageClass);
 

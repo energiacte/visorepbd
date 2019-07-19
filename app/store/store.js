@@ -30,7 +30,7 @@ const initialState = {
   selectedkey: 0, // Currently selected component
   kexp: 0.0,
   area: 200,
-  localizacion: "PENINSULA",
+  location: "PENINSULA",
   wfactors: new_wfactors("PENINSULA", {}),
   components: {
     cmeta: [],
