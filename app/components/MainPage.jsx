@@ -5,7 +5,7 @@ import NavBar from "components/NavBar";
 import EPChart from "components/EPChart";
 import GlobalVarsControl from "components/GlobalVarsControl";
 import EnergyComponentEditor from "components/EnergyComponentEditor";
-import EnergyComponentList from "components/EnergyComponentList";
+import EnergyComponentsTable from "components/EnergyComponentList";
 import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 
@@ -130,7 +130,7 @@ class MainPageClass extends React.Component {
           </div>
           <div className="row">
             <div className="col">
-              <EnergyComponentList
+              <EnergyComponentsTable
                 selectedkey={selectedkey}
                 cdata={components.cdata}
                 area={area}

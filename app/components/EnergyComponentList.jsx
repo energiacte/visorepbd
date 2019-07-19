@@ -26,7 +26,8 @@ const get_service_icon = service => {
   }
 };
 
-export default class EnergyComponentList extends React.Component {
+// Tabla de componentes energéticos
+export default class EnergyComponentsTable extends React.Component {
   // Seleccionar componente
   handleClick(i) {
     const component = this.props.cdata[i];
