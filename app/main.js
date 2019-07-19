@@ -43,5 +43,5 @@ ReactDOM.render(
       </Switch>
     </HashRouter>
   </Provider>,
-  document.body.appendChild(document.createElement("div"))
+  document.getElementById('visorepbdapp')
 );

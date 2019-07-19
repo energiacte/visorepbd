@@ -56,6 +56,7 @@ var plugins = [
     template: "app/index.template.html",
     title: "VisorEPBD: implementación de la ISO 52000-1 para el CTE DB-HE",
     inject: "head",
+    appMountId: "visorepbdapp",
     //favicon: 'favicon.ico',
     filename: "./index.html", // relativo al output path
     minify: {
