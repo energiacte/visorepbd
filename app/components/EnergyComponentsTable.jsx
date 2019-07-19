@@ -49,7 +49,7 @@ export default class EnergyComponentsTable extends React.Component {
     return (
       <table
         id="components"
-        className="table table-striped table-bordered table-condensed"
+        className="table table-striped table-condensed"
       >
         <thead>
           <tr>
