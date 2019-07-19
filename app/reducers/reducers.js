@@ -1,4 +1,10 @@
-import { combineReducers } from "redux";
+// Reducers para calcular los cambios de estado a partir de las acciones
+import {
+  // parse_components,
+  energy_performance,
+  energy_performance_acs_nrb
+} from "wasm-cteepbd";
+
 import {
   SELECT_ENERGY_COMPONENT,
   ADD_ENERGY_COMPONENT,
@@ -148,14 +154,40 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
   }
 }
 
-// Composición de reducers para general el estado general
-export default combineReducers({
-  storedcomponent,
-  selectedkey,
-  kexp,
-  area,
-  location,
-  wfactors,
-  components,
-  currentfilename
-});
+function computeBalances(state = {}) {
+  if (state === {}) return {};
+
+  const { kexp, area, components, wfactors } = state;
+  const componentsobj = {
+    cmeta: components.cmeta,
+    cdata: components.cdata.filter(c => c.active)
+  };
+
+  // Cálculo global
+  const ep = energy_performance(componentsobj, wfactors, kexp, area);
+  // Cálculo para ACS en perímetro próximo
+  const ep_acs_nrb = energy_performance_acs_nrb(
+    componentsobj,
+    wfactors,
+    kexp,
+    area
+  );
+  return { ep, ep_acs_nrb };
+}
+
+// Si se quisiese hacer el cálculo energético en los reducers, para
+// calcular el balance energético usando todo el estado y no solo su parte:
+//
+export default function reducer(state = {}, action) {
+  return {
+    storedcomponent: storedcomponent(state.storedcomponent, action),
+    selectedkey: selectedkey(state.selectedkey, action),
+    kexp: kexp(state.kexp, action),
+    area: area(state.area, action),
+    location: location(state.location, action),
+    wfactors: wfactors(state.wfactors, action),
+    components: components(state.components, action),
+    currentfilename: currentfilename(state.currentfilename, action),
+    balance: computeBalances(state) // XXX: usa todo el estado
+  };
+}

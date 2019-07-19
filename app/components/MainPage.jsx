@@ -9,11 +9,7 @@ import EnergyComponentsTable from "components/EnergyComponentsTable";
 import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 
-import {
-  parse_components,
-  energy_performance,
-  energy_performance_acs_nrb
-} from "wasm-cteepbd";
+import { parse_components } from "wasm-cteepbd";
 
 import {
   changeKexp,
@@ -147,6 +143,8 @@ class MainPageClass extends React.Component {
     );
   }
 
+  // TODO: crear acción nueva que envíe el datastr y en el reducer hacer todo esto,
+  // TODO: para no tener aquí nada relativo al estado de la app.
   uploadCarriers(datastr) {
     const { cdata, cmeta } = parse_components(datastr);
     const newcdata = cdata.map(dd => ({ ...dd, active: true }));
@@ -217,24 +215,15 @@ class MainPageClass extends React.Component {
   }
 
   computeEnergyResults() {
-    const { kexp, area, components, wfactors } = this.props;
-    const componentsobj = {
-      cmeta: components.cmeta,
-      cdata: components.cdata.filter(c => c.active)
-    };
     // Cálculo global
-    const ep = energy_performance(componentsobj, wfactors, kexp, area);
-    const { ren, nren } = ep.balance_m2.B;
+    const { ren, nren } = this.props.balance.ep.balance_m2.B;
     const total = ren + nren;
     const rer = total === 0 ? 0 : ren / total;
     // Cálculo para ACS en perímetro próximo
-    const res_acs_nrb = energy_performance_acs_nrb(
-      componentsobj,
-      wfactors,
-      kexp,
-      area
-    );
-    const { ren: ren_acs, nren: nren_acs } = res_acs_nrb.balance_m2.B;
+    const {
+      ren: ren_acs,
+      nren: nren_acs
+    } = this.props.balance.ep_acs_nrb.balance_m2.B;
     const total_acs = ren_acs + nren_acs;
     const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
     // Actualización
@@ -251,7 +240,8 @@ const MainPage = connect(state => {
     selectedkey: state.selectedkey,
     wfactors: state.wfactors,
     components: state.components,
-    currentfilename: state.currentfilename
+    currentfilename: state.currentfilename,
+    balance: state.balance
   };
 })(MainPageClass);
 
