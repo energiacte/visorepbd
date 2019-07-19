@@ -5,6 +5,7 @@ import Footer from "components/Footer";
 import mfomlogo from "img/logomfom.png";
 import ietcclogo from "img/logoietcccsic.png";
 
+// Página de créditos de la aplicación
 const AboutPage = props => (
   <div>
     <NavBar match={props.match} />

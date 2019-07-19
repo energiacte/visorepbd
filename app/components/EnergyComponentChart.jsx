@@ -1,5 +1,6 @@
 import React from "react";
 
+// Gráfica de consumos del componente energético para cada paso de cálculo
 const EnergyComponentChart = props => {
   const {
     width = "200px",

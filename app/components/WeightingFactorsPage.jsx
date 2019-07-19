@@ -14,6 +14,7 @@ const CTELOCS = {
   CEUTAMELILLA: "Ceuta y Melilla"
 };
 
+// Visualización y edición de factores de paso activos
 class WeightingFactorsPageClass extends React.Component {
   render() {
     const { wfactors, location } = this.props;

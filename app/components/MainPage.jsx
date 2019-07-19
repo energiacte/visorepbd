@@ -5,7 +5,7 @@ import NavBar from "components/NavBar";
 import EPChart from "components/EPChart";
 import GlobalVarsControl from "components/GlobalVarsControl";
 import EnergyComponentEditor from "components/EnergyComponentEditor";
-import EnergyComponentsTable from "components/EnergyComponentList";
+import EnergyComponentsTable from "components/EnergyComponentsTable";
 import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 
@@ -24,6 +24,7 @@ import {
   computeEnergy
 } from "actions/actions.js";
 
+// Página principal de la aplicación
 class MainPageClass extends React.Component {
   constructor(props) {
     super(props);

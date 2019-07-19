@@ -1,7 +1,8 @@
 import React from "react";
-//import { connect } from 'react-redux';
+
 const VALUESREGEX = /\s*([0-9]+[.]?[0-9]*)\s*(,\s*([0-9]+[.]?[0-9]*)\s*)*/;
 
+// Editor de valores
 export default class ValuesEditor extends React.Component {
   constructor(props) {
     super(props);

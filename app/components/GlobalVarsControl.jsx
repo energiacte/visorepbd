@@ -1,6 +1,6 @@
 import React from "react";
-//import { connect } from 'react-redux';
 
+// Control de variables globales: área, kexp, carga y descarga de datos
 export default class GlobalVarsControl extends React.Component {
   render() {
     const {

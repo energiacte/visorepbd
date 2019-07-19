@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+// Barra de navegación superior
 export default class NavBar extends React.Component {
   static defaultProps = { projectName: "VisorEPBD" };
 

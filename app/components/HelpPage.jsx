@@ -44,6 +44,7 @@ const ScrollToIndex = _ => (
   </LinkId>
 );
 
+// Página de ayuda
 const HelpPage = props => (
   <div>
     <NavBar match={props.match} />

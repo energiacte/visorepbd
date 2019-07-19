@@ -23,7 +23,8 @@ const modalStyle = {
   zIndex: 10000
 };
 
-// Modal based on code from https://daveceddia.com/open-modal-in-react/
+// Metacomponente para mostrar componente en ventana modal
+// basado en el código en https://daveceddia.com/open-modal-in-react/
 const ModalContainer = props => {
   // Render nothing if the "show" prop is false
   if (!props.show) {

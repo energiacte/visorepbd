@@ -129,6 +129,7 @@ function getValues(curvename, newtotalenergy, currentvalues) {
   return values;
 }
 
+// Editor de un componente energético
 export default class EnergyComponentEditor extends React.Component {
   constructor(props) {
     super(props);
