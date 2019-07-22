@@ -14,7 +14,6 @@ import { parse_components } from "wasm-cteepbd";
 import {
   changeKexp,
   changeArea,
-  changeLocation,
   cloneEnergyComponent,
   removeEnergyComponent,
   editEnergyComponent,
@@ -22,6 +21,47 @@ import {
   loadEnergyComponents,
   changeCurrentFileName
 } from "actions/actions.js";
+
+// Serialize energy components (carrier data with metadata) to string
+function serialize_components(state) {
+  // TODO: llevar wfactors
+  const { kexp, area, location, wfactors, components } = state;
+  const { cmeta, cdata } = components;
+
+
+  let appmeta = [
+    ({ key: "App", value: "VisorEPBD_1.0" },
+    { key: "CTE_AREAREF", value: area },
+    { key: "CTE_KEXP", value: kexp },
+    { key: "CTE_LOCALIZACION", value: location })
+    // TODO: store wfactors (RED1, RED2, COGEN...)
+  ];
+
+  appmeta.map(({ key, value }) => {
+    const match = cmeta.find(c => c.key === key);
+    if (match) {
+      match.value = `${value}`;
+    } else {
+      cmeta.push({ key, value: `${value}` });
+    }
+    return cmeta;
+  });
+
+  const cmetalines = cmeta.map(mm => `#META ${mm.key}: ${mm.value}`);
+
+  // Serializar componentes energéticos
+  const cdatalines = cdata
+    .filter(e => e.active)
+    .map(
+      cc =>
+        `${cc.carrier}, ${cc.ctype}, ${cc.csubtype}, ${
+          cc.service
+        }, ${cc.values.map(v => v.toFixed(2)).join(",")}${
+          cc.comment !== "" ? " # " + cc.comment : ""
+        }`
+    );
+  return [...cmetalines, ...cdatalines].join("\n");
+}
 
 // Página principal de la aplicación
 class MainPageClass extends React.Component {
@@ -143,75 +183,15 @@ class MainPageClass extends React.Component {
     );
   }
 
-  // TODO: crear acción nueva que envíe el datastr y en el reducer hacer todo esto,
-  // TODO: para no tener aquí nada relativo al estado de la app.
   uploadCarriers(datastr) {
     const { cdata, cmeta } = parse_components(datastr);
     const newcdata = cdata.map(dd => ({ ...dd, active: true }));
-    // TODO: preserve RED1, RED2 and COGEN values
-    const m_Area_ref = cmeta.find(c => c.key === "CTE_AREAREF");
-    const m_kexp = cmeta.find(c => c.key === "CTE_KEXP");
-    const m_location = cmeta.find(c => c.key === "CTE_LOCALIZACION");
-    const { dispatch, kexp, area, location } = this.props;
-    // Localizaciones válidas para CTE
-    const CTE_LOCS = ["PENINSULA", "BALEARES", "CANARIAS", "CEUTAMELILLA"];
-
-    dispatch(loadEnergyComponents({ cmeta, cdata: newcdata }));
-    dispatch(
-      changeArea(
-        m_Area_ref && !isNaN(m_Area_ref.value) ? m_Area_ref.value : area
-      )
-    );
-    dispatch(changeKexp(m_kexp && !isNaN(m_kexp.value) ? m_kexp.value : kexp));
-    dispatch(
-      changeLocation(
-        m_location && CTE_LOCS.includes(m_location.value)
-          ? m_location.value
-          : location
-      )
-    );
+    this.props.dispatch(loadEnergyComponents({ cmeta, cdata: newcdata }));
   }
 
   downloadCarriers() {
-    const { kexp, area, location, components } = this.props;
-    const { cmeta, cdata } = components;
-    // remove active key
-    const newcdata = cdata.filter(e => e.active); //.map(({ active, ...rest }) => rest);
-
-    // Actualiza objeto de metadatos con nuevo valor o inserta si no existe
-    function updatemeta(metaobj, key, value) {
-      const match = metaobj.find(c => c.key === key);
-      if (match) {
-        match.value = value;
-      } else {
-        metaobj.push({ key, value });
-      }
-      return metaobj;
-    }
-
-    [
-      { key: "App", value: "VisorEPBD_1.0" },
-      { key: "CTE_AREAREF", value: area },
-      { key: "CTE_KEXP", value: kexp },
-      { key: "CTE_LOCALIZACION", value: location }
-    ].map(m => updatemeta(cmeta, m.key, m.value));
-
-    // Convert components (carrier data with metadata) to string
-    function serialize_components(components) {
-      // Serialize basic types to string
-      const cmetas = components.cmeta.map(mm => `#META ${mm.key}: ${mm.value}`);
-      const carriers = components.cdata.map(
-        cc =>
-          `${cc.carrier}, ${cc.ctype}, ${cc.csubtype}, ${
-            cc.service
-          }, ${cc.values.map(v => v.toFixed(2)).join(",")}${
-            cc.comment !== "" ? " # " + cc.comment : ""
-          }`
-      );
-      return [...cmetas, ...carriers].join("\n");
-    }
-
-    return serialize_components({ cdata: newcdata, cmeta });
+    const { kexp, area, location, wfactors, components } = this.props;
+    return serialize_components({ kexp, area, location, wfactors, components });
   }
 
   computeEnergyResults() {

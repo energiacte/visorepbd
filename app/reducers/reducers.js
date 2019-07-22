@@ -51,6 +51,10 @@ function kexp(state = 1, action) {
   switch (action.type) {
     case CHANGE_KEXP:
       return Number(action.value);
+    case LOAD_ENERGY_COMPONENTS: {
+      const m_kexp = action.newcomponents.cmeta.find(c => c.key === "CTE_KEXP");
+      return m_kexp && !isNaN(m_kexp.value) ? Number(m_kexp.value) : state;
+    }
     default:
       return state;
   }
@@ -66,6 +70,12 @@ function area(state = 1, action) {
       }
       return Math.max(Math.round(val), 1.0);
     }
+    case LOAD_ENERGY_COMPONENTS: {
+      const m_area = action.newcomponents.cmeta.find(
+        c => c.key === "CTE_AREAREF"
+      );
+      return m_area && !isNaN(m_area.value) ? Number(m_area.value) : state;
+    }
     default:
       return state;
   }
@@ -76,6 +86,16 @@ function location(state = "PENINSULA", action) {
   switch (action.type) {
     case CHANGE_LOCATION:
       return action.value;
+    case LOAD_ENERGY_COMPONENTS: {
+      // Localizaciones válidas para CTE
+      const CTE_LOCS = ["PENINSULA", "BALEARES", "CANARIAS", "CEUTAMELILLA"];
+      const m_location = action.newcomponents.cmeta.find(
+        c => c.key === "CTE_LOCALIZACION"
+      );
+      return m_location && CTE_LOCS.includes(m_location.value)
+        ? m_location.value
+        : location;
+    }
     default:
       return state;
   }
