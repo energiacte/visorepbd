@@ -50,18 +50,18 @@ struct WFactorsUserOptions {
 //
 // El campo de opciones tiene que ser al menos {}
 #[wasm_bindgen]
-pub fn new_wfactors(loc: &str, options: &JsValue) -> JsValue {
-    use cte::CTE_DEFAULTS_WF_EP;
+pub fn new_wfactors(loc: &str, indicator: &str, options: &JsValue) -> JsValue {
+    let defaults_wf = if indicator == "CO2" {cte::CTE_DEFAULTS_WF_CO2} else {cte::CTE_DEFAULTS_WF_EP};
     // XXX: puede tener errores de formato
     let rsoptions: WFactorsUserOptions = options.into_serde().unwrap();
     let red1 = rsoptions
         .red
         .and_then(|v| v.RED1)
-        .or(Some(CTE_DEFAULTS_WF_EP.user.red1));
+        .or(Some(defaults_wf.user.red1));
     let red2 = rsoptions
         .red
         .and_then(|v| v.RED2)
-        .or(Some(CTE_DEFAULTS_WF_EP.user.red2));
+        .or(Some(defaults_wf.user.red2));
     let cogen_to_grid = rsoptions.cogen.and_then(|v| v.A_RED).or(None);
     let cogen_to_nepb = rsoptions.cogen.and_then(|v| v.A_NEPB).or(None);
     let strip_nepb = rsoptions.strip_nepb.unwrap_or(false);
@@ -72,7 +72,7 @@ pub fn new_wfactors(loc: &str, options: &JsValue) -> JsValue {
         cogen_to_nepb,
     };
     // XXX: Puede tener errores de parsing o de localidad
-    let fp: Factors = cte::wfactors_from_loc(loc, &user_wf, &CTE_DEFAULTS_WF_EP, strip_nepb).unwrap();
+    let fp: Factors = cte::wfactors_from_loc(loc, &user_wf, &defaults_wf, strip_nepb).unwrap();
     JsValue::from_serde(&fp).unwrap()
 }
 

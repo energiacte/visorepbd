@@ -177,18 +177,18 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
 function computeBalances(state = {}) {
   if (state === {}) return {};
 
-  const { kexp, area, components, wfactors } = state;
+  const { kexp, area, components, wfactors_ep } = state;
   const componentsobj = {
     cmeta: components.cmeta,
     cdata: components.cdata.filter(c => c.active)
   };
 
   // Cálculo global
-  const ep = energy_performance(componentsobj, wfactors, kexp, area);
+  const ep = energy_performance(componentsobj, wfactors_ep, kexp, area);
   // Cálculo para ACS en perímetro próximo
   const ep_acs_nrb = energy_performance_acs_nrb(
     componentsobj,
-    wfactors,
+    wfactors_ep,
     kexp,
     area
   );
@@ -205,7 +205,7 @@ export default function reducer(state = {}, action) {
     kexp: kexp(state.kexp, action),
     area: area(state.area, action),
     location: location(state.location, action),
-    wfactors: wfactors(state.wfactors, action),
+    wfactors_ep: wfactors(state.wfactors_ep, action),
     components: components(state.components, action),
     currentfilename: currentfilename(state.currentfilename, action),
     balance: computeBalances(state) // XXX: usa todo el estado

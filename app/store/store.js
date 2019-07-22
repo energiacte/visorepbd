@@ -30,7 +30,8 @@ const initialState = {
   kexp: 0.0,
   area: 200,
   location: "PENINSULA",
-  wfactors: new_wfactors("PENINSULA", {}),
+  wfactors_ep: new_wfactors("PENINSULA", "EP", {}),
+  wfactors_co2: new_wfactors("PENINSULA", "CO2", {}),
   components: {
     cmeta: [],
     cdata: [

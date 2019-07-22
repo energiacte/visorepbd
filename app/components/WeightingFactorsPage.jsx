@@ -17,18 +17,18 @@ const CTELOCS = {
 // Visualización y edición de factores de paso activos
 class WeightingFactorsPageClass extends React.Component {
   render() {
-    const { wfactors, location } = this.props;
+    const { wfactors_ep, location } = this.props;
 
     // Factores definidos reglamentariamente
-    const wfactors_reglamentarios = wfactors.wdata.filter(
+    const wfactors_reglamentarios_ep = wfactors_ep.wdata.filter(
       f =>
         !f.carrier.startsWith("RED") &&
         !(f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A")
     );
     // Factores definibles por el usuario
-    const red1 = wfactors.wdata.find(f => f.carrier === "RED1");
-    const red2 = wfactors.wdata.find(f => f.carrier === "RED2");
-    const cog = wfactors.wdata.find(
+    const red1 = wfactors_ep.wdata.find(f => f.carrier === "RED1");
+    const red2 = wfactors_ep.wdata.find(f => f.carrier === "RED2");
+    const cog = wfactors_ep.wdata.find(
       f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
     );
 
@@ -78,10 +78,17 @@ class WeightingFactorsPageClass extends React.Component {
           >
             <thead>
               <tr>
+                <th colSpan="4"></th>
+                <th colSpan="2">Energía primaria</th>
+                <th colSpan="2">Emisiones de CO2</th>
+              </tr>
+              <tr>
                 <th>Vector energético</th>
                 <th>Origen</th>
                 <th>Uso</th>
                 <th>Paso</th>
+                <th>Fp_ren</th>
+                <th>Fp_nren</th>
                 <th>Fp_ren</th>
                 <th>Fp_nren</th>
               </tr>
@@ -174,16 +181,23 @@ class WeightingFactorsPageClass extends React.Component {
           >
             <thead>
               <tr>
+                <th colSpan="4"></th>
+                <th colSpan="2">Energía primaria</th>
+                <th colSpan="2">Emisiones de CO2</th>
+              </tr>
+              <tr>
                 <th>Vector energético</th>
                 <th>Origen</th>
                 <th>Uso</th>
                 <th>Paso</th>
                 <th>Fp_ren</th>
                 <th>Fp_nren</th>
+                <th>Fp_ren</th>
+                <th>Fp_nren</th>
               </tr>
             </thead>
             <tbody>
-              {wfactors_reglamentarios.map(
+              {wfactors_reglamentarios_ep.map(
                 ({ carrier, source, dest, step, ren, nren }) => (
                   <tr key={`${carrier}-${source}-${dest}-${step}`}>
                     <td>{carrier}</td>
@@ -192,6 +206,8 @@ class WeightingFactorsPageClass extends React.Component {
                     <td>{step}</td>
                     <td>{ren.toFixed(3)}</td>
                     <td>{nren.toFixed(3)}</td>
+                    <td>{"TODO"}</td>
+                    <td>{"TODO"}</td>
                   </tr>
                 )
               )}
@@ -259,34 +275,44 @@ class WeightingFactorsPageClass extends React.Component {
   handleChange(vec, factor, e) {
     const newvalue = parseFloat(e.target.value.replace(/,/g, "."));
     if (isNaN(newvalue)) return;
-    const { wfactors, dispatch } = this.props;
-    const { wmeta, wdata } = wfactors;
-    let vecobj, otherveclist;
-    if (vec === "ELECTRICIDADCOGEN") {
-      vecobj = wdata.find(
-        f => f.source === "COGENERACION" && f.dest === "A_RED"
-      );
-      otherveclist = wdata.filter(
-        f => f.source !== "COGENERACION" && f.dest !== "A_RED"
-      );
-    } else {
-      vecobj = wdata.find(f => f.carrier === vec);
-      otherveclist = wdata.filter(f => f.carrier !== vec);
+    const { wfactors_ep, dispatch } = this.props;
+
+    function computewf(wfactors) {
+      const { wmeta, wdata } = wfactors;
+      let vecobj, otherveclist;
+      if (vec === "ELECTRICIDADCOGEN") {
+        // Son solo los factores de paso a electricidad cogenerada a red
+        vecobj = wdata.find(
+          f => f.source === "COGENERACION" && f.dest === "A_RED"
+        );
+        otherveclist = wdata.filter(
+          f => f.source !== "COGENERACION" && f.dest !== "A_RED"
+        );
+      } else {
+        vecobj = wdata.find(f => f.carrier === vec);
+        otherveclist = wdata.filter(f => f.carrier !== vec);
+      }
+      vecobj[factor] = newvalue;
+      return { wmeta, wdata: [...otherveclist, vecobj] };
     }
-    vecobj[factor] = newvalue;
-    dispatch(editWFactors({ wmeta, wdata: [...otherveclist, vecobj] }));
+
+    // Localiza factores EP
+    const wfactorsnew_ep = computewf(wfactors_ep);
+
+    dispatch(editWFactors(wfactorsnew_ep));
   }
 
   handleLocationChange(e) {
     const loc = e.target.value;
-    const { wfactors, dispatch } = this.props;
-    const red1 = wfactors.wdata.find(f => f.carrier === "RED1");
-    const red2 = wfactors.wdata.find(f => f.carrier === "RED2");
-    const cog = wfactors.wdata.find(
+    const { wfactors_ep, dispatch } = this.props;
+    const red1 = wfactors_ep.wdata.find(f => f.carrier === "RED1");
+    const red2 = wfactors_ep.wdata.find(f => f.carrier === "RED2");
+    const cog = wfactors_ep.wdata.find(
       f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
     );
+    // TODO: manejar cambio de localización en reducers, cambiando en wfactors_ep y wfactors_co2
     dispatch(changeLocation(loc));
-    const newfactors = new_wfactors(loc, {
+    const newfactors_ep = new_wfactors(loc, "EP", {
       cogen: {
         A_RED: { ren: cog.ren, nren: cog.nren },
         A_NEPB: { ren: cog.ren, nren: cog.nren }
@@ -296,13 +322,13 @@ class WeightingFactorsPageClass extends React.Component {
         RED2: { ren: red2.ren, nren: red2.nren }
       }
     });
-    dispatch(editWFactors(newfactors));
+    dispatch(editWFactors(newfactors_ep));
   }
 }
 
 const WeightingFactorsPage = connect(state => {
   return {
-    wfactors: state.wfactors,
+    wfactors_ep: state.wfactors_ep,
     location: state.location
   };
 })(WeightingFactorsPageClass);

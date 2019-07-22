@@ -24,8 +24,7 @@ import {
 
 // Serialize energy components (carrier data with metadata) to string
 function serialize_components(state) {
-  // TODO: llevar wfactors
-  const { kexp, area, location, wfactors, components } = state;
+  const { kexp, area, location, wfactors_ep, components } = state;
   const { cmeta, cdata } = components;
 
 
@@ -80,11 +79,10 @@ class MainPageClass extends React.Component {
       area,
       selectedkey,
       components,
+      balance,
       storedcomponent,
       dispatch
     } = this.props;
-
-    const results = this.computeEnergyResults();
 
     return (
       <div>
@@ -112,7 +110,7 @@ class MainPageClass extends React.Component {
           </div>
           <div className="row">
             <div className="col">
-              <EPChart data={results} kexp={kexp} />
+              <EPChart balance={balance} kexp={kexp} />
             </div>
           </div>
           <div className="row">
@@ -190,24 +188,8 @@ class MainPageClass extends React.Component {
   }
 
   downloadCarriers() {
-    const { kexp, area, location, wfactors, components } = this.props;
-    return serialize_components({ kexp, area, location, wfactors, components });
-  }
-
-  computeEnergyResults() {
-    // Cálculo global
-    const { ren, nren } = this.props.balance.ep.balance_m2.B;
-    const total = ren + nren;
-    const rer = total === 0 ? 0 : ren / total;
-    // Cálculo para ACS en perímetro próximo
-    const {
-      ren: ren_acs,
-      nren: nren_acs
-    } = this.props.balance.ep_acs_nrb.balance_m2.B;
-    const total_acs = ren_acs + nren_acs;
-    const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
-    // Actualización
-    return { ren, nren, total, rer, rer_acs_nrb };
+    const { kexp, area, location, wfactors_ep, components } = this.props;
+    return serialize_components({ kexp, area, location, wfactors_ep, components });
   }
 }
 
@@ -218,7 +200,7 @@ const MainPage = connect(state => {
     location: state.location,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
-    wfactors: state.wfactors,
+    wfactors_ep: state.wfactors_ep,
     components: state.components,
     currentfilename: state.currentfilename,
     balance: state.balance

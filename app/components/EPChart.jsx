@@ -26,9 +26,12 @@ export default class EPChart extends React.Component {
 
   chooseLabelText(label) {
     switch (label) {
-      case "C_ep;tot": return "ep;tot";
-      case "C_ep;nren": return "ep;nren";
-      case "C_ep;ren": return "ep;ren";
+      case "C_ep;tot":
+        return "ep;tot";
+      case "C_ep;nren":
+        return "ep;nren";
+      case "C_ep;ren":
+        return "ep;ren";
     }
   }
 
@@ -39,10 +42,19 @@ export default class EPChart extends React.Component {
       display = "inline-block",
       padding = 0,
       className = null,
-      data,
+      balance,
       kexp
     } = this.props;
-    const { ren, nren, total, rer, rer_acs_nrb } = data;
+
+    // Cálculo global
+    const { ren, nren } = balance.ep.balance_m2.B;
+    const total = ren + nren;
+    const rer = total === 0 ? 0 : ren / total;
+    // Cálculo para ACS en perímetro próximo
+    const { ren: ren_acs, nren: nren_acs } = balance.ep_acs_nrb.balance_m2.B;
+    const total_acs = ren_acs + nren_acs;
+    const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
+
     const svgwidth = this.state.width;
 
     const steps = [0, 50, 100, 200, 300];
@@ -125,7 +137,7 @@ export default class EPChart extends React.Component {
           y={(i + 0.5) * barheight}
           dominantBaseline="middle"
         >
-          C<tspan dy="1ex">{ this.chooseLabelText(el.label) }</tspan>
+          C<tspan dy="1ex">{this.chooseLabelText(el.label)}</tspan>
         </text>
         <text
           x={x(Math.min(0, el.value) + 5)}
@@ -174,8 +186,8 @@ export default class EPChart extends React.Component {
             {rer.toFixed(2)})
           </title>
           <desc id="desc">
-            C_ep_tot: {total.toFixed(2)}, C_ep_nren: {nren.toFixed(2)}, C_ep_ren:{" "}
-            {ren.toFixed(2)}
+            C_ep_tot: {total.toFixed(2)}, C_ep_nren: {nren.toFixed(2)},
+            C_ep_ren: {ren.toFixed(2)}
           </desc>
           <g transform={`translate(${textw},0)`}>
             {LimitAxis}
