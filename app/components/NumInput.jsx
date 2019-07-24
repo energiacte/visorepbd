@@ -1,7 +1,7 @@
 import React from "react";
 
-const RE_NUMBER = /^\s*[+-]?((\.\d+)|(\d+(\.\d+)?))\s*$/;
-const RE_INCOMPLETE_NUMBER = /^\s*([+-]|\.0*|[+-]\.0*|[+-]?\d+\.)?\s*$/;
+const RE_NUMBER = /^[+-]?((\.\d+)|(\d+(\.\d+)?))\s*$/;
+const RE_INCOMPLETE_NUMBER = /^([+-]|\.0*|[+-]\.0*|[+-]?\d+\.)?$/;
 
 // Control que permite la entrada de un valor numérico con formato
 function inrangevalue(text, min, max, precision) {
