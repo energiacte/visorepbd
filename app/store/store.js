@@ -33,7 +33,11 @@ const initialState = {
   wfactors_ep: new_wfactors("PENINSULA", "EP", {}),
   wfactors_co2: new_wfactors("PENINSULA", "CO2", {}),
   components: {
-    cmeta: [],
+    cmeta: [
+      {key: "CTE_LOCALIZACION", value: "PENINSULA"},
+      {key: "CTE_KEXP", value: "0"},
+      {key: "CTE_AREAREF", value: "200"}
+    ],
     cdata: [
       // Energy components array (ejemplo3PVBdC.csv)
       {
