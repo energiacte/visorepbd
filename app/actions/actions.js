@@ -12,7 +12,7 @@ export const CHANGE_KEXP = "CHANGE_KEXP";
 export const CHANGE_AREA = "CHANGE_AREA";
 export const CHANGE_LOCATION = "CHANGE_LOCATION";
 export const CHANGE_CURRENTFILENAME = "CHANGE_CURRENTFILENAME";
-export const EDIT_WFACTORS = "EDIT_WFACTORS";
+export const EDIT_USERWFACTORS = "EDIT_USERWFACTORS";
 
 /*
  * action creators
@@ -54,8 +54,8 @@ export function changeLocation(value) {
   return { type: CHANGE_LOCATION, value };
 }
 
-export function editWFactors(newfactors) {
-  return { type: EDIT_WFACTORS, newfactors };
+export function editUserWFactors(indicator, carrier, newfactors) {
+  return { type: EDIT_USERWFACTORS, indicator, carrier, newfactors };
 }
 
 export function changeCurrentFileName(newname) {

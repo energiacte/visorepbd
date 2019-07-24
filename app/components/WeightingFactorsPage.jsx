@@ -4,8 +4,7 @@ import { connect } from "react-redux";
 import NavBar from "components/NavBar";
 import Footer from "components/Footer";
 
-import { editWFactors, changeLocation } from "actions/actions.js";
-import { new_wfactors } from "wasm-cteepbd";
+import { editUserWFactors, changeLocation } from "actions/actions.js";
 
 const CTELOCS = {
   PENINSULA: "Península",
@@ -17,8 +16,9 @@ const CTELOCS = {
 // Visualización y edición de factores de paso activos
 class WeightingFactorsPageClass extends React.Component {
   render() {
-    const { wfactors_ep, location } = this.props;
+    const { wfactors_ep, wfactors_co2, location } = this.props;
 
+    // Energía primaria --------------------
     // Factores definidos reglamentariamente
     const wfactors_reglamentarios_ep = wfactors_ep.wdata.filter(
       f =>
@@ -29,6 +29,19 @@ class WeightingFactorsPageClass extends React.Component {
     const red1 = wfactors_ep.wdata.find(f => f.carrier === "RED1");
     const red2 = wfactors_ep.wdata.find(f => f.carrier === "RED2");
     const cog = wfactors_ep.wdata.find(
+      f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
+    );
+    // Emisiones ---------------------------
+    // Factores definidos reglamentariamente
+    const wfactors_reglamentarios_co2 = wfactors_co2.wdata.filter(
+      f =>
+        !f.carrier.startsWith("RED") &&
+        !(f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A")
+    );
+    // Factores definibles por el usuario
+    const red1co2 = wfactors_co2.wdata.find(f => f.carrier === "RED1");
+    const red2co2 = wfactors_co2.wdata.find(f => f.carrier === "RED2");
+    const cogco2 = wfactors_co2.wdata.find(
       f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
     );
 
@@ -62,7 +75,9 @@ class WeightingFactorsPageClass extends React.Component {
             <select
               id="selectLocation"
               className="form-control"
-              onChange={e => this.handleLocationChange(e)}
+              onChange={e =>
+                this.props.dispatch(changeLocation(e.target.value))
+              }
               value={location}
             >
               <option value={"PENINSULA"}>{CTELOCS["PENINSULA"]}</option>
@@ -78,7 +93,7 @@ class WeightingFactorsPageClass extends React.Component {
           >
             <thead>
               <tr>
-                <th colSpan="4"></th>
+                <th colSpan="4" />
                 <th colSpan="2">Energía primaria</th>
                 <th colSpan="2">Emisiones de CO2</th>
               </tr>
@@ -104,7 +119,15 @@ class WeightingFactorsPageClass extends React.Component {
                     type="text"
                     id="red1ren"
                     defaultValue={red1.ren.toFixed(3)}
-                    onChange={e => this.handleChange("RED1", "ren", e)}
+                    onChange={e =>
+                      this.handleChange(
+                        "EP",
+                        "RED1",
+                        { ...red1 },
+                        "ren",
+                        e.target.value
+                      )
+                    }
                   />
                 </td>
                 <td>
@@ -112,7 +135,47 @@ class WeightingFactorsPageClass extends React.Component {
                     type="text"
                     id="red1nren"
                     defaultValue={red1.nren.toFixed(3)}
-                    onChange={e => this.handleChange("RED1", "nren", e)}
+                    onChange={e =>
+                      this.handleChange(
+                        "EP",
+                        "RED1",
+                        { ...red1 },
+                        "nren",
+                        e.target.value
+                      )
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    id="red1renco2"
+                    defaultValue={red1co2.ren.toFixed(3)}
+                    onChange={e =>
+                      this.handleChange(
+                        "CO2",
+                        "RED1",
+                        { ...red1co2 },
+                        "ren",
+                        e.target.value
+                      )
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    id="red1nrenco2"
+                    defaultValue={red1co2.nren.toFixed(3)}
+                    onChange={e =>
+                      this.handleChange(
+                        "CO2",
+                        "RED1",
+                        { ...red1co2 },
+                        "nren",
+                        e.target.value
+                      )
+                    }
                   />
                 </td>
               </tr>
@@ -126,7 +189,15 @@ class WeightingFactorsPageClass extends React.Component {
                     type="text"
                     id="red2ren"
                     defaultValue={red2.ren.toFixed(3)}
-                    onChange={e => this.handleChange("RED2", "ren", e)}
+                    onChange={e =>
+                      this.handleChange(
+                        "EP",
+                        "RED2",
+                        { ...red2 },
+                        "ren",
+                        e.target.value
+                      )
+                    }
                   />
                 </td>
                 <td>
@@ -135,7 +206,48 @@ class WeightingFactorsPageClass extends React.Component {
                     contentEditable
                     id="red2nren"
                     defaultValue={red2.nren.toFixed(3)}
-                    onChange={e => this.handleChange("RED2", "nren", e)}
+                    onChange={e =>
+                      this.handleChange(
+                        "EP",
+                        "RED2",
+                        { ...red2 },
+                        "nren",
+                        e.target.value
+                      )
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    id="red2renco2"
+                    defaultValue={red2co2.ren.toFixed(3)}
+                    onChange={e =>
+                      this.handleChange(
+                        "CO2",
+                        "RED2",
+                        { ...red2co2 },
+                        "ren",
+                        e.target.value
+                      )
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    contentEditable
+                    id="red2nrenco2"
+                    defaultValue={red2co2.nren.toFixed(3)}
+                    onChange={e =>
+                      this.handleChange(
+                        "CO2",
+                        "RED2",
+                        { ...red2co2 },
+                        "nren",
+                        e.target.value
+                      )
+                    }
                   />
                 </td>
               </tr>
@@ -150,7 +262,13 @@ class WeightingFactorsPageClass extends React.Component {
                     id="red2ren"
                     defaultValue={cog.ren.toFixed(3)}
                     onChange={e =>
-                      this.handleChange("ELECTRICIDADCOGEN", "ren", e)
+                      this.handleChange(
+                        "EP",
+                        "ELECTRICIDADCOGEN",
+                        { ...cog },
+                        "ren",
+                        e.target.value
+                      )
                     }
                   />
                 </td>
@@ -161,7 +279,46 @@ class WeightingFactorsPageClass extends React.Component {
                     id="red2nren"
                     defaultValue={cog.nren.toFixed(3)}
                     onChange={e =>
-                      this.handleChange("ELECTRICIDADCOGEN", "nren", e)
+                      this.handleChange(
+                        "EP",
+                        "ELECTRICIDADCOGEN",
+                        { ...cog },
+                        "nren",
+                        e.target.value
+                      )
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    id="red2renco2"
+                    defaultValue={cogco2.ren.toFixed(3)}
+                    onChange={e =>
+                      this.handleChange(
+                        "CO2",
+                        "ELECTRICIDADCOGEN",
+                        { ...cogco2 },
+                        "ren",
+                        e.target.value
+                      )
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    contentEditable
+                    id="red2nrenco2"
+                    defaultValue={cogco2.nren.toFixed(3)}
+                    onChange={e =>
+                      this.handleChange(
+                        "CO2",
+                        "ELECTRICIDADCOGEN",
+                        { ...cogco2 },
+                        "nren",
+                        e.target.value
+                      )
                     }
                   />
                 </td>
@@ -181,7 +338,7 @@ class WeightingFactorsPageClass extends React.Component {
           >
             <thead>
               <tr>
-                <th colSpan="4"></th>
+                <th colSpan="4" />
                 <th colSpan="2">Energía primaria</th>
                 <th colSpan="2">Emisiones de CO2</th>
               </tr>
@@ -198,18 +355,30 @@ class WeightingFactorsPageClass extends React.Component {
             </thead>
             <tbody>
               {wfactors_reglamentarios_ep.map(
-                ({ carrier, source, dest, step, ren, nren }) => (
-                  <tr key={`${carrier}-${source}-${dest}-${step}`}>
-                    <td>{carrier}</td>
-                    <td>{source}</td>
-                    <td>{dest}</td>
-                    <td>{step}</td>
-                    <td>{ren.toFixed(3)}</td>
-                    <td>{nren.toFixed(3)}</td>
-                    <td>{"TODO"}</td>
-                    <td>{"TODO"}</td>
-                  </tr>
-                )
+                ({ carrier, source, dest, step, ren, nren }) => {
+                  let co2facs = wfactors_reglamentarios_co2.find(
+                    f =>
+                      f.carrier === carrier &&
+                      f.source === source &&
+                      f.dest === dest &&
+                      f.step === step
+                  );
+                  let [co2ren, co2nren] = co2facs
+                    ? [co2facs.ren, co2facs.nren]
+                    : ["-", "-"];
+                  return (
+                    <tr key={`${carrier}-${source}-${dest}-${step}`}>
+                      <td>{carrier}</td>
+                      <td>{source}</td>
+                      <td>{dest}</td>
+                      <td>{step}</td>
+                      <td>{ren.toFixed(3)}</td>
+                      <td>{nren.toFixed(3)}</td>
+                      <td>{co2ren.toFixed(3)}</td>
+                      <td>{co2nren.toFixed(3)}</td>
+                    </tr>
+                  );
+                }
               )}
             </tbody>
           </table>
@@ -272,63 +441,18 @@ class WeightingFactorsPageClass extends React.Component {
     );
   }
 
-  handleChange(vec, factor, e) {
-    const newvalue = parseFloat(e.target.value.replace(/,/g, "."));
-    if (isNaN(newvalue)) return;
-    const { wfactors_ep, dispatch } = this.props;
-
-    function computewf(wfactors) {
-      const { wmeta, wdata } = wfactors;
-      let vecobj, otherveclist;
-      if (vec === "ELECTRICIDADCOGEN") {
-        // Son solo los factores de paso a electricidad cogenerada a red
-        vecobj = wdata.find(
-          f => f.source === "COGENERACION" && f.dest === "A_RED"
-        );
-        otherveclist = wdata.filter(
-          f => f.source !== "COGENERACION" && f.dest !== "A_RED"
-        );
-      } else {
-        vecobj = wdata.find(f => f.carrier === vec);
-        otherveclist = wdata.filter(f => f.carrier !== vec);
-      }
-      vecobj[factor] = newvalue;
-      return { wmeta, wdata: [...otherveclist, vecobj] };
-    }
-
-    // Localiza factores EP
-    const wfactorsnew_ep = computewf(wfactors_ep);
-
-    dispatch(editWFactors(wfactorsnew_ep));
-  }
-
-  handleLocationChange(e) {
-    const loc = e.target.value;
-    const { wfactors_ep, dispatch } = this.props;
-    const red1 = wfactors_ep.wdata.find(f => f.carrier === "RED1");
-    const red2 = wfactors_ep.wdata.find(f => f.carrier === "RED2");
-    const cog = wfactors_ep.wdata.find(
-      f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
-    );
-    // TODO: manejar cambio de localización en reducers, cambiando en wfactors_ep y wfactors_co2
-    dispatch(changeLocation(loc));
-    const newfactors_ep = new_wfactors(loc, "EP", {
-      cogen: {
-        A_RED: { ren: cog.ren, nren: cog.nren },
-        A_NEPB: { ren: cog.ren, nren: cog.nren }
-      },
-      red: {
-        RED1: { ren: red1.ren, nren: red1.nren },
-        RED2: { ren: red2.ren, nren: red2.nren }
-      }
-    });
-    dispatch(editWFactors(newfactors_ep));
+  handleChange(indicator, carrier, factors, part, newvalue) {
+    const newvalueforpart = parseFloat(String(newvalue).replace(/,/g, "."));
+    if (isNaN(newvalueforpart)) return;
+    const newfactors = { ...factors, [part]: newvalueforpart };
+    this.props.dispatch(editUserWFactors(indicator, carrier, newfactors));
   }
 }
 
 const WeightingFactorsPage = connect(state => {
   return {
     wfactors_ep: state.wfactors_ep,
+    wfactors_co2: state.wfactors_co2,
     location: state.location
   };
 })(WeightingFactorsPageClass);

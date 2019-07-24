@@ -24,28 +24,10 @@ import {
 
 // Serialize energy components (carrier data with metadata) to string
 function serialize_components(state) {
-  const { kexp, area, location, wfactors_ep, components } = state;
+  const { components } = state;
   const { cmeta, cdata } = components;
 
-
-  let appmeta = [
-    ({ key: "App", value: "VisorEPBD_1.0" },
-    { key: "CTE_AREAREF", value: area },
-    { key: "CTE_KEXP", value: kexp },
-    { key: "CTE_LOCALIZACION", value: location })
-    // TODO: store wfactors (RED1, RED2, COGEN...)
-  ];
-
-  appmeta.map(({ key, value }) => {
-    const match = cmeta.find(c => c.key === key);
-    if (match) {
-      match.value = `${value}`;
-    } else {
-      cmeta.push({ key, value: `${value}` });
-    }
-    return cmeta;
-  });
-
+  // Serializar metadatos
   const cmetalines = cmeta.map(mm => `#META ${mm.key}: ${mm.value}`);
 
   // Serializar componentes energéticos
@@ -189,7 +171,13 @@ class MainPageClass extends React.Component {
 
   downloadCarriers() {
     const { kexp, area, location, wfactors_ep, components } = this.props;
-    return serialize_components({ kexp, area, location, wfactors_ep, components });
+    return serialize_components({
+      kexp,
+      area,
+      location,
+      wfactors_ep,
+      components
+    });
   }
 }
 
