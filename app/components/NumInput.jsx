@@ -23,8 +23,8 @@ export default class NumInput extends React.Component {
   static defaultProps = {
     id: "numinput - " + Math.random().toString(4), // ID del elemento
     precision: 3, // Precisión numérica de entrada y salida
-    min: Number.MIN_SAFE_INTEGER || -9007199254740991, // Valor mínimo
-    max: Number.MAX_SAFE_INTEGER || 9007199254740991, // Valor máximo
+    min: Number.MIN_VALUE, // Valor mínimo
+    max: Number.MAX_VALUE, // Valor máximo
     className: "", // Clases adicionales del elemento input
     labelClassName: "", // Clases adicionales del elemento label
     groupClassName: "", // Clases adicionbales del elemento group
