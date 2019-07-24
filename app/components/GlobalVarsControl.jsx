@@ -1,4 +1,5 @@
 import React from "react";
+import NumInput from "components/NumInput";
 
 // Control de variables globales: área, kexp, carga y descarga de datos
 export default class GlobalVarsControl extends React.Component {
@@ -26,33 +27,32 @@ export default class GlobalVarsControl extends React.Component {
             className="form-control custom-range"
             defaultValue={kexp}
             onChange={e => onChangeKexp(e.target.value)}
-          />
-          <input
-            type="text"
-            readOnly
-            maxLength="3"
+          />{" "}
+          <NumInput
+            id="kexp_input"
             size="3"
-            className="form-control form-control-sm"
-            value={kexp.toFixed(1)}
+            value={kexp}
+            className="form-control-sm"
+            groupClassName="d-inline"
             style={kexp !== 0.0 ? { backgroundColor: "orange" } : null}
             title={kexp !== 0.0 ? "Valor no reglamentario (kexp != 0)" : null}
+            readOnly
           />
         </div>
-        <div id="area" className="form-group col-lg-3">
-          <label className="control-label" htmlFor="areaentry">
-            Area<sub>ref</sub> (m²){" "}
-          </label>
-          <input
-            type="number"
-            lang="es"
-            min="1"
-            step="1"
-            name="areaentry"
-            className="form-control form-control-sm"
-            value={area.toFixed(0)}
-            onChange={e => onChangeArea(e.target.value)}
-          />
-        </div>
+        <NumInput
+          id="area_input"
+          precision={0}
+          min={0}
+          value={area}
+          onNumberChange={onChangeArea}
+          defaultValue={area}
+          groupClassName="d-inline-block"
+          labelClassName="col-lg-5"
+          className="d-inline form-control-sm col-lg-7"
+          hasFeedback={true}
+        >
+          Area<sub>ref</sub> (m²){" "}
+        </NumInput>
         <div id="buttons" className="form-group float-right">
           <div
             className="btn-group btn-group-md"
