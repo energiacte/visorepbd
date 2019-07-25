@@ -78,10 +78,15 @@ export class NumInput extends React.Component {
       id,
       // propiedades eliminadas para no interferir con rest
       // (p.e. "min" convierte la entrada en entrada de valores enteros)
+      // eslint-disable-next-line no-unused-vars
       precision,
+      // eslint-disable-next-line no-unused-vars
       min,
+      // eslint-disable-next-line no-unused-vars
       max,
+      // eslint-disable-next-line no-unused-vars
       onValueChange,
+      // eslint-disable-next-line no-unused-vars
       value,
       // Resto de valores para hacer bypass
       ...rest
