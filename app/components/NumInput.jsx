@@ -28,7 +28,7 @@ export class NumInput extends React.Component {
     className: "", // Clases adicionales del elemento input
     labelClassName: "", // Clases adicionales del elemento label
     groupClassName: "", // Clases adicionbales del elemento group
-    hasFeedback: false, // Usa controles con feedback
+    hasFeedback: true, // Usa controles con feedback
     hasErrorMessage: false // Muestra mensaje de error
   };
 

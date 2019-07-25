@@ -237,8 +237,6 @@ function wfactors(state = [], action, indicator) {
 
       // Regenera factores de localización
       const newfactors = new_wfactors(loc, indicator, userfactors);
-      console.log("Red1: ", red1, ", Red2: ", red2, ", Cogen: ", cog);
-      console.log("Factores cargados: ", newfactors);
       return newfactors;
     }
     default:
