@@ -11,13 +11,12 @@ function inrangevalue(text, min, max, precision) {
 }
 
 // Componente para entrada numérica controlada y con formato
-export default class NumInput extends React.Component {
+export class NumInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: props.value.toFixed(props.precision),
-      lastoknumber: props.value,
-      status: "OK"
+      value: this.props.value,
+      status: ""
     };
   }
   static defaultProps = {
@@ -25,48 +24,47 @@ export default class NumInput extends React.Component {
     precision: 3, // Precisión numérica de entrada y salida
     min: Number.MIN_VALUE, // Valor mínimo
     max: Number.MAX_VALUE, // Valor máximo
+    onValueChange: () => {}, // Retrollamada para cambio de valor
     className: "", // Clases adicionales del elemento input
     labelClassName: "", // Clases adicionales del elemento label
     groupClassName: "", // Clases adicionbales del elemento group
-    hasFeedback: false // Usa controles con feedback
+    hasFeedback: false, // Usa controles con feedback
+    hasErrorMessage: false // Muestra mensaje de error
   };
 
-  // Controla necesidad de actualización
-  static getDerivedStateFromProps(props, state) {
-    const { precision, value } = props;
-    const text = precision ? value.toFixed(precision) : String(value);
-    if (state.lastoknumber !== value) {
-      return { text, lastoknumber: value, status: "OK" };
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== this.props.value) {
+      // new value from the parent - copy it to state
+      this.setState({ value: nextProps.value });
     }
-    // Return null to indicate no change to state.
-    return null;
   }
 
   // Valida y actualiza estado
-  handleChange(e) {
-    e.preventDefault();
-    const text = this.userInput.value;
-    const { min, max, precision } = this.props;
-    if (RE_NUMBER.test(text)) {
-      let lastoknumber = inrangevalue(text, min, max, precision);
-      this.setState({
-        lastoknumber,
-        text: String(lastoknumber),
-        status: "OK"
-      });
-      this.props.onNumberChange(lastoknumber);
-    } else if (RE_INCOMPLETE_NUMBER.test(text)) {
-      this.setState({ text, status: "INCOMPLETE" });
+  onValueChanged(e) {
+    const { value } = e.target;
+    let status;
+    if (RE_NUMBER.test(value)) {
+      status = "OK";
+    } else if (RE_INCOMPLETE_NUMBER.test(value)) {
+      status = "INCOMPLETE";
     } else {
-      this.setState({ text: this.state.lastoknumber, status: "RESET" });
+      status = "ERROR";
     }
+    this.setState({ value, status });
   }
 
-  // Muestra el último valor válido en la entrada
-  showLast() {
-    this.userInput.value = Number(this.state.lastoknumber).toFixed(
-      this.props.precision
-    );
+  // Envía el último valor válido en la entrada
+  sendNewValue() {
+    const { value } = this.userInput;
+    const { min, max, precision } = this.props;
+    if (this.state.status === "OK") {
+      const vv = inrangevalue(value, min, max, precision);
+      this.setState({ value: String(vv), status: "" }, () =>
+        this.props.onValueChange(vv)
+      );
+    } else {
+      this.setState({ value: String(this.props.value), status: "" });
+    }
   }
 
   render() {
@@ -76,22 +74,39 @@ export default class NumInput extends React.Component {
       labelClassName,
       groupClassName,
       hasFeedback,
+      hasErrorMessage,
       id,
+      // propiedades eliminadas para no interferir con rest
+      // (p.e. "min" convierte la entrada en entrada de valores enteros)
+      precision,
+      min,
+      max,
+      onValueChange,
+      value,
+      // Resto de valores para hacer bypass
       ...rest
     } = this.props;
-    const { text, status } = this.state;
+    const { status } = this.state;
 
     let feedback = "";
     if (hasFeedback) {
-      switch (status) {
-        case "OK":
-          feedback = "is-valid";
-          break;
-        case "INCOMPLETE":
-          feedback = "";
-          break;
-        default:
-          feedback = "is-invalid";
+      if (status == "ERROR") {
+        feedback = "is-invalid";
+      } else if (status === "OK") {
+        feedback = "is-valid";
+      } else if (status == "INCOMPLETE") {
+        feedback = "";
+      } else {
+        feedback = "";
+      }
+    }
+
+    let errorMessage = null;
+    if (hasErrorMessage) {
+      if (status == "OK") {
+        errorMessage = <div>Error con valor {this.state.value}</div>;
+      } else {
+        errorMessage = null
       }
     }
 
@@ -107,13 +122,16 @@ export default class NumInput extends React.Component {
           id={id}
           className={`form-control ${feedback} ${className}`}
           ref={ref => (this.userInput = ref)}
-          onChange={e => this.handleChange(e)}
-          onBlur={_ => this.showLast()}
-          onKeyDown={e => (e.key === "Enter" ? this.showLast() : null)}
-          value={text}
+          onChange={e => this.onValueChanged(e)}
+          onBlur={_ => this.sendNewValue()}
+          onKeyDown={e => (e.key == "Enter" ? this.sendNewValue() : null)}
+          value={this.state.value}
           {...rest}
         />
+        {errorMessage}
       </div>
     );
   }
 }
+
+export default NumInput;

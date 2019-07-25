@@ -44,8 +44,7 @@ export default class GlobalVarsControl extends React.Component {
           precision={0}
           min={0}
           value={area}
-          onNumberChange={onChangeArea}
-          defaultValue={area}
+          onValueChange={onChangeArea}
           groupClassName="d-inline-block"
           labelClassName="col-lg-5"
           className="d-inline form-control-sm col-lg-7"
