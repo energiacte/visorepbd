@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import NavBar from "components/NavBar";
 import Footer from "components/Footer";
+import NumInput from "components/NumInput";
 
 import { editUserWFactors, changeLocation } from "actions/actions.js";
 
@@ -115,67 +116,57 @@ class WeightingFactorsPageClass extends React.Component {
                 <td>SUMINISTRO</td>
                 <td>A</td>
                 <td>
-                  <input
-                    type="text"
-                    id="red1ren"
-                    defaultValue={red1.ren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "EP",
-                        "RED1",
-                        { ...red1 },
-                        "ren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="red1renep_input"
+                    min={0}
+                    value={red1.ren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("EP", "RED1", { ...red1, ren: val })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    id="red1nren"
-                    defaultValue={red1.nren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "EP",
-                        "RED1",
-                        { ...red1 },
-                        "nren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="red1nrenep_input"
+                    min={0}
+                    value={red1.nren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("EP", "RED1", { ...red1, nren: val })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    id="red1renco2"
-                    defaultValue={red1co2.ren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "CO2",
-                        "RED1",
-                        { ...red1co2 },
-                        "ren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="red1renco2_input"
+                    min={0}
+                    value={red1co2.ren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("CO2", "RED1", {
+                          ...red1co2,
+                          ren: val
+                        })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    id="red1nrenco2"
-                    defaultValue={red1co2.nren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "CO2",
-                        "RED1",
-                        { ...red1co2 },
-                        "nren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="red1nrenco2_input"
+                    min={0}
+                    value={red1co2.nren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("CO2", "RED1", {
+                          ...red1co2,
+                          nren: val
+                        })
+                      );
+                    }}
                   />
                 </td>
               </tr>
@@ -185,69 +176,57 @@ class WeightingFactorsPageClass extends React.Component {
                 <td>SUMINISTRO</td>
                 <td>A</td>
                 <td>
-                  <input
-                    type="text"
-                    id="red2ren"
-                    defaultValue={red2.ren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "EP",
-                        "RED2",
-                        { ...red2 },
-                        "ren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="red2renep_input"
+                    min={0}
+                    value={red2.ren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("EP", "RED2", { ...red2, ren: val })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    contentEditable
-                    id="red2nren"
-                    defaultValue={red2.nren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "EP",
-                        "RED2",
-                        { ...red2 },
-                        "nren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="red2nrenep_input"
+                    min={0}
+                    value={red2.nren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("EP", "RED2", { ...red2, nren: val })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    id="red2renco2"
-                    defaultValue={red2co2.ren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "CO2",
-                        "RED2",
-                        { ...red2co2 },
-                        "ren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="red2renco2_input"
+                    min={0}
+                    value={red2co2.ren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("CO2", "RED2", {
+                          ...red2co2,
+                          ren: val
+                        })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    contentEditable
-                    id="red2nrenco2"
-                    defaultValue={red2co2.nren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "CO2",
-                        "RED2",
-                        { ...red2co2 },
-                        "nren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="red2nrenco2_input"
+                    min={0}
+                    value={red2co2.nren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("CO2", "RED2", {
+                          ...red2co2,
+                          nren: val
+                        })
+                      );
+                    }}
                   />
                 </td>
               </tr>
@@ -257,69 +236,63 @@ class WeightingFactorsPageClass extends React.Component {
                 <td>A_RED</td>
                 <td>A</td>
                 <td>
-                  <input
-                    type="text"
-                    id="red2ren"
-                    defaultValue={cog.ren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "EP",
-                        "ELECTRICIDADCOGEN",
-                        { ...cog },
-                        "ren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="cogenrenep_input"
+                    min={0}
+                    value={cog.ren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("EP", "ELECTRICIDADCOGEN", {
+                          ...cog,
+                          ren: val
+                        })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    contentEditable
-                    id="red2nren"
-                    defaultValue={cog.nren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "EP",
-                        "ELECTRICIDADCOGEN",
-                        { ...cog },
-                        "nren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="cogennrenep_input"
+                    min={0}
+                    value={cog.nren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("EP", "ELECTRICIDADCOGEN", {
+                          ...cog,
+                          nren: val
+                        })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    id="red2renco2"
-                    defaultValue={cogco2.ren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "CO2",
-                        "ELECTRICIDADCOGEN",
-                        { ...cogco2 },
-                        "ren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="cogenrenco2_input"
+                    min={0}
+                    value={cogco2.ren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("CO2", "ELECTRICIDADCOGEN", {
+                          ...cogco2,
+                          ren: val
+                        })
+                      );
+                    }}
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    contentEditable
-                    id="red2nrenco2"
-                    defaultValue={cogco2.nren.toFixed(3)}
-                    onChange={e =>
-                      this.handleChange(
-                        "CO2",
-                        "ELECTRICIDADCOGEN",
-                        { ...cogco2 },
-                        "nren",
-                        e.target.value
-                      )
-                    }
+                  <NumInput
+                    id="cogennrenco2_input"
+                    min={0}
+                    value={cogco2.nren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("CO2", "ELECTRICIDADCOGEN", {
+                          ...cogco2,
+                          nren: val
+                        })
+                      );
+                    }}
                   />
                 </td>
               </tr>
