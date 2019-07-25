@@ -48,7 +48,6 @@ export default class GlobalVarsControl extends React.Component {
           groupClassName="d-inline-block"
           labelClassName="col-lg-5"
           className="d-inline form-control-sm col-lg-7"
-          hasFeedback={true}
         >
           Area<sub>ref</sub> (m²){" "}
         </NumInput>
