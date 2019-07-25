@@ -96,17 +96,16 @@ class WeightingFactorsPageClass extends React.Component {
               <tr>
                 <th colSpan="4" />
                 <th colSpan="2">Energía primaria</th>
-                <th colSpan="2">Emisiones de CO2</th>
+                <th>Emisiones</th>
               </tr>
               <tr>
                 <th>Vector energético</th>
                 <th>Origen</th>
                 <th>Uso</th>
                 <th>Paso</th>
-                <th>Fp_ren</th>
-                <th>Fp_nren</th>
-                <th>Fp_ren</th>
-                <th>Fp_nren</th>
+                <th>f<sub>ep;ren</sub></th>
+                <th>f<sub>ep;nren</sub></th>
+                <th>f<sub>CO2</sub></th>
               </tr>
             </thead>
             <tbody>
@@ -135,21 +134,6 @@ class WeightingFactorsPageClass extends React.Component {
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("EP", "RED1", { ...red1, nren: val })
-                      );
-                    }}
-                  />
-                </td>
-                <td>
-                  <NumInput
-                    id="red1renco2_input"
-                    min={0}
-                    value={red1co2.ren}
-                    onValueChange={val => {
-                      this.props.dispatch(
-                        editUserWFactors("CO2", "RED1", {
-                          ...red1co2,
-                          ren: val
-                        })
                       );
                     }}
                   />
@@ -195,21 +179,6 @@ class WeightingFactorsPageClass extends React.Component {
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("EP", "RED2", { ...red2, nren: val })
-                      );
-                    }}
-                  />
-                </td>
-                <td>
-                  <NumInput
-                    id="red2renco2_input"
-                    min={0}
-                    value={red2co2.ren}
-                    onValueChange={val => {
-                      this.props.dispatch(
-                        editUserWFactors("CO2", "RED2", {
-                          ...red2co2,
-                          ren: val
-                        })
                       );
                     }}
                   />
@@ -265,22 +234,7 @@ class WeightingFactorsPageClass extends React.Component {
                     }}
                   />
                 </td>
-                <td>
-                  <NumInput
-                    id="cogenrenco2_input"
-                    min={0}
-                    value={cogco2.ren}
-                    onValueChange={val => {
-                      this.props.dispatch(
-                        editUserWFactors("CO2", "ELECTRICIDADCOGEN", {
-                          ...cogco2,
-                          ren: val
-                        })
-                      );
-                    }}
-                  />
-                </td>
-                <td>
+                 <td>
                   <NumInput
                     id="cogennrenco2_input"
                     min={0}
@@ -313,17 +267,16 @@ class WeightingFactorsPageClass extends React.Component {
               <tr>
                 <th colSpan="4" />
                 <th colSpan="2">Energía primaria</th>
-                <th colSpan="2">Emisiones de CO2</th>
+                <th>Emisiones</th>
               </tr>
               <tr>
                 <th>Vector energético</th>
                 <th>Origen</th>
                 <th>Uso</th>
                 <th>Paso</th>
-                <th>Fp_ren</th>
-                <th>Fp_nren</th>
-                <th>Fp_ren</th>
-                <th>Fp_nren</th>
+                <th>f<sub>ep;ren</sub></th>
+                <th>f<sub>ep;nren</sub></th>
+                <th>f<sub>CO2</sub></th>
               </tr>
             </thead>
             <tbody>
@@ -336,9 +289,7 @@ class WeightingFactorsPageClass extends React.Component {
                       f.dest === dest &&
                       f.step === step
                   );
-                  let [co2ren, co2nren] = co2facs
-                    ? [co2facs.ren, co2facs.nren]
-                    : ["-", "-"];
+                  let co2 = co2facs ? co2facs.nren : 0.0;
                   return (
                     <tr key={`${carrier}-${source}-${dest}-${step}`}>
                       <td>{carrier}</td>
@@ -347,8 +298,7 @@ class WeightingFactorsPageClass extends React.Component {
                       <td>{step}</td>
                       <td>{ren.toFixed(3)}</td>
                       <td>{nren.toFixed(3)}</td>
-                      <td>{co2ren.toFixed(3)}</td>
-                      <td>{co2nren.toFixed(3)}</td>
+                      <td>{co2.toFixed(3)}</td>
                     </tr>
                   );
                 }
@@ -400,12 +350,15 @@ class WeightingFactorsPageClass extends React.Component {
               </li>
             </ul>
             <p>
-              <tt>Fpren</tt>: Factor de paso de energía final a energía primaria
-              renovable
+              <tt>f<sub>ep;ren</sub></tt>: Factor de paso de energía final a energía primaria
+              renovable [kWh/kWh<sub>f</sub>]
             </p>
             <p>
-              <tt>Fpnren</tt>: Factor de paso de energía final a energía
-              primaria no renovable
+              <tt>f<sub>ep;nren</sub></tt>: Factor de paso de energía final a energía
+              primaria no renovable [kWh/kWh<sub>f</sub>]
+            </p>
+            <p>
+              <tt>f<sub>CO2</sub></tt>: Factor de paso de energía final a emisiones de CO2 [kg<sub>CO2e</sub>/kWh<sub>f</sub>]
             </p>
           </div>
         </div>
