@@ -118,10 +118,18 @@ class WeightingFactorsPageClass extends React.Component {
                 </th>
               </tr>
               <tr>
-                <th scope="col" className="col-lg-2">Vector energético</th>
-                <th scope="col" className="col-lg-2">Origen</th>
-                <th scope="col" className="col-lg-2">Uso</th>
-                <th scope="col" className="col-lg-1">Paso</th>
+                <th scope="col" className="col-lg-2">
+                  Vector energético
+                </th>
+                <th scope="col" className="col-lg-2">
+                  Origen
+                </th>
+                <th scope="col" className="col-lg-2">
+                  Uso
+                </th>
+                <th scope="col" className="col-lg-1">
+                  Paso
+                </th>
                 <th scope="col">
                   f<sub>ep;ren</sub>
                 </th>
@@ -317,10 +325,18 @@ class WeightingFactorsPageClass extends React.Component {
                 </th>
               </tr>
               <tr>
-                <th scope="col" className="col-lg-2">Vector energético</th>
-                <th scope="col" className="col-lg-2">Origen</th>
-                <th scope="col" className="col-lg-2">Uso</th>
-                <th scope="col" className="col-lg-1">Paso</th>
+                <th scope="col" className="col-lg-2">
+                  Vector energético
+                </th>
+                <th scope="col" className="col-lg-2">
+                  Origen
+                </th>
+                <th scope="col" className="col-lg-2">
+                  Uso
+                </th>
+                <th scope="col" className="col-lg-1">
+                  Paso
+                </th>
                 <th scope="col">
                   f<sub>ep;ren</sub>
                 </th>
