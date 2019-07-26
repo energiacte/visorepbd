@@ -86,6 +86,18 @@ class MainPageClass extends React.Component {
       dispatch
     } = this.props;
 
+    // Indicadores que se van a representar ------------------
+    let data = {};
+    if (balance) {
+      // Energía primaria
+      const { ren, nren } = balance.ep.balance_m2.B;
+      // Cálculo para ACS en perímetro próximo
+      const { ren: ren_acs, nren: nren_acs } = balance.ep_acs_nrb.balance_m2.B;
+      // Emisiones
+      const co2 = balance.co2.balance_m2.B.nren;
+      data = { kexp, ren, nren, ren_acs, nren_acs, co2 };
+    }
+
     return (
       <div>
         <NavBar match={this.props.match} />
@@ -112,7 +124,7 @@ class MainPageClass extends React.Component {
           </div>
           <div className="row">
             <div className="col">
-              <EPChart balance={balance} kexp={kexp} />
+              <EPChart {...data} />
             </div>
           </div>
           <div className="row">

@@ -347,16 +347,24 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
   }
 }
 
-function computeBalances(state = {}) {
+function computeBalances(state = {}, action) {
   if (state === {}) return {};
 
-  const { kexp, area, components, wfactors_ep } = state;
+  let { kexp, area, components, wfactors_ep, wfactors_co2 } = state;
+  switch(action.type) {
+    case CHANGE_KEXP:
+      kexp = action.value;
+      break;
+    case CHANGE_AREA:
+      area = action.value;
+      break;
+  }
   const componentsobj = {
     cmeta: components.cmeta,
     cdata: components.cdata.filter(c => c.active)
   };
 
-  // Cálculo global
+  // Cálculo global, energía primaria
   const ep = energy_performance(componentsobj, wfactors_ep, kexp, area);
   // Cálculo para ACS en perímetro próximo
   const ep_acs_nrb = energy_performance_acs_nrb(
@@ -365,7 +373,9 @@ function computeBalances(state = {}) {
     kexp,
     area
   );
-  return { ep, ep_acs_nrb };
+  // Cálculo global, emisiones
+  const co2 = energy_performance(componentsobj, wfactors_co2, kexp, area);
+  return { ep, ep_acs_nrb, co2 };
 }
 
 // Si se quisiese hacer el cálculo energético en los reducers, para
@@ -382,6 +392,6 @@ export default function reducer(state = {}, action) {
     wfactors_co2: wfactors(state.wfactors_co2, action, "CO2"),
     components: components(state.components, action),
     currentfilename: currentfilename(state.currentfilename, action),
-    balance: computeBalances(state) // XXX: usa todo el estado
+    balance: computeBalances(state, action) // XXX: usa todo el estado
   };
 }

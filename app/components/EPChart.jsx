@@ -7,6 +7,15 @@ export default class EPChart extends React.Component {
     this.state = { width: 0 };
   }
 
+  static defaultProps = {
+    kexp: 0,
+    ren: 0,
+    nren: 0,
+    ren_acs: 0,
+    nren_acs: 0,
+    co2: 0
+  };
+
   updateDimensions() {
     if (this.divElement !== null) {
       const width =
@@ -32,6 +41,8 @@ export default class EPChart extends React.Component {
         return "ep;nren";
       case "C_ep;ren":
         return "ep;ren";
+      case "E_CO2":
+        return "CO2";
     }
   }
 
@@ -42,19 +53,23 @@ export default class EPChart extends React.Component {
       display = "inline-block",
       padding = 0,
       className = null,
-      balance,
-      kexp
+      kexp,
+      ren,
+      nren,
+      ren_acs,
+      nren_acs,
+      co2
     } = this.props;
 
-    // Cálculo global
-    const { ren, nren } = balance.ep.balance_m2.B;
+    // Indicadores que se van a representar ------------------
+    // Energía primaria
     const total = ren + nren;
     const rer = total === 0 ? 0 : ren / total;
     // Cálculo para ACS en perímetro próximo
-    const { ren: ren_acs, nren: nren_acs } = balance.ep_acs_nrb.balance_m2.B;
     const total_acs = ren_acs + nren_acs;
     const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
 
+    // Definición de los elementos gráficos ------------------
     const svgwidth = this.state.width;
 
     const steps = [0, 50, 100, 200, 300];
@@ -139,7 +154,8 @@ export default class EPChart extends React.Component {
           y={(i + 0.5) * barheight}
           dominantBaseline="middle"
         >
-          C<tspan dy="1ex">{this.chooseLabelText(el.label)}</tspan>
+          {el.label[0]}
+          <tspan dy="1ex">{this.chooseLabelText(el.label)}</tspan>
         </text>
         <text
           x={x(Math.min(0, el.value) + 5)}
@@ -161,16 +177,22 @@ export default class EPChart extends React.Component {
         ref={svgElement => (this.divElement = svgElement)}
         style={{
           backgroundColor: "white",
-          textAlign: "center",
           font: "14px sans-serif",
           fontWeight: "normal"
         }}
       >
-        <p style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
-          Consumo de energía primaria [kWh/m²·año]
+        <p>
+          <span style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
+            k<sub>exp</sub>
+          </span>
+          : {kexp.toFixed(2)}
         </p>
         <p>
-          (k<sub>exp</sub>: {kexp.toFixed(2)}, RER: {rer.toFixed(2)}, RER
+          <span style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
+            Consumo de energía primaria
+          </span>
+          {" [kWh/m²·año] "}
+          (RER: {rer.toFixed(2)}, RER
           <sub>ACS;nrb</sub>: {rer_acs_nrb.toFixed(2)})
         </p>
         <svg
@@ -195,6 +217,12 @@ export default class EPChart extends React.Component {
             {Bars}
           </g>
         </svg>
+        <p style={{ fontSize: "16px", fill: "#444" }}>
+          <b>
+            Emisiones de CO<sub>2</sub>
+          </b>
+          : <b>{co2.toFixed(2)}</b> kg/m²·año
+        </p>
       </div>
     );
   }
