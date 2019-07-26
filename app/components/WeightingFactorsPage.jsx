@@ -22,15 +22,15 @@ class WeightingFactorsPageClass extends React.Component {
     // Energía primaria --------------------
     // Factores definidos reglamentariamente
     const wfactors_reglamentarios_ep = wfactors_ep.wdata
-      .sort((a, b) =>
-        `${a.carrier}-${a.source}-${a.dest}-${a.step}`.localeCompare(
-          `${b.carrier}-${b.source}-${b.dest}-${b.step}`
-        )
-      )
       .filter(
         f =>
           !f.carrier.startsWith("RED") &&
           !(f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A")
+      )
+      .sort((a, b) =>
+        `${a.carrier}-${a.source}-${a.dest}-${a.step}`.localeCompare(
+          `${b.carrier}-${b.source}-${b.dest}-${b.step}`
+        )
       );
     // Factores definibles por el usuario
     const red1 = wfactors_ep.wdata.find(f => f.carrier === "RED1");
