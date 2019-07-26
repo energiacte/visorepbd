@@ -22,6 +22,8 @@ import {
   changeCurrentFileName
 } from "actions/actions.js";
 
+import { selectBalance } from "reducers/reducers.js";
+
 // Serialize energy components (carrier data with metadata) to string
 function serialize_components(state) {
   const { components, wfactors_co2, wfactors_ep } = state;
@@ -212,7 +214,8 @@ class MainPageClass extends React.Component {
   }
 }
 
-const MainPage = connect(state => {
+const MainPage = connect((state) => {
+  const balance = selectBalance(state);
   return {
     kexp: state.kexp,
     area: state.area,
@@ -223,7 +226,7 @@ const MainPage = connect(state => {
     wfactors_co2: state.wfactors_co2,
     components: state.components,
     currentfilename: state.currentfilename,
-    balance: state.balance
+    balance // selector
   };
 })(MainPageClass);
 

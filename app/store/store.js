@@ -3,7 +3,6 @@ import reducer from "reducers/reducers.js";
 import { new_wfactors } from "wasm-cteepbd";
 
 const initialState = {
-  balance: {},
   storedcomponent: {
     active: true,
     carrier: "ELECTRICIDAD",

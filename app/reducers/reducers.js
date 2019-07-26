@@ -347,18 +347,12 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
   }
 }
 
-function computeBalances(state = {}, action) {
+// Selectors --------------------------
+
+export function selectBalance(state) {
   if (state === {}) return {};
 
   let { kexp, area, components, wfactors_ep, wfactors_co2 } = state;
-  switch(action.type) {
-    case CHANGE_KEXP:
-      kexp = action.value;
-      break;
-    case CHANGE_AREA:
-      area = action.value;
-      break;
-  }
   const componentsobj = {
     cmeta: components.cmeta,
     cdata: components.cdata.filter(c => c.active)
@@ -390,7 +384,6 @@ export default function reducer(state = {}, action) {
     wfactors_ep: wfactors(state.wfactors_ep, action, "EP"),
     wfactors_co2: wfactors(state.wfactors_co2, action, "CO2"),
     components: components(state.components, action),
-    currentfilename: currentfilename(state.currentfilename, action),
-    balance: computeBalances(state, action) // XXX: usa todo el estado
+    currentfilename: currentfilename(state.currentfilename, action)
   };
 }
