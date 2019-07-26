@@ -296,7 +296,7 @@ function components(state = { cdata: [], cmeta: [] }, action) {
       return state;
     case CHANGE_AREA:
       newmeta = [...state.cmeta];
-      upsertmeta(newmeta, "CTE_LOCALIZACION", action.value);
+      upsertmeta(newmeta, "CTE_AREAREF", action.value);
       return { ...state, cmeta: newmeta };
     case CHANGE_KEXP:
       newmeta = [...state.cmeta];
