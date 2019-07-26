@@ -21,11 +21,17 @@ class WeightingFactorsPageClass extends React.Component {
 
     // Energía primaria --------------------
     // Factores definidos reglamentariamente
-    const wfactors_reglamentarios_ep = wfactors_ep.wdata.filter(
-      f =>
-        !f.carrier.startsWith("RED") &&
-        !(f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A")
-    );
+    const wfactors_reglamentarios_ep = wfactors_ep.wdata
+      .sort((a, b) =>
+        `${a.carrier}-${a.source}-${a.dest}-${a.step}`.localeCompare(
+          `${b.carrier}-${b.source}-${b.dest}-${b.step}`
+        )
+      )
+      .filter(
+        f =>
+          !f.carrier.startsWith("RED") &&
+          !(f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A")
+      );
     // Factores definibles por el usuario
     const red1 = wfactors_ep.wdata.find(f => f.carrier === "RED1");
     const red2 = wfactors_ep.wdata.find(f => f.carrier === "RED2");
@@ -112,10 +118,10 @@ class WeightingFactorsPageClass extends React.Component {
                 </th>
               </tr>
               <tr>
-                <th scope="col">Vector energético</th>
-                <th scope="col">Origen</th>
-                <th scope="col">Uso</th>
-                <th scope="col">Paso</th>
+                <th scope="col" className="col-lg-2">Vector energético</th>
+                <th scope="col" className="col-lg-2">Origen</th>
+                <th scope="col" className="col-lg-2">Uso</th>
+                <th scope="col" className="col-lg-1">Paso</th>
                 <th scope="col">
                   f<sub>ep;ren</sub>
                 </th>
@@ -128,6 +134,57 @@ class WeightingFactorsPageClass extends React.Component {
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td>ELECTRICIDAD</td>
+                <td>COGENERACION</td>
+                <td>A_RED</td>
+                <td>A</td>
+                <td>
+                  <NumInput
+                    id="cogenrenep_input"
+                    min={0}
+                    value={cog.ren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("EP", "ELECTRICIDADCOGEN", {
+                          ...cog,
+                          ren: val
+                        })
+                      );
+                    }}
+                  />
+                </td>
+                <td>
+                  <NumInput
+                    id="cogennrenep_input"
+                    min={0}
+                    value={cog.nren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("EP", "ELECTRICIDADCOGEN", {
+                          ...cog,
+                          nren: val
+                        })
+                      );
+                    }}
+                  />
+                </td>
+                <td>
+                  <NumInput
+                    id="cogennrenco2_input"
+                    min={0}
+                    value={cogco2.nren}
+                    onValueChange={val => {
+                      this.props.dispatch(
+                        editUserWFactors("CO2", "ELECTRICIDADCOGEN", {
+                          ...cogco2,
+                          nren: val
+                        })
+                      );
+                    }}
+                  />
+                </td>
+              </tr>
               <tr>
                 <td>RED1</td>
                 <td>RED</td>
@@ -218,57 +275,6 @@ class WeightingFactorsPageClass extends React.Component {
                   />
                 </td>
               </tr>
-              <tr>
-                <td>ELECTRICIDAD</td>
-                <td>COGENERACION</td>
-                <td>A_RED</td>
-                <td>A</td>
-                <td>
-                  <NumInput
-                    id="cogenrenep_input"
-                    min={0}
-                    value={cog.ren}
-                    onValueChange={val => {
-                      this.props.dispatch(
-                        editUserWFactors("EP", "ELECTRICIDADCOGEN", {
-                          ...cog,
-                          ren: val
-                        })
-                      );
-                    }}
-                  />
-                </td>
-                <td>
-                  <NumInput
-                    id="cogennrenep_input"
-                    min={0}
-                    value={cog.nren}
-                    onValueChange={val => {
-                      this.props.dispatch(
-                        editUserWFactors("EP", "ELECTRICIDADCOGEN", {
-                          ...cog,
-                          nren: val
-                        })
-                      );
-                    }}
-                  />
-                </td>
-                <td>
-                  <NumInput
-                    id="cogennrenco2_input"
-                    min={0}
-                    value={cogco2.nren}
-                    onValueChange={val => {
-                      this.props.dispatch(
-                        editUserWFactors("CO2", "ELECTRICIDADCOGEN", {
-                          ...cogco2,
-                          nren: val
-                        })
-                      );
-                    }}
-                  />
-                </td>
-              </tr>
             </tbody>
           </table>
 
@@ -302,10 +308,10 @@ class WeightingFactorsPageClass extends React.Component {
                 </th>
               </tr>
               <tr>
-                <th scope="col">Vector energético</th>
-                <th scope="col">Origen</th>
-                <th scope="col">Uso</th>
-                <th scope="col">Paso</th>
+                <th scope="col" className="col-lg-2">Vector energético</th>
+                <th scope="col" className="col-lg-2">Origen</th>
+                <th scope="col" className="col-lg-2">Uso</th>
+                <th scope="col" className="col-lg-1">Paso</th>
                 <th scope="col">
                   f<sub>ep;ren</sub>
                 </th>
@@ -347,7 +353,7 @@ class WeightingFactorsPageClass extends React.Component {
             <p>
               <b>Notas</b>:
             </p>
-            <p>Vector:</p>
+            <p>Vectores energéticos:</p>
             <ul>
               <li>
                 <tt>MEDIOAMBIENTE</tt>: energía térmica procedente del
@@ -362,7 +368,7 @@ class WeightingFactorsPageClass extends React.Component {
                 red de distrito y refrigeración)
               </li>
             </ul>
-            <p>Origen:</p>
+            <p>Origen de la energía:</p>
             <ul>
               <li>
                 <tt>RED</tt>: red de distribución
@@ -375,7 +381,7 @@ class WeightingFactorsPageClass extends React.Component {
                 otra energía importada dentro de la frontera de evaluación)
               </li>
             </ul>
-            <p>Uso:</p>
+            <p>Uso / destino de la energía:</p>
             <ul>
               <li>
                 <tt>SUMINISTRO</tt>: sumiministro
@@ -384,30 +390,42 @@ class WeightingFactorsPageClass extends React.Component {
                 <tt>A_RED</tt>: exportación a la red
               </li>
               <li>
-                <tt>A_NEPB</tt>: exportación a usos nEPB
+                <tt>A_NEPB</tt>: exportación a usos no EPB
               </li>
             </ul>
-            <p>
-              <tt>
-                f<sub>ep;ren</sub>
-              </tt>
-              : Factor de paso de energía final a energía primaria renovable
-              [kWh/kWh<sub>f</sub>]
-            </p>
-            <p>
-              <tt>
-                f<sub>ep;nren</sub>
-              </tt>
-              : Factor de paso de energía final a energía primaria no renovable
-              [kWh/kWh<sub>f</sub>]
-            </p>
-            <p>
-              <tt>
-                f<sub>CO2</sub>
-              </tt>
-              : Factor de paso de energía final a emisiones de CO2 [kg
-              <sub>CO2e</sub>/kWh<sub>f</sub>]
-            </p>
+            <p>Paso de cálculo:</p>
+            <ul>
+              <li>
+                <tt>A</tt>: paso de cálculo A. Recusos usados
+              </li>
+              <li>
+                <tt>B</tt>: paso de cálculo B. Recursos evitados a la red
+              </li>
+            </ul>
+            <p>Factores de paso:</p>
+            <ul>
+              <li>
+                <tt>
+                  f<sub>ep;ren</sub>
+                </tt>
+                : Factor de paso de energía final a energía primaria renovable
+                [kWh/kWh<sub>f</sub>]
+              </li>
+              <li>
+                <tt>
+                  f<sub>ep;nren</sub>
+                </tt>
+                : Factor de paso de energía final a energía primaria no
+                renovable [kWh/kWh<sub>f</sub>]
+              </li>
+              <li>
+                <tt>
+                  f<sub>CO2</sub>
+                </tt>
+                : Factor de paso de energía final a emisiones de CO2 [kg
+                <sub>CO2e</sub>/kWh<sub>f</sub>]
+              </li>
+            </ul>
           </div>
         </div>
         <Footer />
