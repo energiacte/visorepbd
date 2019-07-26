@@ -192,13 +192,13 @@ function wfactors(state = [], action, indicator) {
           : CTE_VALID_LOCS[0];
       let red1, red2, cog;
       if (indicator === "CO2") {
-        red1 = meta.find(c => c.key === "CTE_RED1");
-        red2 = meta.find(c => c.key === "CTE_RED2");
-        cog = meta.find(c => c.key === "CTE_COGEN");
-      } else {
         red1 = meta.find(c => c.key === "CTE_RED1_CO2");
         red2 = meta.find(c => c.key === "CTE_RED2_CO2");
         cog = meta.find(c => c.key === "CTE_COGEN_CO2");
+      } else {
+        red1 = meta.find(c => c.key === "CTE_RED1");
+        red2 = meta.find(c => c.key === "CTE_RED2");
+        cog = meta.find(c => c.key === "CTE_COGEN");
       }
       let userfactors = {
         cogen: {},
