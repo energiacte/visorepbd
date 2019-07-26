@@ -24,11 +24,31 @@ import {
 
 // Serialize energy components (carrier data with metadata) to string
 function serialize_components(state) {
-  const { components } = state;
+  const { components, wfactors_co2, wfactors_ep } = state;
   const { cmeta, cdata } = components;
 
-  // Serializar metadatos
-  const cmetalines = cmeta.map(mm => `#META ${mm.key}: ${mm.value}`);
+  // Serializar metadatos generales
+  let cmetalines = cmeta.map(mm => `#META ${mm.key}: ${mm.value}`);
+
+  // Metadatos de factores de paso de usuario
+  // Energía primaria --------------------
+  const red1 = wfactors_ep.wdata.find(f => f.carrier === "RED1");
+  const red2 = wfactors_ep.wdata.find(f => f.carrier === "RED2");
+  const cog = wfactors_ep.wdata.find(
+    f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
+  );
+  cmetalines.push(`#META CTE_RED1: "${red1.ren}, ${red1.nren}"`);
+  cmetalines.push(`#META CTE_RED2: "${red2.ren}, ${red2.nren}"`);
+  cmetalines.push(`#META CTE_COGEN: "${cog.ren}, ${cog.nren}"`);
+  // Emisiones ---------------------------
+  const red1co2 = wfactors_co2.wdata.find(f => f.carrier === "RED1");
+  const red2co2 = wfactors_co2.wdata.find(f => f.carrier === "RED2");
+  const cogco2 = wfactors_co2.wdata.find(
+    f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
+  );
+  cmetalines.push(`#META CTE_RED1_CO2: "${red1co2.ren}, ${red1co2.nren}"`);
+  cmetalines.push(`#META CTE_RED2_CO2: "${red2co2.ren}, ${red2co2.nren}"`);
+  cmetalines.push(`#META CTE_COGEN_CO2: "${cogco2.ren}, ${cogco2.nren}"`);
 
   // Serializar componentes energéticos
   const cdatalines = cdata
@@ -170,12 +190,10 @@ class MainPageClass extends React.Component {
   }
 
   downloadCarriers() {
-    const { kexp, area, location, wfactors_ep, components } = this.props;
+    const { wfactors_ep, wfactors_co2, components } = this.props;
     return serialize_components({
-      kexp,
-      area,
-      location,
       wfactors_ep,
+      wfactors_co2,
       components
     });
   }
@@ -189,6 +207,7 @@ const MainPage = connect(state => {
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
     wfactors_ep: state.wfactors_ep,
+    wfactors_co2: state.wfactors_co2,
     components: state.components,
     currentfilename: state.currentfilename,
     balance: state.balance
