@@ -196,6 +196,7 @@ class MainPageClass extends React.Component {
   }
 
   uploadCarriers(datastr) {
+    // TODO: convertir a una acción loadComponentsFromString y luego setStateFromComponentsMeta
     const { cdata, cmeta } = parse_components(datastr);
     const newcdata = cdata.map(dd => ({ ...dd, active: true }));
     this.props.dispatch(loadEnergyComponents({ cmeta, cdata: newcdata }));

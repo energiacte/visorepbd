@@ -22,7 +22,7 @@ import {
 
 const CTE_VALID_LOCS = ["PENINSULA", "BALEARES", "CANARIAS", "CEUTAMELILLA"];
 
-// Reducer para la parte de storedcomponent
+// Reducer para la parte de storedcomponent -------------------
 function storedcomponent(state = null, action) {
   switch (action.type) {
     case SELECT_ENERGY_COMPONENT:
@@ -34,7 +34,7 @@ function storedcomponent(state = null, action) {
   }
 }
 
-// Reducer para la parte de selectedkeys
+// Reducer para la parte de selectedkeys -------------------
 function selectedkey(state = null, action) {
   switch (action.type) {
     case SELECT_ENERGY_COMPONENT:
@@ -49,7 +49,7 @@ function selectedkey(state = null, action) {
   }
 }
 
-// Reducer para la parte de kexp
+// Reducer para la parte de kexp -------------------
 function kexp(state = 1, action) {
   switch (action.type) {
     case CHANGE_KEXP:
@@ -63,7 +63,7 @@ function kexp(state = 1, action) {
   }
 }
 
-// Reducer para la parte de area
+// Reducer para la parte de área -------------------
 function area(state = 1, action) {
   switch (action.type) {
     case CHANGE_AREA: {
@@ -84,7 +84,7 @@ function area(state = 1, action) {
   }
 }
 
-// Reducer para la parte de location
+// Reducer para la parte de location -------------------
 function location(state = "PENINSULA", action) {
   switch (action.type) {
     case CHANGE_LOCATION:
@@ -114,7 +114,7 @@ const upsertmeta = (meta, key, value) => {
   return meta;
 };
 
-// Reducer para la parte de wfactors
+// Reducer para la parte de wfactors -------------------
 function wfactors(state = [], action, indicator) {
   switch (action.type) {
     case EDIT_USERWFACTORS: {
@@ -244,7 +244,7 @@ function wfactors(state = [], action, indicator) {
   }
 }
 
-// Reducer para la parte de components
+// Reducer para la parte de components -------------------
 function components(state = { cdata: [], cmeta: [] }, action) {
   let currlist, newmeta;
 
@@ -337,7 +337,7 @@ function components(state = { cdata: [], cmeta: [] }, action) {
   }
 }
 
-// Reducer para la parte de currentfilename
+// Reducer para la parte de currentfilename -------------------
 function currentfilename(state = "csvEPBDpanel.csv", action) {
   switch (action.type) {
     case CHANGE_CURRENTFILENAME:
@@ -378,9 +378,8 @@ function computeBalances(state = {}, action) {
   return { ep, ep_acs_nrb, co2 };
 }
 
-// Si se quisiese hacer el cálculo energético en los reducers, para
-// calcular el balance energético usando todo el estado y no solo su parte:
-//
+// Reducer raíz ------------------------
+
 export default function reducer(state = {}, action) {
   return {
     storedcomponent: storedcomponent(state.storedcomponent, action),
