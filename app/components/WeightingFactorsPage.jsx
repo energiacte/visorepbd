@@ -143,7 +143,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="cogenrenep_input"
                     min={0}
-                    value={cog.ren}
+                    precision={3}
+                    value={cog.ren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("EP", "ELECTRICIDADCOGEN", {
@@ -158,7 +159,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="cogennrenep_input"
                     min={0}
-                    value={cog.nren}
+                    precision={3}
+                    value={cog.nren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("EP", "ELECTRICIDADCOGEN", {
@@ -173,7 +175,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="cogennrenco2_input"
                     min={0}
-                    value={cogco2.nren}
+                    precision={3}
+                    value={cogco2.nren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("CO2", "ELECTRICIDADCOGEN", {
@@ -194,7 +197,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="red1renep_input"
                     min={0}
-                    value={red1.ren}
+                    precision={3}
+                    value={red1.ren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("EP", "RED1", { ...red1, ren: val })
@@ -206,7 +210,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="red1nrenep_input"
                     min={0}
-                    value={red1.nren}
+                    precision={3}
+                    value={red1.nren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("EP", "RED1", { ...red1, nren: val })
@@ -218,7 +223,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="red1nrenco2_input"
                     min={0}
-                    value={red1co2.nren}
+                    precision={3}
+                    value={red1co2.nren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("CO2", "RED1", {
@@ -239,7 +245,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="red2renep_input"
                     min={0}
-                    value={red2.ren}
+                    precision={3}
+                    value={red2.ren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("EP", "RED2", { ...red2, ren: val })
@@ -251,7 +258,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="red2nrenep_input"
                     min={0}
-                    value={red2.nren}
+                    precision={3}
+                    value={red2.nren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("EP", "RED2", { ...red2, nren: val })
@@ -263,7 +271,8 @@ class WeightingFactorsPageClass extends React.Component {
                   <NumInput
                     id="red2nrenco2_input"
                     min={0}
-                    value={red2co2.nren}
+                    precision={3}
+                    value={red2co2.nren.toFixed(3)}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("CO2", "RED2", {
