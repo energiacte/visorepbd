@@ -157,7 +157,7 @@ export default class EnergyComponentEditor extends React.Component {
         key={"selected" + selectedkey}
       >
         <form className="form-horizontal" onSubmit={e => e.preventDefault()}>
-          <div className="form-group">
+          <div className="form-group row">
             <label className="col-lg-2 control-label" htmlFor="selectcarrier">
               Vector
             </label>
@@ -178,7 +178,7 @@ export default class EnergyComponentEditor extends React.Component {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group row">
             <label className="col-lg-2 control-label" htmlFor="selectctype">
               Tipo
             </label>
@@ -199,7 +199,7 @@ export default class EnergyComponentEditor extends React.Component {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group row">
             <label className="col-lg-2 control-label" htmlFor="selectcsubtype">
               Subtipo
             </label>
@@ -220,7 +220,7 @@ export default class EnergyComponentEditor extends React.Component {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group row">
             <label className="col-lg-2 control-label" htmlFor="selectservice">
               Servicio
             </label>
@@ -241,7 +241,7 @@ export default class EnergyComponentEditor extends React.Component {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group row">
             <label className="col-lg-2 control-label" htmlFor="selectcurve">
               Curva
             </label>
@@ -279,7 +279,7 @@ export default class EnergyComponentEditor extends React.Component {
             onEdit={vals => this.handleEditValues(vals)}
           />
 
-          <div className="form-group">
+          <div className="form-group row">
             <label
               className="col-lg-2 control-label"
               htmlFor="totalenergyrange"
@@ -288,7 +288,7 @@ export default class EnergyComponentEditor extends React.Component {
             </label>
             <div className="col-lg-10">
               <input
-                className="form-control col-lg-5"
+                className="form-control align-middle d-inline col-lg-6"
                 ref={ref => (this.totalEnergyRange = ref)}
                 name="totalenergyrange"
                 type="range"
@@ -303,7 +303,7 @@ export default class EnergyComponentEditor extends React.Component {
                 onChange={e => this.handleChangeTotalEnergyRange(e)}
               />
               <input
-                className="form-control col-lg-5"
+                className="form-control align-middle d-inline col-lg-6"
                 ref={ref => (this.totalEnergyEntry = ref)}
                 name="totalenergyentry"
                 type="text"
@@ -317,7 +317,7 @@ export default class EnergyComponentEditor extends React.Component {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group row">
             <label className="col-lg-2 control-label" htmlFor="commentinput">
               Comentario
             </label>

@@ -48,40 +48,27 @@ export default class ValuesEditor extends React.Component {
 
   render() {
     const { status, text } = this.state;
-    let feedback, icon;
-    switch (status) {
-      case "OK":
-        feedback = "";
-        icon = "glyphicon-ok";
-        break;
-      case "VALIDATES":
-        feedback = "has-success";
-        icon = "glyphicon-ok";
-        break;
-      default:
-        feedback = "has-warning";
-        icon = "glyphicon-warning-sign";
+    let feedback = "";
+    if (status == "VALIDATES") {
+      feedback = "is-valid";
+    } else if (status == "FAILS") {
+      feedback = "is-invalid";
     }
 
     return (
-      <div className={`form-group has-feedback ${feedback}`}>
+      <div className={`form-group row ${feedback}`}>
         <label className="col-lg-2 control-label">Valores</label>
         <div className="col-lg-10">
           <div className="input-group">
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${feedback}`}
               value={text}
               ref={ref => (this.userInput = ref)}
               onChange={e => this.handleChange(e)}
               onBlur={e => this.handleAccept(e)}
               onKeyDown={e => (e.key === "Enter" ? this.handleAccept(e) : null)}
             />
-            <span className="input-group-btn">
-              <span
-                className={`form-control form-control-feedback glyphicon ${icon}`}
-              />
-            </span>
           </div>
         </div>
       </div>
