@@ -90,22 +90,41 @@ class WeightingFactorsPageClass extends React.Component {
           <h3>Factores definidos por el usuario</h3>
           <table
             id="weditor"
-            className="table table-striped table-bordered table-condensed"
+            className="table table-sm table-striped table-borderless table-condensed table-hover"
           >
-            <thead>
+            <caption>
+              Lista de factores definibles por el usuario de paso de energía
+              final a otros indicadores en función del origen de la energía, el
+              destino/uso y el paso de cálculo (A o B)
+            </caption>
+            <thead className="border-bottom border-dark">
               <tr>
-                <th colSpan="4" />
-                <th colSpan="2">Energía primaria</th>
-                <th>Emisiones</th>
+                <th scope="col" colSpan="4" />
+                <th
+                  scope="col"
+                  colSpan="2"
+                  className="border-bottom border-dark"
+                >
+                  Energía primaria
+                </th>
+                <th scope="col" className="border-bottom border-dark">
+                  Emisiones
+                </th>
               </tr>
               <tr>
-                <th>Vector energético</th>
-                <th>Origen</th>
-                <th>Uso</th>
-                <th>Paso</th>
-                <th>f<sub>ep;ren</sub></th>
-                <th>f<sub>ep;nren</sub></th>
-                <th>f<sub>CO2</sub></th>
+                <th scope="col">Vector energético</th>
+                <th scope="col">Origen</th>
+                <th scope="col">Uso</th>
+                <th scope="col">Paso</th>
+                <th scope="col">
+                  f<sub>ep;ren</sub>
+                </th>
+                <th scope="col">
+                  f<sub>ep;nren</sub>
+                </th>
+                <th scope="col">
+                  f<sub>CO2</sub>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -234,7 +253,7 @@ class WeightingFactorsPageClass extends React.Component {
                     }}
                   />
                 </td>
-                 <td>
+                <td>
                   <NumInput
                     id="cogennrenco2_input"
                     min={0}
@@ -261,22 +280,41 @@ class WeightingFactorsPageClass extends React.Component {
           </h3>
           <table
             id="components"
-            className="table table-striped table-bordered table-condensed"
+            className="table table-sm table-striped table-borderless table-condensed table-hover"
           >
-            <thead>
+            <caption>
+              Lista de factores reglamentarios de paso de energía final a otros
+              indicadores en función del origen de la energía, el destino/uso y
+              el paso de cálculo (A o B)
+            </caption>
+            <thead className="border-bottom border-dark">
               <tr>
-                <th colSpan="4" />
-                <th colSpan="2">Energía primaria</th>
-                <th>Emisiones</th>
+                <th scope="col" colSpan="4" />
+                <th
+                  scope="col"
+                  colSpan="2"
+                  className="border-bottom border-dark"
+                >
+                  Energía primaria
+                </th>
+                <th scope="col" className="border-bottom border-dark">
+                  Emisiones
+                </th>
               </tr>
               <tr>
-                <th>Vector energético</th>
-                <th>Origen</th>
-                <th>Uso</th>
-                <th>Paso</th>
-                <th>f<sub>ep;ren</sub></th>
-                <th>f<sub>ep;nren</sub></th>
-                <th>f<sub>CO2</sub></th>
+                <th scope="col">Vector energético</th>
+                <th scope="col">Origen</th>
+                <th scope="col">Uso</th>
+                <th scope="col">Paso</th>
+                <th scope="col">
+                  f<sub>ep;ren</sub>
+                </th>
+                <th scope="col">
+                  f<sub>ep;nren</sub>
+                </th>
+                <th scope="col">
+                  f<sub>CO2</sub>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -350,15 +388,25 @@ class WeightingFactorsPageClass extends React.Component {
               </li>
             </ul>
             <p>
-              <tt>f<sub>ep;ren</sub></tt>: Factor de paso de energía final a energía primaria
-              renovable [kWh/kWh<sub>f</sub>]
+              <tt>
+                f<sub>ep;ren</sub>
+              </tt>
+              : Factor de paso de energía final a energía primaria renovable
+              [kWh/kWh<sub>f</sub>]
             </p>
             <p>
-              <tt>f<sub>ep;nren</sub></tt>: Factor de paso de energía final a energía
-              primaria no renovable [kWh/kWh<sub>f</sub>]
+              <tt>
+                f<sub>ep;nren</sub>
+              </tt>
+              : Factor de paso de energía final a energía primaria no renovable
+              [kWh/kWh<sub>f</sub>]
             </p>
             <p>
-              <tt>f<sub>CO2</sub></tt>: Factor de paso de energía final a emisiones de CO2 [kg<sub>CO2e</sub>/kWh<sub>f</sub>]
+              <tt>
+                f<sub>CO2</sub>
+              </tt>
+              : Factor de paso de energía final a emisiones de CO2 [kg
+              <sub>CO2e</sub>/kWh<sub>f</sub>]
             </p>
           </div>
         </div>

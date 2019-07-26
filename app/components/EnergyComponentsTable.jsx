@@ -19,7 +19,7 @@ const get_service_icon = service => {
     case "DHU":
       return { icon: "fa-cloud", color: "red" };
     case "BAC":
-        return { icon: "fa-building", color: "red" };
+      return { icon: "fa-building", color: "red" };
     default:
       // NDEF y otros
       return { icon: "fa-question-circle", color: "gray" };
@@ -49,19 +49,35 @@ export default class EnergyComponentsTable extends React.Component {
     return (
       <table
         id="components"
-        className="table table-striped table-condensed"
+        className="table table-sm table-striped table-borderless table-condensed table-hover"
       >
-        <thead>
+        <thead className="border-bottom border-dark">
           <tr>
-            <th />
-            <th className="col-lg-2">Vector energético</th>
-            <th className="col-lg-1">Tipo</th>
-            <th className="col-lg-1">Subtipo</th>
-            <th className="col-lg-1">Servicio</th>
-            <th className="col-lg-1">kWh/a</th>
-            <th className="col-lg-1">kWh/m²·a</th>
-            <th className="col-lg-1">Valores</th>
-            <th className="col-lg-4">Comentario</th>
+            <th scope="col" />
+            <th scope="col" className="col-lg-2">
+              Vector energético
+            </th>
+            <th scope="col" className="col-lg-1">
+              Tipo
+            </th>
+            <th scope="col" className="col-lg-1">
+              Subtipo
+            </th>
+            <th scope="col" className="col-lg-1">
+              Servicio
+            </th>
+            <th scope="col" className="col-lg-1">
+              kWh/a
+            </th>
+            <th scope="col" className="col-lg-1">
+              kWh/m²·a
+            </th>
+            <th scope="col" className="col-lg-1">
+              Valores
+            </th>
+            <th scope="col" className="col-lg-4">
+              Comentario
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -94,13 +110,13 @@ export default class EnergyComponentsTable extends React.Component {
                 className={rowstyles}
                 onClick={_ => this.handleClick(i)}
               >
-                <td>
+                <th scope="row">
                   <input
                     type="checkbox"
                     defaultChecked={active}
                     onClick={_e => this.handleChange(i)}
                   />
-                </td>
+                </th>
                 <td>{carrier}</td>
                 <td>{ctype}</td>
                 <td>{csubtype}</td>
