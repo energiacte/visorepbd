@@ -130,7 +130,9 @@ export default class EPChart extends React.Component {
           x={x(Math.min(0, el.value))}
           y={i * barheight}
           fill={el.color}
-          fillOpacity="0.7"
+          stroke={el.color}
+          strokeWidth="0.5"
+          fillOpacity="0.1"
         />
         <text
           x={-textw + paddingw}
@@ -143,8 +145,6 @@ export default class EPChart extends React.Component {
           x={x(Math.min(0, el.value) + 5)}
           y={(i + 0.5) * barheight}
           dominantBaseline="middle"
-          fill="white"
-          fontWeight="bold"
         >
           {el.value.toFixed(2)}
         </text>
