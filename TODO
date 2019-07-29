@@ -1,5 +1,4 @@
-- Factores de paso de emisiones (CO2)
-- Mostrar una gráfica de energía primaria y otra de emisiones
+- Separar en el store los userwfactors y dejar wfactors como selector en lugar de estado.
 - Mostrar otros valores intermedios en agregado anual y en intervalos de cálculo (energía exportada, energía suministrada por vector, etc)
 - Ayuda con ejemplos
 - Poner metadatos en estado
