@@ -70,7 +70,7 @@ function serialize_components(state) {
 class MainPageClass extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showEditWindow: false }; // Mostrar ventana modal de edición
+    this.state = { showEditWindow: false, showDetails: false }; // Mostrar ventana modal de edición
   }
 
   toggleEditWindow() {
@@ -131,6 +131,39 @@ class MainPageClass extends React.Component {
               <EPChart {...data} />
             </div>
           </div>
+          {/* Muestra detalles */}
+          <div className="row">
+            <div className="col">
+              <input
+                id="checkDetails1"
+                className=""
+                type="checkbox"
+                {...(this.state.showDetails ? null : "active")}
+                onChange={_ =>
+                  this.setState({ showDetails: !this.state.showDetails })
+                }
+              />{" "}
+              <label className="" htmlFor="checkDetails1">
+                Ver detalles
+              </label>
+            </div>
+          </div>
+          {this.state.showDetails ? (
+            <div className="row">
+              <div className="col-lg-4">
+                <h2>Energía primaria:</h2>
+                <pre>{JSON.stringify(balance.ep, undefined, 2)}</pre>
+              </div>
+              <div className="col-lg-4">
+                <h2>Energía primaria para ACS en perímetro próximo:</h2>
+                <pre>{JSON.stringify(balance.ep_acs_nrb, undefined, 2)}</pre>
+              </div>
+              <div className="col-lg-4">
+                <h2>Emisiones:</h2>
+                <pre>{JSON.stringify(balance.co2, undefined, 2)}</pre>
+              </div>
+            </div>
+          ) : null}
           {/* Acciones de edición de componentes */}
           <div className="row">
             <div className="col float-right">
