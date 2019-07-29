@@ -104,6 +104,7 @@ class MainPageClass extends React.Component {
       <div>
         <NavBar match={this.props.match} />
         <div className="container-fluid">
+          {/* Panel de variables globales */}
           <div className="row">
             <div className="col">
               <GlobalVarsControl
@@ -124,11 +125,13 @@ class MainPageClass extends React.Component {
               />
             </div>
           </div>
+          {/* Gráfica de resultados */}
           <div className="row">
             <div className="col">
               <EPChart {...data} />
             </div>
           </div>
+          {/* Acciones de edición de componentes */}
           <div className="row">
             <div className="col float-right">
               <div
@@ -162,6 +165,7 @@ class MainPageClass extends React.Component {
                 </button>
               </div>
             </div>
+            {/* Ventana modal de edición de componente */}
             <ModalContainer
               show={this.state.showEditWindow}
               onClose={() => this.toggleEditWindow()}
@@ -176,6 +180,7 @@ class MainPageClass extends React.Component {
               />
             </ModalContainer>
           </div>
+          {/* Tabla de componentes */}
           <div className="row">
             <div className="col">
               <EnergyComponentsTable
@@ -214,7 +219,7 @@ class MainPageClass extends React.Component {
   }
 }
 
-const MainPage = connect((state) => {
+const MainPage = connect(state => {
   const balance = selectBalance(state);
   return {
     kexp: state.kexp,
