@@ -54,8 +54,8 @@ export function changeLocation(value) {
   return { type: CHANGE_LOCATION, value };
 }
 
-export function editUserWFactors(indicator, carrier, newfactors) {
-  return { type: EDIT_USERWFACTORS, indicator, carrier, newfactors };
+export function editUserWFactors(carrier, newfactors) {
+  return { type: EDIT_USERWFACTORS, carrier, newfactors };
 }
 
 export function changeCurrentFileName(newname) {

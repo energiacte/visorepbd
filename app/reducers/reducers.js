@@ -115,12 +115,10 @@ const upsertmeta = (meta, key, value) => {
 };
 
 // Reducer para la parte de wfactors -------------------
-function wfactors(state = [], action, indicator) {
+function wfactors(state = [], action) {
   switch (action.type) {
     case EDIT_USERWFACTORS: {
       const { carrier, newfactors } = action;
-
-      if (action.indicator !== indicator) return state;
 
       let wdata = [...state.wdata];
       let wmeta = [...state.wmeta];
@@ -147,7 +145,6 @@ function wfactors(state = [], action, indicator) {
         // eslint-disable-next-line no-console
         console.error(
           "ERROR: Caso imprevisto de modificación de factores de usuario para ",
-          indicator,
           carrier,
           newfactors
         );
@@ -155,6 +152,7 @@ function wfactors(state = [], action, indicator) {
       // Actualiza factores (los metadatos se actualizan en componentes)
       datum.ren = newfactors.ren;
       datum.nren = newfactors.nren;
+      datum.co2 = newfactors.co2;
       return { wmeta, wdata };
     }
     case CHANGE_LOCATION: {
@@ -168,14 +166,14 @@ function wfactors(state = [], action, indicator) {
         f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
       );
       // Regenera factores de localización
-      const newfactors = new_wfactors(loc, indicator, {
+      const newfactors = new_wfactors(loc, {
         cogen: {
-          A_RED: { ren: cog.ren, nren: cog.nren },
-          A_NEPB: { ren: cog.ren, nren: cog.nren }
+          A_RED: { ren: cog.ren, nren: cog.nren, co2: cog.co2 },
+          A_NEPB: { ren: cog.ren, nren: cog.nren, co2: cog.co2 }
         },
         red: {
-          RED1: { ren: red1.ren, nren: red1.nren },
-          RED2: { ren: red2.ren, nren: red2.nren }
+          RED1: { ren: red1.ren, nren: red1.nren, co2: red1.co2 },
+          RED2: { ren: red2.ren, nren: red2.nren, co2: red2.co2 }
         }
       });
       // Actualiza metadatos
@@ -190,16 +188,11 @@ function wfactors(state = [], action, indicator) {
         m_location && CTE_VALID_LOCS.includes(m_location.value)
           ? m_location.value
           : CTE_VALID_LOCS[0];
-      let red1, red2, cog;
-      if (indicator === "CO2") {
-        red1 = meta.find(c => c.key === "CTE_RED1_CO2");
-        red2 = meta.find(c => c.key === "CTE_RED2_CO2");
-        cog = meta.find(c => c.key === "CTE_COGEN_CO2");
-      } else {
-        red1 = meta.find(c => c.key === "CTE_RED1");
-        red2 = meta.find(c => c.key === "CTE_RED2");
-        cog = meta.find(c => c.key === "CTE_COGEN");
-      }
+
+      const red1 = meta.find(c => c.key === "CTE_RED1");
+      const red2 = meta.find(c => c.key === "CTE_RED2");
+      const cog = meta.find(c => c.key === "CTE_COGEN");
+
       let userfactors = {
         cogen: {},
         red: {}
@@ -236,7 +229,7 @@ function wfactors(state = [], action, indicator) {
       }
 
       // Regenera factores de localización
-      const newfactors = new_wfactors(loc, indicator, userfactors);
+      const newfactors = new_wfactors(loc, userfactors);
       return newfactors;
     }
     default:
@@ -307,19 +300,18 @@ function components(state = { cdata: [], cmeta: [] }, action) {
       upsertmeta(newmeta, "CTE_LOCALIZACION", action.value);
       return { ...state, cmeta: newmeta };
     case EDIT_USERWFACTORS: {
-      const { indicator, carrier, newfactors } = action;
+      const { carrier, newfactors } = action;
       let metakey;
       if (carrier === "RED1") {
-        metakey = indicator === "CO2" ? "CTE_RED1_CO2" : "CTE_RED1";
+        metakey = "CTE_RED1";
       } else if (carrier === "RED2") {
-        metakey = indicator === "CO2" ? "CTE_RED2_CO2" : "CTE_RED2";
+        metakey = "CTE_RED2";
       } else if (carrier === "ELECTRICIDADCOGEN") {
-        metakey = indicator === "CO2" ? "CTE_COGEN_CO2" : "CTE_COGEN";
+        metakey = "CTE_COGEN";
       } else {
         // eslint-disable-next-line no-console
         console.error(
           "ERROR: Caso imprevisto de modificación de factores de usuario para ",
-          indicator,
           carrier,
           newfactors
         );
@@ -328,7 +320,7 @@ function components(state = { cdata: [], cmeta: [] }, action) {
       upsertmeta(
         newmeta,
         metakey,
-        `${newfactors.ren.toFixed(3)}, ${newfactors.nren.toFixed(3)}`
+        `${newfactors.ren.toFixed(3)}, ${newfactors.nren.toFixed(3)}, ${newfactors.co2.toFixed(3)}`
       );
       return { ...state, cmeta: newmeta };
     }
@@ -352,24 +344,22 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
 export function selectBalance(state) {
   if (state === {}) return {};
 
-  let { kexp, area, components, wfactors_ep, wfactors_co2 } = state;
+  let { kexp, area, components, wfactors } = state;
   const componentsobj = {
     cmeta: components.cmeta,
     cdata: components.cdata.filter(c => c.active)
   };
 
   // Cálculo global, energía primaria
-  const ep = energy_performance(componentsobj, wfactors_ep, kexp, area);
+  const ep = energy_performance(componentsobj, wfactors, kexp, area);
   // Cálculo para ACS en perímetro próximo
   const ep_acs_nrb = energy_performance_acs_nrb(
     componentsobj,
-    wfactors_ep,
+    wfactors,
     kexp,
     area
   );
-  // Cálculo global, emisiones
-  const co2 = energy_performance(componentsobj, wfactors_co2, kexp, area);
-  return { ep, ep_acs_nrb, co2 };
+  return { ep, ep_acs_nrb };
 }
 
 // Reducer raíz ------------------------
@@ -381,8 +371,7 @@ export default function reducer(state = {}, action) {
     kexp: kexp(state.kexp, action),
     area: area(state.area, action),
     location: location(state.location, action),
-    wfactors_ep: wfactors(state.wfactors_ep, action, "EP"),
-    wfactors_co2: wfactors(state.wfactors_co2, action, "CO2"),
+    wfactors: wfactors(state.wfactors, action),
     components: components(state.components, action),
     currentfilename: currentfilename(state.currentfilename, action)
   };

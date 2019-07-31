@@ -3,7 +3,12 @@ extern crate serde_derive;
 
 use wasm_bindgen::prelude::*;
 
-use cteepbd::{ self, cte, Components, Factors, RenNren, Balance };
+use cteepbd::{ self, cte, Components, Factors, RenNrenCo2, Balance, VERSION };
+
+#[wasm_bindgen]
+pub fn get_version () -> String {
+    return VERSION.to_string();
+}
 
 #[wasm_bindgen]
 pub fn set_panic_hook() {
@@ -28,30 +33,30 @@ pub fn parse_components(datastring: &str) -> JsValue {
 #[allow(non_snake_case)]
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 struct WFactorsCogenUserOptions {
-    A_RED: Option<RenNren>,
-    A_NEPB: Option<RenNren>,
+    A_RED: Option<RenNrenCo2>,
+    A_NEPB: Option<RenNrenCo2>,
 }
 
 #[allow(non_snake_case)]
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 struct WFactorsRedUserOptions {
-    RED1: Option<RenNren>,
-    RED2: Option<RenNren>,
+    RED1: Option<RenNrenCo2>,
+    RED2: Option<RenNrenCo2>,
 }
 
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 struct WFactorsUserOptions {
     cogen: Option<WFactorsCogenUserOptions>,
     red: Option<WFactorsRedUserOptions>,
-    strip_nepb: Option<bool>,
+    // strip_nepb: Option<bool>,
 }
 
 // Obtén factores a partir de la localización y los factores de usuario
 //
 // El campo de opciones tiene que ser al menos {}
 #[wasm_bindgen]
-pub fn new_wfactors(loc: &str, indicator: &str, options: &JsValue) -> JsValue {
-    let defaults_wf = if indicator == "CO2" {cte::CTE_DEFAULTS_WF_CO2} else {cte::CTE_DEFAULTS_WF_EP};
+pub fn new_wfactors(loc: &str, options: &JsValue) -> JsValue {
+    let defaults_wf = cte::WF_RITE2014;
     // XXX: puede tener errores de formato
     let rsoptions: WFactorsUserOptions = options.into_serde().unwrap();
     let red1 = rsoptions
@@ -64,7 +69,6 @@ pub fn new_wfactors(loc: &str, indicator: &str, options: &JsValue) -> JsValue {
         .or(Some(defaults_wf.user.red2));
     let cogen_to_grid = rsoptions.cogen.and_then(|v| v.A_RED).or(None);
     let cogen_to_nepb = rsoptions.cogen.and_then(|v| v.A_NEPB).or(None);
-    let strip_nepb = rsoptions.strip_nepb.unwrap_or(false);
     let user_wf = cte::CteUserWF {
         red1,
         red2,
@@ -72,7 +76,7 @@ pub fn new_wfactors(loc: &str, indicator: &str, options: &JsValue) -> JsValue {
         cogen_to_nepb,
     };
     // XXX: Puede tener errores de parsing o de localidad
-    let fp: Factors = cte::wfactors_from_loc(loc, &user_wf, &defaults_wf, strip_nepb).unwrap();
+    let fp: Factors = cte::wfactors_from_loc(loc, &user_wf, &defaults_wf).unwrap();
     JsValue::from_serde(&fp).unwrap()
 }
 
@@ -97,7 +101,5 @@ pub fn energy_performance_acs_nrb(components: &JsValue, wfactors: &JsValue, kexp
     let balance: Balance = cteepbd::energy_performance(&comps_acs, &wfacs_nrb, kexp, area).unwrap();
     JsValue::from_serde(&balance).unwrap()
 }
-
-
 
 // TODO: gestionar errores en JS para eliminar estos unwrap

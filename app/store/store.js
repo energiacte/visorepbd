@@ -268,10 +268,8 @@ const initialState = {
   //     RED2: { ren: 0.0, nren: 1.3, co2: 0.3 }
   //   }
   // },
-  // Factores de paso a energía primaria
-  wfactors_ep: new_wfactors("PENINSULA", "EP", {}),
-  // Factores de paso a emisiones
-  wfactors_co2: new_wfactors("PENINSULA", "CO2", {}),
+  // Factores de paso
+  wfactors: new_wfactors("PENINSULA", {}),
   // Componentes energéticos (energía final)
   components: EXAMPLE_COMPONENTS,
   // Nombre de archivo actual
