@@ -3,7 +3,8 @@ import {
   // parse_components,
   energy_performance,
   energy_performance_acs_nrb,
-  new_wfactors
+  new_wfactors,
+  get_version
 } from "wasm-cteepbd";
 
 import {
@@ -283,7 +284,7 @@ function components(state = { cdata: [], cmeta: [] }, action) {
     case LOAD_ENERGY_COMPONENTS:
       if (action.newcomponents !== null) {
         const newcomponents = action.newcomponents;
-        upsertmeta(newcomponents.cmeta, "App", "VisorEPBD_1.0");
+        upsertmeta(newcomponents.cmeta, "App", `VisorEPBD 1.0 (CteEPBD ${get_version()})`);
         return newcomponents;
       }
       return state;
