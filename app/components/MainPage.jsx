@@ -90,6 +90,7 @@ class MainPageClass extends React.Component {
             </div>
           </div>
           {/* Muestra detalles */}
+          {balance.error ? <h1>Ha habido un error!: {balance.error}</h1> : null}
           {balance.ep && balance.ep_acs_nrb ? (
             <div className="row">
               <div className="col">

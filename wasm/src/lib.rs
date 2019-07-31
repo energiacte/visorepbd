@@ -82,11 +82,12 @@ pub fn new_wfactors(loc: &str, options: &JsValue) -> JsValue {
 
 // Calcula eficiencia energética
 #[wasm_bindgen]
-pub fn energy_performance(components: &JsValue, wfactors: &JsValue, kexp: f32, area: f32) -> JsValue {
-    let comps: Components = components.into_serde().unwrap();
-    let wfacs: Factors = wfactors.into_serde().unwrap();
-    let balance: Balance = cteepbd::energy_performance(&comps, &wfacs, kexp, area).unwrap();
-    JsValue::from_serde(&balance).unwrap()
+pub fn energy_performance(components: &JsValue, wfactors: &JsValue, kexp: f32, area: f32) -> Result<JsValue, JsValue> {
+    let comps: Components = components.into_serde().map_err(|e| e.to_string())?;
+    let wfacs: Factors = wfactors.into_serde().map_err(|e| e.to_string())?;
+    let balance: Balance = cteepbd::energy_performance(&comps, &wfacs, kexp, area).map_err(|e| e.to_string())?;
+    let jsbalance = JsValue::from_serde(&balance).map_err(|e| e.to_string())?;
+    Ok(jsbalance)
 }
 
 // Calcula eficiencia energética para el perímetro próximo y servicio de ACS

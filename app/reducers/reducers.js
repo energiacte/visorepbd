@@ -281,16 +281,20 @@ export function selectBalance(state) {
     cdata: components.cdata.filter(c => c.active)
   };
 
-  // Cálculo global, energía primaria
-  const ep = energy_performance(componentsobj, wfactors, kexp, area);
-  // Cálculo para ACS en perímetro próximo
-  const ep_acs_nrb = energy_performance_acs_nrb(
-    componentsobj,
-    wfactors,
-    kexp,
-    area
-  );
-  return { ep, ep_acs_nrb };
+  try {
+    // Cálculo global, energía primaria
+    const ep = energy_performance(componentsobj, wfactors, kexp, area);
+    // Cálculo para ACS en perímetro próximo
+    const ep_acs_nrb = energy_performance_acs_nrb(
+      componentsobj,
+      wfactors,
+      kexp,
+      area
+    );
+    return { ep, ep_acs_nrb };
+  } catch (e) {
+    return { error: e };
+  }
 }
 
 // Reducer raíz ------------------------
