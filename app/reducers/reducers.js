@@ -8,6 +8,13 @@ import {
 } from "wasm-cteepbd";
 
 import {
+  upsertmeta,
+  userfactors_from_cmeta,
+  userfactors_from_wdata,
+  location_from_meta
+} from "utils";
+
+import {
   SELECT_ENERGY_COMPONENT,
   ADD_ENERGY_COMPONENT,
   CLONE_ENERGY_COMPONENT,
@@ -20,8 +27,6 @@ import {
   EDIT_USERWFACTORS,
   CHANGE_CURRENTFILENAME
 } from "../actions/actions.js";
-
-const CTE_VALID_LOCS = ["PENINSULA", "BALEARES", "CANARIAS", "CEUTAMELILLA"];
 
 // Reducer para la parte de storedcomponent -------------------
 function storedcomponent(state = null, action) {
@@ -90,28 +95,12 @@ function location(state = "PENINSULA", action) {
   switch (action.type) {
     case CHANGE_LOCATION:
       return action.value;
-    case LOAD_ENERGY_COMPONENTS: {
-      const m_location = action.newcomponents.cmeta.find(
-        c => c.key === "CTE_LOCALIZACION"
-      );
-      return m_location && CTE_VALID_LOCS.includes(m_location.value)
-        ? m_location.value
-        : CTE_VALID_LOCS[0];
-    }
+    case LOAD_ENERGY_COMPONENTS:
+      return location_from_meta(action.newcomponents.cmeta);
     default:
       return state;
   }
 }
-
-const upsertmeta = (meta, key, value) => {
-  const match = meta.find(c => c.key === key);
-  if (match) {
-    match.value = `${value}`;
-  } else {
-    meta.push({ key, value: `${value}` });
-  }
-  return meta;
-};
 
 // Reducer para la parte de wfactors -------------------
 function wfactors(state = [], action) {
@@ -156,80 +145,19 @@ function wfactors(state = [], action) {
     }
     case CHANGE_LOCATION: {
       const loc = action.value;
-      if (!CTE_VALID_LOCS.includes(loc)) return state;
-      // Conserva factores de usuario actuales
-      // TODO: ¿pueden no existir y estar indefinidos?
-      const red1 = state.wdata.find(f => f.carrier === "RED1");
-      const red2 = state.wdata.find(f => f.carrier === "RED2");
-      const cog = state.wdata.find(
-        f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
-      );
-      // Regenera factores de localización
-      const newfactors = new_wfactors(loc, {
-        cogen: {
-          A_RED: { ren: cog.ren, nren: cog.nren, co2: cog.co2 },
-          A_NEPB: { ren: cog.ren, nren: cog.nren, co2: cog.co2 }
-        },
-        red: {
-          RED1: { ren: red1.ren, nren: red1.nren, co2: red1.co2 },
-          RED2: { ren: red2.ren, nren: red2.nren, co2: red2.co2 }
-        }
-      });
+      // Conserva factores de usuario actuales y regenera factores
+      const userfactors = userfactors_from_wdata(state.wdata);
+      const newfactors = new_wfactors(loc, userfactors);
       // Actualiza metadatos
       upsertmeta(newfactors.wmeta, "CTE_LOCALIZACION", loc);
       return newfactors;
     }
     case LOAD_ENERGY_COMPONENTS: {
       // TODO: No se actualizan las entradas, ya que solo se activa el default en la primera carga
-      const meta = action.newcomponents.cmeta;
-      const m_location = meta.find(c => c.key === "CTE_LOCALIZACION");
-      const loc =
-        m_location && CTE_VALID_LOCS.includes(m_location.value)
-          ? m_location.value
-          : CTE_VALID_LOCS[0];
-
-      const red1 = meta.find(c => c.key === "CTE_RED1");
-      const red2 = meta.find(c => c.key === "CTE_RED2");
-      const cog = meta.find(c => c.key === "CTE_COGEN");
-
-      let userfactors = {
-        cogen: {},
-        red: {}
-      };
-
-      if (red1) {
-        const v = red1.value.split(",").map(Number);
-        if (v.length == 2) {
-          userfactors.red = {
-            ...userfactors.red,
-            RED1: { ren: v[0], nren: v[1] }
-          };
-        }
-      }
-
-      if (red2) {
-        const v = red2.value.split(",").map(Number);
-        if (v.length == 2) {
-          userfactors.red = {
-            ...userfactors.red,
-            RED2: { ren: v[0], nren: v[1] }
-          };
-        }
-      }
-
-      if (cog) {
-        const v = cog.value.split(",").map(Number);
-        if (v.length == 2) {
-          userfactors.cogen = {
-            A_RED: { ren: v[0], nren: v[1] },
-            A_NEPB: { ren: v[0], nren: v[1] }
-          };
-        }
-      }
-
-      // Regenera factores de localización
-      const newfactors = new_wfactors(loc, userfactors);
-      return newfactors;
+      const cmeta = action.newcomponents.cmeta;
+      const loc = location_from_meta(cmeta);
+      const userfactors = userfactors_from_cmeta(cmeta);
+      return new_wfactors(loc, userfactors);
     }
     default:
       return state;
@@ -282,7 +210,11 @@ function components(state = { cdata: [], cmeta: [] }, action) {
     case LOAD_ENERGY_COMPONENTS:
       if (action.newcomponents !== null) {
         const newcomponents = action.newcomponents;
-        upsertmeta(newcomponents.cmeta, "App", `VisorEPBD 1.0 (CteEPBD ${get_version()})`);
+        upsertmeta(
+          newcomponents.cmeta,
+          "App",
+          `VisorEPBD 1.0 (CteEPBD ${get_version()})`
+        );
         return newcomponents;
       }
       return state;
@@ -319,7 +251,9 @@ function components(state = { cdata: [], cmeta: [] }, action) {
       upsertmeta(
         newmeta,
         metakey,
-        `${newfactors.ren.toFixed(3)}, ${newfactors.nren.toFixed(3)}, ${newfactors.co2.toFixed(3)}`
+        `${newfactors.ren.toFixed(3)}, ${newfactors.nren.toFixed(
+          3
+        )}, ${newfactors.co2.toFixed(3)}`
       );
       return { ...state, cmeta: newmeta };
     }

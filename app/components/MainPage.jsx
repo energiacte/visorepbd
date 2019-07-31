@@ -10,6 +10,7 @@ import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 
 import { parse_components } from "wasm-cteepbd";
+import { serialize_components } from "utils";
 
 import {
   changeKexp,
@@ -23,41 +24,6 @@ import {
 } from "actions/actions.js";
 
 import { selectBalance } from "reducers/reducers.js";
-
-// Serialize energy components (carrier data with metadata) to string
-function serialize_components(wfactors, components) {
-  const { cmeta, cdata } = components;
-
-  // Serializar metadatos generales
-  let cmetalines = cmeta.map(mm => `#META ${mm.key}: ${mm.value}`);
-
-  // Metadatos de factores de paso de usuario
-  const red1 = wfactors.wdata.find(f => f.carrier === "RED1");
-  const red2 = wfactors.wdata.find(f => f.carrier === "RED2");
-  const cog = wfactors.wdata.find(
-    f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
-  );
-  const cognepb = wfactors.wdata.find(
-    f => f.source === "COGENERACION" && f.dest === "A_NEPB" && f.step === "A"
-  ) || cog;
-  cmetalines.push(`#META CTE_RED1: "${red1.ren}, ${red1.nren}"`);
-  cmetalines.push(`#META CTE_RED2: "${red2.ren}, ${red2.nren}"`);
-  cmetalines.push(`#META CTE_COGEN: "${cog.ren}, ${cog.nren}"`);
-  cmetalines.push(`#META CTE_COGENNEPB: "${cognepb.ren}, ${cognepb.nren}"`);
-
-  // Serializar componentes energéticos
-  const cdatalines = cdata
-    .filter(e => e.active)
-    .map(
-      cc =>
-        `${cc.carrier}, ${cc.ctype}, ${cc.csubtype}, ${
-          cc.service
-        }, ${cc.values.map(v => v.toFixed(2)).join(",")}${
-          cc.comment !== "" ? " # " + cc.comment : ""
-        }`
-    );
-  return [...cmetalines, ...cdatalines].join("\n");
-}
 
 // Página principal de la aplicación
 class MainPageClass extends React.Component {
