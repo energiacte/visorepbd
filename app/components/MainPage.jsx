@@ -25,8 +25,8 @@ import {
 import { selectBalance } from "reducers/reducers.js";
 
 // Serialize energy components (carrier data with metadata) to string
-function serialize_components(state) {
-  const { components: { cmeta, cdata }, wfactors } = state;
+function serialize_components(wfactors, components) {
+  const { cmeta, cdata } = components;
 
   // Serializar metadatos generales
   let cmetalines = cmeta.map(mm => `#META ${mm.key}: ${mm.value}`);
@@ -232,10 +232,7 @@ class MainPageClass extends React.Component {
 
   downloadCarriers() {
     const { wfactors, components } = this.props;
-    return serialize_components({
-      wfactors,
-      components
-    });
+    return serialize_components(wfactors, components);
   }
 }
 
