@@ -1,9 +1,10 @@
 import { createStore } from "redux";
 import reducer from "reducers/reducers.js";
-import { new_wfactors } from "wasm-cteepbd";
+import { new_wfactors, get_version } from "wasm-cteepbd";
 
 const EXAMPLE_COMPONENTS = {
   cmeta: [
+    { key: "APP", value: `VisorEPBD 1.0 (CteEPBD ${get_version()})`},
     { key: "CTE_LOCALIZACION", value: "PENINSULA" },
     { key: "CTE_KEXP", value: "0" },
     { key: "CTE_AREAREF", value: "200" }
