@@ -148,8 +148,6 @@ function wfactors(state = [], action) {
       // Conserva factores de usuario actuales y regenera factores
       const userfactors = userfactors_from_wdata(state.wdata);
       const newfactors = new_wfactors(loc, userfactors);
-      // Actualiza metadatos
-      upsertmeta(newfactors.wmeta, "CTE_LOCALIZACION", loc);
       return newfactors;
     }
     case LOAD_ENERGY_COMPONENTS: {
