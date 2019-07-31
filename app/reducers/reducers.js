@@ -91,14 +91,12 @@ function location(state = "PENINSULA", action) {
     case CHANGE_LOCATION:
       return action.value;
     case LOAD_ENERGY_COMPONENTS: {
-      // Localizaciones válidas para CTE
-      const CTE_LOCS = ["PENINSULA", "BALEARES", "CANARIAS", "CEUTAMELILLA"];
       const m_location = action.newcomponents.cmeta.find(
         c => c.key === "CTE_LOCALIZACION"
       );
-      return m_location && CTE_LOCS.includes(m_location.value)
+      return m_location && CTE_VALID_LOCS.includes(m_location.value)
         ? m_location.value
-        : location;
+        : CTE_VALID_LOCS[0];
     }
     default:
       return state;
