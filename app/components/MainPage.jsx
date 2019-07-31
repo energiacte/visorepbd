@@ -49,7 +49,7 @@ class MainPageClass extends React.Component {
 
     // Indicadores que se van a representar ------------------
     let data = {};
-    if (balance) {
+    if (balance.ep && balance.ep_acs_nrb) {
       // Energía primaria
       const { ren, nren, co2 } = balance.ep.balance_m2.B;
       // Cálculo para ACS en perímetro próximo
@@ -90,30 +90,34 @@ class MainPageClass extends React.Component {
             </div>
           </div>
           {/* Muestra detalles */}
-          <div className="row">
-            <div className="col">
-              <input
-                id="checkDetails1"
-                className=""
-                type="checkbox"
-                {...(this.state.showDetails ? {} : {active:"active"})}
-                onChange={_ =>
-                  this.setState({ showDetails: !this.state.showDetails })
-                }
-              />{" "}
-              <label className="" htmlFor="checkDetails1">
-                Ver detalles
-              </label>
+          {balance.ep && balance.ep_acs_nrb ? (
+            <div className="row">
+              <div className="col">
+                <input
+                  id="checkDetails1"
+                  className=""
+                  type="checkbox"
+                  {...(this.state.showDetails ? {} : { active: "active" })}
+                  onChange={_ =>
+                    this.setState({ showDetails: !this.state.showDetails })
+                  }
+                />{" "}
+                <label className="" htmlFor="checkDetails1">
+                  Ver detalles
+                </label>
+              </div>
             </div>
-          </div>
-          {this.state.showDetails ? (
+          ) : null}
+          {this.state.showDetails && balance.ep && balance.ep_acs_nrb ? (
             <div className="row">
               <div className="col-lg-6">
                 <h2>Energía primaria y emisiones:</h2>
                 <pre>{JSON.stringify(balance.ep, undefined, 2)}</pre>
               </div>
               <div className="col-lg-6">
-                <h2>Energía primaria y emisiones para ACS en perímetro próximo:</h2>
+                <h2>
+                  Energía primaria y emisiones para ACS en perímetro próximo:
+                </h2>
                 <pre>{JSON.stringify(balance.ep_acs_nrb, undefined, 2)}</pre>
               </div>
             </div>
