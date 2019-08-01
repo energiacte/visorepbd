@@ -3,10 +3,10 @@ extern crate serde_derive;
 
 use wasm_bindgen::prelude::*;
 
-use cteepbd::{ self, cte, Components, Factors, RenNrenCo2, Balance, VERSION };
+use cteepbd::{self, cte, Balance, Components, Factors, RenNrenCo2, VERSION};
 
 #[wasm_bindgen]
-pub fn get_version () -> String {
+pub fn get_version() -> String {
     return VERSION.to_string();
 }
 
@@ -24,9 +24,10 @@ pub fn set_panic_hook() {
 
 // Convierte cadena a componentes
 #[wasm_bindgen]
-pub fn parse_components(datastring: &str) -> JsValue {
-    let comps: Components = cte::parse_components(datastring).unwrap();
-    JsValue::from_serde(&comps).unwrap()
+pub fn parse_components(datastring: &str) -> Result<JsValue, JsValue> {
+    let comps: Components = cte::parse_components(datastring).map_err(|e| e.to_string())?;
+    let jscomps = JsValue::from_serde(&comps).map_err(|e| e.to_string())?;
+    Ok(jscomps)
 }
 
 // Estructuras para gestión de factores de usuario
@@ -55,10 +56,9 @@ struct WFactorsUserOptions {
 //
 // El campo de opciones tiene que ser al menos {}
 #[wasm_bindgen]
-pub fn new_wfactors(loc: &str, options: &JsValue) -> JsValue {
+pub fn new_wfactors(loc: &str, options: &JsValue) -> Result<JsValue, JsValue> {
     let defaults_wf = cte::WF_RITE2014;
-    // XXX: puede tener errores de formato
-    let rsoptions: WFactorsUserOptions = options.into_serde().unwrap();
+    let rsoptions: WFactorsUserOptions = options.into_serde().map_err(|e| e.to_string())?;
     let red1 = rsoptions
         .red
         .and_then(|v| v.RED1)
@@ -76,31 +76,43 @@ pub fn new_wfactors(loc: &str, options: &JsValue) -> JsValue {
         cogen_to_nepb,
     };
     // XXX: Puede tener errores de parsing o de localidad
-    let fp: Factors = cte::wfactors_from_loc(loc, &user_wf, &defaults_wf).unwrap();
-    JsValue::from_serde(&fp).unwrap()
+    let fp: Factors =
+        cte::wfactors_from_loc(loc, &user_wf, &defaults_wf).map_err(|e| e.to_string())?;
+    let jsfactors = JsValue::from_serde(&fp).map_err(|e| e.to_string())?;
+    Ok(jsfactors)
 }
 
 // Calcula eficiencia energética
 #[wasm_bindgen]
-pub fn energy_performance(components: &JsValue, wfactors: &JsValue, kexp: f32, area: f32) -> Result<JsValue, JsValue> {
+pub fn energy_performance(
+    components: &JsValue,
+    wfactors: &JsValue,
+    kexp: f32,
+    area: f32,
+) -> Result<JsValue, JsValue> {
     let comps: Components = components.into_serde().map_err(|e| e.to_string())?;
     let wfacs: Factors = wfactors.into_serde().map_err(|e| e.to_string())?;
-    let balance: Balance = cteepbd::energy_performance(&comps, &wfacs, kexp, area).map_err(|e| e.to_string())?;
+    let balance: Balance =
+        cteepbd::energy_performance(&comps, &wfacs, kexp, area).map_err(|e| e.to_string())?;
     let jsbalance = JsValue::from_serde(&balance).map_err(|e| e.to_string())?;
     Ok(jsbalance)
 }
 
 // Calcula eficiencia energética para el perímetro próximo y servicio de ACS
 #[wasm_bindgen]
-pub fn energy_performance_acs_nrb(components: &JsValue, wfactors: &JsValue, kexp: f32, area: f32) -> JsValue {
-    let comps: Components = components.into_serde().unwrap();
-    let wfacs: Factors = wfactors.into_serde().unwrap();
+pub fn energy_performance_acs_nrb(
+    components: &JsValue,
+    wfactors: &JsValue,
+    kexp: f32,
+    area: f32,
+) -> Result<JsValue, JsValue> {
+    let comps: Components = components.into_serde().map_err(|e| e.to_string())?;
+    let wfacs: Factors = wfactors.into_serde().map_err(|e| e.to_string())?;
 
     // componentes para ACS
     let comps_acs = cte::components_by_service(&comps, cteepbd::Service::ACS);
     let wfacs_nrb = cte::wfactors_to_nearby(&wfacs);
     let balance: Balance = cteepbd::energy_performance(&comps_acs, &wfacs_nrb, kexp, area).unwrap();
-    JsValue::from_serde(&balance).unwrap()
+    let jsbalance = JsValue::from_serde(&balance).map_err(|e| e.to_string())?;
+    Ok(jsbalance)
 }
-
-// TODO: gestionar errores en JS para eliminar estos unwrap

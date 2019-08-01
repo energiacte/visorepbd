@@ -151,11 +151,16 @@ function wfactors(state = [], action) {
       return newfactors;
     }
     case LOAD_ENERGY_COMPONENTS: {
-      // TODO: No se actualizan las entradas, ya que solo se activa el default en la primera carga
       const cmeta = action.newcomponents.cmeta;
       const loc = location_from_meta(cmeta);
       const userfactors = userfactors_from_cmeta(cmeta);
-      return new_wfactors(loc, userfactors);
+      try {
+        return new_wfactors(loc, userfactors);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("Error inesperado al generar factores de paso: ", e);
+        return state;
+      }
     }
     default:
       return state;

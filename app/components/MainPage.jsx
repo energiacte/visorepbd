@@ -195,10 +195,14 @@ class MainPageClass extends React.Component {
   }
 
   uploadCarriers(datastr) {
-    // TODO: convertir a una acción loadComponentsFromString y luego setStateFromComponentsMeta
-    const { cdata, cmeta } = parse_components(datastr);
-    const newcdata = cdata.map(dd => ({ ...dd, active: true }));
-    this.props.dispatch(loadEnergyComponents({ cmeta, cdata: newcdata }));
+    try {
+      const { cdata, cmeta } = parse_components(datastr);
+      const newcdata = cdata.map(dd => ({ ...dd, active: true }));
+      this.props.dispatch(loadEnergyComponents({ cmeta, cdata: newcdata }));
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("Se ha producido un error al cargar los datos: ", e);
+    }
   }
 
   downloadCarriers() {

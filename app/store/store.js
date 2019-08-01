@@ -2,9 +2,18 @@ import { createStore } from "redux";
 import reducer from "reducers/reducers.js";
 import { new_wfactors, get_version } from "wasm-cteepbd";
 
+let EXAMPLE_FACTORS;
+try {
+  EXAMPLE_FACTORS = new_wfactors("PENINSULA", {});
+} catch (e) {
+  // eslint-disable-next-line no-console
+  console.error("Error inesperado al generar factores de paso base: ", e);
+  EXAMPLE_FACTORS = null;
+}
+
 const EXAMPLE_COMPONENTS = {
   cmeta: [
-    { key: "APP", value: `VisorEPBD 1.0 (CteEPBD ${get_version()})`},
+    { key: "APP", value: `VisorEPBD 1.0 (CteEPBD ${get_version()})` },
     { key: "CTE_LOCALIZACION", value: "PENINSULA" },
     { key: "CTE_KEXP", value: "0" },
     { key: "CTE_AREAREF", value: "200" }
@@ -270,7 +279,7 @@ const initialState = {
   //   }
   // },
   // Factores de paso
-  wfactors: new_wfactors("PENINSULA", {}),
+  wfactors: EXAMPLE_FACTORS,
   // Componentes energéticos (energía final)
   components: EXAMPLE_COMPONENTS,
   // Nombre de archivo actual
