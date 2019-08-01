@@ -73,17 +73,19 @@ function kexp(state = 1, action) {
 function area(state = 1, action) {
   switch (action.type) {
     case CHANGE_AREA: {
-      let val = Number(action.value);
+      let val = Math.round(Number(action.value));
       if (isNaN(val)) {
         return 1.0;
       }
-      return Math.max(Math.round(val), 1.0);
+      return Math.round(Math.max(val, 1.0));
     }
     case LOAD_ENERGY_COMPONENTS: {
       const m_area = action.newcomponents.cmeta.find(
         c => c.key === "CTE_AREAREF"
       );
-      return m_area && !isNaN(m_area.value) ? Number(m_area.value) : state;
+      return m_area && !isNaN(m_area.value)
+        ? Math.round(Number(m_area.value))
+        : state;
     }
     default:
       return state;
