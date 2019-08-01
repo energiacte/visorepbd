@@ -20,7 +20,11 @@ buildprodjs:
 	EPBDURLPREFIX=${EPBDURLPREFIX} make buildjs
 
 buildwasm:
+	$(info [INFO]: Generando paquete wasm)
 	cd wasm && wasm-pack build
+publishwasm:
+	$(info [INFO]: Publicando paquete (debe estar logueado con "npm login"))
+	cd wasm && wasm-pack publish
 
 # antes hacer un git pull
 update: ${REPODIR}/package.json
