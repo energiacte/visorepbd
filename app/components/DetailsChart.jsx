@@ -29,7 +29,9 @@ class DetailsChart extends React.Component {
           donut: true,
           donutWidth: "50%",
           startAngle: 270,
-          total: 2 * Object.values(b.used_EPB_byuse).reduce(add)
+          total: 2 * Object.values(b.used_EPB_byuse).reduce(add),
+          fullWidth: true,
+          chartPadding: 0,
         },
         type: "Pie"
       },
@@ -42,7 +44,9 @@ class DetailsChart extends React.Component {
           donut: true,
           donutWidth: 60,
           startAngle: 270,
-          total: 2 * b.B.ren
+          total: 2 * b.B.ren,
+          fullWidth: true,
+          chartPadding: 0,
         },
         type: "Pie"
       },
@@ -55,7 +59,9 @@ class DetailsChart extends React.Component {
           donut: true,
           donutWidth: 60,
           startAngle: 270,
-          total: 2 * b.B.nren
+          total: 2 * b.B.nren,
+          fullWidth: true,
+          chartPadding: 0,
         },
         type: "Pie"
       },
@@ -68,7 +74,9 @@ class DetailsChart extends React.Component {
           donut: true,
           donutWidth: 60,
           startAngle: 270,
-          total: 2 * b.B.co2
+          total: 2 * b.B.co2,
+          fullWidth: true,
+          chartPadding: 0,
         },
         type: "Pie"
       }
