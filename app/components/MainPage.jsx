@@ -8,6 +8,7 @@ import EnergyComponentEditor from "components/EnergyComponentEditor";
 import EnergyComponentsTable from "components/EnergyComponentsTable";
 import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
+import DetailsChart from "components/DetailsChart";
 
 import { parse_components } from "wasm-cteepbd";
 import { serialize_components } from "utils";
@@ -108,6 +109,9 @@ class MainPageClass extends React.Component {
                 </label>
               </div>
             </div>
+          ) : null}
+          {this.state.showDetails && balance.ep && balance.ep_acs_nrb ? (
+            <DetailsChart balance={balance.ep} />
           ) : null}
           {this.state.showDetails && balance.ep && balance.ep_acs_nrb ? (
             <div className="row">
