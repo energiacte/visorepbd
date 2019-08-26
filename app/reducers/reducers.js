@@ -34,7 +34,7 @@ function storedcomponent(state = null, action) {
     case SELECT_ENERGY_COMPONENT:
       return action.component;
     case LOAD_ENERGY_COMPONENTS:
-      return action.newcomponents.cdata[0];
+      return { ...action.newcomponents.cdata[0], active: true };
     default:
       return state;
   }
@@ -214,13 +214,13 @@ function components(state = { cdata: [], cmeta: [] }, action) {
       return state;
     case LOAD_ENERGY_COMPONENTS:
       if (action.newcomponents !== null) {
-        const newcomponents = action.newcomponents;
-        upsertmeta(
-          newcomponents.cmeta,
-          "App",
-          `VisorEPBD 1.0 (CteEPBD ${get_version()})`
-        );
-        return newcomponents;
+        const newcmeta = [...action.newcomponents.cmeta];
+        upsertmeta(newcmeta, "App", `VisorEPBD 1.0 (CteEPBD ${get_version()})`);
+        const newcdata = action.newcomponents.cdata.map(dd => ({
+          ...dd,
+          active: true
+        }));
+        return { cmeta: newcmeta, cdata: newcdata };
       }
       return state;
     case CHANGE_AREA:
