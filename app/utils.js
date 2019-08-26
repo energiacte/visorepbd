@@ -25,9 +25,7 @@ export function location_from_meta(meta) {
 }
 
 // Serialize energy components (carrier data with metadata) to string
-export function serialize_components(wfactors, components) {
-  const { cmeta, cdata } = components;
-
+export function serialize_components(wfactors, cmeta, cdata) {
   // Actualiza metadatos de componentes a partir de factores de paso de usuario
   const red1 = wfactors.wdata.find(f => f.carrier === "RED1");
   const red2 = wfactors.wdata.find(f => f.carrier === "RED2");

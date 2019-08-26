@@ -208,8 +208,11 @@ class MainPageClass extends React.Component {
   }
 
   downloadCarriers() {
-    const { wfactors, components } = this.props;
-    return serialize_components(wfactors, components);
+    const {
+      wfactors,
+      components: { cmeta, cdata }
+    } = this.props;
+    return serialize_components(wfactors, cmeta, cdata);
   }
 }
 
