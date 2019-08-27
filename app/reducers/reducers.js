@@ -24,7 +24,7 @@ import {
   CHANGE_KEXP,
   CHANGE_AREA,
   CHANGE_LOCATION,
-  EDIT_USERWFACTORS,
+  CHANGE_USERWFACTORS,
   CHANGE_CURRENTFILENAME
 } from "../actions/actions.js";
 
@@ -107,7 +107,7 @@ function location(state = "PENINSULA", action) {
 // Reducer para factores de usuario user_wfactors --------------
 function user_wfactors(state = {}, action) {
   switch (action.type) {
-    case EDIT_USERWFACTORS: {
+    case CHANGE_USERWFACTORS: {
       const {
         carrier,
         newfactors: { ren, nren, co2 }
@@ -202,7 +202,7 @@ function components(state = { cdata: [], cmeta: [] }, action) {
       newmeta = [...state.cmeta];
       upsertmeta(newmeta, "CTE_LOCALIZACION", action.value);
       return { ...state, cmeta: newmeta };
-    case EDIT_USERWFACTORS: {
+    case CHANGE_USERWFACTORS: {
       const { carrier, newfactors } = action;
       let metakey;
       if (carrier === "RED1") {
