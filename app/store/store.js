@@ -1,16 +1,7 @@
 import { createStore } from "redux";
 import reducer from "reducers/reducers.js";
-import { new_wfactors, get_version } from "wasm-cteepbd";
+import { get_version } from "wasm-cteepbd";
 import { DEFAULT_USER_WFACTORS } from "utils";
-
-let EXAMPLE_FACTORS;
-try {
-  EXAMPLE_FACTORS = new_wfactors("PENINSULA", {});
-} catch (e) {
-  // eslint-disable-next-line no-console
-  console.error("Error inesperado al generar factores de paso base: ", e);
-  EXAMPLE_FACTORS = null;
-}
 
 const EXAMPLE_CMETA = [
   { key: "APP", value: `VisorEPBD 1.0 (CteEPBD ${get_version()})` },
@@ -267,8 +258,6 @@ const initialState = {
   location: "PENINSULA",
   // Factores definidos por el usuario
   user_wfactors: DEFAULT_USER_WFACTORS,
-  // Factores de paso
-  wfactors: EXAMPLE_FACTORS,
   // Datos de componentes energéticos (energía final)
   cdata: EXAMPLE_CDATA,
   // Metadatos de los componentes energéticos
