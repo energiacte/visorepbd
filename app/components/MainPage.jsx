@@ -24,7 +24,7 @@ import {
   changeCurrentFileName
 } from "actions/actions.js";
 
-import { selectBalance } from "reducers/reducers.js";
+import { selectBalance, selectWFactors } from "reducers/reducers";
 
 // Página principal de la aplicación
 class MainPageClass extends React.Component {
@@ -223,9 +223,9 @@ const MainPage = connect(state => {
     location: state.location,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
-    wfactors: state.wfactors,
     components: state.components,
     currentfilename: state.currentfilename,
+    wfactors: selectWFactors(state),
     balance: selectBalance(state)
   };
 })(MainPageClass);

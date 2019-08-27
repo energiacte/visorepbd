@@ -89,16 +89,41 @@ export function serialize_components(wfactors, cmeta, cdata) {
   return [...cmetalines, ...cdatalines].join("\n");
 }
 
-export function userfactors_from_cmeta(wmeta) {
+// Valores por defecto de factores de usuario
+// TODO: usar defaults desde cteepbd
+export const DEFAULT_USER_WFACTORS = {
+  cogen: {
+    A_RED: { ren: 0.0, nren: 2.5, co2: 0.3 },
+    A_NEPB: { ren: 0.0, nren: 2.5, co2: 0.3 }
+  },
+  red: {
+    RED1: { ren: 0.0, nren: 1.3, co2: 0.3 },
+    RED2: { ren: 0.0, nren: 1.3, co2: 0.3 }
+  }
+};
+
+// Clona (deepcopy) estructura de factores de usuario
+export function clone_user_wfactors(user_wfactors) {
+  const {
+    cogen: { A_RED: cr, A_NEPB: cn },
+    red: { RED1: r1, RED2: r2 }
+  } = user_wfactors;
+  return {
+    cogen: { A_RED: { ...cr }, A_NEPB: { ...cn } },
+    red: { RED1: { ...r1 }, RED2: { ...r2 } }
+  };
+}
+
+export function userfactors_from_cmeta(
+  wmeta,
+  defaults = DEFAULT_USER_WFACTORS
+) {
   const red1 = wmeta.find(c => c.key === "CTE_RED1");
   const red2 = wmeta.find(c => c.key === "CTE_RED2");
   const cog = wmeta.find(c => c.key === "CTE_COGEN");
   const cognepb = wmeta.find(c => c.key === "CTE_COGENNEPB");
 
-  let userfactors = {
-    cogen: {},
-    red: {}
-  };
+  let userfactors = clone_user_wfactors(defaults);
 
   if (red1) {
     const v = red1.value.split(",").map(Number);

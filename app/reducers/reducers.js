@@ -9,8 +9,8 @@ import {
 
 import {
   upsertmeta,
+  clone_user_wfactors,
   userfactors_from_cmeta,
-  userfactors_from_wdata,
   location_from_meta
 } from "utils";
 
@@ -104,66 +104,33 @@ function location(state = "PENINSULA", action) {
   }
 }
 
-// Reducer para la parte de wfactors -------------------
-function wfactors(state = [], action) {
+// Reducer para factores de usuario user_wfactors --------------
+function user_wfactors(state = {}, action) {
   switch (action.type) {
     case EDIT_USERWFACTORS: {
-      const { carrier, newfactors } = action;
-
-      let wdata = [...state.wdata];
-      let wmeta = [...state.wmeta];
-
-      // Actualiza datos.
-      let datum;
+      const {
+        carrier,
+        newfactors: { ren, nren, co2 }
+      } = action;
+      let newstate = clone_user_wfactors(state);
       if (carrier === "RED1") {
-        datum = wdata.find(
-          f => f.carrier === "RED1" && f.dest === "SUMINISTRO" && f.step === "A"
-        );
+        newstate.red.RED1 = { ren, nren, co2 };
       } else if (carrier === "RED2") {
-        datum = wdata.find(
-          f => f.carrier === "RED2" && f.dest === "SUMINISTRO" && f.step === "A"
-        );
+        newstate.red.RED2 = { ren, nren, co2 };
       } else if (carrier === "ELECTRICIDADCOGEN") {
-        datum = wdata.find(
-          f =>
-            f.carrier === "ELECTRICIDAD" &&
-            f.source === "COGENERACION" &&
-            f.dest === "A_RED" &&
-            f.step === "A"
-        );
+        newstate.cogen.A_RED = { ren, nren, co2 };
       } else {
         // eslint-disable-next-line no-console
         console.error(
           "ERROR: Caso imprevisto de modificación de factores de usuario para ",
           carrier,
-          newfactors
+          action.newfactors
         );
       }
-      // Actualiza factores (los metadatos se actualizan en componentes)
-      datum.ren = newfactors.ren;
-      datum.nren = newfactors.nren;
-      datum.co2 = newfactors.co2;
-      return { wmeta, wdata };
+      return newstate;
     }
-    case CHANGE_LOCATION: {
-      const loc = action.value;
-      // Conserva factores de usuario actuales y regenera factores
-      const user_wfactors = userfactors_from_wdata(state.wdata);
-      const newfactors = new_wfactors(loc, user_wfactors);
-      return newfactors;
-    }
-    case LOAD_ENERGY_COMPONENTS: {
-      const cmeta = action.newcomponents.cmeta;
-      const loc = location_from_meta(cmeta);
-      const userfactors = userfactors_from_cmeta(cmeta);
-      try {
-        return new_wfactors(loc, userfactors);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error("Error inesperado al generar factores de paso: ", e);
-        return state;
-      }
-    }
+    case LOAD_ENERGY_COMPONENTS:
+      return userfactors_from_cmeta(action.newcomponents.cmeta);
     default:
       return state;
   }
@@ -279,10 +246,26 @@ function currentfilename(state = "csvEPBDpanel.csv", action) {
 
 // Selectors --------------------------
 
+// Genera factores de paso a partir del estado
+export function selectWFactors(state) {
+  if (state === {}) return {};
+  let { location, user_wfactors } = state;
+  try {
+    return new_wfactors(location, user_wfactors);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error("Error inesperado al generar factores de paso: ", e);
+    return state;
+  }
+}
+
+// Genera el balance
+// TODO: debería usarse reselect para componer con selectWFactors
 export function selectBalance(state) {
   if (state === {}) return {};
 
-  let { kexp, area, components, wfactors } = state;
+  let { kexp, area, components } = state;
+  const wfactors = selectWFactors(state);
   const componentsobj = {
     cmeta: components.cmeta,
     cdata: components.cdata.filter(c => c.active)
@@ -313,7 +296,8 @@ export default function reducer(state = {}, action) {
     kexp: kexp(state.kexp, action),
     area: area(state.area, action),
     location: location(state.location, action),
-    wfactors: wfactors(state.wfactors, action),
+    user_wfactors: user_wfactors(state.user_wfactors, action),
+    // wfactors: wfactors(state.wfactors, action),
     components: components(state.components, action),
     currentfilename: currentfilename(state.currentfilename, action)
   };

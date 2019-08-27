@@ -1,6 +1,7 @@
 import { createStore } from "redux";
 import reducer from "reducers/reducers.js";
 import { new_wfactors, get_version } from "wasm-cteepbd";
+import { DEFAULT_USER_WFACTORS } from "utils";
 
 let EXAMPLE_FACTORS;
 try {
@@ -269,19 +270,8 @@ const initialState = {
   area: 200,
   // Localización
   location: "PENINSULA",
-  // TODO: usar esto en lugar de wfactors_ep y wfactors_co2 pero esperar a definir
-  // TODO: factores como triplas de ren, nren y co2 en cteepbd
   // Factores definidos por el usuario
-  // user_wfactors: {
-  //   cogen: {
-  //     A_RED: { ren: 0.0, nren: 2.5, co2: 0.3 },
-  //     A_NEPB: { ren: 0.0, nren: 2.5, co2: 0.3 }
-  //   },
-  //   red: {
-  //     RED1: { ren: 0.0, nren: 1.3, co2: 0.3 },
-  //     RED2: { ren: 0.0, nren: 1.3, co2: 0.3 }
-  //   }
-  // },
+  user_wfactors: DEFAULT_USER_WFACTORS,
   // Factores de paso
   wfactors: EXAMPLE_FACTORS,
   // Componentes energéticos (energía final)

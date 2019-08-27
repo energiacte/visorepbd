@@ -5,7 +5,8 @@ import NavBar from "components/NavBar";
 import Footer from "components/Footer";
 import NumInput from "components/NumInput";
 
-import { editUserWFactors, changeLocation } from "actions/actions.js";
+import { editUserWFactors, changeLocation } from "actions/actions";
+import { selectWFactors } from "reducers/reducers";
 
 const CTELOCS = {
   PENINSULA: "Península",
@@ -17,7 +18,14 @@ const CTELOCS = {
 // Visualización y edición de factores de paso activos
 class WeightingFactorsPageClass extends React.Component {
   render() {
-    const { wfactors, location } = this.props;
+    const {
+      user_wfactors: {
+        red: { RED1: red1, RED2: red2 },
+        cogen: { A_NEPB: _cnepb, A_RED: cog }
+      },
+      wfactors,
+      location
+    } = this.props;
 
     // Energía primaria --------------------
     // Factores definidos reglamentariamente
@@ -32,12 +40,6 @@ class WeightingFactorsPageClass extends React.Component {
           `${b.carrier}-${b.source}-${b.dest}-${b.step}`
         )
       );
-    // Factores definibles por el usuario
-    const red1 = wfactors.wdata.find(f => f.carrier === "RED1");
-    const red2 = wfactors.wdata.find(f => f.carrier === "RED2");
-    const cog = wfactors.wdata.find(
-      f => f.source === "COGENERACION" && f.dest === "A_RED" && f.step === "A"
-    );
 
     return (
       <div>
@@ -445,18 +447,12 @@ class WeightingFactorsPageClass extends React.Component {
       </div>
     );
   }
-
-  // handleChange(carrier, factors, part, newvalue) {
-  //   const newvalueforpart = parseFloat(String(newvalue).replace(/,/g, "."));
-  //   if (isNaN(newvalueforpart)) return;
-  //   const newfactors = { ...factors, [part]: newvalueforpart };
-  //   this.props.dispatch(editUserWFactors(carrier, newfactors));
-  // }
 }
 
 const WeightingFactorsPage = connect(state => {
   return {
-    wfactors: state.wfactors,
+    user_wfactors: state.user_wfactors,
+    wfactors: selectWFactors(state),
     location: state.location
   };
 })(WeightingFactorsPageClass);
