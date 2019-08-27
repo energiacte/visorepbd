@@ -114,7 +114,7 @@ class MainPageClass extends React.Component {
             <DetailsChart balance={balance.ep} />
           ) : null}
           {this.state.showDetails && balance.ep && balance.ep_acs_nrb ? (
-            <div className="row" style={{height: "250px", overflow: "auto"}}>
+            <div className="row" style={{ height: "250px", overflow: "auto" }}>
               <div className="col-lg-6">
                 <h2>Energía primaria y emisiones:</h2>
                 <pre>{JSON.stringify(balance.ep, undefined, 2)}</pre>
