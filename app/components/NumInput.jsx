@@ -70,13 +70,21 @@ export class NumInput extends React.Component {
   render() {
     const {
       children,
+      // clase CSS del control
       className,
+      // clase CSS de la etiqueta del control
       labelClassName,
+      // clase CSS del grupo de formulario del control
       groupClassName,
+      // indica si se muestran elementos de feedback en el control
       hasFeedback,
+      // indica si 
       hasErrorMessage,
+      // si se define, usa precision como número de decimales al mostrar valores
+      isFixed,
+      // id del control
       id,
-      // propiedades eliminadas para no interferir con rest
+      // propiedades filtradas para que rest no afecte a las propiedades del control
       // (p.e. "min" convierte la entrada en entrada de valores enteros)
       // eslint-disable-next-line no-unused-vars
       precision,
@@ -111,7 +119,7 @@ export class NumInput extends React.Component {
       if (status == "OK") {
         errorMessage = <div>Error con valor {this.state.value}</div>;
       } else {
-        errorMessage = null
+        errorMessage = null;
       }
     }
 
@@ -130,7 +138,11 @@ export class NumInput extends React.Component {
           onChange={e => this.onValueChanged(e)}
           onBlur={_ => this.sendNewValue()}
           onKeyDown={e => (e.key == "Enter" ? this.sendNewValue() : null)}
-          value={this.state.value}
+          value={
+            isFixed && precision !== undefined
+              ? this.state.value.toFixed(precision)
+              : this.state.value
+          }
           {...rest}
         />
         {errorMessage}

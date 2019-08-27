@@ -139,7 +139,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="cogenren_input"
                     min={0}
                     precision={3}
-                    value={cog.ren.toFixed(3)}
+                    isFixed
+                    value={cog.ren}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("ELECTRICIDADCOGEN", {
@@ -155,7 +156,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="cogennren_input"
                     min={0}
                     precision={3}
-                    value={cog.nren.toFixed(3)}
+                    isFixed
+                    value={cog.nren}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("ELECTRICIDADCOGEN", {
@@ -171,7 +173,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="cogenco2_input"
                     min={0}
                     precision={3}
-                    value={cog.co2.toFixed(3)}
+                    isFixed
+                    value={cog.co2}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("ELECTRICIDADCOGEN", {
@@ -193,7 +196,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="red1ren_input"
                     min={0}
                     precision={3}
-                    value={red1.ren.toFixed(3)}
+                    isFixed
+                    value={red1.ren}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("RED1", { ...red1, ren: val })
@@ -206,7 +210,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="red1nren_input"
                     min={0}
                     precision={3}
-                    value={red1.nren.toFixed(3)}
+                    isFixed
+                    value={red1.nren}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("RED1", { ...red1, nren: val })
@@ -219,7 +224,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="red1co2_input"
                     min={0}
                     precision={3}
-                    value={red1.co2.toFixed(3)}
+                    isFixed
+                    value={red1.co2}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("RED1", {
@@ -241,7 +247,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="red2ren_input"
                     min={0}
                     precision={3}
-                    value={red2.ren.toFixed(3)}
+                    isFixed
+                    value={red2.ren}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("RED2", { ...red2, ren: val })
@@ -254,7 +261,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="red2nren_input"
                     min={0}
                     precision={3}
-                    value={red2.nren.toFixed(3)}
+                    isFixed
+                    value={red2.nren}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("RED2", { ...red2, nren: val })
@@ -267,7 +275,8 @@ class WeightingFactorsPageClass extends React.Component {
                     id="red2co2_input"
                     min={0}
                     precision={3}
-                    value={red2.co2.toFixed(3)}
+                    isFixed
+                    value={red2.co2}
                     onValueChange={val => {
                       this.props.dispatch(
                         editUserWFactors("RED2", {
