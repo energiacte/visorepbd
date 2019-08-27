@@ -34,7 +34,10 @@ function storedcomponent(state = null, action) {
     case SELECT_ENERGY_COMPONENT:
       return action.component;
     case LOAD_ENERGY_COMPONENTS:
-      return { ...action.newcomponents.cdata[0], active: true };
+      if (action.cdata.length > 0) {
+        return { ...action.cdata[0], active: true };
+      }
+      return state;
     default:
       return state;
   }
@@ -61,7 +64,7 @@ function kexp(state = 1, action) {
     case CHANGE_KEXP:
       return Number(action.value);
     case LOAD_ENERGY_COMPONENTS: {
-      const m_kexp = action.newcomponents.cmeta.find(c => c.key === "CTE_KEXP");
+      const m_kexp = action.cmeta.find(c => c.key === "CTE_KEXP");
       return m_kexp && !isNaN(m_kexp.value) ? Number(m_kexp.value) : state;
     }
     default:
@@ -80,9 +83,7 @@ function area(state = 1, action) {
       return Math.round(Math.max(val, 1.0));
     }
     case LOAD_ENERGY_COMPONENTS: {
-      const m_area = action.newcomponents.cmeta.find(
-        c => c.key === "CTE_AREAREF"
-      );
+      const m_area = action.cmeta.find(c => c.key === "CTE_AREAREF");
       return m_area && !isNaN(m_area.value)
         ? Math.round(Number(m_area.value))
         : state;
@@ -98,7 +99,7 @@ function location(state = "PENINSULA", action) {
     case CHANGE_LOCATION:
       return action.value;
     case LOAD_ENERGY_COMPONENTS:
-      return location_from_meta(action.newcomponents.cmeta);
+      return location_from_meta(action.cmeta);
     default:
       return state;
   }
@@ -130,78 +131,93 @@ function user_wfactors(state = {}, action) {
       return newstate;
     }
     case LOAD_ENERGY_COMPONENTS:
-      return userfactors_from_cmeta(action.newcomponents.cmeta);
+      return userfactors_from_cmeta(action.cmeta);
     default:
       return state;
   }
 }
 
-// Reducer para la parte de components -------------------
-function components(state = { cdata: [], cmeta: [] }, action) {
-  let currlist, newmeta;
-
+// Reducer para datos de componentes energéticos ---------------------
+function cdata(state, action) {
   switch (action.type) {
     case ADD_ENERGY_COMPONENT:
-      return { cmeta: state.cmeta, cdata: [...state.cdata, action.component] };
-    case CLONE_ENERGY_COMPONENT:
+      return [...state, action.component];
+    case CLONE_ENERGY_COMPONENT: {
+      // Sin elementos seleccionado o sin componentes existentes
       if (action.id === null || state.length === 0) {
         const numelems = state.length > 0 ? state[0].values.length : 12;
-        return {
-          cmeta: state.cmeta,
-          cdata: [
-            ...state.cdata,
-            {
-              active: true,
-              carrier: "ELECTRICIDAD",
-              ctype: "PRODUCCION",
-              csubtype: "INSITU",
-              service: "NDEF",
-              values: new Array(numelems).fill(1),
-              comment: "Nuevo componente energético"
-            }
-          ]
-        };
+        return [
+          ...state.cdata,
+          {
+            active: true,
+            carrier: "ELECTRICIDAD",
+            ctype: "PRODUCCION",
+            csubtype: "INSITU",
+            service: "NDEF",
+            values: new Array(numelems).fill(1),
+            comment: "Nuevo componente energético"
+          }
+        ];
       }
-      currlist = [...state.cdata];
+      // Con componente seleccionado
+      let currlist = [...state];
       currlist.splice(action.id + 1, 0, currlist[action.id]);
-      return { cmeta: state.cmeta, cdata: currlist };
-    case REMOVE_ENERGY_COMPONENT:
-      if (state.cdata.length > 0) {
-        currlist = [...state.cdata];
+      return currlist;
+    }
+    case REMOVE_ENERGY_COMPONENT: {
+      if (state.length > 0) {
+        let currlist = [...state];
         currlist.splice(action.id, 1);
-        return { cmeta: state.cmeta, cdata: currlist };
+        return currlist;
       }
       return state;
-    case EDIT_ENERGY_COMPONENT:
-      if (action.id < state.cdata.length) {
-        currlist = [...state.cdata];
+    }
+    case EDIT_ENERGY_COMPONENT: {
+      if (action.id < state.length) {
+        let currlist = [...state];
         currlist[action.id] = action.newcomponent;
-        return { cmeta: state.cmeta, cdata: currlist };
+        return currlist;
       }
       return state;
-    case LOAD_ENERGY_COMPONENTS:
-      if (action.newcomponents !== null) {
-        const newcmeta = [...action.newcomponents.cmeta];
-        upsertmeta(newcmeta, "App", `VisorEPBD 1.0 (CteEPBD ${get_version()})`);
-        const newcdata = action.newcomponents.cdata.map(dd => ({
+    }
+    case LOAD_ENERGY_COMPONENTS: {
+      if (action.cdata !== null) {
+        return action.cdata.map(dd => ({
           ...dd,
           active: true
         }));
-        return { cmeta: newcmeta, cdata: newcdata };
+      }
+      return state;
+    }
+    default:
+      return state;
+  }
+}
+
+// Reducer para metadatos de componentes energéticos -------------------
+function cmeta(state = [], action) {
+  let newmeta;
+
+  switch (action.type) {
+    case LOAD_ENERGY_COMPONENTS:
+      if (action.cmeta !== null) {
+        const newcmeta = [...action.cmeta];
+        upsertmeta(newcmeta, "App", `VisorEPBD 1.0 (CteEPBD ${get_version()})`);
+        return newcmeta;
       }
       return state;
     case CHANGE_AREA:
-      newmeta = [...state.cmeta];
+      newmeta = [...state];
       upsertmeta(newmeta, "CTE_AREAREF", action.value);
-      return { ...state, cmeta: newmeta };
+      return newmeta;
     case CHANGE_KEXP:
-      newmeta = [...state.cmeta];
+      newmeta = [...state];
       upsertmeta(newmeta, "CTE_KEXP", action.value);
-      return { ...state, cmeta: newmeta };
+      return newmeta;
     case CHANGE_LOCATION:
-      newmeta = [...state.cmeta];
+      newmeta = [...state];
       upsertmeta(newmeta, "CTE_LOCALIZACION", action.value);
-      return { ...state, cmeta: newmeta };
+      return newmeta;
     case CHANGE_USERWFACTORS: {
       const { carrier, newfactors } = action;
       let metakey;
@@ -219,7 +235,7 @@ function components(state = { cdata: [], cmeta: [] }, action) {
           newfactors
         );
       }
-      newmeta = [...state.cmeta];
+      newmeta = [...state];
       upsertmeta(
         newmeta,
         metakey,
@@ -227,7 +243,7 @@ function components(state = { cdata: [], cmeta: [] }, action) {
           3
         )}, ${newfactors.co2.toFixed(3)}`
       );
-      return { ...state, cmeta: newmeta };
+      return newmeta;
     }
     default:
       return state;
@@ -264,11 +280,11 @@ export function selectWFactors(state) {
 export function selectBalance(state) {
   if (state === {}) return {};
 
-  let { kexp, area, components } = state;
+  let { kexp, area, cmeta, cdata } = state;
   const wfactors = selectWFactors(state);
   const componentsobj = {
-    cmeta: components.cmeta,
-    cdata: components.cdata.filter(c => c.active)
+    cmeta,
+    cdata: cdata.filter(c => c.active)
   };
 
   try {
@@ -297,8 +313,8 @@ export default function reducer(state = {}, action) {
     area: area(state.area, action),
     location: location(state.location, action),
     user_wfactors: user_wfactors(state.user_wfactors, action),
-    // wfactors: wfactors(state.wfactors, action),
-    components: components(state.components, action),
+    cmeta: cmeta(state.cmeta, action),
+    cdata: cdata(state.cdata, action),
     currentfilename: currentfilename(state.currentfilename, action)
   };
 }

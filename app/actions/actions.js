@@ -42,13 +42,13 @@ export function editEnergyComponent(id, newcomponent) {
 
 export function loadEnergyComponents(datastr) {
   try {
-    const newcomponents = parse_components(datastr);
-    return { type: LOAD_ENERGY_COMPONENTS, newcomponents, errors: null };
+    const { cmeta, cdata } = parse_components(datastr);
+    return { type: LOAD_ENERGY_COMPONENTS, cmeta, cdata, errors: null };
   } catch (e) {
     // TODO: manejar los errores en la interfaz
     // eslint-disable-next-line no-console
     console.error("Se ha producido un error al cargar los datos: ", e);
-    return { type: LOAD_ENERGY_COMPONENTS, newcomponents: null, errors: e };
+    return { type: LOAD_ENERGY_COMPONENTS, cmeta: null, cdata: null, errors: e };
   }
 }
 

@@ -41,9 +41,9 @@ class MainPageClass extends React.Component {
       kexp,
       area,
       wfactors,
-      components: {cmeta, cdata},
+      cmeta,
+      cdata,
       selectedkey,
-      components,
       balance,
       storedcomponent
     } = this.props;
@@ -164,7 +164,7 @@ class MainPageClass extends React.Component {
             >
               <EnergyComponentEditor
                 selectedkey={selectedkey}
-                cdata={components.cdata}
+                cdata={cdata}
                 storedcomponent={storedcomponent}
                 onEdit={(key, component) =>
                   this.props.editEnergyComponent(key, component)
@@ -177,7 +177,7 @@ class MainPageClass extends React.Component {
             <div className="col">
               <EnergyComponentsTable
                 selectedkey={selectedkey}
-                cdata={components.cdata}
+                cdata={cdata}
                 area={area}
                 onSelect={(key, component) =>
                   this.props.selectEnergyComponent(key, component)
@@ -202,7 +202,8 @@ const MainPage = connect(
     location: state.location,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
-    components: state.components,
+    cmeta: state.cmeta,
+    cdata: state.cdata,
     currentfilename: state.currentfilename,
     wfactors: selectWFactors(state),
     balance: selectBalance(state)

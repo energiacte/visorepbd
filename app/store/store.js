@@ -254,14 +254,9 @@ const EXAMPLE_CDATA = [
   }
 ];
 
-const EXAMPLE_COMPONENTS = {
-  cmeta: EXAMPLE_CMETA,
-  cdata: EXAMPLE_CDATA
-};
-
 const initialState = {
   // Último elemento seleccionado
-  storedcomponent: EXAMPLE_COMPONENTS.cdata[0],
+  storedcomponent: EXAMPLE_CDATA[0],
   // Elemento seleccionado (índice)
   selectedkey: 0,
   // Factor de exportación
@@ -274,8 +269,10 @@ const initialState = {
   user_wfactors: DEFAULT_USER_WFACTORS,
   // Factores de paso
   wfactors: EXAMPLE_FACTORS,
-  // Componentes energéticos (energía final)
-  components: EXAMPLE_COMPONENTS,
+  // Datos de componentes energéticos (energía final)
+  cdata: EXAMPLE_CDATA,
+  // Metadatos de los componentes energéticos
+  cmeta: EXAMPLE_CMETA,
   // Nombre de archivo actual
   currentfilename: "VisorEPBD.csv"
 };
