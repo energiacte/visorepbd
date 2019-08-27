@@ -217,7 +217,6 @@ class MainPageClass extends React.Component {
 }
 
 const MainPage = connect(state => {
-  const balance = selectBalance(state);
   return {
     kexp: state.kexp,
     area: state.area,
@@ -227,7 +226,7 @@ const MainPage = connect(state => {
     wfactors: state.wfactors,
     components: state.components,
     currentfilename: state.currentfilename,
-    balance // selector
+    balance: selectBalance(state)
   };
 })(MainPageClass);
 
