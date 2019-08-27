@@ -148,8 +148,8 @@ function wfactors(state = [], action) {
     case CHANGE_LOCATION: {
       const loc = action.value;
       // Conserva factores de usuario actuales y regenera factores
-      const userfactors = userfactors_from_wdata(state.wdata);
-      const newfactors = new_wfactors(loc, userfactors);
+      const user_wfactors = userfactors_from_wdata(state.wdata);
+      const newfactors = new_wfactors(loc, user_wfactors);
       return newfactors;
     }
     case LOAD_ENERGY_COMPONENTS: {
