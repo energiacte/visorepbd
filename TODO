@@ -1,7 +1,3 @@
-- Separar en el store los userwfactors y dejar wfactors como selector en lugar de estado:
-    - el store solo tiene userwfactors con acción EDIT_USERWFACTORS
-    - wfactors es un selector (state -> state)
-    - se calculan los wfactors en donde corresponda y se gestionan los errores fuera de los reducer
 - Mostrar otros valores intermedios en agregado anual y en intervalos de cálculo (energía exportada, energía suministrada por vector, etc)
 - Ayuda con ejemplos
 - Mostrar y editar meta.Name
