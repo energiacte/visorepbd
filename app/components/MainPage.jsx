@@ -10,7 +10,6 @@ import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 import DetailsChart from "components/DetailsChart";
 
-import { parse_components } from "wasm-cteepbd";
 import { serialize_components } from "utils";
 
 import {
@@ -41,11 +40,12 @@ class MainPageClass extends React.Component {
     const {
       kexp,
       area,
+      wfactors,
+      components: {cmeta, cdata},
       selectedkey,
       components,
       balance,
-      storedcomponent,
-      dispatch
+      storedcomponent
     } = this.props;
 
     // Indicadores que se van a representar ------------------
@@ -69,16 +69,12 @@ class MainPageClass extends React.Component {
               <GlobalVarsControl
                 kexp={kexp}
                 area={area}
-                onChangeKexp={value => {
-                  dispatch(changeKexp(value));
-                }}
-                onChangeArea={value => {
-                  dispatch(changeArea(value));
-                }}
-                onCarriersLoad={d => this.uploadCarriers(d)}
-                onCarriersDownload={() => this.downloadCarriers()}
+                onChangeKexp={value => this.props.changeKexp(value)}
+                onChangeArea={value => this.props.changeArea(value)}
+                onCarriersLoad={datastr => this.props.loadComponents(datastr)}
+                onCarriersDownload={() => serialize_components(wfactors, cmeta, cdata)}
                 onChangeCurrentFileName={newname =>
-                  dispatch(changeCurrentFileName(newname))
+                  this.props.changeCurrentFileName(newname)
                 }
                 currentfilename={this.props.currentfilename}
               />
@@ -139,7 +135,7 @@ class MainPageClass extends React.Component {
                   className="btn"
                   id="add"
                   type="button"
-                  onClick={() => dispatch(cloneEnergyComponent(selectedkey))}
+                  onClick={() => this.props.cloneEnergyComponent(selectedkey)}
                 >
                   <span className="fa fa-plus" /> Añadir
                 </button>
@@ -147,7 +143,7 @@ class MainPageClass extends React.Component {
                   className="btn"
                   id="remove"
                   type="button"
-                  onClick={() => dispatch(removeEnergyComponent(selectedkey))}
+                  onClick={() => this.props.removeEnergyComponent(selectedkey)}
                 >
                   <span className="fa fa-minus" /> Borrar
                 </button>
@@ -170,9 +166,9 @@ class MainPageClass extends React.Component {
                 selectedkey={selectedkey}
                 cdata={components.cdata}
                 storedcomponent={storedcomponent}
-                onEdit={(key, component) => {
-                  dispatch(editEnergyComponent(key, component));
-                }}
+                onEdit={(key, component) =>
+                  this.props.editEnergyComponent(key, component)
+                }
               />
             </ModalContainer>
           </div>
@@ -184,11 +180,11 @@ class MainPageClass extends React.Component {
                 cdata={components.cdata}
                 area={area}
                 onSelect={(key, component) =>
-                  dispatch(selectEnergyComponent(key, component))
+                  this.props.selectEnergyComponent(key, component)
                 }
-                onEdit={(key, component) => {
-                  dispatch(editEnergyComponent(key, component));
-                }}
+                onEdit={(key, component) =>
+                  this.props.editEnergyComponent(key, component)
+                }
               />
             </div>
           </div>
@@ -197,27 +193,10 @@ class MainPageClass extends React.Component {
       </div>
     );
   }
-
-  uploadCarriers(datastr) {
-    try {
-      this.props.dispatch(loadEnergyComponents(parse_components(datastr)));
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error("Se ha producido un error al cargar los datos: ", e);
-    }
-  }
-
-  downloadCarriers() {
-    const {
-      wfactors,
-      components: { cmeta, cdata }
-    } = this.props;
-    return serialize_components(wfactors, cmeta, cdata);
-  }
 }
 
-const MainPage = connect(state => {
-  return {
+const MainPage = connect(
+  state => ({
     kexp: state.kexp,
     area: state.area,
     location: state.location,
@@ -227,7 +206,21 @@ const MainPage = connect(state => {
     currentfilename: state.currentfilename,
     wfactors: selectWFactors(state),
     balance: selectBalance(state)
-  };
-})(MainPageClass);
+  }),
+  dispatch => ({
+    loadComponents: datastr => dispatch(loadEnergyComponents(datastr)),
+    selectEnergyComponent: (key, component) =>
+      dispatch(selectEnergyComponent(key, component)),
+    editEnergyComponent: (key, component) =>
+      dispatch(editEnergyComponent(key, component)),
+    cloneEnergyComponent: selectedkey =>
+      dispatch(cloneEnergyComponent(selectedkey)),
+    removeEnergyComponent: selectedkey =>
+      dispatch(removeEnergyComponent(selectedkey)),
+    changeCurrentFileName: newname => dispatch(changeCurrentFileName(newname)),
+    changeKexp: value => dispatch(changeKexp(value)),
+    changeArea: value => dispatch(changeArea(value))
+  })
+)(MainPageClass);
 
 export default MainPage;
