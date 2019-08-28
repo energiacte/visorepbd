@@ -137,26 +137,35 @@ function user_wfactors(state = {}, action) {
   }
 }
 
+const DEFAULT_COMPONENT = {
+  active: true,
+  carrier: "ELECTRICIDAD",
+  ctype: "PRODUCCION",
+  csubtype: "INSITU",
+  service: "NDEF",
+  values: new Array(12).fill(1),
+  comment: "Nuevo componente energético"
+};
+
 // Reducer para datos de componentes energéticos ---------------------
 function cdata(state, action) {
   switch (action.type) {
     case ADD_ENERGY_COMPONENT:
       return [...state, action.component];
     case CLONE_ENERGY_COMPONENT: {
+      const numcomps = state.length;
       // Sin elementos seleccionado o sin componentes existentes
-      if (action.id === null || state.length === 0) {
-        const numelems = state.length > 0 ? state[0].values.length : 12;
-        return [
-          ...state.cdata,
-          {
-            active: true,
-            carrier: "ELECTRICIDAD",
-            ctype: "PRODUCCION",
-            csubtype: "INSITU",
-            service: "NDEF",
-            values: new Array(numelems).fill(1),
-            comment: "Nuevo componente energético"
-          }
+      if (action.id === null || numcomps === 0) {
+        const numvals = numcomps > 0 ? state[0].values.length : 12;
+        const newcomponent = {
+          ...DEFAULT_COMPONENT,
+          values: new Array(numvals).fill(1)
+        };
+        if (numcomps == 0) {
+          return [newcomponent];
+        } else {
+          return [...state.cdata, newcomponent];
+        }
         ];
       }
       // Con componente seleccionado
