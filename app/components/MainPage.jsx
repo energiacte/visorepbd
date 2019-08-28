@@ -63,11 +63,7 @@ class MainPageClass extends React.Component {
     return (
       <div>
         <NavBar match={this.props.match} />
-        <div className="container-fluid">
-          {/* Panel de variables globales */}
-          <div className="row">
-            <div className="col">
-              <GlobalVarsControl
+        <GlobalVarsControl
                 kexp={kexp}
                 area={area}
                 location={location}
@@ -81,8 +77,7 @@ class MainPageClass extends React.Component {
                 }
                 currentfilename={this.props.currentfilename}
               />
-            </div>
-          </div>
+        <div className="container-fluid">
           {/* Gráfica de resultados */}
           <div className="row">
             <div className="col">
