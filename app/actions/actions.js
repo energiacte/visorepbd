@@ -4,7 +4,6 @@ import { parse_components } from "wasm-cteepbd";
  * action types
  */
 
-export const SELECT_ENERGY_COMPONENT = "SELECT_ENERGY_COMPONENT";
 export const ADD_ENERGY_COMPONENT = "ADD_ENERGY_COMPONENT";
 export const CLONE_ENERGY_COMPONENT = "CLONE_ENERGY_COMPONENT";
 export const REMOVE_ENERGY_COMPONENT = "REMOVE_ENERGY_COMPONENT";
@@ -19,10 +18,6 @@ export const CHANGE_USERWFACTORS = "CHANGE_USERWFACTORS";
 /*
  * action creators
  */
-
-export function selectEnergyComponent(id, component) {
-  return { type: SELECT_ENERGY_COMPONENT, id, component };
-}
 
 export function addEnergyComponent(component) {
   return { type: ADD_ENERGY_COMPONENT, component };

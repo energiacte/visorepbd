@@ -15,7 +15,6 @@ import {
 } from "utils";
 
 import {
-  SELECT_ENERGY_COMPONENT,
   ADD_ENERGY_COMPONENT,
   CLONE_ENERGY_COMPONENT,
   REMOVE_ENERGY_COMPONENT,
@@ -27,36 +26,6 @@ import {
   CHANGE_USERWFACTORS,
   CHANGE_CURRENTFILENAME
 } from "../actions/actions.js";
-
-// Reducer para la parte de storedcomponent -------------------
-function storedcomponent(state = null, action) {
-  switch (action.type) {
-    case SELECT_ENERGY_COMPONENT:
-      return action.component;
-    case LOAD_ENERGY_COMPONENTS:
-      if (action.cdata.length > 0) {
-        return { ...action.cdata[0], active: true };
-      }
-      return state;
-    default:
-      return state;
-  }
-}
-
-// Reducer para la parte de selectedkeys -------------------
-function selectedkey(state = null, action) {
-  switch (action.type) {
-    case SELECT_ENERGY_COMPONENT:
-      return action.id;
-    case REMOVE_ENERGY_COMPONENT:
-      if (action.id !== 0) return state - 1;
-      return state;
-    case LOAD_ENERGY_COMPONENTS:
-      return 0;
-    default:
-      return state;
-  }
-}
 
 // Reducer para la parte de kexp -------------------
 function kexp(state = 1, action) {
@@ -166,7 +135,6 @@ function cdata(state, action) {
         } else {
           return [...state.cdata, newcomponent];
         }
-        ];
       }
       // Con componente seleccionado
       let currlist = [...state];
@@ -316,8 +284,6 @@ export function selectBalance(state) {
 
 export default function reducer(state = {}, action) {
   return {
-    storedcomponent: storedcomponent(state.storedcomponent, action),
-    selectedkey: selectedkey(state.selectedkey, action),
     kexp: kexp(state.kexp, action),
     area: area(state.area, action),
     location: location(state.location, action),

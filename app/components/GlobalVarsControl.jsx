@@ -172,8 +172,6 @@ const GlobalVarsControl = connect(
     kexp: state.kexp,
     area: state.area,
     location: state.location,
-    storedcomponent: state.storedcomponent,
-    selectedkey: state.selectedkey,
     cmeta: state.cmeta,
     cdata: state.cdata,
     wfactors: selectWFactors(state),

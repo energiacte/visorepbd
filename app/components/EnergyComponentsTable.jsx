@@ -8,8 +8,7 @@ import ModalContainer from "components/ModalContainer";
 import {
   cloneEnergyComponent,
   removeEnergyComponent,
-  editEnergyComponent,
-  selectEnergyComponent,
+  editEnergyComponent
 } from "actions/actions.js";
 
 const get_service_icon = service => {
@@ -51,7 +50,7 @@ export class EnergyComponentsList extends React.Component {
   }
 
   render() {
-    const { cdata, selectedkey, area } = this.props;
+    const { cdata, pos, area } = this.props;
     const maxvalue = Math.max(
       ...cdata.map(component => Math.max(...component.values))
     );
@@ -106,7 +105,7 @@ export class EnergyComponentsList extends React.Component {
               Valor: value
             }));
             const rowstyles = [
-              selectedkey === i ? "bg-info" : "",
+              pos === i ? "bg-info" : "",
               active ? "" : "inactivecomponent",
               ctype === "CONSUMO" ? "deliveredstyle" : ""
             ].join(" ");
@@ -163,11 +162,17 @@ export class EnergyComponentsList extends React.Component {
 }
 
 // Tabla de componentes energéticos -------------------------------------
-// TODO: mover selectedkey y storedcomponent del estado general a estado de este componente
 class EnergyComponentsTableClass extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showEditWindow: false }; // Mostrar ventana modal de edición
+    this.state = {
+      // ¿Ventana modal de edición visible?
+      showEditWindow: false,
+      // Posición del elemento seleccionado (índice)
+      pos: props.cdata.length < 1 ? null : 0,
+      // Último elemento seleccionado (y que será editado)
+      storedcomponent: props.cdata[0]
+    }; // Mostrar ventana modal de edición
   }
 
   toggleEditWindow() {
@@ -175,12 +180,9 @@ class EnergyComponentsTableClass extends React.Component {
   }
 
   render() {
-    const {
-      area,
-      cdata,
-      selectedkey,
-      storedcomponent
-    } = this.props;
+    const { area, cdata } = this.props;
+
+    const { pos, storedcomponent } = this.state;
 
     return (
       <div>
@@ -197,21 +199,31 @@ class EnergyComponentsTableClass extends React.Component {
                   className="btn"
                   id="add"
                   type="button"
-                  onClick={() => this.props.cloneEnergyComponent(selectedkey)}
+                  onClick={() => this.props.cloneEnergyComponent(pos)}
                 >
                   <span className="fa fa-plus" /> Añadir
                 </button>
                 <button
                   className="btn"
                   id="remove"
+                  disabled={cdata.length < 1 ? true : false}
                   type="button"
-                  onClick={() => this.props.removeEnergyComponent(selectedkey)}
+                  onClick={() => {
+                    this.props.removeEnergyComponent(pos);
+                    // Mantenemos la posición salvo que sea al final (len-2) o al inicio (0)
+                    const newpos = Math.max(0, Math.min(cdata.length - 2, pos));
+                    this.setState({
+                      pos: newpos,
+                      storedcomponent: cdata.length != 0 ? cdata[newpos] : {}
+                    });
+                  }}
                 >
                   <span className="fa fa-minus" /> Borrar
                 </button>
                 <button
                   className="btn"
                   id="edit"
+                  disabled={cdata.length < 1 ? true : false}
                   type="button"
                   onClick={() => this.toggleEditWindow()}
                 >
@@ -225,11 +237,12 @@ class EnergyComponentsTableClass extends React.Component {
               onClose={() => this.toggleEditWindow()}
             >
               <EnergyComponentEditor
-                selectedkey={selectedkey}
+                selectedkey={pos}
                 cdata={cdata}
                 storedcomponent={storedcomponent}
                 onEdit={(key, component) =>
-                  this.props.editEnergyComponent(key, component)
+                  this.props.editEnergyComponent(key, component) &&
+                  this.setState({ storedcomponent: component })
                 }
               />
             </ModalContainer>
@@ -238,14 +251,17 @@ class EnergyComponentsTableClass extends React.Component {
           <div className="row">
             <div className="col">
               <EnergyComponentsList
-                selectedkey={selectedkey}
+                pos={pos}
                 cdata={cdata}
                 area={area}
-                onSelect={(key, component) =>
-                  this.props.selectEnergyComponent(key, component)
+                onSelect={(i, component) =>
+                  this.setState({
+                    pos: i,
+                    storedcomponent: component
+                  })
                 }
-                onEdit={(key, component) =>
-                  this.props.editEnergyComponent(key, component)
+                onEdit={(i, component) =>
+                  this.props.editEnergyComponent(i, component)
                 }
               />
             </div>
@@ -259,19 +275,13 @@ class EnergyComponentsTableClass extends React.Component {
 const EnergyComponentsTable = connect(
   state => ({
     area: state.area,
-    storedcomponent: state.storedcomponent,
-    selectedkey: state.selectedkey,
-    cdata: state.cdata,
+    cdata: state.cdata
   }),
   dispatch => ({
-    selectEnergyComponent: (key, component) =>
-      dispatch(selectEnergyComponent(key, component)),
-    editEnergyComponent: (key, component) =>
-      dispatch(editEnergyComponent(key, component)),
-    cloneEnergyComponent: selectedkey =>
-      dispatch(cloneEnergyComponent(selectedkey)),
-    removeEnergyComponent: selectedkey =>
-      dispatch(removeEnergyComponent(selectedkey)),
+    editEnergyComponent: (id, component) =>
+      dispatch(editEnergyComponent(id, component)),
+    cloneEnergyComponent: id => dispatch(cloneEnergyComponent(id)),
+    removeEnergyComponent: id => dispatch(removeEnergyComponent(id))
   })
 )(EnergyComponentsTableClass);
 
