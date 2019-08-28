@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import NavBar from "components/NavBar";
 import Footer from "components/Footer";
+import GlobalVarsControl from "components/GlobalVarsControl";
 import NumInput from "components/NumInput";
 
 import { editUserWFactors } from "actions/actions";
@@ -36,6 +37,7 @@ class WeightingFactorsPageClass extends React.Component {
     return (
       <div>
         <NavBar match={this.props.match} />
+        <GlobalVarsControl />
         <div className="container-fluid">
           <div className="page-header">
             <h1>
