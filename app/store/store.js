@@ -247,8 +247,10 @@ const EXAMPLE_CDATA = [
 
 const initialState = {
   // Último elemento seleccionado
+  // TODO: llevar a estado del EnergyComponentTable
   storedcomponent: EXAMPLE_CDATA[0],
   // Elemento seleccionado (índice)
+  // TODO: llevar a estado del EnergyComponentTable
   selectedkey: 0,
   // Factor de exportación
   kexp: 0.0,
@@ -263,6 +265,7 @@ const initialState = {
   // Metadatos de los componentes energéticos
   cmeta: EXAMPLE_CMETA,
   // Nombre de archivo actual
+  // TODO: Llevar a estado del GlobalVarsControl
   currentfilename: "VisorEPBD.csv"
 };
 

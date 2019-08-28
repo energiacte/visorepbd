@@ -1,6 +1,16 @@
 import React from "react";
+import { connect } from "react-redux";
 
+import EnergyComponentEditor from "components/EnergyComponentEditor";
 import EnergyComponentChart from "components/EnergyComponentChart.jsx";
+import ModalContainer from "components/ModalContainer";
+
+import {
+  cloneEnergyComponent,
+  removeEnergyComponent,
+  editEnergyComponent,
+  selectEnergyComponent,
+} from "actions/actions.js";
 
 const get_service_icon = service => {
   switch (service) {
@@ -26,8 +36,8 @@ const get_service_icon = service => {
   }
 };
 
-// Tabla de componentes energéticos
-export default class EnergyComponentsList extends React.Component {
+// Lista de componentes energéticos -------------------------------------
+export class EnergyComponentsList extends React.Component {
   // Seleccionar componente
   handleClick(i) {
     const component = this.props.cdata[i];
@@ -151,3 +161,118 @@ export default class EnergyComponentsList extends React.Component {
     );
   }
 }
+
+// Tabla de componentes energéticos -------------------------------------
+// TODO: mover selectedkey y storedcomponent del estado general a estado de este componente
+class EnergyComponentsTableClass extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showEditWindow: false }; // Mostrar ventana modal de edición
+  }
+
+  toggleEditWindow() {
+    this.setState({ showEditWindow: !this.state.showEditWindow });
+  }
+
+  render() {
+    const {
+      area,
+      cdata,
+      selectedkey,
+      storedcomponent
+    } = this.props;
+
+    return (
+      <div>
+        <div className="container-fluid">
+          {/* Acciones de edición de componentes */}
+          <div className="row">
+            <div className="col float-right">
+              <div
+                className="btn-group float-right btn-group-xs"
+                role="group"
+                aria-label="acciones"
+              >
+                <button
+                  className="btn"
+                  id="add"
+                  type="button"
+                  onClick={() => this.props.cloneEnergyComponent(selectedkey)}
+                >
+                  <span className="fa fa-plus" /> Añadir
+                </button>
+                <button
+                  className="btn"
+                  id="remove"
+                  type="button"
+                  onClick={() => this.props.removeEnergyComponent(selectedkey)}
+                >
+                  <span className="fa fa-minus" /> Borrar
+                </button>
+                <button
+                  className="btn"
+                  id="edit"
+                  type="button"
+                  onClick={() => this.toggleEditWindow()}
+                >
+                  <span className="fa fa-edit" /> Editar
+                </button>
+              </div>
+            </div>
+            {/* Ventana modal de edición de componente */}
+            <ModalContainer
+              show={this.state.showEditWindow}
+              onClose={() => this.toggleEditWindow()}
+            >
+              <EnergyComponentEditor
+                selectedkey={selectedkey}
+                cdata={cdata}
+                storedcomponent={storedcomponent}
+                onEdit={(key, component) =>
+                  this.props.editEnergyComponent(key, component)
+                }
+              />
+            </ModalContainer>
+          </div>
+          {/* Tabla de componentes */}
+          <div className="row">
+            <div className="col">
+              <EnergyComponentsList
+                selectedkey={selectedkey}
+                cdata={cdata}
+                area={area}
+                onSelect={(key, component) =>
+                  this.props.selectEnergyComponent(key, component)
+                }
+                onEdit={(key, component) =>
+                  this.props.editEnergyComponent(key, component)
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+const EnergyComponentsTable = connect(
+  state => ({
+    area: state.area,
+    storedcomponent: state.storedcomponent,
+    selectedkey: state.selectedkey,
+    cdata: state.cdata,
+  }),
+  dispatch => ({
+    selectEnergyComponent: (key, component) =>
+      dispatch(selectEnergyComponent(key, component)),
+    editEnergyComponent: (key, component) =>
+      dispatch(editEnergyComponent(key, component)),
+    cloneEnergyComponent: selectedkey =>
+      dispatch(cloneEnergyComponent(selectedkey)),
+    removeEnergyComponent: selectedkey =>
+      dispatch(removeEnergyComponent(selectedkey)),
+  })
+)(EnergyComponentsTableClass);
+
+export default EnergyComponentsTable;

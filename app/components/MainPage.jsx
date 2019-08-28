@@ -4,40 +4,23 @@ import { connect } from "react-redux";
 import NavBar from "components/NavBar";
 import EPChart from "components/EPChart";
 import GlobalVarsControl from "components/GlobalVarsControl";
-import EnergyComponentEditor from "components/EnergyComponentEditor";
-import EnergyComponentsList from "components/EnergyComponentsTable";
 import Footer from "components/Footer";
-import ModalContainer from "components/ModalContainer";
 import DetailsChart from "components/DetailsChart";
 
-import {
-  cloneEnergyComponent,
-  removeEnergyComponent,
-  editEnergyComponent,
-  selectEnergyComponent,
-} from "actions/actions.js";
-
 import { selectBalance } from "reducers/reducers";
+import EnergyComponentsTable from "./EnergyComponentsTable";
 
 // Página principal de la aplicación
 class MainPageClass extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showEditWindow: false, showDetails: false }; // Mostrar ventana modal de edición
-  }
-
-  toggleEditWindow() {
-    this.setState({ showEditWindow: !this.state.showEditWindow });
+    this.state = { showDetails: false }; // Mostrar ventana modal de edición
   }
 
   render() {
     const {
       kexp,
-      area,
-      cdata,
-      selectedkey,
       balance,
-      storedcomponent
     } = this.props;
 
     // Indicadores que se van a representar ------------------
@@ -99,71 +82,7 @@ class MainPageClass extends React.Component {
               </div>
             </div>
           ) : null}
-          {/* Acciones de edición de componentes */}
-          <div className="row">
-            <div className="col float-right">
-              <div
-                className="btn-group float-right btn-group-xs"
-                role="group"
-                aria-label="acciones"
-              >
-                <button
-                  className="btn"
-                  id="add"
-                  type="button"
-                  onClick={() => this.props.cloneEnergyComponent(selectedkey)}
-                >
-                  <span className="fa fa-plus" /> Añadir
-                </button>
-                <button
-                  className="btn"
-                  id="remove"
-                  type="button"
-                  onClick={() => this.props.removeEnergyComponent(selectedkey)}
-                >
-                  <span className="fa fa-minus" /> Borrar
-                </button>
-                <button
-                  className="btn"
-                  id="edit"
-                  type="button"
-                  onClick={() => this.toggleEditWindow()}
-                >
-                  <span className="fa fa-edit" /> Editar
-                </button>
-              </div>
-            </div>
-            {/* Ventana modal de edición de componente */}
-            <ModalContainer
-              show={this.state.showEditWindow}
-              onClose={() => this.toggleEditWindow()}
-            >
-              <EnergyComponentEditor
-                selectedkey={selectedkey}
-                cdata={cdata}
-                storedcomponent={storedcomponent}
-                onEdit={(key, component) =>
-                  this.props.editEnergyComponent(key, component)
-                }
-              />
-            </ModalContainer>
-          </div>
-          {/* Tabla de componentes */}
-          <div className="row">
-            <div className="col">
-              <EnergyComponentsList
-                selectedkey={selectedkey}
-                cdata={cdata}
-                area={area}
-                onSelect={(key, component) =>
-                  this.props.selectEnergyComponent(key, component)
-                }
-                onEdit={(key, component) =>
-                  this.props.editEnergyComponent(key, component)
-                }
-              />
-            </div>
-          </div>
+          <EnergyComponentsTable />
         </div>
         <Footer />
       </div>
@@ -174,21 +93,7 @@ class MainPageClass extends React.Component {
 const MainPage = connect(
   state => ({
     kexp: state.kexp,
-    area: state.area,
-    storedcomponent: state.storedcomponent,
-    selectedkey: state.selectedkey,
-    cdata: state.cdata,
     balance: selectBalance(state)
-  }),
-  dispatch => ({
-    selectEnergyComponent: (key, component) =>
-      dispatch(selectEnergyComponent(key, component)),
-    editEnergyComponent: (key, component) =>
-      dispatch(editEnergyComponent(key, component)),
-    cloneEnergyComponent: selectedkey =>
-      dispatch(cloneEnergyComponent(selectedkey)),
-    removeEnergyComponent: selectedkey =>
-      dispatch(removeEnergyComponent(selectedkey)),
   })
 )(MainPageClass);
 
