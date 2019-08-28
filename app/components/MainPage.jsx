@@ -10,21 +10,14 @@ import Footer from "components/Footer";
 import ModalContainer from "components/ModalContainer";
 import DetailsChart from "components/DetailsChart";
 
-import { serialize_components } from "utils";
-
 import {
-  changeKexp,
-  changeArea,
-  changeLocation,
   cloneEnergyComponent,
   removeEnergyComponent,
   editEnergyComponent,
   selectEnergyComponent,
-  loadEnergyComponents,
-  changeCurrentFileName
 } from "actions/actions.js";
 
-import { selectBalance, selectWFactors } from "reducers/reducers";
+import { selectBalance } from "reducers/reducers";
 
 // Página principal de la aplicación
 class MainPageClass extends React.Component {
@@ -41,8 +34,6 @@ class MainPageClass extends React.Component {
     const {
       kexp,
       area,
-      wfactors,
-      cmeta,
       cdata,
       selectedkey,
       balance,
@@ -63,20 +54,7 @@ class MainPageClass extends React.Component {
     return (
       <div>
         <NavBar match={this.props.match} />
-        <GlobalVarsControl
-                kexp={kexp}
-                area={area}
-                location={location}
-                onChangeKexp={v => this.props.changeKexp(v)}
-                onChangeArea={v => this.props.changeArea(v)}
-                onChangeLocation={v => this.props.changeLocation(v)}
-                onCarriersLoad={datastr => this.props.loadComponents(datastr)}
-                onCarriersDownload={() => serialize_components(wfactors, cmeta, cdata)}
-                onChangeCurrentFileName={newname =>
-                  this.props.changeCurrentFileName(newname)
-                }
-                currentfilename={this.props.currentfilename}
-              />
+        <GlobalVarsControl />
         <div className="container-fluid">
           {/* Gráfica de resultados */}
           <div className="row">
@@ -197,17 +175,12 @@ const MainPage = connect(
   state => ({
     kexp: state.kexp,
     area: state.area,
-    location: state.location,
     storedcomponent: state.storedcomponent,
     selectedkey: state.selectedkey,
-    cmeta: state.cmeta,
     cdata: state.cdata,
-    currentfilename: state.currentfilename,
-    wfactors: selectWFactors(state),
     balance: selectBalance(state)
   }),
   dispatch => ({
-    loadComponents: datastr => dispatch(loadEnergyComponents(datastr)),
     selectEnergyComponent: (key, component) =>
       dispatch(selectEnergyComponent(key, component)),
     editEnergyComponent: (key, component) =>
@@ -216,10 +189,6 @@ const MainPage = connect(
       dispatch(cloneEnergyComponent(selectedkey)),
     removeEnergyComponent: selectedkey =>
       dispatch(removeEnergyComponent(selectedkey)),
-    changeCurrentFileName: newname => dispatch(changeCurrentFileName(newname)),
-    changeKexp: value => dispatch(changeKexp(value)),
-    changeArea: value => dispatch(changeArea(value)),
-    changeLocation: value => dispatch(changeLocation(value))
   })
 )(MainPageClass);
 

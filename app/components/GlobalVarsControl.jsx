@@ -1,17 +1,30 @@
 import React from "react";
+import { connect } from "react-redux";
+
 import NumInput from "components/NumInput";
 
+import {
+  changeKexp,
+  changeArea,
+  changeLocation,
+  loadEnergyComponents,
+  changeCurrentFileName
+} from "actions/actions.js";
+import { selectWFactors } from "reducers/reducers";
+
+import { serialize_components } from "utils";
+
 // Control de variables globales: área, kexp, carga y descarga de datos
-export default class GlobalVarsControl extends React.Component {
+class GlobalVarsControlClass extends React.Component {
   render() {
     const {
       kexp,
       area,
       location,
-      onChangeKexp,
-      onChangeArea,
-      onChangeLocation,
-      currentfilename
+      changeKexp,
+      changeArea,
+      changeLocation,
+      loadComponents
     } = this.props;
 
     return (
@@ -32,7 +45,7 @@ export default class GlobalVarsControl extends React.Component {
                   name="kexprange"
                   className="form-control custom-range"
                   defaultValue={kexp}
-                  onChange={e => onChangeKexp(e.target.value)}
+                  onChange={e => changeKexp(e.target.value)}
                 />{" "}
                 <NumInput
                   id="kexp_input"
@@ -53,7 +66,7 @@ export default class GlobalVarsControl extends React.Component {
                 precision={0}
                 min={0}
                 value={area}
-                onValueChange={onChangeArea}
+                onValueChange={changeArea}
                 groupClassName="d-inline-block"
                 labelClassName="col-lg-5"
                 className="d-inline form-control-sm col-lg-7"
@@ -71,7 +84,7 @@ export default class GlobalVarsControl extends React.Component {
                 <select
                   id="selectLocation"
                   className="d-inline form-control form-control-sm col-lg-6"
-                  onChange={e => onChangeLocation(e.target.value)}
+                  onChange={e => changeLocation(e.target.value)}
                   defaultValue={location}
                 >
                   <option value="PENINSULA">Península</option>
@@ -91,7 +104,7 @@ export default class GlobalVarsControl extends React.Component {
                     ref={ref => (this.fileInput = ref)}
                     type="file"
                     onChange={e =>
-                      this.uploadFile(e, this.props.onCarriersLoad)
+                      this.uploadFile(e, loadComponents)
                     }
                     style={{
                       visibility: "hidden",
@@ -112,13 +125,7 @@ export default class GlobalVarsControl extends React.Component {
                     className="btn btn-light"
                     id="save"
                     type="button"
-                    onClick={e =>
-                      this.downloadFile(
-                        e,
-                        this.props.onCarriersDownload,
-                        currentfilename
-                      )
-                    }
+                    onClick={() => this.downloadFile()}
                   >
                     <span className="fa fa-download" /> Guardar datos
                   </button>
@@ -142,19 +149,43 @@ export default class GlobalVarsControl extends React.Component {
     const reader = new FileReader();
     reader.onload = el => handler(el.target.result);
     reader.readAsText(file);
-    this.props.onChangeCurrentFileName(file.name);
+    this.props.changeCurrentFileName(file.name);
   }
 
-  downloadFile(e, handler, filename) {
-    const energystring = handler();
+  downloadFile() {
+    const { wfactors, cmeta, cdata, currentfilename } = this.props;
+    const energystring = serialize_components(wfactors, cmeta, cdata);
     const data = new Blob([energystring], { type: "text/plain;charset=utf8;" });
     // create hidden link
     const element = document.createElement("a");
     document.body.appendChild(element);
     element.setAttribute("href", window.URL.createObjectURL(data));
-    element.setAttribute("download", filename);
+    element.setAttribute("download", currentfilename);
     element.style.display = "";
     element.click();
     document.body.removeChild(element);
   }
 }
+
+const GlobalVarsControl = connect(
+  state => ({
+    kexp: state.kexp,
+    area: state.area,
+    location: state.location,
+    storedcomponent: state.storedcomponent,
+    selectedkey: state.selectedkey,
+    cmeta: state.cmeta,
+    cdata: state.cdata,
+    wfactors: selectWFactors(state),
+    currentfilename: state.currentfilename
+  }),
+  dispatch => ({
+    loadComponents: datastr => dispatch(loadEnergyComponents(datastr)),
+    changeCurrentFileName: newname => dispatch(changeCurrentFileName(newname)),
+    changeKexp: value => dispatch(changeKexp(value)),
+    changeArea: value => dispatch(changeArea(value)),
+    changeLocation: value => dispatch(changeLocation(value))
+  })
+)(GlobalVarsControlClass);
+
+export default GlobalVarsControl;
