@@ -15,6 +15,7 @@ import { serialize_components } from "utils";
 import {
   changeKexp,
   changeArea,
+  changeLocation,
   cloneEnergyComponent,
   removeEnergyComponent,
   editEnergyComponent,
@@ -69,8 +70,10 @@ class MainPageClass extends React.Component {
               <GlobalVarsControl
                 kexp={kexp}
                 area={area}
-                onChangeKexp={value => this.props.changeKexp(value)}
-                onChangeArea={value => this.props.changeArea(value)}
+                location={location}
+                onChangeKexp={v => this.props.changeKexp(v)}
+                onChangeArea={v => this.props.changeArea(v)}
+                onChangeLocation={v => this.props.changeLocation(v)}
                 onCarriersLoad={datastr => this.props.loadComponents(datastr)}
                 onCarriersDownload={() => serialize_components(wfactors, cmeta, cdata)}
                 onChangeCurrentFileName={newname =>
@@ -220,7 +223,8 @@ const MainPage = connect(
       dispatch(removeEnergyComponent(selectedkey)),
     changeCurrentFileName: newname => dispatch(changeCurrentFileName(newname)),
     changeKexp: value => dispatch(changeKexp(value)),
-    changeArea: value => dispatch(changeArea(value))
+    changeArea: value => dispatch(changeArea(value)),
+    changeLocation: value => dispatch(changeLocation(value))
   })
 )(MainPageClass);
 

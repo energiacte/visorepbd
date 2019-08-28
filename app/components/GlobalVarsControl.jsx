@@ -7,13 +7,16 @@ export default class GlobalVarsControl extends React.Component {
     const {
       kexp,
       area,
+      location,
       onChangeKexp,
       onChangeArea,
+      onChangeLocation,
       currentfilename
     } = this.props;
 
     return (
       <div id="globalvarscontrol" className="form-horizontal col-lg-12">
+        {/* Slider de kexp con entrada de lectura numérica */}
         <div id="kexp" className="form-group col-lg-3">
           <label className="control-label" htmlFor="kexprange">
             k<sub>exp</sub>{" "}
@@ -39,6 +42,7 @@ export default class GlobalVarsControl extends React.Component {
             readOnly
           />
         </div>
+        {/* Entrada de edición de área de referencia */}
         <NumInput
           id="area_input"
           precision={0}
@@ -51,6 +55,24 @@ export default class GlobalVarsControl extends React.Component {
         >
           Area<sub>ref</sub> (m²){" "}
         </NumInput>
+        {/* Desplegable de selección de localización */}
+        <div className="form-group d-inline-block col-lg-3">
+          <label className="control-label col-lg-5" htmlFor="selectLocation">
+            Localización
+          </label>
+          <select
+            id="selectLocation"
+            className="d-inline form-control form-control-sm col-lg-6"
+            onChange={e => onChangeLocation(e.target.value)}
+            defaultValue={location}
+          >
+            <option value="PENINSULA">Península</option>
+            <option value="CANARIAS">Islas Canarias</option>
+            <option value="BALEARES">Islas Baleares</option>
+            <option value="CEUTAMELILLA">Ceuta y Melilla</option>
+          </select>
+        </div>
+        {/* Botones de carga y descarga de datos */}
         <div id="buttons" className="form-group float-right">
           <div
             className="btn-group btn-group-md"

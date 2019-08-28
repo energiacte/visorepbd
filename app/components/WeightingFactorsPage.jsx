@@ -5,15 +5,8 @@ import NavBar from "components/NavBar";
 import Footer from "components/Footer";
 import NumInput from "components/NumInput";
 
-import { editUserWFactors, changeLocation } from "actions/actions";
+import { editUserWFactors } from "actions/actions";
 import { selectWFactors } from "reducers/reducers";
-
-const CTELOCS = {
-  PENINSULA: "Península",
-  CANARIAS: "Islas Canarias",
-  BALEARES: "Islas Baleares",
-  CEUTAMELILLA: "Ceuta y Melilla"
-};
 
 // Visualización y edición de factores de paso activos
 class WeightingFactorsPageClass extends React.Component {
@@ -23,8 +16,7 @@ class WeightingFactorsPageClass extends React.Component {
         red: { RED1: red1, RED2: red2 },
         cogen: { A_NEPB: _cnepb, A_RED: cog }
       },
-      wfactors,
-      location
+      wfactors
     } = this.props;
 
     // Energía primaria --------------------
@@ -62,25 +54,6 @@ class WeightingFactorsPageClass extends React.Component {
               , que incluye los factores de paso de energía final a energía
               primaria y a emisiones.
             </p>
-          </div>
-          <h3>
-            Localización{" "}
-            <small>(define los factores de paso reglamentarios)</small>
-          </h3>
-          <div className="form-group">
-            <select
-              id="selectLocation"
-              className="form-control"
-              onChange={e =>
-                this.props.dispatch(changeLocation(e.target.value))
-              }
-              value={location}
-            >
-              <option value={"PENINSULA"}>{CTELOCS["PENINSULA"]}</option>
-              <option value={"CANARIAS"}>{CTELOCS["CANARIAS"]}</option>
-              <option value={"BALEARES"}>{CTELOCS["BALEARES"]}</option>
-              <option value={"CEUTAMELILLA"}>{CTELOCS["CEUTAMELILLA"]}</option>
-            </select>
           </div>
           <h3>Factores definidos por el usuario</h3>
           <table
@@ -294,10 +267,8 @@ class WeightingFactorsPageClass extends React.Component {
           </table>
 
           <h3>
-            Factores definidos a partir de valores reglamentarios{" "}
-            <small>
-              (para la localización &quot;{CTELOCS[location]}&quot;)
-            </small>
+            Factores definidos reglamentariamente{" "}
+            <small>(según localización)</small>
           </h3>
           <table
             id="components"
@@ -452,8 +423,7 @@ class WeightingFactorsPageClass extends React.Component {
 const WeightingFactorsPage = connect(state => {
   return {
     user_wfactors: state.user_wfactors,
-    wfactors: selectWFactors(state),
-    location: state.location
+    wfactors: selectWFactors(state)
   };
 })(WeightingFactorsPageClass);
 
