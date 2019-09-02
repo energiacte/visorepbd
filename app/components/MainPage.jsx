@@ -44,16 +44,17 @@ class MainPageClass extends React.Component {
         </div>
         <div className="container-fluid">
           <TabList>
-            {/* Tabla de componentes energéticos */}
-            <div label="Componentes energéticos" className="tab-content">
-              <EnergyComponentsTable />
-            </div>
             {/* Desglose de resultados */}
             <div label="Desglose por servicios" className="tab-content">
               {balance.ep && balance.ep_acs_nrb ? (
                 <DetailsChart balance={balance.ep} />
               ) : null}
             </div>
+            {/* Tabla de componentes energéticos */}
+            <div label="Componentes energéticos" className="tab-content">
+              <EnergyComponentsTable />
+            </div>
+            {/* Detalle en JSON */}
             <div label="Detalle de balance en JSON" className="tab-content">
               {balance.ep && balance.ep_acs_nrb ? (
                 <div className="row">
