@@ -1,29 +1,60 @@
 html {
-    body {
-        /* márgenes para barras superior e inferior */
-        padding-top: 60px;
-        padding-bottom: 60px;
-        .card-body {padding:5px 5px 0 5px;}
-        .form-group {margin-bottom:5px;}
-        #components {
-           .bg-info {background-color: #b7caff !important; cursor: pointer;}
-           .deliveredstyle * {color: blue;}
-           .inactivecomponent * {color: gray;}
-           td, th { padding: .5rem; }
-           }
-        #globalvarscontrol {
-           #kexp, #area, #buttons {
-               margin:0;
-               display: inline-block;
-               padding: 5px;
-               label {display: inline;}
-               input[type=range] {width: 40%; display: inline; vertical-align: middle;}
-               input[type=text] {width: 20%; display: inline; vertical-align: middle; color:black;}
-               input[type=number] {width: 60%; display: inline; vertical-align: middle;}
-           }
-        }
-        .help-header {
-            text-decoration: underline;
-        }
+  body {
+    /* márgenes para barras superior e inferior */
+    padding-top: 60px;
+    padding-bottom: 60px;
+    .card-body {
+      padding: 5px 5px 0 5px;
     }
+    .form-group {
+      margin-bottom: 5px;
+    }
+    #components {
+      .bg-info {
+        background-color: #b7caff !important;
+        cursor: pointer;
+      }
+      .deliveredstyle * {
+        color: blue;
+      }
+      .inactivecomponent * {
+        color: gray;
+      }
+      td,
+      th {
+        padding: 0.5rem;
+      }
+    }
+    #globalvarscontrol {
+      #kexp,
+      #area,
+      #buttons {
+        margin: 0;
+        display: inline-block;
+        padding: 5px;
+        label {
+          display: inline;
+        }
+        input[type="range"] {
+          width: 40%; // TODO: eliminar y poner en elemento concreto
+          display: inline;
+          vertical-align: middle;
+        }
+        input[type="text"] {
+          width: 20%; // TODO: eliminar y poner en elemento concreto
+          display: inline;
+          vertical-align: middle;
+          color: black;
+        }
+        input[type="number"] {
+          display: inline;
+          vertical-align: middle;
+        }
+      }
+    }
+    .help-header {
+      text-decoration: underline;
+    }
+
+  }
 }
