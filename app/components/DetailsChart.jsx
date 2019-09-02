@@ -109,7 +109,7 @@ class PieChart extends React.Component {
       .map(([i, _v]) => i);
     const svals = order.map(i => series[i]);
     const slabels = order.map(i => labels[i]);
-    const totalval = svals.reduce(add);
+    const totalval = svals.reduce(add, 0);
     const fracs = svals.map(v => v / totalval);
     const angles = fracs.map(f => f * 360);
     const angleoffsets = [];
@@ -153,6 +153,36 @@ class PieChart extends React.Component {
     const [rx, ry] = [size / 2, size / 2]; // radios
     const dd = this.preparedata();
     const [vbwidth, vbheight] = [size, ishalf ? size / 2 : size];
+
+    if (dd.length == 0) {
+      return (
+        <figure>
+          <div className="figure-content">
+            <svg
+              style={{ width: "100%", height: "auto" }}
+              viewBox={`0 0 ${vbwidth} ${vbheight}`}
+              id="trypaths"
+            >
+              <g>
+                <path
+                  d={f_svg_ellipse_arc(
+                    [cx, cy],
+                    [rx, ry],
+                    [startangleoffset, 180],
+                    0,
+                    ringwidth
+                  )}
+                  fill={"lightgray"}
+                  fillOpacity="0.7"
+                >
+                  <title>Sin datos</title>
+                </path>
+              </g>
+            </svg>
+          </div>
+        </figure>
+      );
+    }
 
     return (
       <figure>
