@@ -72,28 +72,38 @@ const f_svg_ellipse_arc = ([cx, cy], [rx, ry], [t1, delta], rot, ringwidth) => {
   );
 };
 class PieChart extends React.Component {
+  static defaultProps = {
+    data: {
+      // Lista de valores de datos
+      series: [],
+      // Lista de etiquetas (nombres de servicios)
+      labels: [],
+      // Unidades (string)
+      units: ""
+    },
+    options: {
+      // Diámetro del círculo
+      size: 160,
+      // Grosor del anillo circular
+      ringwidth: 40,
+      // Ángulo de separación entre segmentos circulares
+      gap: 2,
+      // Medio círculo
+      ishalf: true,
+      // Grosor del anillo circular (unidades SVG)
+      strokewidth: 40,
+      // Ángulo de desplazamiento inicial (el 0 en las 15h) (deg)
+      startangleoffset: -180
+    }
+  };
+
   preparedata() {
     const {
-      // Lista de valores de datos
-      series = [],
-      // Lista de etiquetas (nombres de servicios)
-      labels = [],
-      // Unidades (string)
-      units = "",
-      options: {
-        // Diámetro del círculo (unidades SVG)
-        size = 160,
-        // Grosor del anillo circular (unidades SVG)
-        strokewidth = 40,
-        // Ángulo de desplazamiento inicial (empieza a las 15h) (deg)
-        startangleoffset = -90
-      } = { size: 160, strokewidth: 40, startangleoffset: -90 }
-    } = this.props.data;
+      data: { series, labels, units },
+      options: { startangleoffset }
+    } = this.props;
 
     // Opciones o valores básicos
-    const [_cx, _cy] = [size / 2, size / 2]; // centro del círculo
-    const r = (size - strokewidth) / 2; // radio
-    const perim = 2 * Math.PI * r; // perímetro
     const order = [...series.map((v, i) => [i, v])]
       .sort((a, b) => b[1] - a[1])
       .map(([i, _v]) => i);
@@ -114,12 +124,8 @@ class PieChart extends React.Component {
       const label = slabels[i];
       const color = SERVICE_COLORS[label];
       const frac = fracs[i];
-      const dashoffset = perim * (1 - frac);
       const angle = angles[i];
       const angleoffset = angleoffsets[i];
-      const rads = ((angle / 2 + angleoffset) * Math.PI) / 180;
-      const tx = r * Math.cos(rads) + _cx;
-      const ty = r * Math.sin(rads) + _cy;
       return {
         i,
         val,
@@ -127,47 +133,57 @@ class PieChart extends React.Component {
         units,
         color,
         frac,
-        dashoffset,
         angle,
-        angleoffset,
-        tx,
-        ty
+        angleoffset
       };
     });
   }
 
   render() {
     const {
-      // Diámetro del círculo
-      size = 160,
-      // Grosor del anillo circular
-      ringwidth = 40,
-      // Ángulo de separación entre segmentos circulares
-      gap = 2
-    } = this.props.data;
+      size,
+      ringwidth,
+      gap,
+      ishalf,
+      startangleoffset
+    } = this.props.options;
 
     // Opciones o valores básicos
     const [cx, cy] = [size / 2, size / 2]; // centro del círculo
     const [rx, ry] = [size / 2, size / 2]; // radios
     const dd = this.preparedata();
+    const [vbwidth, vbheight] = [size, ishalf ? size / 2 : size];
 
     return (
       <figure>
         <div className="figure-content">
           <svg
             style={{ width: "100%", height: "auto" }}
-            viewBox={`0 0 ${size} ${size}`}
+            viewBox={`0 0 ${vbwidth} ${vbheight}`}
             id="trypaths"
           >
             {dd.map((d, i) => {
+              // arcos circulares
+              const f1 = ishalf ? 1 / 2 : 1;
+              const startangle = f1 * (d.angleoffset + startangleoffset);
+              const arclen = f1 * (d.angle - gap);
+              // Posición de texto
+              const rads = ((arclen / 2 + startangle) * Math.PI) / 180;
+              const [tx, ty] = [
+                (rx - ringwidth / 2) * Math.cos(rads) + cx,
+                (ry - ringwidth / 2) * Math.sin(rads) + cy
+              ];
+              // Rotación
+              const rot = 0;
+
               return (
                 <g key={`pp${i}`}>
                   <path
                     d={f_svg_ellipse_arc(
                       [cx, cy],
                       [rx, ry],
-                      [d.angleoffset, d.angle - gap],
-                      0,
+                      [startangle, arclen],
+                      rot,
                       ringwidth
                     )}
                     fill={d.color}
@@ -182,10 +198,10 @@ class PieChart extends React.Component {
                     <text
                       textAnchor="middle"
                       opacity="0.7"
-                      fontSize="12"
+                      fontSize="9"
                       dy="3px"
-                      x={d.tx}
-                      y={d.ty}
+                      x={tx}
+                      y={ty}
                     >
                       {d.label}
                     </text>
@@ -197,9 +213,7 @@ class PieChart extends React.Component {
         </div>
         <figcaption className="figure-key">
           <p className="sr-only">
-            Donut chart showing 10 total beers. Two beers are Imperial India
-            Pale Ales, four beers are Belgian Quadrupels, and three are Russian
-            Imperial Stouts. The last remaining beer is unlabeled.
+            Gráfica de desagregación de resultados por servicios.
           </p>
 
           <ul
