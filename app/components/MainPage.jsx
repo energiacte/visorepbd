@@ -6,22 +6,15 @@ import EPChart from "components/EPChart";
 import GlobalVarsControl from "components/GlobalVarsControl";
 import Footer from "components/Footer";
 import DetailsChart from "components/DetailsChart";
+import TabList from "components/TabList";
 
 import { selectBalance } from "reducers/reducers";
 import EnergyComponentsTable from "./EnergyComponentsTable";
 
 // Página principal de la aplicación
 class MainPageClass extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { showDetails: false }; // Mostrar ventana modal de edición
-  }
-
   render() {
-    const {
-      kexp,
-      balance,
-    } = this.props;
+    const { kexp, balance } = this.props;
 
     // Indicadores que se van a representar ------------------
     let data = {};
@@ -38,6 +31,7 @@ class MainPageClass extends React.Component {
       <div>
         <NavBar match={this.props.match} />
         <GlobalVarsControl />
+
         <div className="container-fluid">
           {/* Gráfica de resultados */}
           <div className="row">
@@ -45,44 +39,44 @@ class MainPageClass extends React.Component {
               <EPChart {...data} />
             </div>
           </div>
-          {/* Muestra detalles */}
+          {/* Errores */}
           {balance.error ? <h1>Ha habido un error!: {balance.error}</h1> : null}
-          {balance.ep && balance.ep_acs_nrb ? (
-            <div className="row">
-              <div className="col">
-                <input
-                  id="checkDetails1"
-                  className=""
-                  type="checkbox"
-                  {...(this.state.showDetails ? {} : { active: "active" })}
-                  onChange={_ =>
-                    this.setState({ showDetails: !this.state.showDetails })
-                  }
-                />{" "}
-                <label className="" htmlFor="checkDetails1">
-                  Ver detalles
-                </label>
-              </div>
+        </div>
+        <div className="container-fluid">
+          <TabList>
+            {/* Tabla de componentes energéticos */}
+            <div label="Componentes energéticos" className="tab-content">
+              <EnergyComponentsTable />
             </div>
-          ) : null}
-          {this.state.showDetails && balance.ep && balance.ep_acs_nrb ? (
-            <DetailsChart balance={balance.ep} />
-          ) : null}
-          {this.state.showDetails && balance.ep && balance.ep_acs_nrb ? (
-            <div className="row" style={{ height: "250px", overflow: "auto" }}>
-              <div className="col-lg-6">
-                <h2>Energía primaria y emisiones:</h2>
-                <pre>{JSON.stringify(balance.ep, undefined, 2)}</pre>
-              </div>
-              <div className="col-lg-6">
-                <h2>
-                  Energía primaria y emisiones para ACS en perímetro próximo:
-                </h2>
-                <pre>{JSON.stringify(balance.ep_acs_nrb, undefined, 2)}</pre>
-              </div>
+            {/* Desglose de resultados */}
+            <div label="Desglose" className="tab-content">
+              {balance.ep && balance.ep_acs_nrb ? (
+                <DetailsChart balance={balance.ep} />
+              ) : null}
             </div>
-          ) : null}
-          <EnergyComponentsTable />
+            <div label="JSON Balance" className="tab-content">
+              {balance.ep && balance.ep_acs_nrb ? (
+                <div
+                  className="row"
+                  style={{ height: "250px", overflow: "auto" }}
+                >
+                  <div className="col-lg-6">
+                    <h2>Energía primaria y emisiones:</h2>
+                    <pre>{JSON.stringify(balance.ep, undefined, 2)}</pre>
+                  </div>
+                  <div className="col-lg-6">
+                    <h2>
+                      Energía primaria y emisiones para ACS en perímetro
+                      próximo:
+                    </h2>
+                    <pre>
+                      {JSON.stringify(balance.ep_acs_nrb, undefined, 2)}
+                    </pre>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </TabList>
         </div>
         <Footer />
       </div>
@@ -90,11 +84,9 @@ class MainPageClass extends React.Component {
   }
 }
 
-const MainPage = connect(
-  state => ({
-    kexp: state.kexp,
-    balance: selectBalance(state)
-  })
-)(MainPageClass);
+const MainPage = connect(state => ({
+  kexp: state.kexp,
+  balance: selectBalance(state)
+}))(MainPageClass);
 
 export default MainPage;
