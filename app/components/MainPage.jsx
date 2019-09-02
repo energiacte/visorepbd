@@ -49,17 +49,14 @@ class MainPageClass extends React.Component {
               <EnergyComponentsTable />
             </div>
             {/* Desglose de resultados */}
-            <div label="Desglose" className="tab-content">
+            <div label="Desglose por servicios" className="tab-content">
               {balance.ep && balance.ep_acs_nrb ? (
                 <DetailsChart balance={balance.ep} />
               ) : null}
             </div>
-            <div label="JSON Balance" className="tab-content">
+            <div label="Detalle de balance en JSON" className="tab-content">
               {balance.ep && balance.ep_acs_nrb ? (
-                <div
-                  className="row"
-                  style={{ height: "250px", overflow: "auto" }}
-                >
+                <div className="row">
                   <div className="col-lg-6">
                     <h2>Energía primaria y emisiones:</h2>
                     <pre>{JSON.stringify(balance.ep, undefined, 2)}</pre>
