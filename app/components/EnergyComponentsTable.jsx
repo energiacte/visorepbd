@@ -185,86 +185,84 @@ class EnergyComponentsTableClass extends React.Component {
     const { pos, storedcomponent } = this.state;
 
     return (
-      <div>
-        <div className="container-fluid">
-          {/* Acciones de edición de componentes */}
-          <div className="row">
-            <div className="col float-right">
-              <div
-                className="btn-group float-right btn-group-xs"
-                role="group"
-                aria-label="acciones"
-              >
-                <button
-                  className="btn"
-                  id="add"
-                  type="button"
-                  onClick={() => this.props.cloneEnergyComponent(pos)}
-                >
-                  <span className="fa fa-plus" /> Añadir
-                </button>
-                <button
-                  className="btn"
-                  id="remove"
-                  disabled={cdata.length < 1 ? true : false}
-                  type="button"
-                  onClick={() => {
-                    this.props.removeEnergyComponent(pos);
-                    // Mantenemos la posición salvo que sea al final (len-2) o al inicio (0)
-                    const newpos = Math.max(0, Math.min(cdata.length - 2, pos));
-                    this.setState({
-                      pos: newpos,
-                      storedcomponent: cdata.length != 0 ? cdata[newpos] : {}
-                    });
-                  }}
-                >
-                  <span className="fa fa-minus" /> Borrar
-                </button>
-                <button
-                  className="btn"
-                  id="edit"
-                  disabled={cdata.length < 1 ? true : false}
-                  type="button"
-                  onClick={() => this.toggleEditWindow()}
-                >
-                  <span className="fa fa-edit" /> Editar
-                </button>
-              </div>
-            </div>
-            {/* Ventana modal de edición de componente */}
-            <ModalContainer
-              show={this.state.showEditWindow}
-              onClose={() => this.toggleEditWindow()}
+      <div className="container-fluid">
+        {/* Acciones de edición de componentes */}
+        <div className="row">
+          <div className="col float-right">
+            <div
+              className="btn-group float-right btn-group-xs"
+              role="group"
+              aria-label="acciones"
             >
-              <EnergyComponentEditor
-                selectedkey={pos}
-                cdata={cdata}
-                storedcomponent={storedcomponent}
-                onEdit={(key, component) =>
-                  this.props.editEnergyComponent(key, component) &&
-                  this.setState({ storedcomponent: component })
-                }
-              />
-            </ModalContainer>
-          </div>
-          {/* Tabla de componentes */}
-          <div className="row">
-            <div className="col">
-              <EnergyComponentsList
-                pos={pos}
-                cdata={cdata}
-                area={area}
-                onSelect={(i, component) =>
+              <button
+                className="btn"
+                id="add"
+                type="button"
+                onClick={() => this.props.cloneEnergyComponent(pos)}
+              >
+                <span className="fa fa-plus" /> Añadir
+              </button>
+              <button
+                className="btn"
+                id="remove"
+                disabled={cdata.length < 1 ? true : false}
+                type="button"
+                onClick={() => {
+                  this.props.removeEnergyComponent(pos);
+                  // Mantenemos la posición salvo que sea al final (len-2) o al inicio (0)
+                  const newpos = Math.max(0, Math.min(cdata.length - 2, pos));
                   this.setState({
-                    pos: i,
-                    storedcomponent: component
-                  })
-                }
-                onEdit={(i, component) =>
-                  this.props.editEnergyComponent(i, component)
-                }
-              />
+                    pos: newpos,
+                    storedcomponent: cdata.length != 0 ? cdata[newpos] : {}
+                  });
+                }}
+              >
+                <span className="fa fa-minus" /> Borrar
+              </button>
+              <button
+                className="btn"
+                id="edit"
+                disabled={cdata.length < 1 ? true : false}
+                type="button"
+                onClick={() => this.toggleEditWindow()}
+              >
+                <span className="fa fa-edit" /> Editar
+              </button>
             </div>
+          </div>
+          {/* Ventana modal de edición de componente */}
+          <ModalContainer
+            show={this.state.showEditWindow}
+            onClose={() => this.toggleEditWindow()}
+          >
+            <EnergyComponentEditor
+              selectedkey={pos}
+              cdata={cdata}
+              storedcomponent={storedcomponent}
+              onEdit={(key, component) =>
+                this.props.editEnergyComponent(key, component) &&
+                this.setState({ storedcomponent: component })
+              }
+            />
+          </ModalContainer>
+        </div>
+        {/* Tabla de componentes */}
+        <div className="row">
+          <div className="col">
+            <EnergyComponentsList
+              pos={pos}
+              cdata={cdata}
+              area={area}
+              onSelect={(i, component) =>
+                this.setState({
+                  pos: i,
+                  storedcomponent: component
+                })
+              }
+              onEdit={(i, component) =>
+                this.props.editEnergyComponent(i, component)
+              }
+            />
           </div>
         </div>
       </div>
