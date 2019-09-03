@@ -35,9 +35,12 @@ export class NumInput extends React.Component {
   };
 
   // Detecta cambios en las propiedades ajenas a la edición (p.e. al cargar un archivo)
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.props.value) {
-      this.setState({ value: nextProps.value });
+  componentDidUpdate(prevProps) {
+    const { isFixed, precision, value } = this.props;
+    if (prevProps.value !== value) {
+      this.setState({
+        value: isFixed && precision ? value.toFixed(precision) : value
+      });
     }
     return null;
   }
