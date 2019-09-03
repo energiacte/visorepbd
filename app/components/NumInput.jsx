@@ -16,6 +16,7 @@ export class NumInput extends React.Component {
     super(props);
     this.state = {
       value: this.props.value,
+      commitedValue: this.props.value,
       status: ""
     };
   }
@@ -32,11 +33,12 @@ export class NumInput extends React.Component {
     hasErrorMessage: false // Muestra mensaje de error
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.props.value) {
-      // new value from the parent - copy it to state
-      this.setState({ value: nextProps.value });
+  // Detecta cambios en las propiedades ajenas a la edición (p.e. al cargar un archivo)
+  static getDerivedStateFromProps(props, state) {
+    if (props.value !== state.commitedValue) {
+      return {value: props.value, commitedValue: props.value, status: ""};
     }
+    return null;
   }
 
   // Valida y actualiza estado
@@ -59,7 +61,7 @@ export class NumInput extends React.Component {
     const { min, max, precision } = this.props;
     if (this.state.status === "OK") {
       const vv = inrangevalue(value, min, max, precision);
-      this.setState({ value: String(vv), status: "" }, () =>
+      this.setState({ value: String(vv), commitedValue: String(vv), status: "" }, () =>
         this.props.onValueChange(vv)
       );
     } else {
