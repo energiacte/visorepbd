@@ -9,6 +9,9 @@ html {
     .form-group {
       margin-bottom: 5px;
     }
+    .nav.nav-tabs {
+      margin-bottom: 1em;
+    }
     #components {
       .bg-info {
         background-color: #b7caff !important;
@@ -55,6 +58,5 @@ html {
     .help-header {
       text-decoration: underline;
     }
-
   }
 }

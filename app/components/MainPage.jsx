@@ -6,6 +6,7 @@ import EPChart from "components/EPChart";
 import GlobalVarsControl from "components/GlobalVarsControl";
 import Footer from "components/Footer";
 import DetailsChart from "components/DetailsChart";
+import DetailsJSON from "components/DetailsJSON";
 import TabList from "components/TabList";
 
 import { selectBalance } from "reducers/reducers";
@@ -46,9 +47,7 @@ class MainPageClass extends React.Component {
           <TabList>
             {/* Desglose de resultados */}
             <div label="Desglose por servicios" className="tab-content">
-              {balance.ep && balance.ep_acs_nrb ? (
-                <DetailsChart balance={balance.ep} />
-              ) : null}
+              <DetailsChart balance={balance.ep} />
             </div>
             {/* Tabla de componentes energéticos */}
             <div label="Componentes energéticos" className="tab-content">
@@ -56,23 +55,7 @@ class MainPageClass extends React.Component {
             </div>
             {/* Detalle en JSON */}
             <div label="Detalle de balance en JSON" className="tab-content">
-              {balance.ep && balance.ep_acs_nrb ? (
-                <div className="row">
-                  <div className="col-lg-6">
-                    <h2>Energía primaria y emisiones:</h2>
-                    <pre>{JSON.stringify(balance.ep, undefined, 2)}</pre>
-                  </div>
-                  <div className="col-lg-6">
-                    <h2>
-                      Energía primaria y emisiones para ACS en perímetro
-                      próximo:
-                    </h2>
-                    <pre>
-                      {JSON.stringify(balance.ep_acs_nrb, undefined, 2)}
-                    </pre>
-                  </div>
-                </div>
-              ) : null}
+              <DetailsJSON balance={balance}/>
             </div>
           </TabList>
         </div>

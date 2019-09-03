@@ -86,14 +86,16 @@ class PieChart extends React.Component {
       size: 160,
       // Grosor del anillo circular
       ringwidth: 40,
-      // Ángulo de separación entre segmentos circulares
-      gap: 2,
-      // Medio círculo
+      // Separación entre segmentos circulares
+      gap: 1,
+      // Usa medio círculo en lugar del círculo completo
       ishalf: true,
       // Grosor del anillo circular (unidades SVG)
       strokewidth: 40,
       // Ángulo de desplazamiento inicial (el 0 en las 15h) (deg)
-      startangleoffset: -180
+      startangleoffset: -180,
+      // Precisión al mostrar los valores
+      precision: 2
     }
   };
 
@@ -119,8 +121,10 @@ class PieChart extends React.Component {
       offset += v;
     });
 
+    // Valor total
+    this.total = totalval;
     // Calcula puntos de datos
-    return svals.map((val, i) => {
+    this.datapoints = svals.map((val, i) => {
       const label = slabels[i];
       const color = SERVICE_COLORS[label];
       const frac = fracs[i];
@@ -145,130 +149,161 @@ class PieChart extends React.Component {
       ringwidth,
       gap,
       ishalf,
-      startangleoffset
+      startangleoffset,
+      precision
     } = this.props.options;
+
+    const { title, units } = this.props.data;
+
+    this.preparedata();
+    const { datapoints, total } = this;
+
+    const Header = ({ title, units, total, precision }) => (
+      <p className="text-center">
+        <b>{title}</b>
+        <br />
+        <b>{total.toFixed(precision)}</b> <i>{units}</i>
+      </p>
+    );
 
     // Opciones o valores básicos
     const [cx, cy] = [size / 2, size / 2]; // centro del círculo
     const [rx, ry] = [size / 2, size / 2]; // radios
-    const dd = this.preparedata();
     const [vbwidth, vbheight] = [size, ishalf ? size / 2 : size];
 
-    if (dd.length == 0) {
+    if (datapoints.length == 0) {
       return (
+        <React.Fragment>
+          <Header title={title} units={units} total={0} precision={precision} />
+          <figure>
+            <div className="figure-content">
+              <svg
+                style={{ width: "100%", height: "auto" }}
+                viewBox={`0 0 ${vbwidth} ${vbheight}`}
+                id="trypaths"
+              >
+                <g>
+                  <path
+                    d={f_svg_ellipse_arc(
+                      [cx, cy],
+                      [rx, ry],
+                      [startangleoffset, 180],
+                      0,
+                      ringwidth
+                    )}
+                    fill={"lightgray"}
+                    fillOpacity="0.7"
+                  >
+                    <title>Sin datos</title>
+                  </path>
+                </g>
+              </svg>
+            </div>
+          </figure>
+        </React.Fragment>
+      );
+    }
+
+    return (
+      <React.Fragment>
+        <Header
+          title={title}
+          units={units}
+          total={total}
+          precision={precision}
+        />
         <figure>
-          <div className="figure-content">
+          <div className="figure-content" style={{ margin: "1em 0.5em" }}>
             <svg
               style={{ width: "100%", height: "auto" }}
               viewBox={`0 0 ${vbwidth} ${vbheight}`}
               id="trypaths"
             >
-              <g>
-                <path
-                  d={f_svg_ellipse_arc(
-                    [cx, cy],
-                    [rx, ry],
-                    [startangleoffset, 180],
-                    0,
-                    ringwidth
-                  )}
-                  fill={"lightgray"}
-                  fillOpacity="0.7"
-                >
-                  <title>Sin datos</title>
-                </path>
-              </g>
+              {datapoints.map((d, i) => {
+                // arcos circulares
+                const f1 = ishalf ? 1 / 2 : 1;
+                const startangle = f1 * (d.angleoffset + startangleoffset);
+                const arclen = f1 * d.angle;
+                // Posición de texto
+                const rads = ((arclen / 2 + startangle) * Math.PI) / 180;
+                const [tx, ty] = [
+                  (rx - ringwidth / 2) * Math.cos(rads) + cx,
+                  (ry - ringwidth / 2) * Math.sin(rads) + cy
+                ];
+                // Rotación
+                const rot = 0;
+
+                const Desc = _props => (
+                  <title>{`${d.label}: ${d.val.toFixed(precision)} ${
+                    d.units
+                  }\n(${(d.frac * 100).toFixed(0)}%)`}</title>
+                );
+
+                return (
+                  <g key={`pp${i}`}>
+                    <path
+                      d={f_svg_ellipse_arc(
+                        [cx, cy],
+                        [rx, ry],
+                        [startangle, arclen],
+                        rot,
+                        ringwidth
+                      )}
+                      fill={d.color}
+                      fillOpacity="0.7"
+                      strokeWidth={gap}
+                      stroke="white"
+                    >
+                      <Desc />
+                    </path>
+                    {/* Solo texto para ángulos > 15º */}
+                    {d.angle > 15 ? (
+                      <text
+                        textAnchor="middle"
+                        opacity="0.7"
+                        fontSize="9"
+                        dy="3px"
+                        x={tx}
+                        y={ty}
+                      >
+                        {d.label}
+                        <Desc/>
+                      </text>
+                    ) : null}
+                  </g>
+                );
+              })}
             </svg>
           </div>
+          <figcaption className="figure-key">
+            <p className="sr-only text-center">
+              Gráfica de desagregación de resultados por servicios.
+            </p>
+
+            <ul
+              className="figure-key-list text-center"
+              aria-hidden="true"
+              role="presentation"
+              style={{ listStyle: "none", margin: 0, padding: 0 }}
+            >
+              {datapoints.map(d => {
+                return (
+                  <li key={`li_${d.i}`}>
+                    <span
+                      className="fa fa-circle"
+                      aria-hidden="true"
+                      style={{ color: d.color }}
+                    />{" "}
+                    <small>{`${d.label}: ${d.val.toFixed(precision)} ${
+                      d.units
+                    } (${(d.frac * 100).toFixed(1)}%)`}</small>
+                  </li>
+                );
+              })}
+            </ul>
+          </figcaption>
         </figure>
-      );
-    }
-
-    return (
-      <figure>
-        <div className="figure-content">
-          <svg
-            style={{ width: "100%", height: "auto" }}
-            viewBox={`0 0 ${vbwidth} ${vbheight}`}
-            id="trypaths"
-          >
-            {dd.map((d, i) => {
-              // arcos circulares
-              const f1 = ishalf ? 1 / 2 : 1;
-              const startangle = f1 * (d.angleoffset + startangleoffset);
-              const arclen = f1 * (d.angle - gap);
-              // Posición de texto
-              const rads = ((arclen / 2 + startangle) * Math.PI) / 180;
-              const [tx, ty] = [
-                (rx - ringwidth / 2) * Math.cos(rads) + cx,
-                (ry - ringwidth / 2) * Math.sin(rads) + cy
-              ];
-              // Rotación
-              const rot = 0;
-
-              return (
-                <g key={`pp${i}`}>
-                  <path
-                    d={f_svg_ellipse_arc(
-                      [cx, cy],
-                      [rx, ry],
-                      [startangle, arclen],
-                      rot,
-                      ringwidth
-                    )}
-                    fill={d.color}
-                    fillOpacity="0.7"
-                  >
-                    <title>{`${d.label}: ${d.val.toFixed(2)}\n(${(
-                      d.frac * 100
-                    ).toFixed(0)}%)`}</title>
-                  </path>
-                  {/* Solo texto para ángulos > 15º */}
-                  {d.angle > 15 ? (
-                    <text
-                      textAnchor="middle"
-                      opacity="0.7"
-                      fontSize="9"
-                      dy="3px"
-                      x={tx}
-                      y={ty}
-                    >
-                      {d.label}
-                    </text>
-                  ) : null}
-                </g>
-              );
-            })}
-          </svg>
-        </div>
-        <figcaption className="figure-key">
-          <p className="sr-only">
-            Gráfica de desagregación de resultados por servicios.
-          </p>
-
-          <ul
-            className="figure-key-list"
-            aria-hidden="true"
-            role="presentation"
-            style={{ listStyle: "none", margin: 0, padding: 0 }}
-          >
-            {dd.map(d => {
-              return (
-                <li key={`li_${d.i}`}>
-                  <span
-                    className="fa fa-circle"
-                    aria-hidden="true"
-                    style={{ color: d.color }}
-                  />{" "}
-                  <small>{`${d.label}: ${d.val.toFixed(1)} ${d.units} (${(
-                    d.frac * 100
-                  ).toFixed(1)}%)`}</small>
-                </li>
-              );
-            })}
-          </ul>
-        </figcaption>
-      </figure>
+      </React.Fragment>
     );
   }
 }
@@ -279,83 +314,69 @@ class DetailsChart extends React.Component {
     super(props);
   }
 
+  static defaultProps = { balance: { balance_m2: null } };
+
   render() {
     const {
       balance: { balance_m2: b }
     } = this.props;
-    const bkeys = Object.keys(b.used_EPB_byuse).sort();
 
+    if (b == null) return null;
+
+    const bkeys = Object.keys(b.used_EPB_byuse).sort();
     return (
-      <React.Fragment>
-        <div className="row">
-          <div className="col">
-            <p className="text-center">
-              <b>Consumo de energía final</b>
-              <br />
-              <i>[kWh/m2.a]</i>
-            </p>
-          </div>
-          <div className="col">
-            <p className="text-center">
-              <b>Consumo de energía primaria renovable</b>
-              <br />
-              <i>[kWh/m2.a]</i>
-            </p>
-          </div>
-          <div className="col">
-            <p className="text-center">
-              <b>Consumo de energía primaria no renovable</b>
-              <br />
-              <i>[kWh/m2.a]</i>
-            </p>
-          </div>
-          <div className="col">
-            <p className="text-center">
-              <b>Emisiones de CO2</b>
-              <br />
-              <i>[kg_CO2/m2.a]</i>
-            </p>
-          </div>
+      <div className="row px-4">
+        <div className="col">
+          <PieChart
+            data={{
+              title: "Consumo de energía final",
+              labels: bkeys,
+              series: bkeys.map(k => b.used_EPB_byuse[k]),
+              units: "kWh/m²·a"
+            }}
+          />
         </div>
-        <div className="row">
-          <div className="col">
-            <PieChart
-              data={{
-                labels: bkeys,
-                series: bkeys.map(k => b.used_EPB_byuse[k]),
-                units: "kWh/m2·a"
-              }}
-            />
-          </div>
-          <div className="col">
-            <PieChart
-              data={{
-                labels: bkeys,
-                series: bkeys.map(k => b.B_byuse[k].ren),
-                units: "kWh/m2·a"
-              }}
-            />
-          </div>
-          <div className="col">
-            <PieChart
-              data={{
-                labels: bkeys,
-                series: bkeys.map(k => b.B_byuse[k].nren),
-                units: "kWh/m2·a"
-              }}
-            />
-          </div>
-          <div className="col">
-            <PieChart
-              data={{
-                labels: bkeys,
-                series: bkeys.map(k => b.B_byuse[k].co2),
-                units: "kg_CO2/m2·a"
-              }}
-            />
-          </div>
+        <div className="col">
+          <PieChart
+            data={{
+              title: "Energía primaria total",
+              labels: bkeys,
+              series: bkeys.map(k => b.B_byuse[k].ren + b.B_byuse[k].nren),
+              units: "kWh/m²·a"
+            }}
+          />
         </div>
-      </React.Fragment>
+        <div className="col">
+          <PieChart
+            data={{
+              title: "Energía primaria no renovable",
+              labels: bkeys,
+              series: bkeys.map(k => b.B_byuse[k].nren),
+              units: "kWh/m²·a"
+            }}
+          />
+        </div>
+        <div className="col">
+          <PieChart
+            data={{
+              title: "Energía primaria renovable",
+              labels: bkeys,
+              series: bkeys.map(k => b.B_byuse[k].ren),
+              units: "kWh/m²·a"
+            }}
+          />
+        </div>
+        <div className="col">
+          <PieChart
+            data={{
+              title: "Emisiones de CO2",
+              labels: bkeys,
+              series: bkeys.map(k => b.B_byuse[k].co2),
+              units: "kg_CO2/m²·a"
+            }}
+          />
+        </div>
+      </div>
     );
   }
 }

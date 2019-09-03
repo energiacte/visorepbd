@@ -141,7 +141,9 @@ export class EnergyComponentsList extends React.Component {
                   <p className="float-right">{sumvalues.toFixed(2)}</p>
                 </td>
                 <td>
-                  <p className="float-right">{(sumvalues / area).toFixed(2)}</p>
+                    <p className="float-right">
+                      {(sumvalues / area).toFixed(2)}
+                    </p>
                 </td>
                 <td>
                   <EnergyComponentChart
