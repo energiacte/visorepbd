@@ -14,19 +14,20 @@ function inrangevalue(text, min, max, precision) {
 export class NumInput extends React.Component {
   constructor(props) {
     super(props);
+    const { isFixed, precision, value } = props;
     this.state = {
-      value: this.props.value,
-      commitedValue: this.props.value,
+      value: isFixed && precision ? value.toFixed(precision) : value,
       status: ""
     };
   }
+
   static defaultProps = {
     id: "numinput - " + Math.random().toString(4), // ID del elemento
     precision: 3, // Precisión numérica de entrada y salida
     min: Number.MIN_VALUE, // Valor mínimo
     max: Number.MAX_VALUE, // Valor máximo
     onValueChange: () => {}, // Retrollamada para cambio de valor
-    className: "", // Clases adicionales del elemento input
+    className: "", // Clases CSS adicionales del control (input)
     labelClassName: "", // Clases adicionales del elemento label
     groupClassName: "", // Clases adicionbales del elemento group
     hasFeedback: true, // Usa controles con feedback
@@ -34,9 +35,9 @@ export class NumInput extends React.Component {
   };
 
   // Detecta cambios en las propiedades ajenas a la edición (p.e. al cargar un archivo)
-  static getDerivedStateFromProps(props, state) {
-    if (props.value !== state.commitedValue) {
-      return {value: props.value, commitedValue: props.value, status: ""};
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== this.props.value) {
+      this.setState({ value: nextProps.value });
     }
     return null;
   }
@@ -58,14 +59,19 @@ export class NumInput extends React.Component {
   // Envía el último valor válido en la entrada
   sendNewValue() {
     const { value } = this.userInput;
-    const { min, max, precision } = this.props;
-    if (this.state.status === "OK") {
+    const { min, max, isFixed, precision } = this.props;
+    if (this.state.status === "OK" || this.state.status == "") {
       const vv = inrangevalue(value, min, max, precision);
-      this.setState({ value: String(vv), commitedValue: String(vv), status: "" }, () =>
+      const newval = isFixed && precision ? vv.toFixed(precision) : vv;
+      this.setState({ value: newval, status: "" }, () =>
         this.props.onValueChange(vv)
       );
     } else {
-      this.setState({ value: String(this.props.value), status: "" });
+      const oldval =
+        isFixed && precision
+          ? this.props.value.toFixed(precision)
+          : this.props.value;
+      this.setState({ value: oldval, status: "" });
     }
   }
 
@@ -80,14 +86,14 @@ export class NumInput extends React.Component {
       groupClassName,
       // indica si se muestran elementos de feedback en el control
       hasFeedback,
-      // indica si 
+      // indica si se añadeun mensaje de error con el control
       hasErrorMessage,
-      // si se define, usa precision como número de decimales al mostrar valores
-      isFixed,
       // id del control
       id,
       // propiedades filtradas para que rest no afecte a las propiedades del control
       // (p.e. "min" convierte la entrada en entrada de valores enteros)
+      // eslint-disable-next-line no-unused-vars
+      isFixed,
       // eslint-disable-next-line no-unused-vars
       precision,
       // eslint-disable-next-line no-unused-vars
@@ -140,11 +146,7 @@ export class NumInput extends React.Component {
           onChange={e => this.onValueChanged(e)}
           onBlur={_ => this.sendNewValue()}
           onKeyDown={e => (e.key == "Enter" ? this.sendNewValue() : null)}
-          value={
-            isFixed && precision !== undefined
-              ? this.state.value.toFixed(precision)
-              : this.state.value
-          }
+          value={this.state.value}
           {...rest}
         />
         {errorMessage}
