@@ -217,7 +217,7 @@ var config = {
             loader: "sass-loader",
             options: {
               sourceMap: production ? shouldUseSourceMap : false,
-              outputStyle: "expanded"
+              // outputStyle: "expanded"
             }
           }
         ]
