@@ -248,7 +248,7 @@ export function selectWFactors(state) {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error("Error inesperado al generar factores de paso: ", e);
-    return state;
+    return { error: e };
   }
 }
 
