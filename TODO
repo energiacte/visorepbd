@@ -6,5 +6,4 @@
 - Mostrar y permitir edición de meta.Name para guardar el archivo con el nombre deseado
 - Posibles simplificaciones:
     - Unir desplegables de Tipo y Origen/Uso (PRODUCCIÓN INSITU, PRODUCCIÓN COGENERACIÓN, CONSUMO EPB, CONSUMO NEPB)
-- Mostrar y ocultar balance en JSON usando https://www.npmjs.com/package/react-hotkeys
 - Añadir visualización en modo informe para imprimir (menú al lado de créditos)

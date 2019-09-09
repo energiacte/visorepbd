@@ -51,6 +51,7 @@ export default class TabList extends Component {
         <nav>
           <div className="nav nav-tabs">
             {children.map(child => {
+              if (child == null) return;
               const { label } = child.props;
 
               return (
@@ -67,7 +68,7 @@ export default class TabList extends Component {
         <div className="tab-content">
           <div className="tab-pane show active">
             {children.map(child => {
-              if (child.props.label !== activeTab) return undefined;
+              if (child == null || child.props.label !== activeTab) return undefined;
               return child.props.children;
             })}
           </div>

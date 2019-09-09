@@ -15,6 +15,20 @@ import EnergyComponentsTab from "./EnergyComponentsTab";
 
 // Página principal de la aplicación
 class MainPageClass extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // ¿Pestaña de JSON visible visible?
+      showJSONTab: false
+    };
+  }
+
+  handleKeyDown(e) {
+    if (e.ctrlKey && e.altKey && e.key === "h") {
+      this.setState({ showJSONTab: !this.state.showJSONTab });
+    }
+  }
+
   render() {
     const { kexp, balance } = this.props;
 
@@ -30,7 +44,7 @@ class MainPageClass extends React.Component {
     }
 
     return (
-      <div>
+      <div onKeyDown={e => this.handleKeyDown(e)} tabIndex="0">
         <NavBar match={this.props.match} />
         <GlobalVarsControl />
 
@@ -51,17 +65,22 @@ class MainPageClass extends React.Component {
               <DetailsChart balance={balance.ep} />
             </div>
             {/* Desglose de resultados por vectores energéticos */}
-            <div label="Desglose por vectores energéticos" className="tab-content">
-              <DetailsChartCarriers balance={balance.ep}/>
+            <div
+              label="Desglose por vectores energéticos"
+              className="tab-content"
+            >
+              <DetailsChartCarriers balance={balance.ep} />
             </div>
             {/* Tabla de componentes energéticos */}
             <div label="Componentes energéticos" className="tab-content">
               <EnergyComponentsTab />
             </div>
             {/* Detalle en JSON */}
-            <div label="Detalle de balance en JSON" className="tab-content">
-              <DetailsJSON balance={balance}/>
-            </div>
+            {this.state.showJSONTab ? (
+              <div label="Detalle de balance en JSON" className="tab-content">
+                <DetailsJSON balance={balance} />
+              </div>
+            ) : null}
           </TabList>
         </div>
         <Footer />
