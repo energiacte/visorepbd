@@ -287,6 +287,7 @@ class PieChart extends React.Component {
               style={{ listStyle: "none", margin: 0, padding: 0 }}
             >
               {datapoints.map(d => {
+                const frac = d.val === 0 ? " - ": (d.frac * 100).toFixed(1);
                 return (
                   <li key={`li_${d.i}`}>
                     <span
@@ -296,7 +297,7 @@ class PieChart extends React.Component {
                     />{" "}
                     <small>{`${d.label}: ${d.val.toFixed(precision)} ${
                       d.units
-                    } (${(d.frac * 100).toFixed(1)}%)`}</small>
+                    } (${frac}%)`}</small>
                   </li>
                 );
               })}
