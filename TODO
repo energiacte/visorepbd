@@ -2,12 +2,9 @@
     - lista global de errores
     - mostrar errores en tarjeta bajo parámetros globales
     - mejorar gestión de errores en llamadas wasm (p.e. usar estándar JSON API para devolver datos)
-- Mostrar otros valores intermedios
-    - energía exportada
-    - energía suministrada por vector
-    - etc
 - Ayuda con ejemplos
 - Mostrar y permitir edición de meta.Name para guardar el archivo con el nombre deseado
 - Posibles simplificaciones:
     - Unir desplegables de Tipo y Origen/Uso (PRODUCCIÓN INSITU, PRODUCCIÓN COGENERACIÓN, CONSUMO EPB, CONSUMO NEPB)
 - Mostrar y ocultar balance en JSON usando https://www.npmjs.com/package/react-hotkeys
+- Añadir visualización en modo informe para imprimir (menú al lado de créditos)
