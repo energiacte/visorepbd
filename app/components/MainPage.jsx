@@ -10,7 +10,7 @@ import DetailsJSON from "components/DetailsJSON";
 import TabList from "components/TabList";
 
 import { selectBalance } from "reducers/reducers";
-import EnergyComponentsTable from "./EnergyComponentsTable";
+import EnergyComponentsTab from "./EnergyComponentsTab";
 
 // Página principal de la aplicación
 class MainPageClass extends React.Component {
@@ -51,7 +51,7 @@ class MainPageClass extends React.Component {
             </div>
             {/* Tabla de componentes energéticos */}
             <div label="Componentes energéticos" className="tab-content">
-              <EnergyComponentsTable />
+              <EnergyComponentsTab />
             </div>
             {/* Detalle en JSON */}
             <div label="Detalle de balance en JSON" className="tab-content">

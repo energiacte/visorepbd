@@ -12,7 +12,7 @@ import {
 } from "actions/actions.js";
 
 // Tabla de componentes energéticos -------------------------------------
-class EnergyComponentsTableClass extends React.Component {
+class EnergyComponentsTabClass extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -120,7 +120,7 @@ class EnergyComponentsTableClass extends React.Component {
   }
 }
 
-const EnergyComponentsTable = connect(
+const EnergyComponentsTab = connect(
   state => ({
     area: state.area,
     cdata: state.cdata
@@ -131,6 +131,6 @@ const EnergyComponentsTable = connect(
     cloneEnergyComponent: id => dispatch(cloneEnergyComponent(id)),
     removeEnergyComponent: id => dispatch(removeEnergyComponent(id))
   })
-)(EnergyComponentsTableClass);
+)(EnergyComponentsTabClass);
 
-export default EnergyComponentsTable;
+export default EnergyComponentsTab;
