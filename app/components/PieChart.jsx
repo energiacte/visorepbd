@@ -81,28 +81,29 @@ class PieChart extends React.Component {
       // Unidades (string)
       units: ""
     },
-    options: {
-      // Diámetro del círculo
-      size: 160,
-      // Grosor del anillo circular
-      ringwidth: 40,
-      // Separación entre segmentos circulares
-      gap: 1,
-      // Usa medio círculo en lugar del círculo completo
-      ishalf: true,
-      // Grosor del anillo circular (unidades SVG)
-      strokewidth: 40,
-      // Ángulo de desplazamiento inicial (el 0 en las 15h) (deg)
-      startangleoffset: -180,
-      // Precisión al mostrar los valores
-      precision: 2
-    }
+    // Diámetro del círculo
+    size: 160,
+    // Grosor del anillo circular
+    ringwidth: 40,
+    // Separación entre segmentos circulares
+    gap: 1,
+    // Usa medio círculo en lugar del círculo completo
+    ishalf: true,
+    // Grosor del anillo circular (unidades SVG)
+    strokewidth: 40,
+    // Ángulo de desplazamiento inicial (el 0 en las 15h) (deg)
+    startangleoffset: -180,
+    // Precisión al mostrar los valores
+    precision: 2,
+    // Colores para asignar a las claves
+    colors: SERVICE_COLORS
   };
 
   preparedata() {
     const {
       data: { series, labels, units },
-      options: { startangleoffset }
+      startangleoffset,
+      colors
     } = this.props;
 
     // Opciones o valores básicos
@@ -126,7 +127,7 @@ class PieChart extends React.Component {
     // Calcula puntos de datos
     this.datapoints = svals.map((val, i) => {
       const label = slabels[i];
-      const color = SERVICE_COLORS[label];
+      const color = colors[label];
       const frac = fracs[i];
       const angle = angles[i];
       const angleoffset = angleoffsets[i];
@@ -145,15 +146,14 @@ class PieChart extends React.Component {
 
   render() {
     const {
+      data: { title, units },
       size,
       ringwidth,
       gap,
       ishalf,
       startangleoffset,
       precision
-    } = this.props.options;
-
-    const { title, units } = this.props.data;
+    } = this.props;
 
     this.preparedata();
     const { datapoints, total } = this;
@@ -267,7 +267,7 @@ class PieChart extends React.Component {
                         y={ty}
                       >
                         {d.label}
-                        <Desc/>
+                        <Desc />
                       </text>
                     ) : null}
                   </g>
