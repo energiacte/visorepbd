@@ -6,6 +6,7 @@ import EPChart from "components/EPChart";
 import GlobalVarsControl from "components/GlobalVarsControl";
 import Footer from "components/Footer";
 import DetailsChart from "components/DetailsChart";
+import DetailsChartCarriers from "components/DetailsChartCarriers";
 import DetailsJSON from "components/DetailsJSON";
 import TabList from "components/TabList";
 
@@ -45,9 +46,13 @@ class MainPageClass extends React.Component {
         </div>
         <div className="container-fluid">
           <TabList>
-            {/* Desglose de resultados */}
+            {/* Desglose de resultados por servicios */}
             <div label="Desglose por servicios" className="tab-content">
               <DetailsChart balance={balance.ep} />
+            </div>
+            {/* Desglose de resultados por vectores energéticos */}
+            <div label="Desglose por vectores energéticos" className="tab-content">
+              <DetailsChartCarriers balance={balance.ep}/>
             </div>
             {/* Tabla de componentes energéticos */}
             <div label="Componentes energéticos" className="tab-content">
