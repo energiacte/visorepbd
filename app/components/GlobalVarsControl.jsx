@@ -7,8 +7,7 @@ import {
   changeKexp,
   changeArea,
   changeLocation,
-  loadEnergyComponents,
-  changeCurrentFileName
+  loadEnergyComponents
 } from "actions/actions.js";
 import { selectWFactors } from "reducers/reducers";
 
@@ -16,6 +15,14 @@ import { serialize_components } from "utils";
 
 // Control de variables globales: área, kexp, carga y descarga de datos
 class GlobalVarsControlClass extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // Nombre de archivo actual
+      currentfilename: "VisorEPBD.csv"
+    };
+  }
+
   render() {
     const {
       kexp,
@@ -103,9 +110,7 @@ class GlobalVarsControlClass extends React.Component {
                   <input
                     ref={ref => (this.fileInput = ref)}
                     type="file"
-                    onChange={e =>
-                      this.uploadFile(e, loadComponents)
-                    }
+                    onChange={e => this.uploadFile(e, loadComponents)}
                     style={{
                       visibility: "hidden",
                       position: "absolute",
@@ -149,11 +154,13 @@ class GlobalVarsControlClass extends React.Component {
     const reader = new FileReader();
     reader.onload = el => handler(el.target.result);
     reader.readAsText(file);
-    this.props.changeCurrentFileName(file.name);
+    this.setState({ currentfilename: file.name });
   }
 
   downloadFile() {
-    const { wfactors, cmeta, cdata, currentfilename } = this.props;
+    const { wfactors, cmeta, cdata } = this.props;
+    const { currentfilename } = this.state;
+
     const energystring = serialize_components(wfactors, cmeta, cdata);
     const data = new Blob([energystring], { type: "text/plain;charset=utf8;" });
     // create hidden link
@@ -174,12 +181,10 @@ const GlobalVarsControl = connect(
     location: state.location,
     cmeta: state.cmeta,
     cdata: state.cdata,
-    wfactors: selectWFactors(state),
-    currentfilename: state.currentfilename
+    wfactors: selectWFactors(state)
   }),
   dispatch => ({
     loadComponents: datastr => dispatch(loadEnergyComponents(datastr)),
-    changeCurrentFileName: newname => dispatch(changeCurrentFileName(newname)),
     changeKexp: value => dispatch(changeKexp(value)),
     changeArea: value => dispatch(changeArea(value)),
     changeLocation: value => dispatch(changeLocation(value))

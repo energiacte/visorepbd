@@ -257,10 +257,7 @@ const initialState = {
   // Datos de componentes energéticos (energía final)
   cdata: EXAMPLE_CDATA,
   // Metadatos de los componentes energéticos
-  cmeta: EXAMPLE_CMETA,
-  // Nombre de archivo actual
-  // TODO: Llevar a estado del GlobalVarsControl
-  currentfilename: "VisorEPBD.csv"
+  cmeta: EXAMPLE_CMETA
 };
 
 export default createStore(reducer, initialState);

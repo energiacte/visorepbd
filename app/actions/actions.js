@@ -12,7 +12,6 @@ export const LOAD_ENERGY_COMPONENTS = "LOAD_ENERGY_COMPONENTS";
 export const CHANGE_KEXP = "CHANGE_KEXP";
 export const CHANGE_AREA = "CHANGE_AREA";
 export const CHANGE_LOCATION = "CHANGE_LOCATION";
-export const CHANGE_CURRENTFILENAME = "CHANGE_CURRENTFILENAME";
 export const CHANGE_USERWFACTORS = "CHANGE_USERWFACTORS";
 
 /*
@@ -61,8 +60,4 @@ export function changeLocation(value) {
 
 export function editUserWFactors(carrier, newfactors) {
   return { type: CHANGE_USERWFACTORS, carrier, newfactors };
-}
-
-export function changeCurrentFileName(newname) {
-  return { type: CHANGE_CURRENTFILENAME, newname };
 }

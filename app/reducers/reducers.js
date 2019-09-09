@@ -23,8 +23,7 @@ import {
   CHANGE_KEXP,
   CHANGE_AREA,
   CHANGE_LOCATION,
-  CHANGE_USERWFACTORS,
-  CHANGE_CURRENTFILENAME
+  CHANGE_USERWFACTORS
 } from "../actions/actions.js";
 
 // Reducer para la parte de kexp -------------------
@@ -227,16 +226,6 @@ function cmeta(state = [], action) {
   }
 }
 
-// Reducer para la parte de currentfilename -------------------
-function currentfilename(state = "csvEPBDpanel.csv", action) {
-  switch (action.type) {
-    case CHANGE_CURRENTFILENAME:
-      return action.newname;
-    default:
-      return state;
-  }
-}
-
 // Selectors --------------------------
 
 // Genera factores de paso a partir del estado
@@ -289,7 +278,6 @@ export default function reducer(state = {}, action) {
     location: location(state.location, action),
     user_wfactors: user_wfactors(state.user_wfactors, action),
     cmeta: cmeta(state.cmeta, action),
-    cdata: cdata(state.cdata, action),
-    currentfilename: currentfilename(state.currentfilename, action)
+    cdata: cdata(state.cdata, action)
   };
 }
