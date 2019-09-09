@@ -219,6 +219,23 @@ class PieChart extends React.Component {
               viewBox={`0 0 ${vbwidth} ${vbheight}`}
               id="trypaths"
             >
+              {datapoints.length == 0 || datapoints[0].val == 0.0  ? (
+                <g>
+                  <path
+                    d={f_svg_ellipse_arc(
+                      [cx, cy],
+                      [rx, ry],
+                      ishalf
+                        ? [0.5 * startangleoffset, 359.99]
+                        : [startangleoffset, 359.99],
+                      0,
+                      ringwidth
+                    )}
+                    fill="lightgray"
+                    // Llevar a opciones
+                  ></path>
+                </g>
+              ) : null}
               {datapoints.map((d, i) => {
                 // arcos circulares
                 const f1 = ishalf ? 1 / 2 : 1;
