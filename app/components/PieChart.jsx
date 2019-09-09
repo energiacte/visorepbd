@@ -276,10 +276,6 @@ class PieChart extends React.Component {
             </svg>
           </div>
           <figcaption className="figure-key">
-            <p className="sr-only text-center">
-              Gráfica de desagregación de resultados por servicios.
-            </p>
-
             <ul
               className="figure-key-list text-center"
               aria-hidden="true"
