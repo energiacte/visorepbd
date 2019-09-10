@@ -3,7 +3,7 @@ import React from "react";
 import PieChart from "components/PieChart";
 
 // Gráfica de detalle de composición de consumos y emisiones
-class DetailsChart extends React.Component {
+class ChartsByUse extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -75,4 +75,4 @@ class DetailsChart extends React.Component {
   }
 }
 
-export default DetailsChart;
+export default ChartsByUse;

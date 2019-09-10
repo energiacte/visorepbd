@@ -5,8 +5,8 @@ import NavBar from "components/NavBar";
 import EPChart from "components/EPChart";
 import GlobalVarsControl from "components/GlobalVarsControl";
 import Footer from "components/Footer";
-import DetailsChart from "components/DetailsChart";
-import DetailsChartCarriers from "components/DetailsChartCarriers";
+import ChartsByUse from "components/ChartsByUse";
+import ChartsByCarrier from "components/ChartsByCarrier";
 import DetailsJSON from "components/DetailsJSON";
 import TabList from "components/TabList";
 
@@ -62,14 +62,14 @@ class MainPageClass extends React.Component {
           <TabList>
             {/* Desglose de resultados por servicios */}
             <div label="Desglose por servicios" className="tab-content">
-              <DetailsChart balance={balance.ep} />
+              <ChartsByUse balance={balance.ep} />
             </div>
             {/* Desglose de resultados por vectores energéticos */}
             <div
               label="Desglose por vectores energéticos"
               className="tab-content"
             >
-              <DetailsChartCarriers balance={balance.ep} />
+              <ChartsByCarrier balance={balance.ep} />
             </div>
             {/* Tabla de componentes energéticos */}
             <div label="Componentes energéticos" className="tab-content">

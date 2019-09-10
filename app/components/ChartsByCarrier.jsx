@@ -4,7 +4,7 @@ import PieChart from "components/PieChart";
 
 const ORIGIN_COLORS = { INSITU: "green", COGEN: "blue", RED: "red" };
 
-// Gráfica de detalle de composición de consumos y emisiones para un vector energético
+// Gráfica de detalle de composición de consumos y emisiones de un vector energético
 const DetailsChartForCarrier = ({ balance_cr }) => {
   // Used energy
   const uses_keys = Object.keys(balance_cr.used_EPB_an_byuse).sort();
@@ -20,17 +20,15 @@ const DetailsChartForCarrier = ({ balance_cr }) => {
   const exp_keys = Object.keys(balance_cr.exported_bygen_an).sort();
   const exp_values = exp_keys.map(k => balance_cr.exported_bygen_an[k]);
   // EP
-  const epnren_values = uses_keys.map(k => balance_cr.we_an_byuse[k].nren);
-  const epren_values = uses_keys.map(k => balance_cr.we_an_byuse[k].ren);
-  const co2_values = uses_keys.map(k => balance_cr.we_an_byuse[k].co2);
-  const eptot_values = uses_keys.map(k => {
-    const we = balance_cr.we_an_byuse[k];
-    return we.ren + we.nren;
-  });
+  const ep = balance_cr.we_an_byuse;
+  const epnren_values = uses_keys.map(k => ep[k].nren);
+  const epren_values = uses_keys.map(k => ep[k].ren);
+  const co2_values = uses_keys.map(k => ep[k].co2);
+  const eptot_values = uses_keys.map(k => ep[k].ren + ep[k].nren);
 
   return (
     <div className="col">
-      <div className="row" style={{borderBottom: "1px solid gray"}}>
+      <div className="row" style={{ borderBottom: "1px solid gray" }}>
         <h4>{balance_cr.carrier}</h4>
       </div>
       <div className="row" id={`finalyemisiones-${balance_cr.carrier}`}>
@@ -77,9 +75,6 @@ const DetailsChartForCarrier = ({ balance_cr }) => {
               units: "kWh/a"
             }}
           />
-          {/* <p>Energía primaria total</p>
-          <tt>{JSON.stringify(balance_cr.we_an_byuse, undefined, 2)}</tt>
-          ren + nren... */}
         </div>
         <div className="col">
           <PieChart
@@ -117,7 +112,7 @@ const DetailsChartForCarrier = ({ balance_cr }) => {
 };
 
 // Gráfica de detalle de composición de consumos y emisiones
-const DetailsChartCarriers = props => {
+const ChartsByCarrier = props => {
   const { balance_cr } = props.balance;
   const carriers = Object.keys(balance_cr).sort();
   return carriers.map(cr => (
@@ -127,4 +122,4 @@ const DetailsChartCarriers = props => {
   ));
 };
 
-export default DetailsChartCarriers;
+export default ChartsByCarrier;
