@@ -1,8 +1,5 @@
-#[macro_use]
-extern crate serde_derive;
-
 use wasm_bindgen::prelude::*;
-
+use serde::{Serialize, Deserialize};
 use cteepbd::{self, cte, Balance, Components, Factors, RenNrenCo2, VERSION};
 
 #[wasm_bindgen]
