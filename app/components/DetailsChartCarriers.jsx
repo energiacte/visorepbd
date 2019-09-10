@@ -30,7 +30,7 @@ const DetailsChartForCarrier = ({ balance_cr }) => {
 
   return (
     <div className="col">
-      <div className="row">
+      <div className="row" style={{borderBottom: "1px solid gray"}}>
         <h4>{balance_cr.carrier}</h4>
       </div>
       <div className="row" id={`finalyemisiones-${balance_cr.carrier}`}>
