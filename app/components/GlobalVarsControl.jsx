@@ -19,7 +19,7 @@ class GlobalVarsControlClass extends React.Component {
     super(props);
     this.state = {
       // Nombre de archivo actual
-      currentfilename: "VisorEPBD.csv"
+      currentfilename: "Ejemplo_VisorEPBD.cteepbd"
     };
   }
 
