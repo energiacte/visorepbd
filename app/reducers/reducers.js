@@ -32,6 +32,7 @@ function kexp(state = 1, action) {
     case CHANGE_KEXP:
       return Number(action.value);
     case LOAD_ENERGY_COMPONENTS: {
+      if (action.cmeta === null) return state;
       const m_kexp = action.cmeta.find(c => c.key === "CTE_KEXP");
       return m_kexp && !isNaN(m_kexp.value) ? Number(m_kexp.value) : state;
     }
@@ -51,6 +52,7 @@ function area(state = 1, action) {
       return Math.round(Math.max(val, 1.0));
     }
     case LOAD_ENERGY_COMPONENTS: {
+      if (action.cmeta === null) return state;
       const m_area = action.cmeta.find(c => c.key === "CTE_AREAREF");
       return m_area && !isNaN(m_area.value)
         ? Math.round(Number(m_area.value))
@@ -67,6 +69,7 @@ function location(state = "PENINSULA", action) {
     case CHANGE_LOCATION:
       return action.value;
     case LOAD_ENERGY_COMPONENTS:
+      if (action.cmeta === null) return state;
       return location_from_meta(action.cmeta);
     default:
       return state;
@@ -99,6 +102,7 @@ function user_wfactors(state = {}, action) {
       return newstate;
     }
     case LOAD_ENERGY_COMPONENTS:
+      if (action.cmeta === null) return state;
       return userfactors_from_cmeta(action.cmeta);
     default:
       return state;
