@@ -1,4 +1,7 @@
 // Reducers para calcular los cambios de estado a partir de las acciones
+
+import { createSelector } from "reselect";
+
 import {
   // parse_components,
   energy_performance,
@@ -247,56 +250,66 @@ function globalerrors(state = [], action) {
 // Selectors --------------------------
 
 // Genera factores de paso a partir del estado
-export const selectWFactors = state => {
-  let { location, user_wfactors } = state;
-  try {
-    return new_wfactors(location, user_wfactors);
-  } catch (e) {
-    return { error: e };
+export const selectWFactors = createSelector(
+  state => state.location,
+  state => state.user_wfactors,
+  (location, user_wfactors) => {
+    try {
+      return new_wfactors(location, user_wfactors);
+    } catch (e) {
+      return { error: e };
+    }
   }
-};
+);
 
 // Genera el balance
-export const selectBalance = state => {
-  let { kexp, area, cmeta, cdata } = state;
-  const wfactors = selectWFactors(state);
-  const componentsobj = {
-    cmeta,
-    cdata: cdata.filter(c => c.active)
-  };
+export const selectBalance = createSelector(
+  state => state.kexp,
+  state => state.area,
+  state => state.cmeta,
+  state => state.cdata,
+  selectWFactors,
+  (kexp, area, cmeta, cdata, wfactors) => {
+    const componentsobj = {
+      cmeta,
+      cdata: cdata.filter(c => c.active)
+    };
 
-  try {
-    // Cálculo global, energía primaria
-    const ep = energy_performance(componentsobj, wfactors, kexp, area);
-    // Cálculo para ACS en perímetro próximo
-    const ep_acs_nrb = energy_performance_acs_nrb(
-      componentsobj,
-      wfactors,
-      kexp,
-      area
-    );
-    return { ep, ep_acs_nrb };
-  } catch (e) {
-    return { error: e };
+    try {
+      // Cálculo global, energía primaria
+      const ep = energy_performance(componentsobj, wfactors, kexp, area);
+      // Cálculo para ACS en perímetro próximo
+      const ep_acs_nrb = energy_performance_acs_nrb(
+        componentsobj,
+        wfactors,
+        kexp,
+        area
+      );
+      return { ep, ep_acs_nrb };
+    } catch (e) {
+      return { error: e };
+    }
   }
-};
+);
 
 // Genera conjunto de errores
 //
 // Toma los errores globales y los que se puedan producir en wfactors y balance
-export const selectErrors = state => {
-  const balance = selectBalance(state);
-  const wfactors = selectWFactors(state);
-
-  let errors = [...state.globalerrors];
-  if (balance.error) {
-    errors.push(balance.error);
+export const selectErrors = createSelector(
+  selectBalance,
+  selectWFactors,
+  state => state.globalerrors,
+  (balance, wfactors, globalerrors) => {
+    let errors = [...globalerrors];
+    if (balance.error) {
+      errors.push(balance.error);
+    }
+    if (wfactors.error) {
+      errors.push(wfactors.error);
+    }
+    return errors;
   }
-  if (wfactors.error) {
-    errors.push(wfactors.error);
-  }
-  return errors;
-};
+);
 
 // Reducer raíz ------------------------
 

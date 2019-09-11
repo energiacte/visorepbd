@@ -104,5 +104,6 @@
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "redux": "^4.0.4",
+    "reselect": "^4.0.0",
   }
 }
