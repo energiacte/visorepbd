@@ -72,7 +72,7 @@ pub fn new_wfactors(loc: &str, options: &JsValue) -> Result<JsValue, JsValue> {
         cogen_to_grid,
         cogen_to_nepb,
     };
-    // XXX: Puede tener errores de parsing o de localidad
+    // Puede tener errores de parsing o de localidad
     let fp: Factors =
         cte::wfactors_from_loc(loc, &user_wf, &defaults_wf).map_err(|e| e.to_string())?;
     let jsfactors = JsValue::from_serde(&fp).map_err(|e| e.to_string())?;
