@@ -9,7 +9,7 @@ import {
   changeLocation,
   loadEnergyComponents
 } from "actions/actions.js";
-import { selectWFactors } from "reducers/reducers";
+import { selectWFactors, selectErrors } from "reducers/reducers";
 
 import { serialize_components } from "utils";
 
@@ -28,6 +28,7 @@ class GlobalVarsControlClass extends React.Component {
       kexp,
       area,
       location,
+      errors,
       changeKexp,
       changeArea,
       changeLocation,
@@ -139,6 +140,24 @@ class GlobalVarsControlClass extends React.Component {
             </div>
           </div>
         </div>
+        {errors.length !== 0 ? (
+          <div className="row">
+            <div className="col">
+              <div className="card text-danger m-3">
+                <div className="card-body">
+                  <p className="card-title">
+                    <b>Error</b>
+                  </p>
+                  <ul>
+                    {errors.map((err, idx) => (
+                      <li key={`err-${idx}`}>{err}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -181,6 +200,7 @@ const GlobalVarsControl = connect(
     location: state.location,
     cmeta: state.cmeta,
     cdata: state.cdata,
+    errors: selectErrors(state),
     wfactors: selectWFactors(state)
   }),
   dispatch => ({

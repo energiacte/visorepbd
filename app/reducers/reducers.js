@@ -230,6 +230,20 @@ function cmeta(state = [], action) {
   }
 }
 
+// Reducer de errores ----------------------------------
+function globalerrors(state = [], action) {
+  switch (action.type) {
+    case LOAD_ENERGY_COMPONENTS: {
+      if (action.error !== null) {
+        return [...state, action.error];
+      }
+      return Array(0);
+    }
+    default:
+      return state;
+  }
+}
+
 // Selectors --------------------------
 
 // Genera factores de paso a partir del estado
@@ -239,14 +253,11 @@ export function selectWFactors(state) {
   try {
     return new_wfactors(location, user_wfactors);
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error("Error inesperado al generar factores de paso: ", e);
     return { error: e };
   }
 }
 
 // Genera el balance
-// TODO: debería usarse reselect para componer con selectWFactors
 export function selectBalance(state) {
   if (state === {}) return {};
 
@@ -273,6 +284,23 @@ export function selectBalance(state) {
   }
 }
 
+// Genera conjunto de errores
+//
+// Toma los errores globales y los que se puedan producir en wfactors y balance
+export function selectErrors(state) {
+  const balance = selectBalance(state);
+  const wfactors = selectWFactors(state);
+
+  let errors = [...state.globalerrors];
+  if (balance.error) {
+    errors.push(balance.error);
+  }
+  if (wfactors.error) {
+    errors.push(wfactors.error);
+  }
+  return errors;
+}
+
 // Reducer raíz ------------------------
 
 export default function reducer(state = {}, action) {
@@ -282,6 +310,7 @@ export default function reducer(state = {}, action) {
     location: location(state.location, action),
     user_wfactors: user_wfactors(state.user_wfactors, action),
     cmeta: cmeta(state.cmeta, action),
-    cdata: cdata(state.cdata, action)
+    cdata: cdata(state.cdata, action),
+    globalerrors: globalerrors(state.globalerrors, action)
   };
 }

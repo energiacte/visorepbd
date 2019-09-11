@@ -47,7 +47,6 @@ class MainPageClass extends React.Component {
       <div onKeyDown={e => this.handleKeyDown(e)} tabIndex="0">
         <NavBar match={this.props.match} />
         <GlobalVarsControl />
-
         <div className="container-fluid">
           {/* Gráfica de resultados */}
           <div className="row">

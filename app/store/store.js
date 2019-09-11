@@ -257,7 +257,9 @@ const initialState = {
   // Datos de componentes energéticos (energía final)
   cdata: EXAMPLE_CDATA,
   // Metadatos de los componentes energéticos
-  cmeta: EXAMPLE_CMETA
+  cmeta: EXAMPLE_CMETA,
+  // Errores globales
+  globalerrors: []
 };
 
 export default createStore(reducer, initialState);
