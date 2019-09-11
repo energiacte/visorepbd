@@ -1,7 +1,3 @@
-- Mejorar gestión de errores
-    - lista global de errores
-    - mostrar errores en tarjeta bajo parámetros globales
-    - mejorar gestión de errores en llamadas wasm (p.e. usar estándar JSON API para devolver datos)
 - Actualizar ayuda e incorporar ejemplos
 - Mostrar y permitir edición de meta.Name para guardar el archivo con el nombre deseado
 - Posibles simplificaciones:
