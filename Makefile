@@ -19,6 +19,11 @@ buildprodjs:
 	$(info [INFO]: Generando bundle JS de producción con prefijo de URL $(EPBDURLPREFIX))
 	EPBDURLPREFIX=${EPBDURLPREFIX} make buildjs
 
+tryprod:
+	$(info "[INFO]: Probando versión de producción en despliegue local")
+	npm run buildprod --watch&
+	cd build && python3.8 -m http.server
+
 buildwasm:
 	$(info [INFO]: Generando paquete wasm)
 	cd wasm && wasm-pack build
