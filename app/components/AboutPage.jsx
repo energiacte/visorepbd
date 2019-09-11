@@ -4,6 +4,9 @@ import NavBar from "components/NavBar";
 import Footer from "components/Footer";
 import mfomlogo from "img/logomfom.png";
 import ietcclogo from "img/logoietcccsic.png";
+import pachi from "img/equipo/FotoPachi.jpg";
+import dani from "img/equipo/FotoDani.jpg";
+import marta from "img/equipo/FotoMarta.jpg";
 
 // Página de créditos de la aplicación
 const AboutPage = props => (
@@ -11,18 +14,33 @@ const AboutPage = props => (
     <NavBar match={props.match} />
     <div className="container-fluid">
       <h1>VisorEPBD</h1>
+      <p>
+        Herramienta de análisis y diseño para la evaluación de la eficiencia
+        energética de edificios y aplicación del Documento Básico de Ahorro de
+        Energía (DB-HE) del Código Técnico de la Edificación (CTE) mediante el
+        procedimiento de la norma ISO UNE-EN 52000-1.
+      </p>
       <h3>Equipo de desarrollo (IETcc-CSIC):</h3>
-      <ul>
-        <li>
-          Rafael Villar Burke, <i>pachi@ietcc.csic.es</i>
-        </li>
-        <li>
-          Daniel Jiménez González, <i>danielj@ietcc.csic.es</i>
-        </li>
-        <li>
-          Marta Sorribes Gil, <i>msorribes@ietcc.csic.es</i>
-        </li>
-      </ul>
+      <div className="row">
+        <div className="col-2 offset-2">
+          <img className="img-fluid" alt="Rafael Villar Burke" src={pachi} />
+          <p>
+            Rafael Villar Burke, <i>pachi@ietcc.csic.es</i>
+          </p>
+        </div>
+        <div className="col-2">
+          <img className="img-fluid" alt="Daniel Jiménez González" src={dani} />
+          <p>
+            Daniel Jiménez González, <i>danielj@ietcc.csic.es</i>
+          </p>
+        </div>
+        <div className="col-2">
+          <img className="img-fluid" alt="Marta Sorribes Gil" src={marta} />
+          <p>
+            Marta Sorribes Gil, <i>msorribes@ietcc.csic.es</i>
+          </p>
+        </div>
+      </div>
       <h3>Licencia</h3>
       <p>
         <em>VisorEPBD</em> es software libre y se distribuye bajo la licencia{" "}

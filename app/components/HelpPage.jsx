@@ -57,16 +57,15 @@ const HelpPage = props => (
           <strong>
             evaluación de la eficiencia energética de los edificios
           </strong>{" "}
-          usando el procedimiento de la norma FprEN ISO 52000-1 y destinado a la{" "}
+          usando el procedimiento de la norma ISO UNE-EN 52000-1 y destinado a
+          la{" "}
           <strong>aplicación del Documento Básico de Ahorro de Energía</strong>{" "}
           (DB-HE) del <strong>Código Técnico de la Edificación</strong> (CTE).
         </p>
 
         <p>
           La aplicación{" "}
-          <a href="https://github.com/energiacte/cteepbd">
-            CteEPBD
-          </a>{" "}
+          <a href="https://github.com/energiacte/cteepbd">CteEPBD</a>{" "}
           proporciona una implementación alternativa del procedimiento para su
           uso desde la consola.
         </p>
