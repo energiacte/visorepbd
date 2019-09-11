@@ -120,7 +120,7 @@ const DEFAULT_COMPONENT = {
 };
 
 // Reducer para datos de componentes energéticos ---------------------
-function cdata(state, action) {
+function cdata(state = [], action) {
   switch (action.type) {
     case ADD_ENERGY_COMPONENT:
       return [...state, action.component];
@@ -247,20 +247,17 @@ function globalerrors(state = [], action) {
 // Selectors --------------------------
 
 // Genera factores de paso a partir del estado
-export function selectWFactors(state) {
-  if (state === {}) return {};
+export const selectWFactors = state => {
   let { location, user_wfactors } = state;
   try {
     return new_wfactors(location, user_wfactors);
   } catch (e) {
     return { error: e };
   }
-}
+};
 
 // Genera el balance
-export function selectBalance(state) {
-  if (state === {}) return {};
-
+export const selectBalance = state => {
   let { kexp, area, cmeta, cdata } = state;
   const wfactors = selectWFactors(state);
   const componentsobj = {
@@ -282,12 +279,12 @@ export function selectBalance(state) {
   } catch (e) {
     return { error: e };
   }
-}
+};
 
 // Genera conjunto de errores
 //
 // Toma los errores globales y los que se puedan producir en wfactors y balance
-export function selectErrors(state) {
+export const selectErrors = state => {
   const balance = selectBalance(state);
   const wfactors = selectWFactors(state);
 
@@ -299,7 +296,7 @@ export function selectErrors(state) {
     errors.push(wfactors.error);
   }
   return errors;
-}
+};
 
 // Reducer raíz ------------------------
 
