@@ -1,6 +1,6 @@
+use cteepbd::{self, cte, types::RenNrenCo2, Balance, Components, Factors, VERSION};
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
-use serde::{Serialize, Deserialize};
-use cteepbd::{self, cte, Balance, Components, Factors, RenNrenCo2, VERSION};
 
 #[wasm_bindgen]
 pub fn get_version() -> String {
@@ -22,7 +22,9 @@ pub fn set_panic_hook() {
 // Convierte cadena a componentes
 #[wasm_bindgen]
 pub fn parse_components(datastring: &str) -> Result<JsValue, JsValue> {
-    let comps: Components = cte::parse_components(datastring).map_err(|e| e.to_string())?;
+    let comps: Components = datastring
+        .parse::<Components>()
+        .map_err(|e| e.to_string())?;
     let jscomps = JsValue::from_serde(&comps).map_err(|e| e.to_string())?;
     Ok(jscomps)
 }
@@ -54,27 +56,27 @@ struct WFactorsUserOptions {
 // El campo de opciones tiene que ser al menos {}
 #[wasm_bindgen]
 pub fn new_wfactors(loc: &str, options: &JsValue) -> Result<JsValue, JsValue> {
-    let defaults_wf = cte::WF_RITE2014;
+    let defaults_wf = cte::CTE_USERWF;
     let rsoptions: WFactorsUserOptions = options.into_serde().map_err(|e| e.to_string())?;
     let red1 = rsoptions
         .red
         .and_then(|v| v.RED1)
-        .or(Some(defaults_wf.user.red1));
+        .or(Some(defaults_wf.red1));
     let red2 = rsoptions
         .red
         .and_then(|v| v.RED2)
-        .or(Some(defaults_wf.user.red2));
+        .or(Some(defaults_wf.red2));
     let cogen_to_grid = rsoptions.cogen.and_then(|v| v.A_RED).or(None);
     let cogen_to_nepb = rsoptions.cogen.and_then(|v| v.A_NEPB).or(None);
-    let user_wf = cte::CteUserWF {
+    let user_wf = cteepbd::UserWF {
         red1,
         red2,
         cogen_to_grid,
         cogen_to_nepb,
     };
     // Puede tener errores de parsing o de localidad
-    let fp: Factors =
-        cte::wfactors_from_loc(loc, &user_wf, &defaults_wf).map_err(|e| e.to_string())?;
+    let fp: Factors = cte::wfactors_from_loc(loc, &cte::CTE_LOCWF_RITE2014, user_wf, defaults_wf)
+        .map_err(|e| e.to_string())?;
     let jsfactors = JsValue::from_serde(&fp).map_err(|e| e.to_string())?;
     Ok(jsfactors)
 }
@@ -107,7 +109,9 @@ pub fn energy_performance_acs_nrb(
     let wfacs: Factors = wfactors.into_serde().map_err(|e| e.to_string())?;
 
     // componentes para ACS
-    let comps_acs = cte::components_by_service(&comps, cteepbd::Service::ACS);
+    let comps_acs = comps
+        .filter_by_service(cteepbd::types::Service::ACS)
+        .normalize();
     let wfacs_nrb = cte::wfactors_to_nearby(&wfacs);
     let balance: Balance = cteepbd::energy_performance(&comps_acs, &wfacs_nrb, kexp, area).unwrap();
     let jsbalance = JsValue::from_serde(&balance).map_err(|e| e.to_string())?;
