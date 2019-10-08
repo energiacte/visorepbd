@@ -1,6 +1,6 @@
 {
   "name": "visorepbd",
-  "version": "2.2.0",
+  "version": "2.5.0",
   "description": "Web panel for the epbdcalc library",
   "repository": {
     "type": "git",
