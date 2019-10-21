@@ -1,5 +1,4 @@
 - Actualizar ayuda e incorporar ejemplos
-- Mostrar y permitir edición de meta.Name para guardar el archivo con el nombre deseado
 - Posibles simplificaciones:
     - Unir desplegables de Tipo y Origen/Uso (PRODUCCIÓN INSITU, PRODUCCIÓN COGENERACIÓN, CONSUMO EPB, CONSUMO NEPB)
 - Añadir visualización en modo informe para imprimir (menú al lado de créditos)

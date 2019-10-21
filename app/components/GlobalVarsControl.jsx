@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import sanitize from "sanitize-filename";
 
 import NumInput from "components/NumInput";
 
@@ -17,10 +18,10 @@ import { serialize_components } from "utils";
 class GlobalVarsControlClass extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      // Nombre de archivo actual
-      currentfilename: "Ejemplo_VisorEPBD.cteepbd"
-    };
+    // Entrada oculta para hacer download
+    this.fileInput = React.createRef();
+    // Entrada para definir el nombre del archivo que se descarga o sube
+    this.filenameinput = React.createRef();
   }
 
   render() {
@@ -41,8 +42,8 @@ class GlobalVarsControlClass extends React.Component {
           <div className="col">
             <div id="globalvarscontrol" className="form-horizontal col-lg-12">
               {/* Slider de kexp con entrada de lectura numérica */}
-              <div id="kexp" className="form-group col-lg-3">
-                <label className="control-label" htmlFor="kexprange">
+              <div id="kexp" className="form-group col-lg-2">
+                <label className="control-label col-lg-2" htmlFor="kexprange">
                   k<sub>exp</sub>{" "}
                 </label>
                 <input
@@ -51,7 +52,7 @@ class GlobalVarsControlClass extends React.Component {
                   max="1"
                   step="0.1"
                   name="kexprange"
-                  className="form-control custom-range"
+                  className="form-control custom-range col-lg-8"
                   defaultValue={kexp}
                   onChange={e => changeKexp(e.target.value)}
                 />{" "}
@@ -60,7 +61,7 @@ class GlobalVarsControlClass extends React.Component {
                   size="3"
                   value={kexp}
                   className="form-control-sm"
-                  groupClassName="d-inline"
+                  groupClassName="d-inline col-lg-2"
                   style={kexp !== 0.0 ? { backgroundColor: "orange" } : null}
                   title={
                     kexp !== 0.0 ? "Valor no reglamentario (kexp != 0)" : null
@@ -75,23 +76,23 @@ class GlobalVarsControlClass extends React.Component {
                 min={0}
                 value={area}
                 onValueChange={changeArea}
-                groupClassName="d-inline-block"
-                labelClassName="col-lg-5"
-                className="d-inline form-control-sm col-lg-7"
+                groupClassName="d-inline-block col-lg-2"
+                labelClassName="col-lg-6"
+                className="d-inline form-control-sm col-lg-6"
               >
                 Area<sub>ref</sub> (m²){" "}
               </NumInput>
               {/* Desplegable de selección de localización */}
               <div className="form-group d-inline-block col-lg-3">
                 <label
-                  className="control-label col-lg-5"
+                  className="control-label col-lg-4"
                   htmlFor="selectLocation"
                 >
                   Localización
                 </label>
                 <select
                   id="selectLocation"
-                  className="d-inline form-control form-control-sm col-lg-6"
+                  className="d-inline form-control form-control-sm col-lg-8"
                   onChange={e => changeLocation(e.target.value)}
                   defaultValue={location}
                 >
@@ -102,14 +103,26 @@ class GlobalVarsControlClass extends React.Component {
                 </select>
               </div>
               {/* Botones de carga y descarga de datos */}
-              <div id="buttons" className="form-group float-right">
+              <div className="form-group d-inline-block col-lg-3">
+                <label className="control-label col-lg-4" htmlFor="filename">
+                    Nombre{" "}
+                </label>
+                <input
+                    name="filename"
+                  className="d-inline form-control form-control-sm col-lg-8"
+                  type="text"
+                  ref={this.filenameinput}
+                  defaultValue="Ejemplo_VisorEPBD"
+                />
+              </div>
+              <div id="buttons" className="form-group d-inline-block col-lg-2">
                 <div
                   className="btn-group btn-group-md"
                   role="group"
                   aria-label="acciones"
                 >
                   <input
-                    ref={ref => (this.fileInput = ref)}
+                    ref={this.fileInput}
                     type="file"
                     onChange={e => this.uploadFile(e, loadComponents)}
                     style={{
@@ -123,7 +136,7 @@ class GlobalVarsControlClass extends React.Component {
                     className="btn btn-light"
                     id="modify"
                     type="button"
-                    onClick={() => this.fileInput.click()}
+                    onClick={() => this.fileInput.current.click()}
                   >
                     <span className="fa fa-upload" /> Cargar datos
                   </button>
@@ -173,12 +186,19 @@ class GlobalVarsControlClass extends React.Component {
     const reader = new FileReader();
     reader.onload = el => handler(el.target.result);
     reader.readAsText(file);
-    this.setState({ currentfilename: file.name });
+    this.filenameinput.current.value = sanitize(file.name).replace(
+      /\.(cteepbd|csv|txt)$/,
+      ""
+    );
   }
 
   downloadFile() {
     const { wfactors, cmeta, cdata } = this.props;
-    const { currentfilename } = this.state;
+    const outfilename =
+      sanitize(this.filenameinput.current.value).replace(
+        /\.(cteepbd|csv|txt)$/,
+        ""
+      ) + ".cteepbd";
 
     const energystring = serialize_components(wfactors, cmeta, cdata);
     const data = new Blob([energystring], { type: "text/plain;charset=utf8;" });
@@ -186,7 +206,7 @@ class GlobalVarsControlClass extends React.Component {
     const element = document.createElement("a");
     document.body.appendChild(element);
     element.setAttribute("href", window.URL.createObjectURL(data));
-    element.setAttribute("download", currentfilename);
+    element.setAttribute("download", outfilename);
     element.style.display = "";
     element.click();
     document.body.removeChild(element);
