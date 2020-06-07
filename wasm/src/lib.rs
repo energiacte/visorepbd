@@ -110,7 +110,7 @@ pub fn energy_performance_acs_nrb(
 
     // componentes para ACS
     let comps_acs = comps
-        .filter_by_service(cteepbd::types::Service::ACS)
+        .filter_by_epb_service(cteepbd::types::Service::ACS)
         .normalize();
     let wfacs_nrb = cte::wfactors_to_nearby(&wfacs);
     let balance: Balance = cteepbd::energy_performance(&comps_acs, &wfacs_nrb, kexp, area).unwrap();
