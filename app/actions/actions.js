@@ -11,6 +11,7 @@ export const EDIT_ENERGY_COMPONENT = "EDIT_ENERGY_COMPONENT";
 export const LOAD_ENERGY_COMPONENTS = "LOAD_ENERGY_COMPONENTS";
 export const CHANGE_KEXP = "CHANGE_KEXP";
 export const CHANGE_AREA = "CHANGE_AREA";
+export const CHANGE_DHW_NEEDS = "CHANGE_DHW_NEEDS";
 export const CHANGE_LOCATION = "CHANGE_LOCATION";
 export const CHANGE_USERWFACTORS = "CHANGE_USERWFACTORS";
 
@@ -54,6 +55,10 @@ export function changeKexp(value) {
 
 export function changeArea(value) {
   return { type: CHANGE_AREA, value };
+}
+
+export function changeDhw(value) {
+  return { type: CHANGE_DHW_NEEDS, value };
 }
 
 export function changeLocation(value) {

@@ -25,6 +25,7 @@ import {
   LOAD_ENERGY_COMPONENTS,
   CHANGE_KEXP,
   CHANGE_AREA,
+  CHANGE_DHW_NEEDS,
   CHANGE_LOCATION,
   CHANGE_USERWFACTORS
 } from "../actions/actions.js";
@@ -59,6 +60,28 @@ function area(state = 1, action) {
       const m_area = action.cmeta.find(c => c.key === "CTE_AREAREF");
       return m_area && !isNaN(m_area.value)
         ? Math.round(Number(m_area.value))
+        : state;
+    }
+    default:
+      return state;
+  }
+}
+
+// Reducer para la parte de demanda anual de ACS -------------------
+function dhw_needs(state = 1, action) {
+  switch (action.type) {
+    case CHANGE_DHW_NEEDS: {
+      let val = Math.round(Number(action.value));
+      if (isNaN(val)) {
+        return null;
+      }
+      return Math.round(Math.max(val, 1.0));
+    }
+    case LOAD_ENERGY_COMPONENTS: {
+      if (action.cmeta === null) return state;
+      const m_dhw = action.cmeta.find(c => c.key === "CTE_ACS_DEMANDA_ANUAL");
+      return m_dhw && !isNaN(m_dhw.value)
+        ? Math.round(Number(m_dhw.value))
         : state;
     }
     default:
@@ -193,6 +216,10 @@ function cmeta(state = [], action) {
       newmeta = [...state];
       upsertmeta(newmeta, "CTE_AREAREF", action.value);
       return newmeta;
+    case CHANGE_DHW_NEEDS:
+      newmeta = [...state];
+      upsertmeta(newmeta, "CTE_ACS_DEMANDA_ANUAL", action.value);
+      return newmeta;
     case CHANGE_KEXP:
       newmeta = [...state];
       upsertmeta(newmeta, "CTE_KEXP", action.value);
@@ -317,6 +344,7 @@ export default function reducer(state = {}, action) {
   return {
     kexp: kexp(state.kexp, action),
     area: area(state.area, action),
+    dhw_needs: dhw_needs(state.dhw_needs, action),
     location: location(state.location, action),
     user_wfactors: user_wfactors(state.user_wfactors, action),
     cmeta: cmeta(state.cmeta, action),

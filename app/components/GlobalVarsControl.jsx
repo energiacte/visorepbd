@@ -7,6 +7,7 @@ import NumInput from "components/NumInput";
 import {
   changeKexp,
   changeArea,
+  changeDhw,
   changeLocation,
   loadEnergyComponents
 } from "actions/actions.js";
@@ -28,10 +29,12 @@ class GlobalVarsControlClass extends React.Component {
     const {
       kexp,
       area,
+      dhw_needs,
       location,
       errors,
       changeKexp,
       changeArea,
+      changeDhw,
       changeLocation,
       loadComponents
     } = this.props;
@@ -77,22 +80,35 @@ class GlobalVarsControlClass extends React.Component {
                 value={area}
                 onValueChange={changeArea}
                 groupClassName="d-inline-block col-lg-2"
-                labelClassName="col-lg-6"
-                className="d-inline form-control-sm col-lg-6"
+                labelClassName="col-lg-8"
+                className="d-inline form-control-sm col-lg-4"
               >
                 Area<sub>ref</sub> (m²){" "}
               </NumInput>
+              {/* Entrada de edición de demanda anual de ACS */}
+              <NumInput
+                id="dhw_input"
+                precision={0}
+                min={0}
+                value={dhw_needs}
+                onValueChange={changeDhw}
+                groupClassName="d-inline-block col-lg-2"
+                labelClassName="col-lg-8"
+                className="d-inline form-control-sm col-lg-4"
+              >
+                D<sub>ACS,an</sub> (kWh/a){" "}
+              </NumInput>
               {/* Desplegable de selección de localización */}
-              <div className="form-group d-inline-block col-lg-3">
+              <div className="form-group d-inline-block col-lg-2">
                 <label
-                  className="control-label col-lg-4"
+                  className="control-label col-lg-6"
                   htmlFor="selectLocation"
                 >
                   Localización
                 </label>
                 <select
                   id="selectLocation"
-                  className="d-inline form-control form-control-sm col-lg-8"
+                  className="d-inline form-control form-control-sm col-lg-6"
                   onChange={e => changeLocation(e.target.value)}
                   defaultValue={location}
                 >
@@ -103,7 +119,7 @@ class GlobalVarsControlClass extends React.Component {
                 </select>
               </div>
               {/* Botones de carga y descarga de datos */}
-              <div className="form-group d-inline-block col-lg-3">
+              <div className="form-group d-inline-block col-lg-2">
                 <label className="control-label col-lg-4" htmlFor="filename">
                     Nombre{" "}
                 </label>
@@ -217,6 +233,7 @@ const GlobalVarsControl = connect(
   state => ({
     kexp: state.kexp,
     area: state.area,
+    dhw_needs: state.dhw_needs,
     location: state.location,
     cmeta: state.cmeta,
     cdata: state.cdata,
@@ -227,6 +244,7 @@ const GlobalVarsControl = connect(
     loadComponents: datastr => dispatch(loadEnergyComponents(datastr)),
     changeKexp: value => dispatch(changeKexp(value)),
     changeArea: value => dispatch(changeArea(value)),
+    changeDhw: value => dispatch(changeDhw(value)),
     changeLocation: value => dispatch(changeLocation(value))
   })
 )(GlobalVarsControlClass);

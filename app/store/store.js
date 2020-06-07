@@ -250,6 +250,8 @@ const initialState = {
   kexp: 0.0,
   // Área de referencia
   area: 200,
+  // Demanda anual de ACS (kWh)
+  dhw_needs: null,
   // Localización
   location: "PENINSULA",
   // Factores definidos por el usuario
