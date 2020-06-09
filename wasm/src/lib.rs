@@ -4,7 +4,7 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn get_version() -> String {
-    return VERSION.to_string();
+    VERSION.to_string()
 }
 
 #[wasm_bindgen]
