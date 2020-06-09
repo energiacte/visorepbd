@@ -293,10 +293,11 @@ export const selectWFactors = createSelector(
 export const selectBalance = createSelector(
   state => state.kexp,
   state => state.area,
+  state => state.dhw_needs,
   state => state.cmeta,
   state => state.cdata,
   selectWFactors,
-  (kexp, area, cmeta, cdata, wfactors) => {
+  (kexp, area, dhw_needs, cmeta, cdata, wfactors) => {
     const componentsobj = {
       cmeta,
       cdata: cdata.filter(c => c.active)
@@ -304,7 +305,7 @@ export const selectBalance = createSelector(
 
     try {
       // Cálculo global, energía primaria
-      const ep = energy_performance(componentsobj, wfactors, kexp, area);
+      const ep = energy_performance(componentsobj, wfactors, kexp, area, dhw_needs);
       // Cálculo para ACS en perímetro próximo
       const ep_acs_nrb = energy_performance_acs_nrb(
         componentsobj,

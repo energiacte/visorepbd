@@ -55,6 +55,7 @@ export default class EPChart extends React.Component {
       className = null,
       kexp,
       ren,
+      d_ren_acs_nrb,
       nren,
       ren_acs,
       nren_acs,
@@ -222,6 +223,13 @@ export default class EPChart extends React.Component {
             Emisiones de CO<sub>2</sub>
           </b>
           : <b>{co2.toFixed(2)}</b> kg/m²·año
+        </p>
+        <p>
+          <span style={{ fontSize: "16px", fontWeight: "bold", fill: "#444" }}>
+            Porcentaje de la demanda de ACS con origen renovable (perímetro próximo)
+          </span>
+          {" [%]: "}
+          {d_ren_acs_nrb ? (d_ren_acs_nrb * 100).toFixed(0): "-"}
         </p>
       </div>
     );

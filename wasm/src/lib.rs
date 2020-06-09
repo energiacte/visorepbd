@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use cteepbd::{self, cte, types::RenNrenCo2, Balance, Components, Factors, VERSION};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
@@ -81,18 +82,49 @@ pub fn new_wfactors(loc: &str, options: &JsValue) -> Result<JsValue, JsValue> {
     Ok(jsfactors)
 }
 
-// Calcula eficiencia energética
+/// Calcula eficiencia energética
+///
+/// Calcula también la demanda renovable de ACS si es posible y agrega los datos al balance.
+/// Si no se puede calcular esta demanda renovable balance.misc es un valor nulo (null en JS, None en Rust)
+/// Si se puede agregar, se añade:
+/// - balance.misc.demanda_anual_acs: demanda anual de ACS en kWh/a
+/// - balance.misc.porcentaje_renovable_demanda_acs_nrb: fracción renovable de la demanda de ACS (kWh/kWh)
 #[wasm_bindgen]
 pub fn energy_performance(
     components: &JsValue,
     wfactors: &JsValue,
     kexp: f32,
     area: f32,
+    dhw_needs: Option<f32>,
 ) -> Result<JsValue, JsValue> {
     let comps: Components = components.into_serde().map_err(|e| e.to_string())?;
     let wfacs: Factors = wfactors.into_serde().map_err(|e| e.to_string())?;
-    let balance: Balance =
+    let mut balance: Balance =
         cteepbd::energy_performance(&comps, &wfacs, kexp, area).map_err(|e| e.to_string())?;
+    if let Some(demanda_anual_acs) = dhw_needs {
+        if demanda_anual_acs.abs() > f32::EPSILON {
+            match cte::demanda_renovable_acs_nrb(&comps, &wfacs) {
+                Ok(demanda_renovable_acs_nrb) => {
+                        let porcentaje_renovable_demanda_acs_nrb =
+                            demanda_renovable_acs_nrb / demanda_anual_acs;
+                        let mut map = balance.misc.unwrap_or_else(HashMap::<String, String>::new);
+                        map.insert(
+                            "demanda_anual_acs".to_string(),
+                            format!("{:.1}", demanda_anual_acs),
+                        );
+                        map.insert(
+                            "fraccion_renovable_demanda_acs_nrb".to_string(),
+                            format!("{:.3}", porcentaje_renovable_demanda_acs_nrb),
+                        );
+                        balance.misc = Some(map);
+                    }
+                Err(_) => {
+                        balance.misc = None;
+                    }
+            }
+        };
+    }
+
     let jsbalance = JsValue::from_serde(&balance).map_err(|e| e.to_string())?;
     Ok(jsbalance)
 }

@@ -39,8 +39,12 @@ class MainPageClass extends React.Component {
       const { ren, nren, co2 } = balance.ep.balance_m2.B;
       // Cálculo para ACS en perímetro próximo
       const { ren: ren_acs, nren: nren_acs } = balance.ep_acs_nrb.balance_m2.B;
+      const d_ren_acs_nrb =
+        balance.ep.misc && !isNaN(balance.ep.misc.fraccion_renovable_demanda_acs_nrb)
+          ? Number(balance.ep.misc.fraccion_renovable_demanda_acs_nrb)
+          : null;
       // Datos agrupados
-      data = { kexp, ren, nren, co2, ren_acs, nren_acs };
+      data = { kexp, d_ren_acs_nrb, ren, nren, co2, ren_acs, nren_acs };
     }
 
     return (
