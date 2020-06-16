@@ -36,7 +36,7 @@ export class NumInput extends React.Component {
     labelClassName: "", // Clases adicionales del elemento label
     groupClassName: "", // Clases adicionbales del elemento group
     hasFeedback: true, // Usa controles con feedback
-    hasErrorMessage: false // Muestra mensaje de error
+    hasErrorMessage: false, // Muestra mensaje de error
   };
 
   // Detecta cambios en las propiedades ajenas a la edición (p.e. al cargar un archivo)
@@ -155,10 +155,10 @@ export class NumInput extends React.Component {
           type="text"
           id={id}
           className={`form-control ${feedback} ${className}`}
-          ref={ref => (this.userInput = ref)}
-          onChange={e => this.onValueChanged(e)}
-          onBlur={_ => this.sendNewValue()}
-          onKeyDown={e => (e.key == "Enter" ? this.sendNewValue() : null)}
+          ref={(ref) => (this.userInput = ref)}
+          onChange={(e) => this.onValueChanged(e)}
+          onBlur={(_) => this.sendNewValue()}
+          onKeyDown={(e) => (e.key == "Enter" ? this.sendNewValue() : null)}
           value={this.state.value}
           {...rest}
         />
