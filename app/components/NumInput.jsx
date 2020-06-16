@@ -16,8 +16,13 @@ export class NumInput extends React.Component {
     super(props);
     const { isFixed, precision, value } = props;
     this.state = {
-      value: isFixed && precision ? value.toFixed(precision) : value,
-      status: ""
+      value:
+        value == null
+          ? ""
+          : isFixed && precision
+          ? value.toFixed(precision)
+          : value,
+      status: "",
     };
   }
 
@@ -39,7 +44,12 @@ export class NumInput extends React.Component {
     const { isFixed, precision, value } = this.props;
     if (prevProps.value !== value) {
       this.setState({
-        value: isFixed && precision ? value.toFixed(precision) : value
+        value:
+          value == null
+            ? ""
+            : isFixed && precision
+            ? value.toFixed(precision)
+            : value,
       });
     }
     return null;
