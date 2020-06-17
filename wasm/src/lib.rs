@@ -98,31 +98,9 @@ pub fn energy_performance(
 ) -> Result<JsValue, JsValue> {
     let comps: Components = components.into_serde().map_err(|e| e.to_string())?;
     let wfacs: Factors = wfactors.into_serde().map_err(|e| e.to_string())?;
-    let balance: Balance =
-        cteepbd::energy_performance(&comps, &wfacs, kexp, area)
-        .map(|b| {cte::incorpora_demanda_renovable_acs_nrb(b, dhw_needs)})
+    let balance: Balance = cteepbd::energy_performance(&comps, &wfacs, kexp, area)
+        .map(|b| cte::incorpora_demanda_renovable_acs_nrb(b, dhw_needs))
         .map_err(|e| e.to_string())?;
-    let jsbalance = JsValue::from_serde(&balance).map_err(|e| e.to_string())?;
-    Ok(jsbalance)
-}
-
-// Calcula eficiencia energética para el perímetro próximo y servicio de ACS
-#[wasm_bindgen]
-pub fn energy_performance_acs_nrb(
-    components: &JsValue,
-    wfactors: &JsValue,
-    kexp: f32,
-    area: f32,
-) -> Result<JsValue, JsValue> {
-    let comps: Components = components.into_serde().map_err(|e| e.to_string())?;
-    let wfacs: Factors = wfactors.into_serde().map_err(|e| e.to_string())?;
-
-    // componentes para ACS
-    let comps_acs = comps
-        .filter_by_epb_service(cteepbd::types::Service::ACS)
-        .normalize();
-    let wfacs_nrb = cte::wfactors_to_nearby(&wfacs);
-    let balance: Balance = cteepbd::energy_performance(&comps_acs, &wfacs_nrb, kexp, area).unwrap();
     let jsbalance = JsValue::from_serde(&balance).map_err(|e| e.to_string())?;
     Ok(jsbalance)
 }
