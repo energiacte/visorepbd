@@ -75,7 +75,7 @@ function dhw_needs(state = 1, action) {
       if (isNaN(val)) {
         return null;
       }
-      return Math.round(Math.max(val, 1.0));
+      return Math.round(Math.max(val, 0.0));
     }
     case LOAD_ENERGY_COMPONENTS: {
       if (action.cmeta === null) return state;
