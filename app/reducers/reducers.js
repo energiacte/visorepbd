@@ -5,7 +5,6 @@ import { createSelector } from "reselect";
 import {
   // parse_components,
   energy_performance,
-  energy_performance_acs_nrb,
   new_wfactors,
   get_version
 } from "wasm-cteepbd";
@@ -306,14 +305,7 @@ export const selectBalance = createSelector(
     try {
       // Cálculo global, energía primaria
       const ep = energy_performance(componentsobj, wfactors, kexp, area, dhw_needs);
-      // Cálculo para ACS en perímetro próximo
-      const ep_acs_nrb = energy_performance_acs_nrb(
-        componentsobj,
-        wfactors,
-        kexp,
-        area
-      );
-      return { ep, ep_acs_nrb };
+      return { ep };
     } catch (e) {
       return { error: e };
     }

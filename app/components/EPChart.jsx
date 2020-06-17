@@ -11,8 +11,6 @@ export default class EPChart extends React.Component {
     kexp: 0,
     ren: 0,
     nren: 0,
-    ren_acs: 0,
-    nren_acs: 0,
     co2: 0
   };
 
@@ -57,8 +55,6 @@ export default class EPChart extends React.Component {
       ren,
       d_ren_acs_nrb,
       nren,
-      ren_acs,
-      nren_acs,
       co2
     } = this.props;
 
@@ -66,9 +62,6 @@ export default class EPChart extends React.Component {
     // Energía primaria
     const total = ren + nren;
     const rer = total === 0 ? 0 : ren / total;
-    // Cálculo para ACS en perímetro próximo
-    const total_acs = ren_acs + nren_acs;
-    const rer_acs_nrb = total_acs === 0 ? 0 : ren_acs / total_acs;
 
     // Definición de los elementos gráficos ------------------
     const svgwidth = this.state.width;
@@ -193,8 +186,7 @@ export default class EPChart extends React.Component {
             Consumo de energía primaria
           </span>
           {" [kWh/m²·año] "}
-          (RER: {rer.toFixed(2)}, RER
-          <sub>ACS;nrb</sub>: {rer_acs_nrb.toFixed(2)})
+          (RER: {rer.toFixed(2)})
         </p>
         <svg
           width={svgwidth}
