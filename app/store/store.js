@@ -7,7 +7,8 @@ const EXAMPLE_CMETA = [
   { key: "APP", value: `VisorEPBD 1.0 (CteEPBD ${get_version()})` },
   { key: "CTE_LOCALIZACION", value: "PENINSULA" },
   { key: "CTE_KEXP", value: "0" },
-  { key: "CTE_AREAREF", value: "200" }
+  { key: "CTE_AREAREF", value: "200" },
+  { key: "CTE_ACS_DEMANDA_ANUAL", value: "2500" }
 ];
 
 const EXAMPLE_CDATA = [
@@ -251,7 +252,7 @@ const initialState = {
   // Área de referencia
   area: 200,
   // Demanda anual de ACS (kWh)
-  dhw_needs: null,
+  dhw_needs: 2500,
   // Localización
   location: "PENINSULA",
   // Factores definidos por el usuario
