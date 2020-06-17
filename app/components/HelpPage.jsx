@@ -32,11 +32,11 @@ function scrollToId(id) {
   window.scrollBy(0, -40); // Adjust scrolling with a negative value here
 }
 
-const LinkId = props => (
-  <a onClick={_ => scrollToId(props.to)}>{props.children}</a>
+const LinkId = (props) => (
+  <a onClick={(_) => scrollToId(props.to)}>{props.children}</a>
 );
 
-const ScrollToIndex = _ => (
+const ScrollToIndex = (_) => (
   <LinkId to="Indice">
     <small>
       (Volver al índice <span className="fa fa-chevron-up" />)
@@ -45,7 +45,7 @@ const ScrollToIndex = _ => (
 );
 
 // Página de ayuda
-const HelpPage = props => (
+const HelpPage = (props) => (
   <div>
     <NavBar match={props.match} />
     <div className="container-fluid">
