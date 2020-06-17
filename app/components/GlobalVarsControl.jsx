@@ -152,17 +152,19 @@ class GlobalVarsControlClass extends React.Component {
                     className="btn btn-light"
                     id="modify"
                     type="button"
+                    title="Cargar datos desde un archivo"
                     onClick={() => this.fileInput.current.click()}
                   >
-                    <span className="fa fa-upload" /> Cargar datos
+                    <span className="fa fa-upload" />
                   </button>
                   <button
                     className="btn btn-light"
                     id="save"
                     type="button"
+                    title="Guardar datos a un archivo"
                     onClick={() => this.downloadFile()}
                   >
-                    <span className="fa fa-download" /> Guardar datos
+                    <span className="fa fa-download" />
                   </button>
                 </div>
               </div>
