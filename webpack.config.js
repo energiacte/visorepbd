@@ -132,7 +132,7 @@ var config = {
   },
   resolve: {
     modules: [PATHS.app, PATHS.wasm, PATHS.node, PATHS.nodedir],
-    extensions: [".web.js", ".js", ".web.jsx", ".jsx", ".json"],
+    extensions: [".web.js", ".js", ".web.jsx", ".jsx", ".json", ".wasm"],
     alias: {
       // Para usar alias en imports
       styles: PATHS.styles,
