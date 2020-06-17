@@ -43,10 +43,10 @@ class GlobalVarsControlClass extends React.Component {
       <div className="container-fluid">
         <div className="row">
           <div className="col">
-            <div id="globalvarscontrol" className="form-horizontal col-lg-12">
+            <div id="globalvarscontrol" className="form-horizontal col-lg-12 pl-0">
               {/* Slider de kexp con entrada de lectura numérica */}
               <div id="kexp" className="form-group col-lg-2">
-                <label className="control-label col-lg-2" htmlFor="kexprange">
+                <label className="control-label col-lg-2 px-0" htmlFor="kexprange">
                   k<sub>exp</sub>{" "}
                 </label>
                 <input
@@ -79,8 +79,8 @@ class GlobalVarsControlClass extends React.Component {
                 min={0}
                 value={area}
                 onValueChange={changeArea}
-                groupClassName="d-inline-block col-lg-2"
-                labelClassName="col-lg-8"
+                groupClassName="d-inline-block col-lg-2 pl-0"
+                labelClassName="col-lg-8 px-0"
                 className="d-inline form-control-sm col-lg-4"
               >
                 Area<sub>ref</sub> (m²){" "}
@@ -92,16 +92,16 @@ class GlobalVarsControlClass extends React.Component {
                 min={0}
                 value={dhw_needs}
                 onValueChange={changeDhw}
-                groupClassName="d-inline-block col-lg-2"
-                labelClassName="col-lg-8"
+                groupClassName="d-inline-block col-lg-2 pl-0"
+                labelClassName="col-lg-8 px-0"
                 className="d-inline form-control-sm col-lg-4"
               >
                 D<sub>ACS,an</sub> (kWh/a){" "}
               </NumInput>
               {/* Desplegable de selección de localización */}
-              <div className="form-group d-inline-block col-lg-2">
+              <div className="form-group d-inline-block col-lg-2 pl-0">
                 <label
-                  className="control-label col-lg-6"
+                  className="control-label col-lg-6 px-0"
                   htmlFor="selectLocation"
                 >
                   Localización
@@ -119,19 +119,19 @@ class GlobalVarsControlClass extends React.Component {
                 </select>
               </div>
               {/* Botones de carga y descarga de datos */}
-              <div className="form-group d-inline-block col-lg-2">
-                <label className="control-label col-lg-4" htmlFor="filename">
+              <div className="form-group d-inline-block col-lg-3 pl-0">
+                <label className="control-label col-lg-4 px-0" htmlFor="filename">
                     Nombre{" "}
                 </label>
                 <input
-                    name="filename"
+                  name="filename"
                   className="d-inline form-control form-control-sm col-lg-8"
                   type="text"
                   ref={this.filenameinput}
                   defaultValue="Ejemplo_VisorEPBD"
                 />
               </div>
-              <div id="buttons" className="form-group d-inline-block col-lg-2">
+              <div id="buttons" className="form-group d-inline-block col-lg-1">
                 <div
                   className="btn-group btn-group-md"
                   role="group"
