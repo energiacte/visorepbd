@@ -40,7 +40,7 @@ class GlobalVarsControlClass extends React.Component {
     } = this.props;
 
     return (
-      <div className="container-fluid">
+      <div className="container-fluid bg-light">
         <div className="row">
           <div className="col">
             <div id="globalvarscontrol" className="form-horizontal col-lg-12 pl-0">
