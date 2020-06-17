@@ -5,10 +5,11 @@ import Footer from "components/Footer";
 import esquema_0pasos from "img/esquema_0pasos.svg";
 import esquema_1balance from "img/esquema_1balance.svg";
 import esquema_2ponderacion from "img/esquema_2ponderacion.svg";
-import esquema_3resultados from "img/esquema_3resultados.png";
 import interfaz_general from "img/interfaz/general.png";
 import interfaz_parametrosgenerales from "img/interfaz/parametrosgenerales.png";
-import interfaz_lineasvalores from "img/interfaz/lineasvalores.png";
+import interfaz_pestanhavectores from "img/interfaz/pestanhavectores.png";
+import interfaz_pestanhaservicios from "img/interfaz/pestanhaservicios.png";
+import interfaz_pestanhacomponentes from "img/interfaz/pestanhacomponentes.png";
 import interfaz_editor from "img/interfaz/editor.png";
 import interfaz_entradavalorexpresion from "img/interfaz/entradavalorexpresion.png";
 import interfaz_comentario from "img/interfaz/comentario.png";
@@ -201,11 +202,38 @@ const HelpPage = (props) => (
           />
           <p>
             Esta pestaña permite definir y modificar los parámetros generales de
-            cálculo, el <b>factor de exportación</b> (
-            <b>
-              k<sub>exp</sub>
-            </b>
-            ) y el <b>área de referencia</b>.
+            cálculo:
+            <ul>
+              <li>
+                el <b>factor de exportación</b> (
+                <i>
+                  k<sub>exp</sub>
+                </i>
+                ) , adimensional y con valores entre 0.0 y 1.0;
+              </li>
+              <li>
+                el <b>área de referencia</b> (
+                <i>
+                  Area<sub>ref</sub>
+                </i>
+                ) , en m²;
+              </li>
+              <li>
+                la <b>demanda anual de ACS</b> (
+                <i>
+                  D<sub>ACS,an</sub>
+                </i>
+                ), en kWh/a;
+              </li>
+              <li>
+                la <b>localización</b>, a efectos de determinar los factores de
+                paso reglamentarios;
+              </li>
+              <li>
+                el <b>nombre del proyecto</b>, que se usará como nombre del
+                archivo de datos, en caso de guardar la información en disco.
+              </li>
+            </ul>
           </p>
           <p>
             El botón &quot;
@@ -230,62 +258,114 @@ const HelpPage = (props) => (
             src={interfaz_indicadores}
           />
           <p>
-            El diagrama muestra barras y valores del{" "}
-            <b>
-              consumo de energía primaria total (
-              <i>
-                C<sub>ep,tot</sub>
-              </i>
-              )
-            </b>
-            , el{" "}
-            <b>
-              consumo de energía primaria no renovable (
-              <i>
-                C<sub>ep,nren</sub>
-              </i>
-              )
-            </b>{" "}
-            y el{" "}
-            <b>
-              consumo de energía primaria renovable (
-              <i>
-                C<sub>ep,ren</sub>
-              </i>
-              )
-            </b>
-            .
+            El diagrama muestra los valores y resultados de:
+            <ul>
+              <li>
+                el{" "}
+                <b>
+                  factor de exportación{" "}
+                  <i>
+                    k<sub>exp</sub>
+                  </i>{" "}
+                  usado;
+                </b>
+              </li>
+              <li>
+                el <b>consumo de energía primaria</b>, incluyendo:
+                <ul>
+                  <li>
+                    la <b>fracción de energía primaria de origen renovable</b>{" "}
+                    (RER);
+                  </li>
+                  <li>
+                    el{" "}
+                    <b>
+                      consumo de energía primaria total (
+                      <i>
+                        C<sub>ep,tot</sub>
+                      </i>
+                      )
+                    </b>
+                    ;
+                  </li>
+                  <li>
+                    el{" "}
+                    <b>
+                      consumo de energía primaria no renovable (
+                      <i>
+                        C<sub>ep,nren</sub>
+                      </i>
+                      )
+                    </b>{" "}
+                    ;
+                  </li>
+                  <li>
+                    el{" "}
+                    <b>
+                      consumo de energía primaria renovable (
+                      <i>
+                        C<sub>ep,ren</sub>
+                      </i>
+                      )
+                    </b>
+                    ;
+                  </li>
+                </ul>
+              </li>
+              <li>
+                las{" "}
+                <b>
+                  emisiones de CO<sub>2</sub>
+                </b>
+                ;
+              </li>
+              <li>
+                el{" "}
+                <b>
+                  porcentaje de la demanda de ACS procedente de fuentes
+                  renovables
+                </b>
+                , calculada para el perímetro próximo .
+              </li>
+            </ul>
           </p>
 
-          <p>
-            El subtítulo del diagrama indica el factor de exportación utilizado
-            en el cálculo (
-            <i>
-              k<sub>exp</sub>
-            </i>
-            ), la{" "}
-            <b>
-              fracción de energía energía primaria de origen renovable (
-              <i>RER</i>)
-            </b>{" "}
-            y la{" "}
-            <b>
-              fracción de energía primaria de origen renovable para el servicio
-              de ACS obtenido con factores de paso para el perímetro próximo (
-              <i>
-                RER<sub>ACS;nrb</sub>
-              </i>
-              )
-            </b>
-            .
-          </p>
-
-          <h4>Componentes energéticos</h4>
+          <h4>Pestaña de desglose por servicios</h4>
 
           <img
             className="img-fluid offset-md-2"
             width="60%"
-            src={interfaz_lineasvalores}
+            src={interfaz_pestanhaservicios}
+          />
+          <p>
+            Esta pestaña de resultados incluye una representación gráfica,
+            desagregada por servicios, del consumo de energía final, la energía
+            primaria total, la energía primaria de origen renovable y las
+            emisiones de CO2.
+          </p>
+
+          <h4>Pestaña de desglose por vectores energéticos</h4>
+
+          <img
+            className="img-fluid offset-md-2"
+            width="60%"
+            src={interfaz_pestanhavectores}
+          />
+          <p>
+            Esta pestaña de resultados incluye, para cada vector energético
+            disponible, una representación gráfica de la energía final consumida
+            por servicios, la energía final suministrada por origen, la energía
+            final exportada por destino, la energía primaria total por
+            servicios, la energía primaria de origen renovable por servicios y
+            las emisiones de CO2 por servicios.
+          </p>
+
+          <h4>Pestaña de componentes energéticos</h4>
+
+          <img
+            className="img-fluid offset-md-2"
+            width="60%"
+            src={interfaz_pestanhacomponentes}
           />
           <p>
             Esta parte de la interfaz incluye una tabla con información sobre
@@ -800,7 +880,7 @@ const HelpPage = (props) => (
 
           <img
             className="img-fluid offset-md-2 col-lg-8"
-            src={esquema_3resultados}
+            src={interfaz_pestanhacomponentes}
           />
         </div>
       </div>
