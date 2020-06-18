@@ -2,7 +2,7 @@ import React from "react";
 
 import NavBar from "components/NavBar";
 import Footer from "components/Footer";
-import mfomlogo from "img/logomfom.png";
+import mfomlogo from "img/logomfom.svg";
 import ietcclogo from "img/logoietcccsic.png";
 import pachi from "img/equipo/FotoPachi.jpg";
 import dani from "img/equipo/FotoDani.jpg";
