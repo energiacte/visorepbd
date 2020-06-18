@@ -5,8 +5,8 @@ const Footer = _props => (
     <div className="row">
       <div className="col text-center">
         <p className="text-muted small center">
-          <b>VisorEPBD</b> - 2017-2019 -{" "}
-          <a href="http://www.fomento.gob.es">Ministerio de Fomento</a>,{" "}
+          <b>VisorEPBD</b> - 2017-2020 -{" "}
+          <a href="http://www.mitma.gob.es">Ministerio de Transportes, Movilidad y Agenda Urbana</a>,{" "}
           <a href="http://www.ietcc.csic.es">
             Instituto Eduardo Torroja de Ciencias de la Construcción
             (IETcc-CSIC)

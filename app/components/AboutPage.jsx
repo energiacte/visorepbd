@@ -61,13 +61,13 @@ const AboutPage = props => (
         </b>{" "}
         en el marco del convenio suscrito con el{" "}
         <b>
-          <a href="http://www.fomento.gob.es">Ministerio de Fomento</a>
+          <a href="http://www.mitma.gob.es">Ministerio de Transportes, Movilidad y Agenda Urbana</a>
         </b>
         .
       </p>
       {/* <div className="container-fluid"> */}
       <div className="container-fluid">
-        <a href="http://www.fomento.gob.es">
+        <a href="http://www.mitma.gob.es">
           <img className="img offset-md-3 col-md-3" src={mfomlogo} />
         </a>
         <a href="http://www.ietcc.csic.es">
