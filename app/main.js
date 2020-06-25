@@ -18,20 +18,25 @@ import { Provider } from "react-redux";
 // Elementos propios
 import "styles/style.scss"; // CSS
 import store from "store/store.js";
+
+import AboutPage from "components/AboutPage.jsx";
+import HelpPage from "components/HelpPage.jsx";
 import MainPage from "components/MainPage.jsx";
 import WeightingFactorsPage from "components/WeightingFactorsPage.jsx";
-import HelpPage from "components/HelpPage.jsx";
-import AboutPage from "components/AboutPage.jsx";
 
 import { set_panic_hook } from "wasm-cteepbd";
 
 set_panic_hook();
 
 // Render
+// Ver problemas con manejo de URLs en la app en https://stackoverflow.com/questions/27928372/react-router-urls-dont-work-when-refreshing-or-writing-manually
+// https://stackoverflow.com/questions/36857147/react-router-2-0-browserhistory-doesnt-work-when-refreshing/37622953#37622953
+// Para usar BrowserRouter en vez de HashRouter, ver https://github.com/reactjs/react-router-tutorial/tree/master/lessons/10-clean-urls
 ReactDOM.render(
   <Provider store={store}>
     <HashRouter>
       <Switch>
+        <Route exact path="/" component={MainPage} />
         <Route
           exact
           path="/weightingfactors"
