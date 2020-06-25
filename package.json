@@ -18,12 +18,12 @@
     "clean": "rm -rf build/",
     "buildprod": "NODE_ENV=production webpack --progress --colors -p",
     "builddev": "NODE_ENV=development webpack --progress --colors -d --watch",
-    "webpack-server": "webpack-dev-server --hot --inline --colors",
+    "webpack-server": "webpack-dev-server --hot --inline --colors --history-api-fallback",
     "web-server": "http-server -p 3000 ./build",
     "prodserver": "npm run web-server | NODE_ENV=production webpack --progress --colors -p --watch",
     "bs3": "rm .bootstraprc && cp node_modules/bootstrap-loader/.bootstraprc-3-default .bootstraprc",
     "lint": "eslint --ignore-pattern build/*.js --ext .js,.jsx app/",
-    "start": "npm run webpack-server --history-api-fallback",
+    "start": "npm run webpack-server",
     "deploy": "NODE_ENV=production webpack -p"
   },
   "keywords": [
