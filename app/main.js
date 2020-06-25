@@ -21,6 +21,7 @@ import store from "store/store.js";
 
 import AboutPage from "components/AboutPage.jsx";
 import HelpPage from "components/HelpPage.jsx";
+import LoadDataPage from "components/LoadDataPage.jsx";
 import MainPage from "components/MainPage.jsx";
 import WeightingFactorsPage from "components/WeightingFactorsPage.jsx";
 
@@ -44,7 +45,7 @@ ReactDOM.render(
         />
         <Route exact path="/help" component={HelpPage} />
         <Route exact path="/about" component={AboutPage} />
-        <Route exact path="/" component={MainPage} />
+        <Route exact path="/load/:epbddata" component={LoadDataPage} />
       </Switch>
     </HashRouter>
   </Provider>,
