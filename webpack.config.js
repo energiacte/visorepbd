@@ -185,7 +185,7 @@ var config = {
           {
             loader: "postcss-loader",
             options: {
-              config: {
+              postcssOptions: {
                 path: __dirname + "/postcss.config.js"
               }
             }
@@ -208,7 +208,7 @@ var config = {
           {
             loader: "postcss-loader",
             options: {
-              config: {
+              postcssOptions: {
                 path: __dirname + "/postcss.config.js"
               }
             }
